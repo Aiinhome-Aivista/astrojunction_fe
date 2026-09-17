@@ -1,0 +1,587 @@
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  Compass,
+  Sparkles,
+  Layers,
+  Hash,
+  MessageSquareText,
+  CreditCard,
+  ShieldCheck,
+  Network,
+  User,
+  PlusCircle,
+  Clock,
+  Sun,
+  Moon,
+  Globe,
+  ChevronDown,
+  Check,
+  HeartHandshake,
+  LogOut,
+  Calendar,
+  FileText,
+  Users,
+  Terminal,
+  Wallet,
+  Menu,
+  X,
+  Shield,
+  Home,
+  Loader2,
+  Cpu,
+} from 'lucide-react';
+import { UserProfile, HoroscopeTradition } from '../types';
+import { AncientTraditionLogo } from './AncientTraditionLogo';
+import { SUPPORTED_LANGUAGES, getTranslation } from '../services/translations';
+import { generateMasterFullReportPdf } from '../services/fullReportGenerator';
+
+interface NavbarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  currentProfile: UserProfile;
+  profiles: UserProfile[];
+  onSelectProfile: (profile: UserProfile) => void;
+  onOpenNewProfile: () => void;
+  onOpenDisclaimer: () => void;
+  tradition: HoroscopeTradition;
+  setTradition: (tradition: HoroscopeTradition) => void;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
+  language: string;
+  setLanguage: (lang: string) => void;
+  onLogout?: () => void;
+  isAdmin?: boolean;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  setActiveTab,
+  currentProfile,
+  profiles,
+  onSelectProfile,
+  onOpenNewProfile,
+  onOpenDisclaimer,
+  tradition,
+  setTradition,
+  theme,
+  toggleTheme,
+  language = 'en',
+  setLanguage,
+  onLogout,
+  isAdmin = false,
+}) => {
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isGeneratingFullReport, setIsGeneratingFullReport] = useState(false);
+
+  const t = (key: string, fallback?: string) => {
+    const val = getTranslation(key, language);
+    return val === key && fallback ? fallback : val;
+  };
+
+  const handleDownloadFullReport = async () => {
+    if (isGeneratingFullReport) return;
+    setIsGeneratingFullReport(true);
+    try {
+      await generateMasterFullReportPdf({
+        profile: currentProfile,
+        tradition,
+        language,
+      });
+    } catch (err) {
+      console.error('Failed to generate master full report:', err);
+    } finally {
+      setIsGeneratingFullReport(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close mobile drawer on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileDrawerOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // User & Admin tabs (Panjika is excluded for logged-in users)
+  const tabs = isAdmin
+    ? [
+        { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
+        { id: 'admin_users', label: 'Users', icon: Users },
+        { id: 'admin_revenue', label: 'Revenue', icon: Wallet },
+        { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
+        { id: 'admin_logs', label: 'Logs', icon: Terminal },
+        { id: 'blogs', label: 'Blogs', icon: FileText },
+        { id: 'admin', label: t('tab.admin'), icon: Network },
+      ]
+    : [
+        { id: 'daily', label: t('tab.daily'), icon: Sun },
+        { id: 'horoscope', label: t('tab.horoscope'), icon: Compass },
+        { id: 'matchmaking', label: t('tab.matchmaking'), icon: HeartHandshake },
+        { id: 'numerology', label: t('tab.numerology'), icon: Hash },
+        { id: 'consultations', label: t('tab.consultations'), icon: CreditCard },
+      ];
+
+  // Mobile Bottom Bar Quick Tabs (Panjika excluded)
+  const mobileQuickTabs = isAdmin
+    ? [
+        { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
+        { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
+        { id: 'admin_users', label: 'Users', icon: Users },
+        { id: 'admin_revenue', label: 'Revenue', icon: Wallet },
+        { id: 'blogs', label: 'Blogs', icon: FileText },
+      ]
+    : [
+        { id: 'daily', label: 'Daily', icon: Sun },
+        { id: 'horoscope', label: 'Kundli', icon: Compass },
+        { id: 'matchmaking', label: 'Match', icon: HeartHandshake },
+        { id: 'counsellor', label: 'Daivajna', icon: Sparkles },
+      ];
+
+  const isViewingAdmin = isAdmin || activeTab?.startsWith('admin_') || activeTab === 'admin';
+
+  return (
+    <>
+      {/* Top Primary Header Bar */}
+      <header
+        className={`sticky top-0 z-40 backdrop-blur-xl transition-colors ${
+          theme === 'dark' ? 'bg-[#0D0D0F]/90 text-[#E5E1D8]' : 'bg-[#F6EFE0]/95 text-[#0D0D0F] border-b border-[#DFC896]/40'
+        }`}
+      >
+        {/* Main Header Row */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-2">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Logo & Brand */}
+            <div
+              className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none"
+              onClick={() => setActiveTab('landing')}
+              title={t('tab.home') || 'Home'}
+            >
+              <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
+              <div>
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
+                  <span className={`text-lg sm:text-xl font-bold tracking-wider ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
+                    ASTRO<span className="text-[#C9A050]">JUNCTION</span>
+                  </span>
+                  {isAdmin ? (
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                      ADMIN CONSOLE
+                    </span>
+                  ) : (
+                    <span className="hidden xs:inline-block px-1.5 sm:px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold tracking-widest uppercase bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
+                      {t('brand.subtitle')}
+                    </span>
+                  )}
+                </div>
+                <p className={`text-[10px] sm:text-[11px] ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'} hidden md:block`}>
+                  {t('brand.tagline')}
+                </p>
+              </div>
+            </div>
+
+            {/* Controls: Home Button, Language Selector, Theme Toggle, Profile Switcher & Mobile Menu Button */}
+            <div className="flex items-center space-x-1.5 sm:space-x-2.5">
+              {/* Home Navigation Button */}
+              <button
+                onClick={() => setActiveTab('landing')}
+                title={t('tab.home') || 'Home'}
+                className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${
+                  activeTab === 'landing' || activeTab === 'home'
+                    ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
+                    : theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                    : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                }`}
+                aria-label="Home"
+              >
+                <Home className="w-3.5 h-3.5 text-[#C9A050]" />
+                <span className="hidden sm:inline font-semibold">{t('tab.home') || 'Home'}</span>
+              </button>
+
+              {/* Light / Dark Mode Toggle */}
+              <button
+                onClick={toggleTheme}
+                title={theme === 'dark' ? t('header.theme_light') : t('header.theme_dark')}
+                className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shadow-sm shrink-0 ${
+                  theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#C9A050] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                    : 'bg-[#FAF3DF] border-[#DFC896] text-[#8C6218] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                }`}
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4 text-[#C9A050] transition-transform hover:rotate-45" />
+                ) : (
+                  <Moon className="w-4 h-4 text-[#8C6218] transition-transform hover:-rotate-12" />
+                )}
+              </button>
+
+              {/* Active Profile Dropdown */}
+              <div
+                className={`relative flex items-center border rounded-lg p-1 sm:p-1.5 text-xs shadow-inner max-w-[130px] sm:max-w-[200px] ${
+                  theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#FAF3DF] border-[#DFC896]'
+                }`}
+                ref={profileMenuRef}
+              >
+                <User className="w-3.5 h-3.5 text-[#C9A050] ml-1 mr-1 shrink-0" />
+                <button
+                  onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                  className={`bg-transparent focus:outline-none pr-4 sm:pr-5 cursor-pointer text-xs truncate flex items-center flex-1 text-left ${
+                    theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2C2825]'
+                  }`}
+                >
+                  <span className="truncate">{currentProfile.fullName}</span>
+                  <ChevronDown className="w-3 h-3 ml-0.5 absolute right-6 text-[#9E9A90]" />
+                </button>
+
+                {isProfileMenuOpen && (
+                  <div className={`absolute top-full right-0 mt-2 w-52 border rounded-xl shadow-xl overflow-hidden z-50 ${
+                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
+                  }`}>
+                    <div className="py-1">
+                      {profiles.map((p) => {
+                        const isSelected = p.id === currentProfile.id;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => {
+                              onSelectProfile(p);
+                              setIsProfileMenuOpen(false);
+                            }}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${
+                              isSelected
+                                ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold'
+                                : theme === 'dark'
+                                ? 'text-[#E5E1D8] hover:bg-[#1C1C22] hover:text-[#F0ECE1]'
+                                : 'text-[#2C2825] hover:bg-[#F3EADB] hover:text-[#1A1816]'
+                            }`}
+                          >
+                            <span className="truncate">
+                              {p.fullName} ({p.horoscopeSystem === 'western' ? 'Western' : 'Vedic'})
+                            </span>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-[#C9A050] shrink-0" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={onOpenNewProfile}
+                  title={t('header.add_profile')}
+                  className="ml-0.5 p-1 rounded bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 transition-colors cursor-pointer shrink-0"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Desktop Quick Action: Download Master Full Report (Hidden for Admin) */}
+              {!isViewingAdmin && (
+                <button
+                  onClick={handleDownloadFullReport}
+                  disabled={isGeneratingFullReport}
+                  title="Download Comprehensive Master Vedic Report (All 4 Pillars)"
+                  className={`hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-bold text-xs shadow-md transition-all duration-300 cursor-pointer shrink-0 hover:-translate-y-0.5 hover:scale-105 ${
+                    isGeneratingFullReport ? 'opacity-70 cursor-wait' : ''
+                  } ${
+                    theme === 'dark'
+                      ? 'bg-[#1C1A14] border border-[#C9A050]/60 text-[#E8C470] hover:border-[#C9A050] hover:bg-[#252219] shadow-[#C9A050]/15'
+                      : 'bg-[#FAF5E6] border border-[#C9A050] text-[#8C6218] hover:bg-[#F3EACB] shadow-sm'
+                  }`}
+                >
+                  {isGeneratingFullReport ? (
+                    <Loader2 className="w-3.5 h-3.5 text-[#C9A050] animate-spin" />
+                  ) : (
+                    <FileText className="w-3.5 h-3.5 text-[#C9A050]" />
+                  )}
+                  <span>
+                    {isGeneratingFullReport
+                      ? 'Generating...'
+                      : t('header.download_full_report', 'Download Full Report')}
+                  </span>
+                </button>
+              )}
+
+              {/* Desktop Quick Action: Ask AI / Daivajna (Hidden for Admin) */}
+              {!isViewingAdmin && (
+                <button
+                  onClick={() => setActiveTab('counsellor')}
+                  className={`hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-bold text-xs shadow-md transition-all duration-300 cursor-pointer shrink-0 hover:-translate-y-0.5 hover:scale-105 ${
+                    theme === 'dark'
+                      ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] shadow-[#C9A050]/20 hover:shadow-[#C9A050]/40'
+                      : 'bg-gradient-to-r from-[#FAF2DA] to-[#F5E8C8] border border-[#DFC896] text-[#8C6218] hover:bg-[#F3E5BE] shadow-sm'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
+                  <span>{t('header.ask_ai')}</span>
+                </button>
+              )}
+
+              {/* Logout (Desktop) */}
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  title="Log out"
+                  className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shadow-sm shrink-0 ${
+                    theme === 'dark'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#9E9A90] hover:border-[#C9A050]/50 hover:text-[#C9A050]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#6E6452] hover:border-[#C9A050] hover:text-[#1E1B15]'
+                  }`}
+                  aria-label="Log out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              )}
+
+              {/* Mobile Drawer Menu Toggle */}
+              <button
+                onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
+                className={`md:hidden flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${
+                  theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
+                    : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:text-[#C9A050] hover:border-[#C9A050]'
+                }`}
+                aria-label="Toggle navigation drawer"
+              >
+                {isMobileDrawerOpen ? <X className="w-4 h-4 text-[#C9A050]" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 
+          ========================================================================
+          UNIFIED STICKY SUB-NAVIGATION BAR (TRANSPARENT BACKGROUND + TOP BORDER ONLY)
+          ========================================================================
+        */}
+        <div
+          className={`hidden md:block w-full border-t transition-colors ${
+            theme === 'dark' ? 'border-[#2A2A2E]/60' : 'border-[#DFC896]/50'
+          } bg-transparent`}
+        >
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-2">
+            <nav
+              className="flex items-center justify-center flex-wrap gap-2.5 sm:gap-3"
+              aria-label="Secondary Tabs Navigation"
+            >
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? theme === 'dark'
+                          ? 'bg-[#1C1A14] text-[#E8C470] border-2 border-[#C9A050] shadow-md shadow-[#C9A050]/20 font-bold scale-[1.02]'
+                          : 'bg-[#FAF2DA] text-[#8C6218] border-2 border-[#C9A050] shadow-md shadow-[#C9A050]/15 font-bold scale-[1.02]'
+                        : theme === 'dark'
+                        ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
+                        : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
+                    }`}
+                  >
+                    <Icon
+                      className={`w-4 h-4 shrink-0 transition-colors ${
+                        isActive ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8A847A]'
+                      }`}
+                    />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Slide-Out Navigation Drawer */}
+      {isMobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in">
+          <div className="w-[82%] max-w-sm h-full bg-[#141418] border-l border-[#2A2A2E] p-5 shadow-2xl flex flex-col justify-between overflow-y-auto font-sans">
+            <div>
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-[#2A2A2E]">
+                <div className="flex items-center space-x-2.5">
+                  <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
+                  <div>
+                    <h3 className="font-bold text-sm text-[#F0ECE1]">
+                      ASTRO<span className="text-[#C9A050]">JUNCTION</span>
+                    </h3>
+                    <p className="text-[10px] text-[#9E9A90]">Astrological Intelligence</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="p-1.5 rounded-lg bg-[#1A1A1E] text-[#9E9A90] hover:text-[#F0ECE1] border border-[#2A2A2E]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* User Profile Card in Drawer */}
+              <div className="my-4 p-3 rounded-xl bg-[#1A1A1E] border border-[#2A2A2E] flex items-center justify-between">
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-8 h-8 rounded-full bg-[#C9A050]/20 text-[#C9A050] flex items-center justify-center font-bold text-xs">
+                    {currentProfile.fullName.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="font-bold text-xs text-[#F0ECE1]">{currentProfile.fullName}</div>
+                    <div className="text-[10px] text-[#9E9A90] capitalize">
+                      {currentProfile.horoscopeSystem || 'Vedic'} System
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
+                    onOpenNewProfile();
+                  }}
+                  className="p-1.5 rounded-lg bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 text-xs font-semibold"
+                  title="Edit or Add Profile"
+                >
+                  <PlusCircle className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Navigation Tabs List */}
+              <div className="space-y-1 mt-2">
+                <div className="text-[10px] font-bold text-[#9E9A90] uppercase tracking-wider px-2 py-1">
+                  Navigation
+                </div>
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setIsMobileDrawerOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left ${
+                        isActive
+                          ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
+                          : 'text-[#E5E1D8] hover:bg-[#1A1A1E] hover:text-[#F0ECE1]'
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+
+                {/* Download Master Full Report (Mobile, Hidden for Admin) */}
+                {!isViewingAdmin && (
+                  <button
+                    onClick={() => {
+                      handleDownloadFullReport();
+                      setIsMobileDrawerOpen(false);
+                    }}
+                    disabled={isGeneratingFullReport}
+                    className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer text-left mt-2 bg-[#C9A050]/20 text-[#E8C470] border border-[#C9A050]/50 hover:bg-[#C9A050]/30"
+                  >
+                    {isGeneratingFullReport ? (
+                      <Loader2 className="w-4 h-4 text-[#C9A050] animate-spin" />
+                    ) : (
+                      <FileText className="w-4 h-4 text-[#C9A050]" />
+                    )}
+                    <span>
+                      {isGeneratingFullReport
+                        ? 'Generating Report...'
+                        : t('header.download_full_report', 'Download Full Report')}
+                    </span>
+                  </button>
+                )}
+
+                {/* Daivajna Consultation Link (Mobile, Hidden for Admin) */}
+                {!isViewingAdmin && (
+                  <button
+                    onClick={() => {
+                      setActiveTab('counsellor');
+                      setIsMobileDrawerOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left mt-1.5 ${
+                      activeTab === 'counsellor'
+                        ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
+                        : 'text-[#C9A050] bg-[#C9A050]/10 hover:bg-[#C9A050]/20'
+                    }`}
+                  >
+                    <Sparkles className="w-4 h-4 text-[#C9A050]" />
+                    <span>Daivajna Consultation</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Drawer Footer Actions */}
+            <div className="pt-4 border-t border-[#2A2A2E] space-y-2">
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  onOpenDisclaimer();
+                }}
+                className="w-full flex items-center space-x-2 text-xs text-[#9E9A90] hover:text-[#C9A050] py-1.5 px-2 rounded"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" />
+                <span>Astrological Disclaimer</span>
+              </button>
+
+              {onLogout && (
+                <button
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
+                    onLogout();
+                  }}
+                  className="w-full flex items-center space-x-2 text-xs text-rose-400 hover:text-rose-300 py-1.5 px-2 rounded hover:bg-rose-500/10 transition"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Log Out of Account</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Sticky Bottom Navigation Bar (Visible on md and below) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0D0D0F]/95 backdrop-blur-xl border-t border-[#2A2A2E]/80 px-2 py-1.5 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+        <nav className="flex items-center justify-around" aria-label="Mobile Bottom Navigation">
+          {mobileQuickTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg transition-all text-[10px] font-medium min-w-[54px] cursor-pointer ${
+                  isActive
+                    ? 'text-[#C9A050] font-bold scale-105'
+                    : 'text-[#9E9A90] hover:text-[#E5E1D8]'
+                }`}
+              >
+                <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
+                <span className="truncate">{tab.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+    </>
+  );
+};
