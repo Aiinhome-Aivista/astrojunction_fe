@@ -160,18 +160,18 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
   const bDate = new Date(`${p.birthDate}T${timeString.length === 5 ? timeString : '12:00'}:00`);
   const dayOfYear = Math.floor((bDate.getTime() - new Date(bDate.getFullYear(), 0, 0).getTime()) / 86400000);
   const birthHours = bDate.getHours() + bDate.getMinutes() / 60;
-  
+
   // Seed hash for consistent deterministic astronomical approximations (fallback)
   const seed = (bDate.getFullYear() * 365 + dayOfYear) * 24 + birthHours + (p.latitude || 22.57) * 0.5 + (p.longitude || 88.36) * 0.2;
-  
+
   // Ascendant Calculation
-  let totalLagnaDeg = ephemerisData 
+  let totalLagnaDeg = ephemerisData
     ? ephemerisData.ascendant + ayanamshaShift
     : (Math.floor(seed * 1.618 + ((p.longitude || 88.36) / 15) * 30 + birthHours * 15 + ayanamshaShift)) % 360;
-    
+
   if (totalLagnaDeg >= 360) totalLagnaDeg -= 360;
   if (totalLagnaDeg < 0) totalLagnaDeg += 360;
-  
+
   const lagnaSignIndex = Math.floor(totalLagnaDeg / 30);
   const lagnaDeg = totalLagnaDeg % 30;
   const lagnaNakshatraIdx = Math.floor(totalLagnaDeg / 13.3333) % 27;
@@ -192,7 +192,7 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
   const calculatedPlanets: PlanetPosition[] = planetConfigs.map((p, idx) => {
     let totDeg = 0;
     let isRetro = false;
-    
+
     if (p.id === 'ketu' && ephemerisData?.planets?.rahu) {
       // Force Ketu to be exactly opposite Rahu (180 degrees)
       totDeg = (ephemerisData.planets.rahu.longitude + ayanamshaShift + 180) % 360;
@@ -212,13 +212,13 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
       totDeg = fallbackBase % 360;
       isRetro = (idx === 2 || idx === 4 || idx === 6) ? (Math.sin(seed * idx) > 0.4) : false;
     }
-    
+
     if (totDeg < 0) totDeg += 360;
     const signIdx = Math.floor(totDeg / 30);
     const degInSign = parseFloat((totDeg % 30).toFixed(2));
     const nakIdx = Math.floor(totDeg / 13.3333) % 27;
     const pada = Math.floor((totDeg % 13.3333) / 3.3333) + 1;
-    
+
     // House placement relative to Lagna / Ascendant
     let house = ((signIdx - lagnaSignIndex + 12) % 12) + 1;
 
@@ -278,9 +278,9 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
       // KP Sub-Lord: derived from the fractional position within the nakshatra (13°20' span)
       // The 9 KP sub-lords divide each nakshatra in Vimshottari dasha sequence order
       kpSubLord: (() => {
-        const KP_SEQ = ['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
+        const KP_SEQ = ['Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury'];
         const lordStartIdx: Record<string, number> = {
-          'Ketu':0,'Venus':1,'Sun':2,'Moon':3,'Mars':4,'Rahu':5,'Jupiter':6,'Saturn':7,'Mercury':8
+          'Ketu': 0, 'Venus': 1, 'Sun': 2, 'Moon': 3, 'Mars': 4, 'Rahu': 5, 'Jupiter': 6, 'Saturn': 7, 'Mercury': 8
         };
         const NAK_SPAN = 360 / 27; // 13.333...°
         const posInNak = totDeg % NAK_SPAN;  // 0 to 13.333
@@ -308,12 +308,12 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
     const signIdx = (lagnaSignIndex + i) % 12;
     const occupyingPlanets = calculatedPlanets.filter(p => p.house === houseNum);
     const sig = HOUSE_SIGNIFICANCES[i];
-    
+
     // KP and Lal Kitab indicators
     const kpSubLords = ['Mercury', 'Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn'];
     const kpSubLord = kpSubLords[(signIdx + houseNum * 2) % kpSubLords.length];
     const kpStarLord = NAKSHATRAS[(signIdx * 2 + houseNum) % 27].lord;
-    
+
     let lalKitabState = 'Awakened (Jagrit)';
     if (occupyingPlanets.length === 0) {
       lalKitabState = 'Dormant (Soyi Kismat - Needs activation via transit or remedy)';
@@ -339,7 +339,7 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
   const moonNakIdx = Math.floor(moon.totalDegree / 13.3333) % 27;
   const startingLord = NAKSHATRAS[moonNakIdx].lord;
   const dashaStartIdx = DASHA_ORDER.findIndex(d => d.planet.toLowerCase() === startingLord.toLowerCase());
-  
+
   const birthYear = bDate.getFullYear();
   let currentAccumYear = birthYear;
   const now = new Date();
@@ -352,7 +352,7 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
       const startYr = parseInt(d.startDate.split('-')[0]);
       const endYr = parseInt(d.endDate.split('-')[0]);
       const isCurrent = (currentYear >= startYr && currentYear < endYr);
-      
+
       return {
         planet: d.planet,
         sanskrit: d.sanskrit,
@@ -378,21 +378,21 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
     const fractionRemaining = 1.0 - (moon.totalDegree % 13.3333) / 13.3333;
     const firstYears = DASHA_ORDER[dashaStartIdx].years * fractionRemaining;
     const firstElapsed = DASHA_ORDER[dashaStartIdx].years - firstYears;
-    
+
     // Absolute start date of the first Mahadasha in the past
     let currentAccumDate = new Date(bDate.getTime() - firstElapsed * 365.2425 * 86400000);
-    
+
     for (let i = 0; i < 9; i++) {
       const dashaIdx = (dashaStartIdx + i) % 9;
       const item = DASHA_ORDER[dashaIdx];
-      
+
       const startMs = currentAccumDate.getTime();
       const endMs = startMs + item.years * 365.2425 * 86400000;
       const mdStartStr = new Date(startMs).toISOString().split('T')[0];
       const mdEndStr = new Date(endMs).toISOString().split('T')[0];
-      
+
       const isCurrentMD = (now.getTime() >= startMs && now.getTime() <= endMs);
-      
+
       // Calculate Sub-Periods (Antardashas)
       const subPeriods = [];
       let subAccumDate = currentAccumDate;
@@ -400,19 +400,19 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
         const adIdx = (dashaIdx + j) % 9;
         const adItem = DASHA_ORDER[adIdx];
         const adDurationYears = (item.years * adItem.years) / 120;
-        
+
         const subStartMs = subAccumDate.getTime();
         const subEndMs = subStartMs + adDurationYears * 365.2425 * 86400000;
         const subStartStr = new Date(subStartMs).toISOString().split('T')[0];
         const subEndStr = new Date(subEndMs).toISOString().split('T')[0];
-        
+
         subPeriods.push({
           planet: adItem.planet,
           startDate: subStartStr,
           endDate: subEndStr,
           isCurrent: isCurrentMD && (now.getTime() >= subStartMs && now.getTime() <= subEndMs)
         });
-        
+
         subAccumDate = new Date(subEndMs);
       }
 
@@ -425,105 +425,105 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
         isCurrent: isCurrentMD,
         subPeriods: subPeriods
       });
-      
+
       currentAccumDate = new Date(endMs);
     }
   }
 
-    // Detect Vedic Yogas
+  // Detect Vedic Yogas
   const jupiter = calculatedPlanets.find(p => p.id === 'jupiter')!;
   const sun = calculatedPlanets.find(p => p.id === 'sun')!;
   const mercury = calculatedPlanets.find(p => p.id === 'mercury')!;
   const mars = calculatedPlanets.find(p => p.id === 'mars')!;
   const venus = calculatedPlanets.find(p => p.id === 'venus')!;
   const saturn = calculatedPlanets.find(p => p.id === 'saturn')!;
-  
+
   const yogas: VedicYoga[] = [];
   if (ephemerisData && ephemerisData.yogas) {
     yogas.push(...ephemerisData.yogas);
   } else {
 
-  // 1. Gajakesari Yoga (Jupiter in Kendra from Moon: 1, 4, 7, 10 houses away)
-  const moonHouse = moon.house;
-  const jupHouse = jupiter.house;
-  const distFromMoon = ((jupHouse - moonHouse + 12) % 12) + 1;
-  if ([1, 4, 7, 10].includes(distFromMoon)) {
-    yogas.push({
-      id: 'gajakesari',
-      name: 'Gajakesari Yoga (गजकेसरी योग)',
-      sanskritName: 'Gajakesari Yoga',
-      type: 'Raja Yoga',
-      planetsInvolved: ['Jupiter', 'Moon'],
-      description: 'Jupiter is in a Kendra (angular house) from the Moon, creating the majestic lion-elephant alliance.',
-      effect: 'Bestows sharp intellect, high virtue, authoritative reputation, immense social respect, and enduring prosperity.',
-      remedy: 'Chant Brihaspati and Chandra Beej Mantras; wear white or saffron clothes on Thursdays.',
-    });
-  }
+    // 1. Gajakesari Yoga (Jupiter in Kendra from Moon: 1, 4, 7, 10 houses away)
+    const moonHouse = moon.house;
+    const jupHouse = jupiter.house;
+    const distFromMoon = ((jupHouse - moonHouse + 12) % 12) + 1;
+    if ([1, 4, 7, 10].includes(distFromMoon)) {
+      yogas.push({
+        id: 'gajakesari',
+        name: 'Gajakesari Yoga (गजकेसरी योग)',
+        sanskritName: 'Gajakesari Yoga',
+        type: 'Raja Yoga',
+        planetsInvolved: ['Jupiter', 'Moon'],
+        description: 'Jupiter is in a Kendra (angular house) from the Moon, creating the majestic lion-elephant alliance.',
+        effect: 'Bestows sharp intellect, high virtue, authoritative reputation, immense social respect, and enduring prosperity.',
+        remedy: 'Chant Brihaspati and Chandra Beej Mantras; wear white or saffron clothes on Thursdays.',
+      });
+    }
 
-  // 2. Budhaditya Yoga (Sun + Mercury conjunction in same house)
-  if (sun.house === mercury.house) {
-    yogas.push({
-      id: 'budhaditya',
-      name: 'Budhaditya Yoga (बुधादित्य योग)',
-      sanskritName: 'Budhaditya Yoga',
-      type: 'Auspicious',
-      planetsInvolved: ['Sun', 'Mercury'],
-      description: 'Sun and Mercury illuminate the same house, merging royal radiance with analytical intelligence.',
-      effect: 'Excellence in strategic governance, scientific learning, administration, public speaking, and business ventures.',
-      remedy: 'Offer water to the rising Sun (Arghya) and feed green fodder or grass to cows on Wednesdays.',
-    });
-  }
+    // 2. Budhaditya Yoga (Sun + Mercury conjunction in same house)
+    if (sun.house === mercury.house) {
+      yogas.push({
+        id: 'budhaditya',
+        name: 'Budhaditya Yoga (बुधादित्य योग)',
+        sanskritName: 'Budhaditya Yoga',
+        type: 'Auspicious',
+        planetsInvolved: ['Sun', 'Mercury'],
+        description: 'Sun and Mercury illuminate the same house, merging royal radiance with analytical intelligence.',
+        effect: 'Excellence in strategic governance, scientific learning, administration, public speaking, and business ventures.',
+        remedy: 'Offer water to the rising Sun (Arghya) and feed green fodder or grass to cows on Wednesdays.',
+      });
+    }
 
-  // 3. Pancha Mahapurusha Yogas (Mars -> Ruchaka, Mercury -> Bhadra, Jupiter -> Hamsa, Venus -> Malavya, Saturn -> Sasa in Kendra & Own/Exalted)
-  if ([1, 4, 7, 10].includes(jupiter.house) && (jupiter.dignity === 'Exalted' || jupiter.dignity === 'Own')) {
-    yogas.push({
-      id: 'hamsa_yoga',
-      name: 'Hamsa Mahapurusha Yoga (हंस योग)',
-      sanskritName: 'Hamsa Yoga',
-      type: 'Mahapurusha Yoga',
-      planetsInvolved: ['Jupiter'],
-      description: 'Guru (Jupiter) occupies a Kendra house in exalted or own sign (Cancer, Sagittarius, Pisces).',
-      effect: 'Noble spiritual character, esteemed guru or judicial advisor status, pure mindedness, universal reverence.',
-    });
-  }
-  if ([1, 4, 7, 10].includes(mars.house) && (mars.dignity === 'Exalted' || mars.dignity === 'Own')) {
-    yogas.push({
-      id: 'ruchaka_yoga',
-      name: 'Ruchaka Mahapurusha Yoga (रुचक योग)',
-      sanskritName: 'Ruchaka Yoga',
-      type: 'Mahapurusha Yoga',
-      planetsInvolved: ['Mars'],
-      description: 'Mars resides in a Kendra house in Aries, Scorpio, or Capricorn.',
-      effect: 'Unflinching bravery, leadership in engineering/military/entrepreneurship, physical strength, victorious over adversaries.',
-    });
-  }
-  if ([1, 4, 7, 10].includes(venus.house) && (venus.dignity === 'Exalted' || venus.dignity === 'Own')) {
-    yogas.push({
-      id: 'malavya_yoga',
-      name: 'Malavya Mahapurusha Yoga (मालव्य योग)',
-      sanskritName: 'Malavya Yoga',
-      type: 'Mahapurusha Yoga',
-      planetsInvolved: ['Venus'],
-      description: 'Venus resides in a Kendra in Taurus, Libra, or Pisces.',
-      effect: 'Magnetic charm, refined artistic genius, immense material wealth, luxury vehicles, and blissful domestic happiness.',
-    });
-  }
+    // 3. Pancha Mahapurusha Yogas (Mars -> Ruchaka, Mercury -> Bhadra, Jupiter -> Hamsa, Venus -> Malavya, Saturn -> Sasa in Kendra & Own/Exalted)
+    if ([1, 4, 7, 10].includes(jupiter.house) && (jupiter.dignity === 'Exalted' || jupiter.dignity === 'Own')) {
+      yogas.push({
+        id: 'hamsa_yoga',
+        name: 'Hamsa Mahapurusha Yoga (हंस योग)',
+        sanskritName: 'Hamsa Yoga',
+        type: 'Mahapurusha Yoga',
+        planetsInvolved: ['Jupiter'],
+        description: 'Guru (Jupiter) occupies a Kendra house in exalted or own sign (Cancer, Sagittarius, Pisces).',
+        effect: 'Noble spiritual character, esteemed guru or judicial advisor status, pure mindedness, universal reverence.',
+      });
+    }
+    if ([1, 4, 7, 10].includes(mars.house) && (mars.dignity === 'Exalted' || mars.dignity === 'Own')) {
+      yogas.push({
+        id: 'ruchaka_yoga',
+        name: 'Ruchaka Mahapurusha Yoga (रुचक योग)',
+        sanskritName: 'Ruchaka Yoga',
+        type: 'Mahapurusha Yoga',
+        planetsInvolved: ['Mars'],
+        description: 'Mars resides in a Kendra house in Aries, Scorpio, or Capricorn.',
+        effect: 'Unflinching bravery, leadership in engineering/military/entrepreneurship, physical strength, victorious over adversaries.',
+      });
+    }
+    if ([1, 4, 7, 10].includes(venus.house) && (venus.dignity === 'Exalted' || venus.dignity === 'Own')) {
+      yogas.push({
+        id: 'malavya_yoga',
+        name: 'Malavya Mahapurusha Yoga (मालव्य योग)',
+        sanskritName: 'Malavya Yoga',
+        type: 'Mahapurusha Yoga',
+        planetsInvolved: ['Venus'],
+        description: 'Venus resides in a Kendra in Taurus, Libra, or Pisces.',
+        effect: 'Magnetic charm, refined artistic genius, immense material wealth, luxury vehicles, and blissful domestic happiness.',
+      });
+    }
 
-  // 4. Dhana Yoga (Lords of 1st, 2nd, 5th, 9th, 11th interacting)
-  // Check if benefic planets (Jupiter, Venus, Mercury) are in wealth houses (2, 9, 11)
-  const hasDhanaYoga = [jupiter, venus, mercury].some(p => [2, 9, 11].includes(p.house) && (p.dignity === 'Own' || p.dignity === 'Exalted' || p.dignity === 'Friendly'));
-  if (hasDhanaYoga) {
-    yogas.push({
-      id: 'dhana_yoga',
-      name: 'Maha Lakshmi Dhana Yoga (महालक्ष्मी धन योग)',
-      sanskritName: 'Dhana Yoga',
-      type: 'Dhana Yoga',
-      planetsInvolved: ['Venus', 'Mercury', 'Jupiter'],
-      description: 'Benefic planets are strongly placed in wealth-giving houses (2nd Dhana, 9th Bhagya, 11th Labha).',
-      effect: 'Steady accumulation of assets, multiple lucrative income streams, real estate expansion, and business acumen.',
-      remedy: 'Recite Sri Suktam or Kanakadhara Stotram on Fridays.',
-    });
-  }
+    // 4. Dhana Yoga (Lords of 1st, 2nd, 5th, 9th, 11th interacting)
+    // Check if benefic planets (Jupiter, Venus, Mercury) are in wealth houses (2, 9, 11)
+    const hasDhanaYoga = [jupiter, venus, mercury].some(p => [2, 9, 11].includes(p.house) && (p.dignity === 'Own' || p.dignity === 'Exalted' || p.dignity === 'Friendly'));
+    if (hasDhanaYoga) {
+      yogas.push({
+        id: 'dhana_yoga',
+        name: 'Maha Lakshmi Dhana Yoga (महालक्ष्मी धन योग)',
+        sanskritName: 'Dhana Yoga',
+        type: 'Dhana Yoga',
+        planetsInvolved: ['Venus', 'Mercury', 'Jupiter'],
+        description: 'Benefic planets are strongly placed in wealth-giving houses (2nd Dhana, 9th Bhagya, 11th Labha).',
+        effect: 'Steady accumulation of assets, multiple lucrative income streams, real estate expansion, and business acumen.',
+        remedy: 'Recite Sri Suktam or Kanakadhara Stotram on Fridays.',
+      });
+    }
 
   }
 
@@ -532,92 +532,92 @@ export function calculateVedicChart(profile?: UserProfile, ephemerisData?: any):
   if (ephemerisData && ephemerisData.doshas) {
     doshas.push(...ephemerisData.doshas);
   } else {
-  const isManglik = [1, 4, 7, 8, 12].includes(mars.house);
-  doshas.push({
-    id: 'manglik_dosha',
-    name: 'Manglik / Kuja Dosha (मांगलिक दोष)',
-    severity: isManglik ? (mars.house === 7 || mars.house === 8 ? 'Moderate' : 'Severe') : 'None',
-    isPresent: isManglik,
-    description: isManglik
-      ? `Mars is positioned in house ${mars.house}, which can trigger passionate intensity, direct temperament, and initial hurdles in marital alignment.`
-      : 'Mars is placed in a non-afflicting house. No significant Manglik influence detected.',
-    impactArea: 'Partnerships, Marriage Harmony, Temperament & Energy Regulation',
-    vedicRemedies: [
-      'Perform Mangal Shanti Pooja or chant the Hanuman Chalisa on Tuesdays',
-      'Wear a genuine Red Coral (Moonga) or keep a clean copper vessel in the bedroom',
-      'Match charts thoroughly or perform Kumbh Vivah ritual if marriage is planned with non-Manglik',
-      'Fast on Tuesdays and donate red lentils (Masoor Dal) or jaggery',
-    ],
-  });
+    const isManglik = [1, 4, 7, 8, 12].includes(mars.house);
+    doshas.push({
+      id: 'manglik_dosha',
+      name: 'Manglik / Kuja Dosha (मांगलिक दोष)',
+      severity: isManglik ? (mars.house === 7 || mars.house === 8 ? 'Moderate' : 'Severe') : 'None',
+      isPresent: isManglik,
+      description: isManglik
+        ? `Mars is positioned in house ${mars.house}, which can trigger passionate intensity, direct temperament, and initial hurdles in marital alignment.`
+        : 'Mars is placed in a non-afflicting house. No significant Manglik influence detected.',
+      impactArea: 'Partnerships, Marriage Harmony, Temperament & Energy Regulation',
+      vedicRemedies: [
+        'Perform Mangal Shanti Pooja or chant the Hanuman Chalisa on Tuesdays',
+        'Wear a genuine Red Coral (Moonga) or keep a clean copper vessel in the bedroom',
+        'Match charts thoroughly or perform Kumbh Vivah ritual if marriage is planned with non-Manglik',
+        'Fast on Tuesdays and donate red lentils (Masoor Dal) or jaggery',
+      ],
+    });
 
-  // 2. Kaal Sarp Dosha (All planets hemmed between Rahu & Ketu axis)
-  const rahu = calculatedPlanets.find(p => p.id === 'rahu')!;
-  const ketu = calculatedPlanets.find(p => p.id === 'ketu')!;
-  
-  // Check if all 7 classical planets are on one side of the nodal axis
-  const classicalPlanets = [sun, moon, mars, mercury, jupiter, venus, saturn];
-  let allOnOneSide = true;
-  let allOnOtherSide = true;
-  
-  for (const p of classicalPlanets) {
-    const diffRahu = (p.totalDegree - rahu.totalDegree + 360) % 360;
-    if (diffRahu > 180) allOnOneSide = false;
-    if (diffRahu < 180) allOnOtherSide = false;
-  }
-  
-  const allHemmed = allOnOneSide || allOnOtherSide;
+    // 2. Kaal Sarp Dosha (All planets hemmed between Rahu & Ketu axis)
+    const rahu = calculatedPlanets.find(p => p.id === 'rahu')!;
+    const ketu = calculatedPlanets.find(p => p.id === 'ketu')!;
 
-  doshas.push({
-    id: 'kaalsarp_dosha',
-    name: 'Kaal Sarp Yoga / Dosha (कालसर्प योग)',
-    severity: allHemmed ? 'Severe' : 'None',
-    isPresent: allHemmed,
-    description: allHemmed
-      ? 'Planetary cluster aligns along the nodal axis of Rahu-Ketu (Anant / Vasuki type), creating cyclical delays followed by sudden meteoric rises.'
-      : 'No Kaal Sarp formation; planetary energies circulate freely without karmic axis constriction.',
-    impactArea: 'Career breakthroughs, sleep tranquility, karmic cycles',
-    vedicRemedies: [
-      'Perform Maha Mrityunjaya Japa (108 times daily)',
-      'Offer milk and Bilva leaves to Shiva Lingam on Mondays and Nag Panchami',
-      'Install a consecrated Parad (Mercury) Shiva Lingam at home altar',
-      'Avoid wearing black clothes on crucial examination or meeting dates',
-    ],
-  });
+    // Check if all 7 classical planets are on one side of the nodal axis
+    const classicalPlanets = [sun, moon, mars, mercury, jupiter, venus, saturn];
+    let allOnOneSide = true;
+    let allOnOtherSide = true;
 
-  // 3. Sade Sati Phase (Saturn transit over natal Moon: 12th, 1st, 2nd from Moon)
-  // Approximate based on current year vs natal Moon sign
-  const moonSign = moon.signIndex;
-  const currentSaturnTransitSign = 11; // 2026: Saturn is in Sidereal Pisces (11)
-  const sadeSatiDiff = (currentSaturnTransitSign - moonSign + 12) % 12;
-  let sadeSatiPhase = 'Not in active Sade Sati';
-  let isSadeSatiActive = false;
-  if (sadeSatiDiff === 11) {
-    sadeSatiPhase = 'First Phase (Rising - 12th from Moon: Mental restructuring & financial recalibration)';
-    isSadeSatiActive = true;
-  } else if (sadeSatiDiff === 0) {
-    sadeSatiPhase = 'Peak Phase (Janma Shani - Saturn on natal Moon: Deep discipline, emotional maturity, karmic tests)';
-    isSadeSatiActive = true;
-  } else if (sadeSatiDiff === 1) {
-    sadeSatiPhase = 'Setting Phase (2nd from Moon: Stabilization of family wealth, health recovery, long-term rewards)';
-    isSadeSatiActive = true;
-  }
+    for (const p of classicalPlanets) {
+      const diffRahu = (p.totalDegree - rahu.totalDegree + 360) % 360;
+      if (diffRahu > 180) allOnOneSide = false;
+      if (diffRahu < 180) allOnOtherSide = false;
+    }
 
-  doshas.push({
-    id: 'sade_sati',
-    name: 'Shani Sade Sati Transit (शनि साढ़े साती)',
-    severity: isSadeSatiActive ? 'Moderate' : 'None',
-    isPresent: isSadeSatiActive,
-    description: isSadeSatiActive
-      ? `Currently experiencing ${sadeSatiPhase}. Saturn is refining your endurance and stripping away non-essential distractions.`
-      : 'Currently peaceful from Saturn’s 7.5-year major transit (Sade Sati).',
-    impactArea: 'Patience, Career Endurance, Health, Karmic Growth',
-    vedicRemedies: [
-      'Light a mustard oil lamp (Diya) under a Peepal tree on Saturday evenings',
-      'Chant Shani Beej Mantra: Om Sham Shanaicharaya Namah (108 times)',
-      'Serve and donate to elderly people, laborers, or physically challenged individuals',
-      'Feed black sesame seeds or bread to stray dogs or crows on Saturdays',
-    ],
-  });
+    const allHemmed = allOnOneSide || allOnOtherSide;
+
+    doshas.push({
+      id: 'kaalsarp_dosha',
+      name: 'Kaal Sarp Yoga / Dosha (कालसर्प योग)',
+      severity: allHemmed ? 'Severe' : 'None',
+      isPresent: allHemmed,
+      description: allHemmed
+        ? 'Planetary cluster aligns along the nodal axis of Rahu-Ketu (Anant / Vasuki type), creating cyclical delays followed by sudden meteoric rises.'
+        : 'No Kaal Sarp formation; planetary energies circulate freely without karmic axis constriction.',
+      impactArea: 'Career breakthroughs, sleep tranquility, karmic cycles',
+      vedicRemedies: [
+        'Perform Maha Mrityunjaya Japa (108 times daily)',
+        'Offer milk and Bilva leaves to Shiva Lingam on Mondays and Nag Panchami',
+        'Install a consecrated Parad (Mercury) Shiva Lingam at home altar',
+        'Avoid wearing black clothes on crucial examination or meeting dates',
+      ],
+    });
+
+    // 3. Sade Sati Phase (Saturn transit over natal Moon: 12th, 1st, 2nd from Moon)
+    // Approximate based on current year vs natal Moon sign
+    const moonSign = moon.signIndex;
+    const currentSaturnTransitSign = 11; // 2026: Saturn is in Sidereal Pisces (11)
+    const sadeSatiDiff = (currentSaturnTransitSign - moonSign + 12) % 12;
+    let sadeSatiPhase = 'Not in active Sade Sati';
+    let isSadeSatiActive = false;
+    if (sadeSatiDiff === 11) {
+      sadeSatiPhase = 'First Phase (Rising - 12th from Moon: Mental restructuring & financial recalibration)';
+      isSadeSatiActive = true;
+    } else if (sadeSatiDiff === 0) {
+      sadeSatiPhase = 'Peak Phase (Janma Shani - Saturn on natal Moon: Deep discipline, emotional maturity, karmic tests)';
+      isSadeSatiActive = true;
+    } else if (sadeSatiDiff === 1) {
+      sadeSatiPhase = 'Setting Phase (2nd from Moon: Stabilization of family wealth, health recovery, long-term rewards)';
+      isSadeSatiActive = true;
+    }
+
+    doshas.push({
+      id: 'sade_sati',
+      name: 'Shani Sade Sati Transit (शनि साढ़े साती)',
+      severity: isSadeSatiActive ? 'Moderate' : 'None',
+      isPresent: isSadeSatiActive,
+      description: isSadeSatiActive
+        ? `Currently experiencing ${sadeSatiPhase}. Saturn is refining your endurance and stripping away non-essential distractions.`
+        : 'Currently peaceful from Saturn’s 7.5-year major transit (Sade Sati).',
+      impactArea: 'Patience, Career Endurance, Health, Karmic Growth',
+      vedicRemedies: [
+        'Light a mustard oil lamp (Diya) under a Peepal tree on Saturday evenings',
+        'Chant Shani Beej Mantra: Om Sham Shanaicharaya Namah (108 times)',
+        'Serve and donate to elderly people, laborers, or physically challenged individuals',
+        'Feed black sesame seeds or bread to stray dogs or crows on Saturdays',
+      ],
+    });
   }
 
   return {
@@ -1001,26 +1001,26 @@ export function getDailyPanchang(dateOrLat?: Date | number, lng?: number, apiDat
   const karanas = ['Bava (बव)', 'Balava (बालव)', 'Kaulava (कौलव)', 'Taitila (तैतिल)', 'Gara (गर)', 'Vanija (वणिज)', 'Vishti / Bhadra', 'Shakuni', 'Chatushpada', 'Naga', 'Kinstughna'];
 
   const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
-  
+
   // Real world lunar cycle approximation (Known new moon: Jan 11, 2024)
   const daysSinceNewMoon = (date.getTime() - new Date('2024-01-11T11:57:00Z').getTime()) / 86400000;
   const phase = (daysSinceNewMoon % 29.530588 + 29.530588) % 29.530588;
   const tithiIdx = apiData && apiData.tithiIndex !== undefined ? apiData.tithiIndex : (Math.floor(phase * (30 / 29.530588)) % 30);
-  
+
   // Single Source of Truth (Moon Longitude) for Nakshatra and Rashi
   let moonLongitude = 0;
   if (apiData?.planets?.moon?.longitude !== undefined) {
     moonLongitude = apiData.planets.moon.longitude;
   } else if (apiData && apiData.nakshatraIndex !== undefined) {
     // Reverse engineer a valid moon longitude so Nakshatra and Rashi perfectly sync
-    moonLongitude = apiData.nakshatraIndex * (360 / 27) + 2; 
+    moonLongitude = apiData.nakshatraIndex * (360 / 27) + 2;
   } else {
     // Mathematical approximation fallback
     const daysSinceKnownNak = (date.getTime() - new Date('2024-01-01T00:00:00Z').getTime()) / 86400000;
     const moonDaysInCycle = ((daysSinceKnownNak % 27.321661) + 27.321661) % 27.321661;
     moonLongitude = (moonDaysInCycle / 27.321661) * 360; // 0 to 360 degrees
   }
-  
+
   const nakIdx = Math.floor(moonLongitude / (360 / 27)) % 27;
   const lunarSignIdx = Math.floor(moonLongitude / 30) % 12;
 
@@ -1028,7 +1028,7 @@ export function getDailyPanchang(dateOrLat?: Date | number, lng?: number, apiDat
   const karanaIdx = apiData && apiData.karanaIndex !== undefined ? (apiData.karanaIndex % karanas.length) : ((dayOfYear * 4) % karanas.length);
 
   const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  
+
   const yoga = apiData && apiData.yogaName ? apiData.yogaName : yogas[yogaIdx];
   const tithi = apiData && apiData.tithiName ? apiData.tithiName : tithis[tithiIdx];
   const nakshatra = apiData && apiData.nakshatraName ? apiData.nakshatraName : NAKSHATRAS[nakIdx].name + ' (Lord: ' + NAKSHATRAS[nakIdx].lord + ')';
@@ -1480,18 +1480,18 @@ export const DEFAULT_ROADMAP = [
 export const generateCustomRoadmap = (profile?: any, chartData?: any): LifeMilestone[] => {
   const ascSign = chartData?.ascendant?.signName || chartData?.ascendant?.signSanskrit || 'Vedic Ascendant';
   const currDasha = chartData?.dashaPeriods?.find((d: any) => d.isCurrent)?.planet || chartData?.currentDasha?.mahadasha || 'Vimshottari';
-  
+
   return DEFAULT_ROADMAP.map((item) => {
     let personalizedGuidance = item.guidance;
     let personalizedTransits = item.favorableTransits;
-    
+
     if (item.category === 'Career' && item.timeframe === '0-5 Years') {
       personalizedGuidance = `Under the active ${currDasha} Mahadasha and ${ascSign} lagna, Jupiter transit over your 10th house stimulates executive authority and strategic visibility.`;
       personalizedTransits = `Auspicious Jupiter transit trines your ${ascSign} Ascendant`;
     } else if (item.category === 'Career' && (item.timeframe === '0-10 Years' || item.timeframe === '5-10 Years')) {
       personalizedGuidance = `Major Saturn-Jupiter mutual aspect activates your 10th and 11th houses, conferring institutional status and global credibility for ${ascSign} natives.`;
     }
-    
+
     return {
       ...item,
       guidance: personalizedGuidance,
@@ -1714,8 +1714,8 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
       taraPoints === 3
         ? 'Exceptionally auspicious planetary star concordance; brings protection, mutual longevity, and prosperity.'
         : taraPoints >= 1.5
-        ? 'Beneficial star alignment with solid overall life protection.'
-        : 'Challenging Tara cycle; recommended to recite Maha Mrityunjaya Mantra together for health vitality.',
+          ? 'Beneficial star alignment with solid overall life protection.'
+          : 'Challenging Tara cycle; recommended to recite Maha Mrityunjaya Mantra together for health vitality.',
   };
 
   // 4. YONI KOOTA (Max 4 points)
@@ -1751,8 +1751,8 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
       yoniPoints === 4
         ? 'Same Yoni animal archetype; perfect instinctual harmony, mutual physical fondness, and deep bonding.'
         : yoniPoints >= 2
-        ? 'Harmonious physical compatibility with great mutual understanding of intimacy needs.'
-        : 'Inimical Yoni pairing; requires patience, conscious tenderness, and emotional communication.',
+          ? 'Harmonious physical compatibility with great mutual understanding of intimacy needs.'
+          : 'Inimical Yoni pairing; requires patience, conscious tenderness, and emotional communication.',
   };
 
   // 5. GRAHA MAITRI (Max 5 points)
@@ -1797,8 +1797,8 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
       grahaPoints >= 4
         ? 'Moon sign lords are mutual friends; deep intellectual wavelength, emotional transparency, and laughter.'
         : grahaPoints >= 3
-        ? 'Neutral planetary lords; mutual respect and functional communication thrive with common goals.'
-        : 'Incompatible Moon sign lords; intellectual views differ, encouraging personal patience and growth.',
+          ? 'Neutral planetary lords; mutual respect and functional communication thrive with common goals.'
+          : 'Incompatible Moon sign lords; intellectual views differ, encouraging personal patience and growth.',
   };
 
   // 6. GANA KOOTA (Max 6 points)
@@ -1927,8 +1927,8 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
       !isSameNadi
         ? `Different Nadis (${nadi1} & ${nadi2}) provide optimal bio-magnetic balance (Vata/Pitta/Kapha equilibrium) and strong hereditary vitality.`
         : isNadiCancelled
-        ? `Nadi Dosha cancelled: ${nadiCancellationReason} Full 8 points awarded.`
-        : `Active Nadi Dosha detected (${nadi1} Nadi for both partners: ${moon1.nakshatra} in ${ZODIAC_SIGNS[rashi1Idx].name} & ${moon2.nakshatra} in ${ZODIAC_SIGNS[rashi2Idx].name}). Recommended to perform Maha Mrityunjaya Japa and remedial charity.`,
+          ? `Nadi Dosha cancelled: ${nadiCancellationReason} Full 8 points awarded.`
+          : `Active Nadi Dosha detected (${nadi1} Nadi for both partners: ${moon1.nakshatra} in ${ZODIAC_SIGNS[rashi1Idx].name} & ${moon2.nakshatra} in ${ZODIAC_SIGNS[rashi2Idx].name}). Recommended to perform Maha Mrityunjaya Japa and remedial charity.`,
   };
 
   const kootas = [
@@ -2237,13 +2237,13 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
       reason: !isSameNadi
         ? `Different Nadis (${nadi1} & ${nadi2}) - Harmonious Genetic Accord`
         : isNadiCancelled
-        ? nadiCancellationReason
-        : `Both share ${nadi1} Nadi (${moon1.nakshatra} in ${rashi1Name} & ${moon2.nakshatra} in ${rashi2Name}) - Active Nadi Dosha`,
+          ? nadiCancellationReason
+          : `Both share ${nadi1} Nadi (${moon1.nakshatra} in ${rashi1Name} & ${moon2.nakshatra} in ${rashi2Name}) - Active Nadi Dosha`,
       remedy: isSameNadi && !isNadiCancelled
         ? 'Perform Maha Mrityunjaya Japa (108 chants), donate gold/grains, and recite Swasti Suktam on auspicious nakshatra days.'
         : isSameNadi && isNadiCancelled
-        ? 'Nadi Dosha is cancelled by classical Jyotish parihara. No major dosha remedy required; regular prayers are beneficial.'
-        : 'No specific remedy required as Nadis are naturally distinct and harmonious.',
+          ? 'Nadi Dosha is cancelled by classical Jyotish parihara. No major dosha remedy required; regular prayers are beneficial.'
+          : 'No specific remedy required as Nadis are naturally distinct and harmonious.',
     },
     bhakootDosha: {
       hasDosha: isBhakootInauspicious,

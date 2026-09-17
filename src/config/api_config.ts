@@ -85,4 +85,9 @@ export const API_ENDPOINTS = {
     CLEAR_HISTORY: '/api/ai/history',
     PUBLIC_CHAT: '/api/public-chat',
   },
+  PAYMENT: {
+    CREATE_ORDER: '/api/payment/create-order',
+    VERIFY: '/api/payment/verify',
+    HISTORY: '/api/payment/history',
+  },
 };

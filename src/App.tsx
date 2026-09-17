@@ -126,9 +126,10 @@ export function App() {
         }
         try {
           const remoteProfiles = await profileApi.fetchProfiles();
+          let baseProfile: UserProfile;
           if (remoteProfiles && remoteProfiles.length > 0) {
             setProfiles(remoteProfiles);
-            setCurrentProfile(remoteProfiles[0]);
+            baseProfile = remoteProfiles[0];
           } else {
             const userDefaultProfile: UserProfile = {
               ...DEFAULT_PROFILES[0],
@@ -136,8 +137,38 @@ export function App() {
               fullName: user.fullName || 'Seeker',
             };
             setProfiles([userDefaultProfile]);
-            setCurrentProfile(userDefaultProfile);
+            baseProfile = userDefaultProfile;
           }
+
+          // Check server payment history to sync unlocks immediately
+          try {
+            const res = await api.get<any>(API_ENDPOINTS.PAYMENT.HISTORY);
+            const txList = Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []);
+            const hasDaily = txList.some((tx: any) => tx.status === 'success' && (tx.item_id === 'daily_vedic_subscription' || Number(tx.amount) === 99));
+            const hasMatchmaking = txList.some((tx: any) => tx.status === 'success' && (tx.item_id === 'matchmaking_regenerate_subscription' || Number(tx.amount) === 149));
+            const unlockedRoadmaps = txList
+              .filter((tx: any) => tx.status === 'success' && (tx.item_id?.startsWith('roadmap_') || [169, 199, 249].includes(Number(tx.amount))))
+              .map((tx: any) => tx.item_id || 'roadmap_15_subscription');
+
+            if (hasDaily) {
+              localStorage.setItem('jyotish_user_premium', 'true');
+              localStorage.setItem('jyotish_daily_vedic_subscription_active', 'true');
+              baseProfile.isPremium = true;
+            }
+            if (hasMatchmaking) {
+              localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
+              localStorage.setItem('jyotish_matchmaking_regenerate_subscription_active', 'true');
+              (baseProfile as any).isMatchmakingPremium = true;
+            }
+            if (unlockedRoadmaps.length > 0) {
+              unlockedRoadmaps.forEach((id: string) => localStorage.setItem(`jyotish_${id}_active`, 'true'));
+              (baseProfile as any).unlockedRoadmapTiers = Array.from(new Set([...((baseProfile as any).unlockedRoadmapTiers || []), ...unlockedRoadmaps]));
+            }
+          } catch (histErr) {
+            console.warn('Initial payment history check error:', histErr);
+          }
+
+          setCurrentProfile(baseProfile);
         } catch (err) {
           console.warn('Could not load profiles from server:', err);
         }
@@ -554,7 +585,12 @@ export function App() {
       {/* Header & Navigation */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          if (tab === 'consultations') {
+            setSelectedConsultationTierId(null);
+          }
+          setActiveTab(tab);
+        }}
         currentProfile={currentProfile}
         profiles={profiles}
         onSelectProfile={setCurrentProfile}
@@ -714,38 +750,32 @@ export function App() {
                 tiers={DEFAULT_CONSULTATION_TIERS}
                 initialSelectedTierId={selectedConsultationTierId}
                 theme={theme}
+                onNavigateTab={(tab) => setActiveTab(tab as any)}
                 onPaymentSuccess={(tier) => {
-                  // Upgrade profile
+                  // Upgrade profile state immediately
                   const updatedProfile = {
                     ...currentProfile,
                     isPremium: true,
-                    isMatchmakingPremium: tier.id === 'matchmaking_regenerate_subscription' || (currentProfile as any)?.isMatchmakingPremium,
-                    unlockedRoadmapTiers: [
-                      ...((currentProfile as any)?.unlockedRoadmapTiers || []),
-                      tier.id,
-                    ],
+                    isMatchmakingPremium:
+                      tier.id === 'matchmaking_regenerate_subscription' ||
+                      (currentProfile as any)?.isMatchmakingPremium,
+                    unlockedRoadmapTiers: Array.from(
+                      new Set([
+                        ...((currentProfile as any)?.unlockedRoadmapTiers || []),
+                        tier.id,
+                      ])
+                    ),
                   };
 
                   handleSaveProfile(updatedProfile);
-                  if (tier.id.startsWith('roadmap_')) {
-                    try {
-                      localStorage.setItem(`jyotish_${tier.id}_active`, 'true');
-                    } catch {}
-                    setTimeout(() => {
-                      setActiveTab('roadmap');
-                    }, 1200);
-                  } else if (tier.id === 'daily_vedic_subscription') {
-                    setTimeout(() => {
-                      setActiveTab('daily');
-                    }, 1200);
-                  } else if (tier.id === 'matchmaking_regenerate_subscription') {
-                    try {
+
+                  try {
+                    localStorage.setItem('jyotish_user_premium', 'true');
+                    localStorage.setItem(`jyotish_${tier.id}_active`, 'true');
+                    if (tier.id === 'matchmaking_regenerate_subscription') {
                       localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
-                    } catch {}
-                    setTimeout(() => {
-                      setActiveTab('matchmaking');
-                    }, 1200);
-                  }
+                    }
+                  } catch {}
                 }}
               />
             )}

@@ -599,4 +599,20 @@ samp {
   height: auto;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
 }
+
+/* Native Calendar & Clock Picker Indicator Styling - Pure Bright White */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(1) !important;
+  cursor: pointer;
+  opacity: 1 !important;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.85 !important;
+  transform: scale(1.1);
+}
 

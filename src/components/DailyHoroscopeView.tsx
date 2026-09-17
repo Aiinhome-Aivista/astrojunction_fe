@@ -100,30 +100,82 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
     return `jyotish_daily_reading_${profileId}_${dateStr}`;
   };
 
-  // Check localStorage on mount or when profile/panchang date changes
-  useEffect(() => {
-    if (!profile?.isPremium) {
-      setAiInsights(null);
-      return;
+  const [isHistoryUnlocked, setIsHistoryUnlocked] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        localStorage.getItem('jyotish_user_premium') === 'true' ||
+        localStorage.getItem('jyotish_daily_vedic_subscription_active') === 'true'
+      );
     }
-    try {
-      const storageKey = getDailyStorageKey();
-      const cached = localStorage.getItem(storageKey);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed && parsed.summary) {
-          setAiInsights(parsed);
-          return;
+    return false;
+  });
+
+  const isPremiumUser = Boolean(
+    profile?.isPremium ||
+    isHistoryUnlocked ||
+    (typeof window !== 'undefined' && (
+      localStorage.getItem('jyotish_user_premium') === 'true' ||
+      localStorage.getItem('jyotish_daily_vedic_subscription_active') === 'true'
+    ))
+  );
+
+  // Check localStorage on mount or when profile/panchang date changes, and auto-fetch reading
+  useEffect(() => {
+    let isCancelled = false;
+
+    const syncStatusAndFetch = async () => {
+      let isUnlocked = isPremiumUser;
+      if (!isUnlocked) {
+        try {
+          const token = getToken();
+          if (token) {
+            const res = await api.get<any>(API_ENDPOINTS.PAYMENT.HISTORY);
+            const list = Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []);
+            if (list.some((tx: any) => tx.status === 'success' && (tx.item_id === 'daily_vedic_subscription' || Number(tx.amount) === 99))) {
+              isUnlocked = true;
+              setIsHistoryUnlocked(true);
+              localStorage.setItem('jyotish_user_premium', 'true');
+              localStorage.setItem('jyotish_daily_vedic_subscription_active', 'true');
+            }
+          }
+        } catch (err) {
+          console.warn('Could not sync history in DailyHoroscopeView:', err);
         }
       }
-      setAiInsights(null);
-    } catch {
-      setAiInsights(null);
-    }
-  }, [profile?.id, profile?.fullName, profile?.isPremium, panchang?.date]);
+
+      if (!isUnlocked) {
+        if (!isCancelled) setAiInsights(null);
+        return;
+      }
+
+      // Check cached reading in localStorage
+      try {
+        const storageKey = getDailyStorageKey();
+        const cached = localStorage.getItem(storageKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && (parsed.summary || parsed.career)) {
+            if (!isCancelled) setAiInsights(parsed);
+            return;
+          }
+        }
+      } catch {}
+
+      // Automatically generate/fetch reading for unlocked user!
+      if (!isCancelled) {
+        fetchDailyAiReading();
+      }
+    };
+
+    syncStatusAndFetch();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [profile?.id, profile?.fullName, profile?.isPremium, isPremiumUser, isHistoryUnlocked, panchang?.date]);
 
   const handleUnlockClick = () => {
-    if (profile?.isPremium) {
+    if (isPremiumUser) {
       fetchDailyAiReading();
     } else {
       if (onNavigateToTab) {
@@ -1298,17 +1350,32 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
 
                 <button
                   onClick={handleUnlockClick}
+                  disabled={isLoadingAi}
                   className={`w-full py-3.5 px-4 rounded-xl border flex items-center justify-center space-x-2.5 transition cursor-pointer font-sans text-xs sm:text-sm font-semibold shadow-sm ${
-                    theme === 'dark'
+                    isPremiumUser
+                      ? 'border-emerald-500/50 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200'
+                      : theme === 'dark'
                       ? 'border-[#C9A050]/40 bg-gradient-to-r from-[#C9A050]/15 via-[#C9A050]/10 to-[#C9A050]/15 hover:bg-[#C9A050]/20 text-[#E5E1D8]'
                       : 'border-[#C9A050]/50 bg-gradient-to-r from-[#C9A050]/15 via-[#FFFDF7] to-[#C9A050]/15 hover:bg-[#C9A050]/25 text-[#2A2A2E]'
                   }`}
                 >
-                  <Lock className="w-4 h-4 text-[#C9A050]" />
-                  <span>Click to Unlock Comprehensive Vedic Deep-Dive Reading</span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] ml-1.5 shadow-sm">
-                    {profile?.isPremium ? 'Unlocked' : '₹99 / Subscription'}
-                  </span>
+                  {isPremiumUser ? (
+                    <>
+                      <Sparkles className={`w-4 h-4 text-emerald-400 ${isLoadingAi ? 'animate-spin' : ''}`} />
+                      <span>{isLoadingAi ? 'Synthesizing Your Unlocked Deep-Dive Reading...' : 'Generate / Refresh Unlocked Vedic Reading'}</span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500 text-black ml-1.5 shadow-sm">
+                        ✓ UNLOCKED
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4 text-[#C9A050]" />
+                      <span>Click to Unlock Comprehensive Vedic Deep-Dive Reading</span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] ml-1.5 shadow-sm">
+                        ₹99 / Subscription
+                      </span>
+                    </>
+                  )}
                 </button>
               </div>
             )}
