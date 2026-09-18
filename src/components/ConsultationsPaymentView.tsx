@@ -555,26 +555,40 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     },
   ];
 
+  const isDark = theme === 'dark';
+
   return (
     <div className="space-y-8 font-sans">
       {/* Top Cosmic Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-[#121217]/95 border border-[#2E2E38] p-7 md:p-9 shadow-2xl backdrop-blur-xl">
+      <div className={`relative overflow-hidden rounded-3xl p-7 md:p-9 shadow-2xl backdrop-blur-xl border transition-colors duration-300 ${
+        isDark ? 'bg-[#121217]/95 border-[#2E2E38]' : 'bg-white/95 border-[#E5E1D8] shadow-xl'
+      }`}>
         {/* Background Ambient Radial Glow */}
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#C9A050]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -right-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className={`absolute -top-24 -left-24 w-96 h-96 rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-[#C9A050]/10' : 'bg-[#C9A050]/15'}`} />
+        <div className={`absolute top-1/2 -right-24 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-amber-500/10' : 'bg-amber-500/10'}`} />
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#2A2A35]">
+        <div className={`relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b ${
+          isDark ? 'border-[#2A2A35]' : 'border-[#EAE6DC]'
+        }`}>
           <div className="max-w-2xl space-y-2.5">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#C9A050]/15 border border-[#C9A050]/35 text-[#E2C378] text-xs font-semibold tracking-wider uppercase backdrop-blur-md">
+            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wider uppercase backdrop-blur-md ${
+              isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#E2C378]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+            }`}>
               <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
               <span>Certified Vedic Consultations & Premium Gateways</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F0DFB0] to-[#C9A050] tracking-tight">
+            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight ${
+              isDark
+                ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F0DFB0] to-[#C9A050]'
+                : 'text-transparent bg-clip-text bg-gradient-to-r from-[#1A1A1E] via-[#5C451D] to-[#996F19]'
+            }`}>
               Unlock Deeper Planetary Wisdom & 1-on-1 Guidance
             </h1>
 
-            <p className="text-xs sm:text-sm text-[#A8A49C] leading-relaxed max-w-xl">
+            <p className={`text-xs sm:text-sm leading-relaxed max-w-xl ${
+              isDark ? 'text-[#A8A49C]' : 'text-[#666258]'
+            }`}>
               Certified astrological accuracy backed by Swiss Ephemeris, 256-bit SSL encrypted transactions, and sacred Vedic remediations.
             </p>
           </div>
@@ -583,14 +597,20 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <button
               onClick={fetchPaymentHistory}
               title="View Payment History"
-              className="flex items-center space-x-2 bg-[#1A1A20] hover:bg-[#25252D] border border-[#C9A050]/40 hover:border-[#C9A050] px-4 py-2.5 rounded-xl text-xs font-semibold text-[#E2C378] transition-all duration-200 cursor-pointer shadow-lg hover:shadow-[#C9A050]/10"
+              className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer shadow-md ${
+                isDark
+                  ? 'bg-[#1A1A20] hover:bg-[#25252D] border border-[#C9A050]/40 hover:border-[#C9A050] text-[#E2C378]'
+                  : 'bg-[#FAF7F0] hover:bg-[#F3EFE6] border border-[#C9A050]/50 hover:border-[#C9A050] text-[#8C6517]'
+              }`}
             >
               <History className="w-4 h-4 text-[#C9A050]" />
               <span>Payment History</span>
             </button>
 
-            <div className="flex items-center space-x-2 bg-[#1A1A20] border border-emerald-500/30 px-3.5 py-2.5 rounded-xl text-xs text-emerald-300 font-medium">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className={`flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-medium border ${
+              isDark ? 'bg-[#1A1A20] border-emerald-500/30 text-emerald-300' : 'bg-emerald-50 border-emerald-500/40 text-emerald-800'
+            }`}>
+              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
               <span>100% Certified Astrological Precision</span>
             </div>
           </div>
@@ -598,43 +618,51 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
         {/* Feature Highlights Ribbon */}
         <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
-          <div className="p-3 rounded-xl bg-[#181820]/70 border border-[#2A2A34] flex items-center space-x-2.5 hover:border-[#C9A050]/30 transition">
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
+            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+          }`}>
             <div className="w-8 h-8 rounded-lg bg-[#C9A050]/15 flex items-center justify-center text-[#C9A050] shrink-0">
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-[#F0ECE1]">Instant PDF Dossier</p>
-              <p className="text-[10px] text-[#9E9A90]">Automated Download</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant PDF Dossier</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Automated Download</p>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#181820]/70 border border-[#2A2A34] flex items-center space-x-2.5 hover:border-[#C9A050]/30 transition">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
+            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+          }`}>
+            <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-500 shrink-0">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-[#F0ECE1]">Classical Shastras</p>
-              <p className="text-[10px] text-[#9E9A90]">Brihat Parashara Rigor</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Classical Shastras</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Brihat Parashara Rigor</p>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#181820]/70 border border-[#2A2A34] flex items-center space-x-2.5 hover:border-[#C9A050]/30 transition">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
+            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+          }`}>
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-500 shrink-0">
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-[#F0ECE1]">Personalized Upayas</p>
-              <p className="text-[10px] text-[#9E9A90]">Sacred Remedial Mantras</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Personalized Upayas</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Sacred Remedial Mantras</p>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#181820]/70 border border-[#2A2A34] flex items-center space-x-2.5 hover:border-[#C9A050]/30 transition">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-400 shrink-0">
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
+            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+          }`}>
+            <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-500 shrink-0">
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-[#F0ECE1]">Instant Activation</p>
-              <p className="text-[10px] text-[#9E9A90]">Seamless Razorpay Sync</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant Activation</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Seamless Razorpay Sync</p>
             </div>
           </div>
         </div>
@@ -648,12 +676,18 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           return (
             <div
               key={tier.id}
-              className={`group rounded-2xl p-5 text-[#E5E1D8] flex flex-col justify-between transition-all duration-300 relative ${
+              className={`group rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 relative ${
                 unlocked
-                  ? 'bg-[#141A16]/90 border-2 border-emerald-500/60 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.22)] ring-1 ring-emerald-500/30'
+                  ? isDark
+                    ? 'bg-[#141A16]/90 border-2 border-emerald-500/60 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.22)] ring-1 ring-emerald-500/30 text-[#E5E1D8]'
+                    : 'bg-[#F0FAF4] border-2 border-emerald-600/60 shadow-lg ring-1 ring-emerald-500/20 text-[#1A1A1E]'
                   : meta.highlight
-                  ? 'bg-gradient-to-b from-[#1E1C15] via-[#141419] to-[#101014] border-2 border-[#C9A050] shadow-[0_8px_30px_-6px_rgba(201,160,80,0.28)] ring-1 ring-[#C9A050]/40 -translate-y-1'
-                  : 'bg-[#131318]/90 hover:bg-[#17171E] border border-[#2A2A34] hover:border-[#C9A050]/50 shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                  ? isDark
+                    ? 'bg-gradient-to-b from-[#1E1C15] via-[#141419] to-[#101014] border-2 border-[#C9A050] shadow-[0_8px_30px_-6px_rgba(201,160,80,0.28)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#E5E1D8]'
+                    : 'bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EC] to-[#F5EFE0] border-2 border-[#C9A050] shadow-[0_10px_30px_-6px_rgba(201,160,80,0.22)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#1A1A1E]'
+                  : isDark
+                  ? 'bg-[#131318]/90 hover:bg-[#17171E] border border-[#2A2A34] hover:border-[#C9A050]/50 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-[#E5E1D8]'
+                  : 'bg-white hover:bg-[#FAF9F5] border border-[#E5E1D8] hover:border-[#C9A050]/60 shadow-md hover:shadow-xl hover:-translate-y-0.5 text-[#1A1A1E]'
               }`}
             >
               {/* Top Floating Badge */}
@@ -664,7 +698,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     <span>PLAN UNLOCKED & ACTIVE</span>
                   </span>
                 ) : (
-                  <span className={`px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 ${meta.badgeBg}`}>
+                  <span className={`px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 ${
+                    meta.highlight
+                      ? meta.badgeBg
+                      : isDark
+                      ? meta.badgeBg
+                      : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/35 font-bold shadow-sm'
+                  }`}>
                     <meta.icon className="w-3 h-3" />
                     <span>{meta.badge}</span>
                   </span>
@@ -674,31 +714,53 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <div>
                 {/* Header with Icon and Delivery */}
                 <div className="flex items-center justify-between pt-0.5 mb-2.5">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${unlocked ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : meta.iconBox}`}>
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                    unlocked
+                      ? isDark ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+                      : isDark ? meta.iconBox : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/30'
+                  }`}>
                     <meta.icon className="w-4.5 h-4.5" />
                   </div>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${unlocked ? 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' : 'text-[#A09C92] bg-[#1A1A22] border-[#2B2B36]'}`}>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
+                    unlocked
+                      ? isDark ? 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' : 'text-emerald-800 bg-emerald-100/90 border-emerald-300'
+                      : isDark ? 'text-[#A09C92] bg-[#1A1A22] border-[#2B2B36]' : 'text-[#666258] bg-[#F3EFE6] border-[#E2DDD0]'
+                  }`}>
                     {unlocked ? 'Active on Profile' : (tier.deliveryTime || 'Instant Access')}
                   </span>
                 </div>
 
-                <h3 className="text-base sm:text-lg font-serif font-bold text-[#F5F2EA] group-hover:text-[#F3E5AB] transition">
+                <h3 className={`text-base sm:text-lg font-serif font-bold transition ${
+                  isDark ? 'text-[#F5F2EA] group-hover:text-[#F3E5AB]' : 'text-[#1A1A1E] group-hover:text-[#8C6517]'
+                }`}>
                   {tier.name}
                 </h3>
-                <p className="text-[11px] text-[#9E9A90] mt-1 leading-snug min-h-[32px] line-clamp-2">
+                <p className={`text-[11px] mt-1 leading-snug min-h-[32px] line-clamp-2 ${
+                  isDark ? 'text-[#9E9A90]' : 'text-[#666258]'
+                }`}>
                   {tier.description}
                 </p>
 
                 {/* Price Display */}
-                <div className="mt-3 pt-2.5 pb-3 border-y border-[#282832] flex items-baseline justify-between">
+                <div className={`mt-3 pt-2.5 pb-3 border-y flex items-baseline justify-between ${
+                  isDark ? 'border-[#282832]' : 'border-[#EAE6DC]'
+                }`}>
                   <div className="flex items-baseline space-x-1">
-                    <span className="text-2xl sm:text-3xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FFF4D0] to-[#C9A050]">
+                    <span className={`text-2xl sm:text-3xl font-serif font-bold ${
+                      isDark
+                        ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF4D0] to-[#C9A050]'
+                        : 'text-transparent bg-clip-text bg-gradient-to-r from-[#8C6517] to-[#C9A050]'
+                    }`}>
                       ₹{tier.priceINR.toLocaleString()}
                     </span>
-                    <span className="text-[10px] text-[#9E9A90] font-sans font-medium">INR</span>
+                    <span className={`text-[10px] font-sans font-medium ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>INR</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-semibold text-[#C9A050] bg-[#C9A050]/10 px-2 py-0.5 rounded border border-[#C9A050]/25">
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                      isDark
+                        ? 'text-[#C9A050] bg-[#C9A050]/10 border-[#C9A050]/25'
+                        : 'text-[#8C6517] bg-[#C9A050]/15 border-[#C9A050]/35'
+                    }`}>
                       ~ ${tier.priceUSD} USD
                     </span>
                   </div>
@@ -706,14 +768,22 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                 {/* Features List */}
                 <div className="mt-3 space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#C9A050] flex items-center space-x-1">
+                  <p className={`text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 ${
+                    isDark ? 'text-[#C9A050]' : 'text-[#8C6517]'
+                  }`}>
                     <Star className="w-2.5 h-2.5 text-[#C9A050] fill-[#C9A050]" />
                     <span>Included Benefits:</span>
                   </p>
                   <ul className="space-y-1.5 text-[11px]">
                     {tier.features.map((feat, i) => (
-                      <li key={i} className="flex items-start space-x-2 text-[#D8D4CA] leading-snug">
-                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${unlocked ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#C9A050]'}`}>
+                      <li key={i} className={`flex items-start space-x-2 leading-snug ${
+                        isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'
+                      }`}>
+                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${
+                          unlocked
+                            ? isDark ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-emerald-100 text-emerald-700 border-emerald-400'
+                            : isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                        }`}>
                           <Check className="w-2 h-2 stroke-[3]" />
                         </div>
                         <span>{feat}</span>
@@ -727,9 +797,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               {unlocked ? (
                 <button
                   onClick={() => handleViewUnlockedData(tier.id)}
-                  className="w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5"
+                  className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${
+                    isDark
+                      ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400'
+                      : 'bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600 shadow-md'
+                  }`}
                 >
-                  <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                  <BookOpen className={`w-3.5 h-3.5 ${isDark ? 'text-emerald-400' : 'text-white'}`} />
                   <span>View Unlocked Plan Data ➔</span>
                 </button>
               ) : (
@@ -738,7 +812,9 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${
                     meta.highlight
                       ? 'bg-gradient-to-r from-[#C9A050] via-[#E2C378] to-[#C9A050] hover:brightness-110 active:scale-[0.99] text-[#0A0A0D] shadow-[#C9A050]/30'
-                      : 'bg-[#1E1E26] hover:bg-[#C9A050] text-[#F0ECE1] hover:text-[#0A0A0D] border border-[#2D2D38] hover:border-[#C9A050] shadow-md hover:shadow-[#C9A050]/25'
+                      : isDark
+                      ? 'bg-[#1E1E26] hover:bg-[#C9A050] text-[#F0ECE1] hover:text-[#0A0A0D] border border-[#2D2D38] hover:border-[#C9A050] shadow-md hover:shadow-[#C9A050]/25'
+                      : 'bg-[#F7F4EC] hover:bg-[#C9A050] text-[#2A2A2E] hover:text-white border border-[#DDD6C7] hover:border-[#C9A050] shadow-sm hover:shadow-[#C9A050]/25'
                   }`}
                 >
                   <Zap className="w-3.5 h-3.5" />
@@ -753,56 +829,68 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
       {/* Trust & Security 4-Pillar Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-        <div className="p-4 rounded-2xl bg-[#131317]/80 border border-[#272730] flex items-center space-x-3.5 hover:border-[#C9A050]/30 transition">
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
+          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+        }`}>
           <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[#C9A050] shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#F0ECE1]">256-Bit SSL Secured</h4>
-            <p className="text-[11px] text-[#9E9A90]">Bank-grade Razorpay gateway</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>256-Bit SSL Secured</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Bank-grade Razorpay gateway</p>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#131317]/80 border border-[#272730] flex items-center space-x-3.5 hover:border-[#C9A050]/30 transition">
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 shrink-0">
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
+          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+        }`}>
+          <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-500 shrink-0">
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#F0ECE1]">Instant Fulfillment</h4>
-            <p className="text-[11px] text-[#9E9A90]">Zero waiting, immediate activation</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant Fulfillment</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Zero waiting, immediate activation</p>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#131317]/80 border border-[#272730] flex items-center space-x-3.5 hover:border-[#C9A050]/30 transition">
-          <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-400 shrink-0">
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
+          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+        }`}>
+          <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-500 shrink-0">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#F0ECE1]">Ancient Vedic Rigor</h4>
-            <p className="text-[11px] text-[#9E9A90]">Parashari & Jaimini precision</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Ancient Vedic Rigor</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Parashari & Jaimini precision</p>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#131317]/80 border border-[#272730] flex items-center space-x-3.5 hover:border-[#C9A050]/30 transition">
-          <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/25 text-purple-400 shrink-0">
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
+          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+        }`}>
+          <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/25 text-purple-500 shrink-0">
             <Lock className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#F0ECE1]">100% Confidential</h4>
-            <p className="text-[11px] text-[#9E9A90]">Strict privacy for your birth data</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>100% Confidential</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Strict privacy for your birth data</p>
           </div>
         </div>
       </div>
 
       {/* Frequently Asked Questions Accordion */}
-      <div className="rounded-3xl bg-[#121217]/90 border border-[#2A2A35] p-6 md:p-8 space-y-4 shadow-xl">
-        <div className="flex items-center space-x-2.5 border-b border-[#282834] pb-4">
+      <div className={`rounded-3xl p-6 md:p-8 space-y-4 shadow-xl border ${
+        isDark ? 'bg-[#121217]/90 border-[#2A2A35]' : 'bg-white border-[#E5E1D8] shadow-lg'
+      }`}>
+        <div className={`flex items-center space-x-2.5 border-b pb-4 ${
+          isDark ? 'border-[#282834]' : 'border-[#EAE6DC]'
+        }`}>
           <HelpCircle className="w-5 h-5 text-[#C9A050]" />
           <div>
-            <h3 className="text-lg font-serif font-bold text-[#F0ECE1]">
+            <h3 className={`text-lg font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
               Frequently Asked Questions
             </h3>
-            <p className="text-xs text-[#9E9A90]">
+            <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
               Everything you need to know about our consultations and instant payment verification
             </p>
           </div>
@@ -814,22 +902,28 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             return (
               <div
                 key={idx}
-                className="rounded-2xl border border-[#2A2A34] bg-[#171720]/60 overflow-hidden transition"
+                className={`rounded-2xl border overflow-hidden transition ${
+                  isDark ? 'border-[#2A2A34] bg-[#171720]/60' : 'border-[#E8E4DA] bg-[#FAF8F4]'
+                }`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full p-4 text-left flex items-center justify-between text-xs font-semibold text-[#F0ECE1] hover:text-[#C9A050] transition cursor-pointer"
+                  className={`w-full p-4 text-left flex items-center justify-between text-xs font-semibold transition cursor-pointer ${
+                    isDark ? 'text-[#F0ECE1] hover:text-[#C9A050]' : 'text-[#1A1A1E] hover:text-[#8C6517]'
+                  }`}
                 >
                   <span>{faq.q}</span>
                   {isOpen ? (
                     <ChevronUp className="w-4 h-4 text-[#C9A050] shrink-0 ml-2" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-[#9E9A90] shrink-0 ml-2" />
+                    <ChevronDown className={`w-4 h-4 shrink-0 ml-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
                   )}
                 </button>
                 {isOpen && (
-                  <div className="px-4 pb-4 pt-1 text-xs text-[#A8A49C] leading-relaxed border-t border-[#2A2A34]/50">
+                  <div className={`px-4 pb-4 pt-1 text-xs leading-relaxed border-t ${
+                    isDark ? 'text-[#A8A49C] border-[#2A2A34]/50' : 'text-[#4A463E] border-[#EAE6DC]'
+                  }`}>
                     {faq.a}
                   </div>
                 )}
@@ -842,13 +936,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       {/* User Information & Direct Pay Modal */}
       {selectedTier && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#141418] border border-[#2A2A2E] rounded-2xl max-w-lg w-full p-6 text-[#E5E1D8] shadow-2xl relative font-sans max-h-[92vh] flex flex-col">
+          <div className={`border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative font-sans max-h-[92vh] flex flex-col ${
+            isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
+          }`}>
             {/* Top Right Actions: History & Close */}
             <div className="absolute top-4 right-4 flex items-center space-x-1.5 z-10">
               <button
                 type="button"
                 onClick={fetchPaymentHistory}
-                className="text-[#9E9A90] hover:text-[#C9A050] p-1.5 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] cursor-pointer transition flex items-center space-x-1 text-xs"
+                className={`p-1.5 rounded-lg cursor-pointer transition flex items-center space-x-1 text-xs ${
+                  isDark
+                    ? 'text-[#9E9A90] hover:text-[#C9A050] bg-[#1A1A1E] hover:bg-[#2A2A2E]'
+                    : 'text-[#787266] hover:text-[#8C6517] bg-[#F2EFE8] hover:bg-[#EAE5DA]'
+                }`}
                 title="View Payment History"
               >
                 <History className="w-4 h-4" />
@@ -856,7 +956,11 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               </button>
               <button
                 onClick={() => setSelectedTier(null)}
-                className="text-[#9E9A90] hover:text-white p-1.5 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] cursor-pointer transition"
+                className={`p-1.5 rounded-lg cursor-pointer transition ${
+                  isDark
+                    ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]'
+                    : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
+                }`}
                 title="Close"
               >
                 <X className="w-5 h-5" />
@@ -865,16 +969,18 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
             {/* Modal Header */}
             {!paymentSuccess && (
-              <div className="pb-4 border-b border-[#2A2A2E] pr-10">
+              <div className={`pb-4 border-b pr-10 ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#C9A050]/15 border border-[#C9A050]/30 text-[#C9A050] text-[10px] font-bold uppercase tracking-wider">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                    isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                  }`}>
                     {selectedTier.name}
                   </span>
                 </div>
                 <div className="text-xl font-bold text-[#C9A050] font-serif mt-1">
                   ₹{selectedTier.priceINR.toLocaleString()} INR
                 </div>
-                <p className="text-xs text-[#9E9A90] mt-0.5">
+                <p className={`text-xs mt-0.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'}`}>
                   Confirm your personal details below to proceed with payment and sync your profile.
                 </p>
               </div>
@@ -888,22 +994,22 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   {/* Celebration Header */}
                   <div className="text-center pt-2 pb-1">
                     <div className="relative inline-flex items-center justify-center mb-3">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/25 to-teal-500/10 border-2 border-emerald-500/60 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/25 to-teal-500/10 border-2 border-emerald-500/60 text-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
                       <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-r from-[#C9A050] to-[#E2C378] text-[#0D0D0F] shadow">
                         <Sparkles className="w-3.5 h-3.5" />
                       </div>
                     </div>
-                    <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 mb-2">
+                    <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-600 border border-emerald-500/40 mb-2">
                       <Check className="w-3 h-3 stroke-[3]" />
                       <span>Payment Verified • Plan Unlocked</span>
                     </div>
-                    <h3 className="text-xl font-serif font-bold text-[#F5F2EA]">
+                    <h3 className={`text-xl font-serif font-bold ${isDark ? 'text-[#F5F2EA]' : 'text-[#1A1A1E]'}`}>
                       Congratulations, {userData.fullName}!
                     </h3>
-                    <p className="text-xs text-[#A8A49A] mt-1 max-w-md mx-auto leading-relaxed">
-                      Your plan <strong>{paymentSuccess.tier.name}</strong> is now <span className="text-emerald-400 font-semibold">unlocked &amp; active</span>. Your personalized astrological data and features are ready to explore.
+                    <p className={`text-xs mt-1 max-w-md mx-auto leading-relaxed ${isDark ? 'text-[#A8A49A]' : 'text-[#666258]'}`}>
+                      Your plan <strong>{paymentSuccess.tier.name}</strong> is now <span className="text-emerald-600 font-semibold">unlocked &amp; active</span>. Your personalized astrological data and features are ready to explore.
                     </p>
                   </div>
 
@@ -911,11 +1017,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   {(() => {
                     const unlockedInfo = getTierUnlockedDetails(paymentSuccess.tier.id);
                     return (
-                      <div className="rounded-2xl p-4 bg-gradient-to-b from-[#181F1B] via-[#141A17] to-[#101512] border-2 border-emerald-500/50 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.25)] space-y-3.5 font-sans">
-                        <div className="flex items-center justify-between border-b border-emerald-500/25 pb-2.5">
+                      <div className={`rounded-2xl p-4 border-2 shadow-lg space-y-3.5 font-sans ${
+                        isDark
+                          ? 'bg-gradient-to-b from-[#181F1B] via-[#141A17] to-[#101512] border-emerald-500/50 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.25)] text-[#E5E1D8]'
+                          : 'bg-gradient-to-b from-[#F0FAF4] via-[#EAF7EE] to-[#E2F2E9] border-emerald-500/60 text-[#1A1A1E]'
+                      }`}>
+                        <div className={`flex items-center justify-between border-b pb-2.5 ${
+                          isDark ? 'border-emerald-500/25' : 'border-emerald-500/30'
+                        }`}>
                           <div className="flex items-center space-x-2">
                             <Crown className="w-4 h-4 text-[#C9A050]" />
-                            <span className="text-xs font-bold font-serif text-[#F0ECE1] tracking-wide">
+                            <span className={`text-xs font-bold font-serif tracking-wide ${
+                              isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'
+                            }`}>
                               {unlockedInfo.title}
                             </span>
                           </div>
@@ -925,14 +1039,16 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </div>
 
                         {/* Profile Binding Summary */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-black/30 p-2.5 rounded-xl border border-emerald-500/20">
+                        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] p-2.5 rounded-xl border ${
+                          isDark ? 'bg-black/30 border-emerald-500/20' : 'bg-white/80 border-emerald-500/30'
+                        }`}>
                           <div>
-                            <span className="text-[#8E8A80] block text-[10px]">Client / Chart:</span>
-                            <span className="font-semibold text-[#F0ECE1]">{userData.fullName}</span>
+                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Client / Chart:</span>
+                            <span className={`font-semibold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{userData.fullName}</span>
                           </div>
                           <div>
-                            <span className="text-[#8E8A80] block text-[10px]">Birth Coordinates:</span>
-                            <span className="text-[#D8D4CA] truncate block" title={`${userData.birthDate} ${userData.birthTime} • ${userData.birthAddress}`}>
+                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Birth Coordinates:</span>
+                            <span className={`truncate block ${isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'}`} title={`${userData.birthDate} ${userData.birthTime} • ${userData.birthAddress}`}>
                               {userData.birthDate} {userData.birthTime ? `@ ${userData.birthTime}` : ''}
                             </span>
                           </div>
@@ -940,19 +1056,23 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                         {/* Unlocked Features / Data List */}
                         <div className="space-y-2">
-                          <p className="text-[11px] font-bold text-[#E5C378] flex items-center space-x-1.5 uppercase tracking-wider">
-                            <Sparkles className="w-3 h-3 text-[#E5C378]" />
+                          <p className={`text-[11px] font-bold flex items-center space-x-1.5 uppercase tracking-wider ${
+                            isDark ? 'text-[#E5C378]' : 'text-[#8C6517]'
+                          }`}>
+                            <Sparkles className="w-3 h-3 text-[#C9A050]" />
                             <span>Unlocked Data &amp; Calculations:</span>
                           </p>
                           <div className="grid grid-cols-1 gap-2">
                             {unlockedInfo.highlights.map((h, i) => (
-                              <div key={i} className="flex items-start space-x-2 text-xs bg-[#1A221D]/60 p-2 rounded-lg border border-emerald-500/15">
-                                <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                              <div key={i} className={`flex items-start space-x-2 text-xs p-2 rounded-lg border ${
+                                isDark ? 'bg-[#1A221D]/60 border-emerald-500/15' : 'bg-white/90 border-emerald-500/25 shadow-sm'
+                              }`}>
+                                <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
                                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                                 </div>
                                 <div className="text-left">
-                                  <span className="font-semibold text-[#F0ECE1]">{h.label}: </span>
-                                  <span className="text-[#A8A49A] text-[11px]">{h.desc}</span>
+                                  <span className={`font-semibold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{h.label}: </span>
+                                  <span className={`text-[11px] ${isDark ? 'text-[#A8A49A]' : 'text-[#666258]'}`}>{h.desc}</span>
                                 </div>
                               </div>
                             ))}
@@ -972,30 +1092,34 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   })()}
 
                   {/* Payment Verification Receipt Slip Details */}
-                  <div className="p-3 bg-[#16161B] rounded-xl border border-[#2A2A32] text-left text-xs space-y-2 font-sans">
-                    <div className="flex items-center justify-between border-b border-[#2A2A32] pb-1.5">
-                      <span className="text-[#8E8A80] text-[11px]">Transaction ID:</span>
+                  <div className={`p-3 rounded-xl border text-left text-xs space-y-2 font-sans ${
+                    isDark ? 'bg-[#16161B] border-[#2A2A32]' : 'bg-[#FAF8F4] border-[#E8E4DA]'
+                  }`}>
+                    <div className={`flex items-center justify-between border-b pb-1.5 ${
+                      isDark ? 'border-[#2A2A32]' : 'border-[#EAE6DC]'
+                    }`}>
+                      <span className={`text-[11px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Transaction ID:</span>
                       <span className="text-[#C9A050] font-mono font-bold text-[11px]">{paymentSuccess.txId}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8E8A80]">Amount Paid:</span>
-                      <span className="text-[#F0ECE1] font-bold">₹{paymentSuccess.amount} INR</span>
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Amount Paid:</span>
+                      <span className={`font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>₹{paymentSuccess.amount} INR</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8E8A80]">Order Verification:</span>
-                      <span className="text-emerald-400 font-semibold flex items-center space-x-1">
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Order Verification:</span>
+                      <span className="text-emerald-500 font-semibold flex items-center space-x-1">
                         <CheckCircle2 className="w-3 h-3 inline" />
                         <span>HMAC Verified &amp; Synced</span>
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8E8A80]">Phone / WhatsApp:</span>
-                      <span className="text-[#D8D4CA] font-mono">{userData.phone}</span>
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Phone / WhatsApp:</span>
+                      <span className={`font-mono ${isDark ? 'text-[#D8D4CA]' : 'text-[#1A1A1E]'}`}>{userData.phone}</span>
                     </div>
                     {userData.currentAddress && (
                       <div className="flex justify-between">
-                        <span className="text-[#8E8A80]">Current Address:</span>
-                        <span className="text-[#D8D4CA] max-w-[220px] truncate text-right" title={userData.currentAddress}>
+                        <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Current Address:</span>
+                        <span className={`max-w-[220px] truncate text-right ${isDark ? 'text-[#D8D4CA]' : 'text-[#1A1A1E]'}`} title={userData.currentAddress}>
                           {userData.currentAddress}
                         </span>
                       </div>
@@ -1013,14 +1137,18 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     </button>
                     <button
                       onClick={() => window.print()}
-                      className="px-4 py-2.5 rounded-xl bg-[#1A1A22] hover:bg-[#252530] text-[#E5E1D8] border border-[#2D2D3A] font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition"
+                      className={`px-4 py-2.5 rounded-xl border font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition ${
+                        isDark ? 'bg-[#1A1A22] hover:bg-[#252530] text-[#E5E1D8] border-[#2D2D3A]' : 'bg-[#F3EFE6] hover:bg-[#EAE5DA] text-[#2A2A2E] border-[#DDD6C7]'
+                      }`}
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Print Slip</span>
                     </button>
                     <button
                       onClick={() => setSelectedTier(null)}
-                      className="px-3 py-2.5 rounded-xl bg-[#141418] hover:bg-[#1E1E26] text-[#9E9A90] hover:text-white border border-[#25252E] text-xs transition cursor-pointer"
+                      className={`px-3 py-2.5 rounded-xl border text-xs transition cursor-pointer ${
+                        isDark ? 'bg-[#141418] hover:bg-[#1E1E26] text-[#9E9A90] hover:text-white border-[#25252E]' : 'bg-[#FAF8F4] hover:bg-[#F0ECE1] text-[#787266] hover:text-black border-[#E2DDD0]'
+                      }`}
                     >
                       Close
                     </button>
@@ -1032,18 +1160,22 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   {/* Row 1: Full Name & Phone */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-[#E5E1D8] mb-1">
-                        Full Name <span className="text-amber-400">*</span>
+                      <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
+                        Full Name <span className="text-amber-500">*</span>
                       </label>
                       <div className="relative">
-                        <User className="w-4 h-4 text-[#9E9A90] absolute left-3 top-2.5" />
+                        <User className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
                         <input
                           type="text"
                           required
                           value={userData.fullName}
                           onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
                           placeholder="Your legal or chart name"
-                          className="w-full pl-9 pr-3 py-2 bg-[#1A1A1E] border border-[#2A2A2E] focus:border-[#C9A050] rounded-lg text-xs text-[#F0ECE1] focus:outline-none transition"
+                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${
+                            isDark
+                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
+                              : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
+                          }`}
                         />
                       </div>
                       {formErrors.fullName && (
@@ -1052,18 +1184,22 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-[#E5E1D8] mb-1">
-                        Phone / WhatsApp <span className="text-amber-400">*</span>
+                      <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
+                        Phone / WhatsApp <span className="text-amber-500">*</span>
                       </label>
                       <div className="relative">
-                        <Phone className="w-4 h-4 text-[#9E9A90] absolute left-3 top-2.5" />
+                        <Phone className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
                         <input
                           type="tel"
                           required
                           value={userData.phone}
                           onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
                           placeholder="+91 98765 43210"
-                          className="w-full pl-9 pr-3 py-2 bg-[#1A1A1E] border border-[#2A2A2E] focus:border-[#C9A050] rounded-lg text-xs text-[#F0ECE1] focus:outline-none transition font-mono"
+                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition font-mono border ${
+                            isDark
+                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
+                              : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
+                          }`}
                         />
                       </div>
                       {formErrors.phone && (
@@ -1072,21 +1208,24 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     </div>
                   </div>
 
-
-                  {/* Row 5: Current Full Address */}
+                  {/* Row 2: Current Full Address */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-[#E5E1D8] mb-1">
-                      Current Full Address <span className="text-amber-400">*</span>
+                    <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
+                      Current Full Address <span className="text-amber-500">*</span>
                     </label>
                     <div className="relative">
-                      <Home className="w-4 h-4 text-[#9E9A90] absolute left-3 top-2.5" />
+                      <Home className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
                       <input
                         type="text"
                         required
                         value={userData.currentAddress}
                         onChange={(e) => setUserData({ ...userData, currentAddress: e.target.value })}
                         placeholder="House/Flat No, Street, Landmark, City, State, Pincode"
-                        className="w-full pl-9 pr-3 py-2 bg-[#1A1A1E] border border-[#2A2A2E] focus:border-[#C9A050] rounded-lg text-xs text-[#F0ECE1] focus:outline-none transition"
+                        className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${
+                          isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
+                            : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
+                        }`}
                       />
                     </div>
                     {formErrors.currentAddress && (
@@ -1095,8 +1234,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   </div>
 
                   {apiError && (
-                    <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center space-x-2">
-                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                    <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs flex items-center space-x-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
                       <span>{apiError}</span>
                     </div>
                   )}
@@ -1120,7 +1259,9 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </>
                       )}
                     </button>
-                    <div className="flex items-center justify-center space-x-1.5 mt-2.5 text-xs text-[#E5E1D8] font-medium">
+                    <div className={`flex items-center justify-center space-x-1.5 mt-2.5 text-xs font-medium ${
+                      isDark ? 'text-[#E5E1D8]' : 'text-[#666258]'
+                    }`}>
                       <Lock className="w-3.5 h-3.5 text-[#C9A050]" />
                       <span>256-Bit SSL Encrypted • 100% Safe & Secure Payment</span>
                     </div>
@@ -1135,25 +1276,31 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       {/* Payment History Modal */}
       {showHistoryModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-          <div className="bg-[#141418] border border-[#2A2A2E] rounded-2xl max-w-2xl w-full p-6 text-[#E5E1D8] shadow-2xl relative max-h-[85vh] flex flex-col">
+          <div className={`border rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col ${
+            isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
+          }`}>
             {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#2A2A2E]">
+            <div className={`flex items-center justify-between pb-4 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
               <div className="flex items-center space-x-2.5">
-                <div className="p-2 rounded-xl bg-[#C9A050]/15 border border-[#C9A050]/30 text-[#C9A050]">
+                <div className={`p-2 rounded-xl border ${
+                  isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                }`}>
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-serif font-bold text-[#F0ECE1]">
+                  <h2 className={`text-lg font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
                     Payment & Transaction History
                   </h2>
-                  <p className="text-xs text-[#9E9A90]">
+                  <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'}`}>
                     Official record of your consultations and orders
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className="text-[#9E9A90] hover:text-white p-1.5 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] transition cursor-pointer"
+                className={`p-1.5 rounded-lg transition cursor-pointer ${
+                  isDark ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]' : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
+                }`}
                 title="Close"
               >
                 <X className="w-5 h-5" />
@@ -1163,19 +1310,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             {/* Content List */}
             <div className="overflow-y-auto py-4 flex-1 space-y-3">
               {historyLoading ? (
-                <div className="py-12 flex flex-col items-center justify-center text-[#9E9A90] space-y-2">
+                <div className={`py-12 flex flex-col items-center justify-center space-y-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
                   <Loader2 className="w-6 h-6 animate-spin text-[#C9A050]" />
                   <p className="text-xs">Loading transaction history...</p>
                 </div>
               ) : historyError ? (
-                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center space-x-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
                   <span>{historyError}</span>
                 </div>
               ) : historyList.length === 0 ? (
-                <div className="py-12 text-center text-[#9E9A90] space-y-2">
-                  <Receipt className="w-8 h-8 mx-auto text-[#9E9A90]/40" />
-                  <p className="text-sm font-medium text-[#F0ECE1]">No transactions yet</p>
+                <div className={`py-12 text-center space-y-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
+                  <Receipt className="w-8 h-8 mx-auto opacity-40" />
+                  <p className={`text-sm font-medium ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>No transactions yet</p>
                   <p className="text-xs">
                     Your confirmed consultation orders and payments will appear here.
                   </p>
@@ -1190,22 +1337,26 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                       key={tx.id || idx}
                       className={`p-4 rounded-xl border transition space-y-2.5 ${
                         isSuccess
-                          ? 'bg-gradient-to-r from-[#141A16] to-[#171E1A] border-emerald-500/40 shadow-md'
-                          : 'bg-[#1A1A1E] border-[#2A2A2E] hover:border-[#C9A050]/40'
+                          ? isDark
+                            ? 'bg-gradient-to-r from-[#141A16] to-[#171E1A] border-emerald-500/40 shadow-md'
+                            : 'bg-gradient-to-r from-[#F0FAF4] to-[#EAF7EE] border-emerald-500/50 shadow-sm'
+                          : isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] hover:border-[#C9A050]/40'
+                          : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <span className="font-semibold text-sm text-[#F0ECE1]">
+                          <span className={`font-semibold text-sm ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
                             {itemInfo.name}
                           </span>
                           <span
                             className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                               isSuccess
-                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center space-x-1'
+                                ? 'bg-emerald-500/20 text-emerald-600 border border-emerald-500/40 flex items-center space-x-1'
                                 : tx.status === 'failed'
-                                ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
-                                : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                                ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
+                                : 'bg-amber-500/15 text-amber-600 border border-amber-500/30'
                             }`}
                           >
                             {isSuccess ? (
@@ -1225,17 +1376,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                       {/* Unlocked Data Box for Successful Transactions */}
                       {isSuccess && (
-                        <div className="p-3 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-left text-xs space-y-2">
+                        <div className={`p-3 rounded-lg border text-left text-xs space-y-2 ${
+                          isDark ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-emerald-50/80 border-emerald-300'
+                        }`}>
                           <div className="flex items-center justify-between">
-                            <span className="text-emerald-400 font-bold flex items-center space-x-1 text-[11px]">
-                              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-600 font-bold flex items-center space-x-1 text-[11px]">
+                              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                               <span>Plan Features &amp; Predictions Unlocked</span>
                             </span>
-                            <span className="text-[10px] text-emerald-300/80 font-medium">
+                            <span className={`text-[10px] font-medium ${isDark ? 'text-emerald-300/80' : 'text-emerald-700'}`}>
                               Active for your Profile
                             </span>
                           </div>
-                          <p className="text-[#D8D4CA] text-[11px] leading-relaxed">
+                          <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#D8D4CA]' : 'text-[#2D2A24]'}`}>
                             {itemInfo.highlights}
                           </p>
                           <button
@@ -1249,22 +1402,24 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </div>
                       )}
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#9E9A90] pt-1 border-t border-[#2A2A2E]/60">
+                      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1 border-t ${
+                        isDark ? 'text-[#9E9A90] border-[#2A2A2E]/60' : 'text-[#787266] border-[#EAE6DC]'
+                      }`}>
                         {tx.razorpay_payment_id && (
                           <div>
                             Payment ID:{' '}
-                            <span className="font-mono text-[#F0ECE1]">{tx.razorpay_payment_id}</span>
+                            <span className={`font-mono ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.razorpay_payment_id}</span>
                           </div>
                         )}
                         {tx.razorpay_order_id && (
                           <div>
                             Order ID:{' '}
-                            <span className="font-mono text-[#F0ECE1]">{tx.razorpay_order_id}</span>
+                            <span className={`font-mono ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.razorpay_order_id}</span>
                           </div>
                         )}
                         <div>
                           Date:{' '}
-                          <span className="text-[#F0ECE1]">
+                          <span className={isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}>
                             {tx.created_at
                               ? new Date(tx.created_at).toLocaleDateString('en-US', {
                                   month: 'short',
@@ -1277,7 +1432,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           </span>
                         </div>
                         <div>
-                          Method: <span className="text-[#F0ECE1] capitalize">{tx.payment_method || 'Razorpay'}</span>
+                          Method: <span className={`capitalize ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.payment_method || 'Razorpay'}</span>
                         </div>
                       </div>
                     </div>
@@ -1287,10 +1442,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             </div>
 
             {/* Footer */}
-            <div className="pt-3 border-t border-[#2A2A2E] flex justify-end">
+            <div className={`pt-3 border-t flex justify-end ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#2A2A2E] hover:bg-[#3A3A3E] text-[#F0ECE1] text-xs font-semibold cursor-pointer transition"
+                className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition ${
+                  isDark ? 'bg-[#2A2A2E] hover:bg-[#3A3A3E] text-[#F0ECE1]' : 'bg-[#F2EFE8] hover:bg-[#EAE5DA] text-[#1A1A1E] border border-[#DDD6C7]'
+                }`}
               >
                 Close
               </button>
