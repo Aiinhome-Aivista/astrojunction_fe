@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     GOOGLE: '/auth/google',
     CURRENT_USER: '/auth/current-user',
+    CHANGE_PASSWORD: '/auth/change-password',
   },
   USER: {
     PROFILES: '/user/profiles',
@@ -20,6 +21,7 @@ export const API_ENDPOINTS = {
     REVENUE_TRANSACTIONS: '/api/admin/revenue/transactions',
     LLM_CONFIG: '/api/admin/llm-config',
     LLM_TEST: '/api/admin/llm-config/test',
+    SEO_CONFIG: '/api/admin/seo-config',
   },
   BLOGS: {
     LIST: '/api/blogs',

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { BlogPost } from './BlogCarousel';
 import { blogApi } from '../services/blogApi';
+import { SEO } from './SEO';
 
 interface BlogPageProps {
   theme: 'light' | 'dark';
@@ -119,10 +120,38 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   // VIEW 1: DEDICATED FULL-PAGE ARTICLE READER
   // ==========================================
   if (selectedBlog) {
+    const blogDescription = selectedBlog.preview || (selectedBlog.content ? selectedBlog.content.replace(/<[^>]*>?/gm, '').slice(0, 160) : selectedBlog.title);
     return (
       <div className={`min-h-[calc(100vh-5rem)] w-full pb-24 transition-colors ${
         isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
       }`}>
+        <SEO
+          title={`${selectedBlog.title} • ASTROJUNCTION`}
+          description={blogDescription}
+          keywords={Array.isArray(selectedBlog.tags) && selectedBlog.tags.length ? selectedBlog.tags : [selectedBlog.category || 'Vedic Astrology']}
+          ogImage={selectedBlog.image_url || '/blog_1.jpg'}
+          ogType="article"
+          jsonLd={{
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": selectedBlog.title,
+            "description": blogDescription,
+            "image": selectedBlog.image_url ? [selectedBlog.image_url] : [],
+            "datePublished": selectedBlog.created_at || new Date().toISOString(),
+            "author": {
+              "@type": "Organization",
+              "name": "ASTROJUNCTION Vedic Scholars"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "ASTROJUNCTION",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://astrojunction.com/jyotishveda_logo_standard.png"
+              }
+            }
+          }}
+        />
         {/* Sticky Sub-Header Navigation */}
         <div className={`sticky top-20 z-30 w-full backdrop-blur-xl border-b transition-colors ${
           isDark ? 'bg-[#0D0D0F]/95 border-[#2A2A2E]' : 'bg-[#FAF8F5]/95 border-[#E5E1D8]'
@@ -409,6 +438,13 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
     <div className={`min-h-[calc(100vh-5rem)] w-full pb-32 transition-colors ${
       isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
     }`}>
+      <SEO
+        title="Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION"
+        description="Explore curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth."
+        keywords={["astrology blog", "vedic articles", "zodiac signs blog", "planetary transits", "vedic wisdom"]}
+        ogImage="/blog_1.jpg"
+        ogType="website"
+      />
       {/* Top Control Bar: Full-width matching Navbar's left and right alignment */}
       <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">

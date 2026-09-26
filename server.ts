@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
@@ -749,6 +750,73 @@ The planetary 2nd, 7th, and 11th house trines indicate that entering into this u
 3. **Space Energization**: Place a pair of loving Rose Quartz figurines or a sacred silver coin in the Northeast (Ishanya) corner of your living quarters.`;
 }
 
+const SEO_SERVER_CONFIG: Record<string, { title: string; description: string; ogImage: string }> = {
+  landing: {
+    title: "ASTROJUNCTION • Ancient Vedic Astrology & Life Insights",
+    description: "Explore authentic Vedic Astrology, personalized Janam Kundli, Daily Horoscope, Panchang, 36 Gun Milan Matchmaking, and Vedic Numerology.",
+    ogImage: "/golden_zodiac_wheel.jpg"
+  },
+  daily: {
+    title: "Daily Horoscope & Vedic Panchang • ASTROJUNCTION",
+    description: "Get real-time Vedic Panchang today with accurate Tithi, Nakshatra, Yoga, Karana, Rahu Kaal, Shubh Muhurat, and personalized daily horoscope forecasts.",
+    ogImage: "/vedic_calendar_alt.jpg"
+  },
+  horoscope: {
+    title: "Janam Kundli & Vedic Birth Chart (D1 & D9) • ASTROJUNCTION",
+    description: "Generate your free Vedic Janam Kundli online. Detailed Parashari planetary positions, Lagna chart, Navamsha (D9) analysis, and life predictions.",
+    ogImage: "/golden_zodiac_wheel.jpg"
+  },
+  matchmaking: {
+    title: "Kundli Milan & Gun Milan (36 Points Ashtakoota) • ASTROJUNCTION",
+    description: "Free online Kundli Milan for marriage. In-depth 36 Gun Ashtakoota analysis, Manglik Dosha assessment, Nadi Dosha cancellation, and Vedic compatibility.",
+    ogImage: "/zodiac_compatibility_art.jpg"
+  },
+  numerology: {
+    title: "Vedic Numerology Calculator (Mulank, Bhagyank, Namank) • ASTROJUNCTION",
+    description: "Discover your destiny with Vedic Numerology. Instant Mulank (Root), Bhagyank (Life Path), Chaldean and Pythagorean Name numbers with lucky gem recommendations.",
+    ogImage: "/golden_zodiac_wheel.jpg"
+  },
+  panjika: {
+    title: "Vedic Panjika & Hindu Calendar • ASTROJUNCTION",
+    description: "Complete Hindu Vedic Panjika calendar. Find auspicious dates, festivals, Ekadashi, Purnima, Amavasya, and planetary transits.",
+    ogImage: "/vedic_calendar_alt.jpg"
+  },
+  consultations: {
+    title: "Expert Vedic Astrologer Consultations • ASTROJUNCTION",
+    description: "Book 1-on-1 personalized consultations with certified Vedic astrologers for career, marriage, health, and financial roadmap guidance.",
+    ogImage: "/astrologer_bg.jpg"
+  },
+  counsellor: {
+    title: "AI Daivajna Astrological Life Counsellor • ASTROJUNCTION",
+    description: "Get instant, personalized Vedic life counselling powered by AI Daivajna intelligence combined with classical Jyotish shastras.",
+    ogImage: "/golden_zodiac_wheel.jpg"
+  },
+  blogs: {
+    title: "Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION",
+    description: "Explore curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.",
+    ogImage: "/blog_1.jpg"
+  }
+};
+
+function injectDynamicMeta(html: string, req: express.Request): string {
+  const urlPath = req.path.replace(/^\/+|\/+$/g, '').toLowerCase();
+  const tabQuery = (req.query.tab as string || '').toLowerCase();
+  const key = tabQuery || urlPath || 'landing';
+  const seo = SEO_SERVER_CONFIG[key] || SEO_SERVER_CONFIG['landing'];
+
+  const host = req.get('host') || 'localhost:3000';
+  const protocol = req.protocol || 'http';
+  const fullOgImage = seo.ogImage.startsWith('http') ? seo.ogImage : `${protocol}://${host}${seo.ogImage}`;
+  const fullCanonical = `${protocol}://${host}${req.originalUrl || req.url}`;
+
+  return html
+    .replace(/<title>.*?<\/title>/i, `<title>${seo.title}</title>`)
+    .replace(/<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="description" content="${seo.description}" />`)
+    .replace(/<meta\s+property=["']og:title["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:title" content="${seo.title}" />`)
+    .replace(/<meta\s+property=["']og:description["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:description" content="${seo.description}" />`)
+    .replace(/<meta\s+property=["']og:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image" content="${fullOgImage}" />\n    <link rel="canonical" href="${fullCanonical}" />`);
+}
+
 // Start Server with Vite Middleware
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
@@ -761,7 +829,15 @@ async function startServer() {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      try {
+        const indexPath = path.join(distPath, 'index.html');
+        const rawHtml = fs.readFileSync(indexPath, 'utf-8');
+        const finalHtml = injectDynamicMeta(rawHtml, req);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send(finalHtml);
+      } catch {
+        res.sendFile(path.join(distPath, 'index.html'));
+      }
     });
   }
 
