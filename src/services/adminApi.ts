@@ -103,6 +103,15 @@ export const adminApi = {
   testAllProviders: async (): Promise<Record<string, LLMTestResult>> => {
     return api.post<Record<string, LLMTestResult>>(API_ENDPOINTS.ADMIN.LLM_TEST, { provider: 'all' });
   },
+
+  getSeoConfig: async (): Promise<Record<string, any>> => {
+    const res = await api.get<any>(API_ENDPOINTS.ADMIN.SEO_CONFIG);
+    return (res as any)?.data || res;
+  },
+
+  updateSeoConfig: async (seoConfig: Record<string, any>): Promise<any> => {
+    return api.put(API_ENDPOINTS.ADMIN.SEO_CONFIG, seoConfig);
+  },
 };
 
 export interface LLMConfig {

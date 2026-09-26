@@ -128,6 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     ? [
         { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
         { id: 'admin_users', label: 'Users', icon: Users },
+        { id: 'admin_seo', label: 'SEO', icon: Globe },
         { id: 'admin_revenue', label: 'Revenue', icon: Wallet },
         { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
         { id: 'admin_logs', label: 'Logs', icon: Terminal },
@@ -236,84 +237,130 @@ export const Navbar: React.FC<NavbarProps> = ({
                 )}
               </button>
 
-              {/* Active Profile Dropdown */}
-              <div
-                className={`relative flex items-center border rounded-lg p-1 sm:p-1.5 text-xs shadow-inner max-w-[130px] sm:max-w-[200px] ${
-                  theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#FAF3DF] border-[#DFC896]'
-                }`}
-                ref={profileMenuRef}
-              >
-                <User className="w-3.5 h-3.5 text-[#C9A050] ml-1 mr-1 shrink-0" />
-                <button
-                  onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                  className={`bg-transparent focus:outline-none pr-4 sm:pr-5 cursor-pointer text-xs truncate flex items-center flex-1 text-left ${
-                    theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2C2825]'
+              {/* Active Profile Dropdown or Admin Account Menu */}
+              {isAdmin ? (
+                <div
+                  className={`relative flex items-center border rounded-lg p-1 sm:p-1.5 text-xs shadow-inner ${
+                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#FAF3DF] border-[#DFC896]'
                   }`}
+                  ref={profileMenuRef}
                 >
-                  <span className="truncate">{currentProfile.fullName}</span>
-                  <ChevronDown className="w-3 h-3 ml-0.5 absolute right-6 text-[#9E9A90]" />
-                </button>
+                  <Shield className="w-3.5 h-3.5 text-[#C9A050] ml-1 mr-1 shrink-0" />
+                  <button
+                    onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                    className={`bg-transparent focus:outline-none pr-4 sm:pr-5 cursor-pointer text-xs flex items-center flex-1 text-left ${
+                      theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2C2825]'
+                    }`}
+                  >
+                    <span className="font-semibold text-[#C9A050] truncate max-w-[100px] sm:max-w-[140px]">
+                      {userEmail?.split('@')[0] || 'Admin'}
+                    </span>
+                    <ChevronDown className="w-3 h-3 ml-0.5 absolute right-2 text-[#9E9A90]" />
+                  </button>
 
-                {isProfileMenuOpen && (
-                  <div className={`absolute top-full right-0 mt-2 w-52 border rounded-xl shadow-xl overflow-hidden z-50 ${
-                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
-                  }`}>
-                    <div className="py-1">
-                      {profiles.map((p) => {
-                        const isSelected = p.id === currentProfile.id;
-                        return (
-                          <button
-                            key={p.id}
-                            onClick={() => {
-                              onSelectProfile(p);
-                              setIsProfileMenuOpen(false);
-                            }}
-                            className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${
-                              isSelected
-                                ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold'
-                                : theme === 'dark'
-                                ? 'text-[#E5E1D8] hover:bg-[#1C1C22] hover:text-[#F0ECE1]'
-                                : 'text-[#2C2825] hover:bg-[#F3EADB] hover:text-[#1A1816]'
-                            }`}
-                          >
-                            <span className="truncate">
-                              {p.fullName} ({p.horoscopeSystem === 'western' ? 'Western' : 'Vedic'})
-                            </span>
-                            {isSelected && <Check className="w-3.5 h-3.5 text-[#C9A050] shrink-0" />}
-                          </button>
-                        );
-                      })}
-                      {/* Change Password in Profile Menu (Admin only) */}
-                      {isAdmin && (
-                        <div className={`border-t pt-1 mt-1 ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]/40'}`}>
-                          <button
-                            onClick={() => {
-                              setIsProfileMenuOpen(false);
-                              setIsChangePasswordOpen(true);
-                            }}
-                            className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${
-                              theme === 'dark'
-                                ? 'text-[#C9A050] hover:bg-[#1C1C22]'
-                                : 'text-[#8C6218] hover:bg-[#F3EADB]'
-                            }`}
-                          >
-                            <Key className="w-3.5 h-3.5" />
-                            <span>Change Password</span>
-                          </button>
+                  {isProfileMenuOpen && (
+                    <div className={`absolute top-full right-0 mt-2 w-56 border rounded-xl shadow-xl overflow-hidden z-50 ${
+                      theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
+                    }`}>
+                      <div className="p-3 border-b border-inherit">
+                        <div className="text-[10px] uppercase font-bold text-[#C9A050] tracking-wider">
+                          Administrator
                         </div>
-                      )}
+                        <div className={`text-xs truncate font-mono mt-0.5 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {userEmail || 'admin@astrojunction.com'}
+                        </div>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setIsProfileMenuOpen(false);
+                            setIsChangePasswordOpen(true);
+                          }}
+                          className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${
+                            theme === 'dark'
+                              ? 'text-[#C9A050] hover:bg-[#1C1C22]'
+                              : 'text-[#8C6218] hover:bg-[#F3EADB]'
+                          }`}
+                        >
+                          <Key className="w-3.5 h-3.5" />
+                          <span>Change Password</span>
+                        </button>
+                        {onLogout && (
+                          <button
+                            onClick={() => {
+                              setIsProfileMenuOpen(false);
+                              onLogout();
+                            }}
+                            className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left text-red-500 hover:bg-red-500/10`}
+                          >
+                            <LogOut className="w-3.5 h-3.5" />
+                            <span>Logout</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-
-                <button
-                  onClick={onOpenNewProfile}
-                  title={t('header.add_profile')}
-                  className="ml-0.5 p-1 rounded bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 transition-colors cursor-pointer shrink-0"
+                  )}
+                </div>
+              ) : (
+                <div
+                  className={`relative flex items-center border rounded-lg p-1 sm:p-1.5 text-xs shadow-inner max-w-[130px] sm:max-w-[200px] ${
+                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#FAF3DF] border-[#DFC896]'
+                  }`}
+                  ref={profileMenuRef}
                 >
-                  <PlusCircle className="w-3.5 h-3.5" />
-                </button>
-              </div>
+                  <User className="w-3.5 h-3.5 text-[#C9A050] ml-1 mr-1 shrink-0" />
+                  <button
+                    onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                    className={`bg-transparent focus:outline-none pr-4 sm:pr-5 cursor-pointer text-xs truncate flex items-center flex-1 text-left ${
+                      theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2C2825]'
+                    }`}
+                  >
+                    <span className="truncate">{currentProfile.fullName}</span>
+                    <ChevronDown className="w-3 h-3 ml-0.5 absolute right-6 text-[#9E9A90]" />
+                  </button>
+
+                  {isProfileMenuOpen && (
+                    <div className={`absolute top-full right-0 mt-2 w-52 border rounded-xl shadow-xl overflow-hidden z-50 ${
+                      theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
+                    }`}>
+                      <div className="py-1">
+                        {profiles.map((p) => {
+                          const isSelected = p.id === currentProfile.id;
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => {
+                                onSelectProfile(p);
+                                setIsProfileMenuOpen(false);
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${
+                                isSelected
+                                  ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold'
+                                  : theme === 'dark'
+                                  ? 'text-[#E5E1D8] hover:bg-[#1C1C22] hover:text-[#F0ECE1]'
+                                  : 'text-[#2C2825] hover:bg-[#F3EADB] hover:text-[#1A1816]'
+                              }`}
+                            >
+                              <span className="truncate">
+                                {p.fullName} ({p.horoscopeSystem === 'western' ? 'Western' : 'Vedic'})
+                              </span>
+                              {isSelected && <Check className="w-3.5 h-3.5 text-[#C9A050] shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={onOpenNewProfile}
+                    title={t('header.add_profile')}
+                    className="ml-0.5 p-1 rounded bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 transition-colors cursor-pointer shrink-0"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
 
               {/* Desktop Quick Action: Download Master Full Report (Hidden for Admin) */}
               {!isViewingAdmin && (
@@ -357,37 +404,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               )}
 
-              {/* Change Password Button (Desktop - Admin only) */}
-              {isAdmin && (
-                <button
-                  onClick={() => setIsChangePasswordOpen(true)}
-                  title="Change Admin Password"
-                  className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shadow-sm shrink-0 ${
-                    theme === 'dark'
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#C9A050] hover:border-[#C9A050] hover:bg-[#1C1C22]'
-                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#8C6218] hover:border-[#C9A050] hover:text-[#1E1B15]'
-                  }`}
-                  aria-label="Change Admin Password"
-                >
-                  <Key className="w-4 h-4" />
-                </button>
-              )}
-
-              {/* Logout (Desktop) */}
-              {onLogout && (
-                <button
-                  onClick={onLogout}
-                  title="Log out"
-                  className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shadow-sm shrink-0 ${
-                    theme === 'dark'
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#9E9A90] hover:border-[#C9A050]/50 hover:text-[#C9A050]'
-                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#6E6452] hover:border-[#C9A050] hover:text-[#1E1B15]'
-                  }`}
-                  aria-label="Log out"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              )}
 
               {/* Mobile Drawer Menu Toggle */}
               <button
@@ -476,29 +492,55 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
 
               {/* User Profile Card in Drawer */}
-              <div className="my-4 p-3 rounded-xl bg-[#1A1A1E] border border-[#2A2A2E] flex items-center justify-between">
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#C9A050]/20 text-[#C9A050] flex items-center justify-center font-bold text-xs">
-                    {currentProfile.fullName.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="font-bold text-xs text-[#F0ECE1]">{currentProfile.fullName}</div>
-                    <div className="text-[10px] text-[#9E9A90] capitalize">
-                      {currentProfile.horoscopeSystem || 'Vedic'} System
+              {isAdmin ? (
+                <div className="my-4 p-3 rounded-xl bg-[#1A1A1E] border border-[#C9A050]/30 flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#C9A050]/20 text-[#C9A050] flex items-center justify-center font-bold text-xs">
+                      <Shield className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-xs text-[#F0ECE1]">Admin Account</div>
+                      <div className="text-[10px] text-[#C9A050] truncate max-w-[150px]">
+                        {userEmail || 'Administrator'}
+                      </div>
                     </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      setIsChangePasswordOpen(true);
+                    }}
+                    className="p-1.5 rounded-lg bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 text-xs font-semibold flex items-center space-x-1"
+                    title="Change Password"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setIsMobileDrawerOpen(false);
-                    onOpenNewProfile();
-                  }}
-                  className="p-1.5 rounded-lg bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 text-xs font-semibold"
-                  title="Edit or Add Profile"
-                >
-                  <PlusCircle className="w-4 h-4" />
-                </button>
-              </div>
+              ) : (
+                <div className="my-4 p-3 rounded-xl bg-[#1A1A1E] border border-[#2A2A2E] flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#C9A050]/20 text-[#C9A050] flex items-center justify-center font-bold text-xs">
+                      {currentProfile.fullName.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="font-bold text-xs text-[#F0ECE1]">{currentProfile.fullName}</div>
+                      <div className="text-[10px] text-[#9E9A90] capitalize">
+                        {currentProfile.horoscopeSystem || 'Vedic'} System
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      onOpenNewProfile();
+                    }}
+                    className="p-1.5 rounded-lg bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 text-xs font-semibold"
+                    title="Edit or Add Profile"
+                  >
+                    <PlusCircle className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
 
               {/* Navigation Tabs List */}
               <div className="space-y-1 mt-2">

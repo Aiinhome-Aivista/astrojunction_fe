@@ -16,12 +16,15 @@ import { AdminUsersView } from './components/AdminUsersView';
 import { AdminLogsView } from './components/AdminLogsView';
 import { AdminRevenueView } from './components/AdminRevenueView';
 import { AdminLLMConfigView } from './components/AdminLLMConfigView';
+import { AdminSEOView } from './components/AdminSEOView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
 
 import { API_ENDPOINTS } from './config/api_config';
 import { api } from './services/api';
 import { ProfileModal, PRESET_CITIES } from './components/ProfileModal';
 import { DisclaimerModal } from './components/DisclaimerModal';
+import { SEO } from './components/SEO';
+import { TAB_SEO_CONFIG, DEFAULT_SEO } from './config/seoConfig';
 import { Footer } from './components/Footer';
 import { StarfieldBackground } from './components/StarfieldBackground';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -184,6 +187,18 @@ export function App() {
 
   const [activeTab, setActiveTab] = useState<string>('daily');
   const [selectedConsultationTierId, setSelectedConsultationTierId] = useState<string | null>(null);
+  const [dynamicSeoMap, setDynamicSeoMap] = useState<Record<string, any>>({});
+
+  useEffect(() => {
+    api.get<any>('/api/seo-config')
+      .then((res) => {
+        const data = res?.data || res;
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          setDynamicSeoMap(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (authUser?.role === 'admin') {
@@ -548,8 +563,10 @@ export function App() {
   };
 
   if (!authUser || activeTab === 'landing' || activeTab === 'home') {
+    const landingSeo = dynamicSeoMap['landing'] || TAB_SEO_CONFIG['landing'] || DEFAULT_SEO;
     return (
       <>
+        <SEO {...landingSeo} />
         <LandingPage
           onLoginClick={() => { setAuthMode('login'); setShowAuthGate(true); }}
           onRegisterClick={() => { setAuthMode('register'); setShowAuthGate(true); }}
@@ -570,6 +587,8 @@ export function App() {
     );
   }
 
+  const activeSeo = dynamicSeoMap[activeTab] || TAB_SEO_CONFIG[activeTab] || DEFAULT_SEO;
+
   return (
     <div
       dir={isRtl ? 'rtl' : 'ltr'}
@@ -579,6 +598,7 @@ export function App() {
           : 'light bg-[#F0ECE1] text-[#0D0D0F] selection:bg-[#D4AF37] selection:text-[#FFFFFF]'
       }`}
     >
+      <SEO {...activeSeo} />
       {/* Animated Space Background - Only in Dark Mode */}
       {theme === 'dark' && <StarfieldBackground />}
 
@@ -594,9 +614,11 @@ export function App() {
         currentProfile={currentProfile}
         profiles={profiles}
         onSelectProfile={setCurrentProfile}
-        onOpenNewProfile={() =>
-          setIsProfileModalOpen(true)
-        }
+        onOpenNewProfile={() => {
+          if (authUser?.role !== 'admin') {
+            setIsProfileModalOpen(true);
+          }
+        }}
         onOpenDisclaimer={() =>
           setIsDisclaimerModalOpen(true)
         }
@@ -672,6 +694,10 @@ export function App() {
 
             {activeTab === 'admin_llm' && (
               <AdminLLMConfigView theme={theme} />
+            )}
+
+            {activeTab === 'admin_seo' && (
+              <AdminSEOView theme={theme} />
             )}
 
             {activeTab === 'horoscope' && (
@@ -800,14 +826,16 @@ export function App() {
         </AnimatePresence>
       </main>
 
-      {/* Profile Creation / Edit Modal */}
-      <ProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        onSave={handleSaveProfile}
-        initialProfile={currentProfile}
-        theme={theme}
-      />
+      {/* Profile Creation / Edit Modal (Only for regular users, hidden for Admin) */}
+      {authUser?.role !== 'admin' && (
+        <ProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          onSave={handleSaveProfile}
+          initialProfile={currentProfile}
+          theme={theme}
+        />
+      )}
 
       {/* Ethical & Astrological Disclaimer Modal */}
       <DisclaimerModal
