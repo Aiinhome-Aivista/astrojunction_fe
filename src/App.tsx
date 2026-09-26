@@ -608,6 +608,7 @@ export function App() {
         setLanguage={setLanguage}
         onLogout={handleLogout}
         isAdmin={authUser?.role === 'admin'}
+        userEmail={authUser?.email}
       />
 
       {/* Main Container */}

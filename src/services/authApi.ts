@@ -77,3 +77,11 @@ export function logout(): void {
 export async function getCurrentUser(): Promise<AuthUser> {
   return api.get<AuthUser>(API_ENDPOINTS.AUTH.CURRENT_USER);
 }
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  return api.post<{ message: string }>(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, {
+    currentPassword,
+    newPassword,
+  });
+}
+

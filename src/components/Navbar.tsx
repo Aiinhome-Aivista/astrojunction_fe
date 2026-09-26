@@ -29,11 +29,13 @@ import {
   Home,
   Loader2,
   Cpu,
+  Key,
 } from 'lucide-react';
 import { UserProfile, HoroscopeTradition } from '../types';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
 import { SUPPORTED_LANGUAGES, getTranslation } from '../services/translations';
 import { generateMasterFullReportPdf } from '../services/fullReportGenerator';
+import { ChangePasswordModal } from './ChangePasswordModal';
 
 interface NavbarProps {
   activeTab: string;
@@ -51,6 +53,7 @@ interface NavbarProps {
   setLanguage: (lang: string) => void;
   onLogout?: () => void;
   isAdmin?: boolean;
+  userEmail?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -69,11 +72,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   setLanguage,
   onLogout,
   isAdmin = false,
+  userEmail,
 }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isGeneratingFullReport, setIsGeneratingFullReport] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+
 
   const t = (key: string, fallback?: string) => {
     const val = getTranslation(key, language);
@@ -277,6 +283,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </button>
                         );
                       })}
+                      {/* Change Password in Profile Menu (Admin only) */}
+                      {isAdmin && (
+                        <div className={`border-t pt-1 mt-1 ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]/40'}`}>
+                          <button
+                            onClick={() => {
+                              setIsProfileMenuOpen(false);
+                              setIsChangePasswordOpen(true);
+                            }}
+                            className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${
+                              theme === 'dark'
+                                ? 'text-[#C9A050] hover:bg-[#1C1C22]'
+                                : 'text-[#8C6218] hover:bg-[#F3EADB]'
+                            }`}
+                          >
+                            <Key className="w-3.5 h-3.5" />
+                            <span>Change Password</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -329,6 +354,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
                   <span>{t('header.ask_ai')}</span>
+                </button>
+              )}
+
+              {/* Change Password Button (Desktop - Admin only) */}
+              {isAdmin && (
+                <button
+                  onClick={() => setIsChangePasswordOpen(true)}
+                  title="Change Admin Password"
+                  className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shadow-sm shrink-0 ${
+                    theme === 'dark'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#C9A050] hover:border-[#C9A050] hover:bg-[#1C1C22]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#8C6218] hover:border-[#C9A050] hover:text-[#1E1B15]'
+                  }`}
+                  aria-label="Change Admin Password"
+                >
+                  <Key className="w-4 h-4" />
                 </button>
               )}
 
@@ -531,6 +572,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Drawer Footer Actions */}
             <div className="pt-4 border-t border-[#2A2A2E] space-y-2">
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
+                    setIsChangePasswordOpen(true);
+                  }}
+                  className="w-full flex items-center space-x-2 text-xs text-[#C9A050] hover:text-[#D4AF37] py-1.5 px-2 rounded hover:bg-[#C9A050]/10 transition"
+                >
+                  <Key className="w-3.5 h-3.5 text-[#C9A050]" />
+                  <span>Change Password</span>
+                </button>
+              )}
+
               <button
                 onClick={() => {
                   setIsMobileDrawerOpen(false);
@@ -582,6 +636,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
       </div>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+        theme={theme}
+        userEmail={userEmail}
+      />
     </>
   );
 };

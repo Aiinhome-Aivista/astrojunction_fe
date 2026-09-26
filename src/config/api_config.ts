@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     GOOGLE: '/auth/google',
     CURRENT_USER: '/auth/current-user',
+    CHANGE_PASSWORD: '/auth/change-password',
   },
   USER: {
     PROFILES: '/user/profiles',
