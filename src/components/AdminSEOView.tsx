@@ -317,17 +317,29 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               <span>Google Search Preview</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white text-gray-900 border border-gray-200 font-sans shadow-inner space-y-1">
-              <div className="flex items-center space-x-2 text-[11px] text-gray-600">
-                <span className="w-4 h-4 rounded-full bg-[#C9A050] text-[9px] text-white flex items-center justify-center font-bold">
+            <div
+              className={`p-4 rounded-xl font-sans space-y-1 border transition-colors ${
+                isDark
+                  ? 'bg-[#18181D] border-[#2A2A2E] text-[#e8eaed]'
+                  : 'bg-white border-gray-200 text-gray-900 shadow-inner'
+              }`}
+            >
+              <div className="flex items-center space-x-2 text-[11px]">
+                <span className="w-4 h-4 rounded-full bg-[#C9A050] text-[9px] text-[#0D0D0F] flex items-center justify-center font-bold">
                   AJ
                 </span>
-                <span className="truncate">https://astrojunction.com {pageDef.path}</span>
+                <span className={`truncate ${isDark ? 'text-[#9aa0a6]' : 'text-gray-600'}`}>
+                  https://astrojunction.com {pageDef.path}
+                </span>
               </div>
-              <h4 className="text-base text-[#1a0dab] hover:underline font-medium line-clamp-1 leading-snug cursor-pointer">
+              <h4
+                className={`text-base font-medium line-clamp-1 leading-snug cursor-pointer hover:underline ${
+                  isDark ? 'text-[#8ab4f8]' : 'text-[#1a0dab]'
+                }`}
+              >
                 {currentPage.title || 'Page Title'}
               </h4>
-              <p className="text-xs text-[#4d5156] line-clamp-2 leading-relaxed">
+              <p className={`text-xs line-clamp-2 leading-relaxed ${isDark ? 'text-[#bdc1c6]' : 'text-[#4d5156]'}`}>
                 {currentPage.description || 'Meta description will appear here in search engine results.'}
               </p>
             </div>
@@ -340,8 +352,14 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               <span>Social Share Card Preview</span>
             </div>
 
-            <div className="rounded-xl overflow-hidden border border-gray-300 bg-white text-gray-900 shadow-sm">
-              <div className="aspect-[1.91/1] w-full bg-black/10 overflow-hidden relative">
+            <div
+              className={`rounded-xl overflow-hidden border transition-colors ${
+                isDark
+                  ? 'border-[#2A2A2E] bg-[#18181D] shadow-lg shadow-black/40'
+                  : 'border-gray-200 bg-white shadow-sm'
+              }`}
+            >
+              <div className="aspect-[1.91/1] w-full bg-black/20 overflow-hidden relative">
                 <img
                   src={currentPage.ogImage || '/golden_zodiac_wheel.jpg'}
                   alt="OG Preview"
@@ -351,14 +369,18 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
                   }}
                 />
               </div>
-              <div className="p-3 bg-gray-50 border-t border-gray-200 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">
+              <div
+                className={`p-3 space-y-1 border-t transition-colors ${
+                  isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-gray-50 border-gray-200'
+                }`}
+              >
+                <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   ASTROJUNCTION.COM
                 </span>
-                <h5 className="text-xs font-bold text-gray-900 line-clamp-1 leading-tight">
+                <h5 className={`text-xs font-bold line-clamp-1 leading-tight ${isDark ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
                   {currentPage.title}
                 </h5>
-                <p className="text-[11px] text-gray-600 line-clamp-2 leading-relaxed">
+                <p className={`text-[11px] line-clamp-2 leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                   {currentPage.description}
                 </p>
               </div>
