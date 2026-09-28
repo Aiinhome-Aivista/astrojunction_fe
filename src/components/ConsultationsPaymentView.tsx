@@ -98,13 +98,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     const itemId = tx.item_id || '';
     const amount = Number(tx.amount);
 
-    if (itemId === 'daily_vedic_subscription' || amount === 99) {
+    if (itemId === 'daily_vedic_subscription' || itemId === 'birth_chart_subscription' || amount === 99) {
       return {
         id: 'daily_vedic_subscription',
-        name: 'Vedic Daily Seeker (Daily Horoscope & Panchang)',
-        tab: 'daily',
-        tabName: 'Daily Horoscope',
-        highlights: 'Real-time Planetary Transits (Gochar), Auspicious Muhurats & AI Horoscope Synthesis.',
+        name: 'Comprehensive Vedic Synthesis (Parashari)',
+        tab: 'horoscope',
+        tabName: 'Birth Chart',
+        highlights: 'Comprehensive Vedic Synthesis (Parashari & Multi-Traditions), 12 Bhavas, Yogas & Dashas.',
       };
     }
     if (itemId === 'matchmaking_regenerate_subscription' || amount === 149) {
@@ -116,15 +116,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         highlights: '36-Guna Ashta Koota Milan, Manglik & Nadi Dosha Analysis & Karmic Synastry.',
       };
     }
-    if (itemId.startsWith('roadmap_') || amount === 169 || amount === 199 || amount === 249) {
-      const is25 = itemId === 'roadmap_25_subscription' || amount === 249;
-      const is20 = itemId === 'roadmap_20_subscription' || amount === 199;
+    if (itemId.startsWith('roadmap_') || [100, 150, 169, 200, 199, 250, 249, 300].includes(amount)) {
+      const is25 = itemId === 'roadmap_25_subscription' || amount === 300 || amount === 249;
+      const is20 = itemId === 'roadmap_20_subscription' || amount === 250 || amount === 199;
+      const is15 = itemId === 'roadmap_15_subscription' || amount === 200 || amount === 169;
+      const is10 = itemId === 'roadmap_10_subscription' || amount === 150;
+      const id = is25 ? 'roadmap_25_subscription' : is20 ? 'roadmap_20_subscription' : is15 ? 'roadmap_15_subscription' : is10 ? 'roadmap_10_subscription' : 'roadmap_5_subscription';
+      const name = is25 ? '25-Year Life Horizon' : is20 ? '20-Year Life Horizon' : is15 ? '15-Year Life Horizon' : is10 ? '10-Year Life Horizon' : '5-Year Life Horizon';
       return {
-        id: itemId || (is25 ? 'roadmap_25_subscription' : is20 ? 'roadmap_20_subscription' : 'roadmap_15_subscription'),
-        name: is25 ? '25-Year Life Horizon' : is20 ? '20-Year Life Horizon' : '15-Year Life Horizon',
+        id,
+        name,
         tab: 'roadmap',
         tabName: 'Destiny Roadmap',
-        highlights: '15-Year Vimshottari Dasha Milestones, Career/Wealth Yogas & Lifetime PDF Dossier.',
+        highlights: `${name} Vimshottari Dasha Milestones, Career/Wealth Yogas & Lifetime PDF Dossier.`,
       };
     }
 
@@ -154,9 +158,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         if (tx.status === 'success') {
           const details = getHistoryItemDetails(tx);
           localStorage.setItem(`jyotish_${details.id}_active`, 'true');
-          if (details.id === 'daily_vedic_subscription' || Number(tx.amount) === 99) {
+          if (details.id === 'daily_vedic_subscription' || details.id === 'birth_chart_subscription' || Number(tx.amount) === 99) {
             localStorage.setItem('jyotish_user_premium', 'true');
             localStorage.setItem('jyotish_daily_vedic_subscription_active', 'true');
+            localStorage.setItem('jyotish_birth_chart_subscription_active', 'true');
           }
           if (details.id === 'matchmaking_regenerate_subscription' || Number(tx.amount) === 149) {
             localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
@@ -393,7 +398,11 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           (tx.item_id === tierId ||
             (tierId === 'daily_vedic_subscription' && (tx.item_id === 'daily_vedic_subscription' || Number(tx.amount) === 99)) ||
             (tierId === 'matchmaking_regenerate_subscription' && (tx.item_id === 'matchmaking_regenerate_subscription' || Number(tx.amount) === 149)) ||
-            (tierId === 'roadmap_15_subscription' && (tx.item_id === 'roadmap_15_subscription' || Number(tx.amount) === 169)))
+            (tierId === 'roadmap_5_subscription' && (tx.item_id === 'roadmap_5_subscription' || Number(tx.amount) === 100)) ||
+            (tierId === 'roadmap_10_subscription' && (tx.item_id === 'roadmap_10_subscription' || Number(tx.amount) === 150)) ||
+            (tierId === 'roadmap_15_subscription' && (tx.item_id === 'roadmap_15_subscription' || Number(tx.amount) === 200 || Number(tx.amount) === 169)) ||
+            (tierId === 'roadmap_20_subscription' && (tx.item_id === 'roadmap_20_subscription' || Number(tx.amount) === 250 || Number(tx.amount) === 199)) ||
+            (tierId === 'roadmap_25_subscription' && (tx.item_id === 'roadmap_25_subscription' || Number(tx.amount) === 300 || Number(tx.amount) === 249)))
       )
     ) {
       return true;
@@ -423,9 +432,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
     try {
       localStorage.setItem(`jyotish_${tierId}_active`, 'true');
-      if (tierId === 'daily_vedic_subscription') {
+      if (tierId === 'daily_vedic_subscription' || tierId === 'birth_chart_subscription') {
         localStorage.setItem('jyotish_user_premium', 'true');
         localStorage.setItem('jyotish_daily_vedic_subscription_active', 'true');
+        localStorage.setItem('jyotish_birth_chart_subscription_active', 'true');
       }
       if (tierId === 'matchmaking_regenerate_subscription') {
         localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
@@ -436,12 +446,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     if (onNavigateTab) {
       if (tierId.startsWith('roadmap_')) {
         onNavigateTab('roadmap');
-      } else if (tierId === 'daily_vedic_subscription') {
-        onNavigateTab('daily');
+      } else if (tierId === 'daily_vedic_subscription' || tierId === 'birth_chart_subscription') {
+        onNavigateTab('horoscope');
       } else if (tierId === 'matchmaking_regenerate_subscription') {
         onNavigateTab('matchmaking');
       } else {
-        onNavigateTab('daily');
+        onNavigateTab('horoscope');
       }
     } else if (onPaymentSuccess && paymentSuccess?.tier) {
       onPaymentSuccess(paymentSuccess.tier, paymentSuccess.txId);
@@ -450,16 +460,21 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
   const getTierUnlockedDetails = (tierId: string) => {
     if (tierId.startsWith('roadmap_')) {
+      const is25 = tierId === 'roadmap_25_subscription';
+      const is20 = tierId === 'roadmap_20_subscription';
+      const is15 = tierId === 'roadmap_15_subscription';
+      const is10 = tierId === 'roadmap_10_subscription';
+      const labelHorizon = is25 ? '25-Year' : is20 ? '20-Year' : is15 ? '15-Year' : is10 ? '10-Year' : '5-Year';
       return {
-        title: '15-Year Astrological Destiny Roadmap',
+        title: `${labelHorizon} Astrological Destiny Roadmap`,
         destination: 'Vedic Roadmap Dashboard',
         tab: 'roadmap',
         highlights: [
-          { label: 'Vimshottari Dasha Milestones', desc: 'Complete 15-Year Mahadasha & Antardasha transition timings unlocked.' },
+          { label: 'Vimshottari Dasha Milestones', desc: `Complete ${labelHorizon} Mahadasha & Antardasha transition timings unlocked.` },
           { label: 'Career & Financial Turning Points', desc: 'Optimal career progression, business growth & wealth yogas.' },
           { label: 'Destiny & Life Progression', desc: 'Predictions across all 8 core life dimensions synthesized.' },
           { label: 'Planetary Upayas & Remedial Guide', desc: 'Customized gemstone, Yantra, Kavach & Vedic Stotras.' },
-          { label: 'Full High-Res PDF Life Dossier', desc: 'Printable 25-Year Vedic Destiny Blueprint unlocked for instant export.' },
+          { label: 'Full High-Res PDF Life Dossier', desc: 'Printable Vedic Destiny Blueprint unlocked for instant export.' },
         ],
       };
     }
@@ -471,7 +486,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         highlights: [
           { label: '36-Guna Ashta Koota Milan', desc: 'Deep breakdown of Varn, Vashya, Tara, Yoni, Maitri, Gana, Bhakoot & Nadi.' },
           { label: 'Dosha Cancellation Analysis', desc: 'Mangal Dosha & Nadi Dosha cancellations computed from classical Shastras.' },
-          { label: 'Daivajna AI Karmic Synastry', desc: 'Emotional, psychological & spiritual harmony analysis.' },
+          { label: 'Daivajna Karmic Synastry', desc: 'Emotional, psychological & spiritual harmony analysis.' },
           { label: 'Unlimited Regenerations', desc: 'Re-synthesize matchmaking counsel anytime with updated partner data.' },
           { label: 'Printable Kundli Milan Dossier', desc: 'Instant export of the full comprehensive matchmaking report.' },
         ],
@@ -486,7 +501,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           { label: 'Real-time Gochar (Transits)', desc: 'Live Chandra Gochar, Nakshatra lord vibrations & 12 Bhavas analysis.' },
           { label: 'Auspicious Muhurats & Kaal Windows', desc: 'Precise Abhijit Muhurat, Rahu Kaal, Gulika Kaal & Yamaganda timings.' },
           { label: 'Personalized Lucky Vibrations', desc: 'Daily lucky numbers, color frequencies & auspicious planetary hours.' },
-          { label: 'Daivajna AI Daily Synthesis', desc: 'Personalized transit reading calculated directly from your birth chart.' },
+          { label: 'Daivajna Daily Synthesis', desc: 'Personalized transit reading calculated directly from your birth chart.' },
         ],
       };
     }
@@ -503,15 +518,26 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
   };
 
   const getTierMeta = (tier: ConsultationTier, index: number) => {
-    if (tier.id.includes('roadmap') || index === 2) {
+    if (tier.id === 'roadmap_25_subscription') {
       return {
-        badge: 'MOST POPULAR • BEST VALUE',
+        badge: 'MASTER 25-YEAR BLUEPRINT • BEST VALUE',
         badgeBg: 'bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A050] text-[#0D0D0F] font-black shadow-lg shadow-amber-500/25',
         icon: Crown,
         iconBox: 'bg-amber-500/20 text-[#E5C378] border border-amber-500/40 shadow-inner',
         highlight: true,
-        tagline: 'Comprehensive 15-Year Life Horizon',
-        popularLabel: 'Recommended by Daivajna AI',
+        tagline: 'All Horizons (0-25 Years) Unlocked',
+        popularLabel: 'Recommended by Daivajna',
+      };
+    }
+    if (tier.id.includes('roadmap')) {
+      return {
+        badge: 'VEDIC DESTINY HORIZON',
+        badgeBg: 'bg-amber-500/20 text-[#E5C378] border border-amber-500/40 font-bold backdrop-blur-md',
+        icon: Crown,
+        iconBox: 'bg-amber-500/15 text-[#E5C378] border border-amber-500/30',
+        highlight: false,
+        tagline: tier.name,
+        popularLabel: 'Predictive Transit Cycle',
       };
     }
     if (tier.id.includes('matchmaking') || index === 1) {
@@ -751,7 +777,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF4D0] to-[#C9A050]'
                         : 'text-transparent bg-clip-text bg-gradient-to-r from-[#8C6517] to-[#C9A050]'
                     }`}>
-                      ₹{tier.priceINR.toLocaleString()}
+                      {tier.priceINR === 0 ? 'FREE (₹0)' : `₹${tier.priceINR.toLocaleString()}`}
                     </span>
                     <span className={`text-[10px] font-sans font-medium ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>INR</span>
                   </div>

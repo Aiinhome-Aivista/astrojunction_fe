@@ -38,7 +38,7 @@
   html,
   body,
   #root {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
   }
 
@@ -48,6 +48,12 @@
     font-family: 'Nunito';
     letter-spacing: 0.01em;
     transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Hide browser native password reveal and clear buttons (e.g. Edge) so only custom eye toggle shows */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none !important;
   }
 }
 

@@ -13,6 +13,7 @@ import { BlogPage } from './BlogPage';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
 import { VedicRemediesSection } from './VedicRemediesSection';
 import { landingChatApi } from '../services/landingChatApi';
+import { LegalInfoPage, LegalPageView } from './LegalInfoPage';
 
 interface LandingPageProps {
   onLoginClick: () => void;
@@ -41,33 +42,33 @@ export function LandingPage({
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch (e) {}
+    } catch (e) { }
     return [{ role: 'assistant', content: 'Namaste. I am AstroJunction. How may I guide your astrological journey today?' }];
   });
 
   const [input, setInput] = useState('');
-  
+
   const [msgCount, setMsgCount] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('jyotishveda_guest_chat_count');
       if (saved) return parseInt(saved, 10) || 0;
-    } catch (e) {}
+    } catch (e) { }
     return 0;
   });
 
   const [isAiThinking, setIsAiThinking] = useState(false);
-  
+
   const [savedDob, setSavedDob] = useState<any>(() => {
     try {
       const saved = localStorage.getItem('jyotishveda_guest_chat_dob');
       if (saved) return JSON.parse(saved);
-    } catch (e) {}
+    } catch (e) { }
     return null;
   });
 
   const [selectedFeatureForPreview, setSelectedFeatureForPreview] = useState<PremiumFeatureDetail | null>(null);
   const [selectedBlogForPage, setSelectedBlogForPage] = useState<BlogPost | null>(null);
-  const [currentView, setCurrentView] = useState<'landing' | 'blogs'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>('landing');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
@@ -82,7 +83,7 @@ export function LandingPage({
       } else {
         localStorage.removeItem('jyotishveda_guest_chat_dob');
       }
-    } catch (e) {}
+    } catch (e) { }
   }, [messages, msgCount, savedDob]);
 
   useEffect(() => {
@@ -96,7 +97,7 @@ export function LandingPage({
       localStorage.removeItem('jyotishveda_guest_chat_messages');
       localStorage.removeItem('jyotishveda_guest_chat_count');
       localStorage.removeItem('jyotishveda_guest_chat_dob');
-    } catch (e) {}
+    } catch (e) { }
     setMessages([{ role: 'assistant', content: 'Namaste. I am AstroJunction. How may I guide your astrological journey today?' }]);
     setMsgCount(0);
     setSavedDob(null);
@@ -181,7 +182,7 @@ export function LandingPage({
       // Client-side Fallback
       setTimeout(() => {
         let reply = "";
-        
+
         if (msgCount >= 2) {
           reply = "Please login to unlock deep analysis and detailed celestial wisdom.";
           setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
@@ -239,7 +240,7 @@ export function LandingPage({
         if (detectedD && detectedM && detectedY) {
           const newDob = [detectedY, detectedM, detectedD];
           setSavedDob(newDob);
-          
+
           const digits = `${detectedY}${detectedM < 10 ? '0' + detectedM : detectedM}${detectedD < 10 ? '0' + detectedD : detectedD}`.split('').map(Number);
           let lp = digits.reduce((a, b) => a + b, 0);
           while (lp > 9 && lp !== 11 && lp !== 22 && lp !== 33) {
@@ -358,8 +359,8 @@ export function LandingPage({
               <button
                 onClick={() => scrollToSection('hero-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <Home className="w-3.5 h-3.5" />
@@ -368,8 +369,8 @@ export function LandingPage({
               <button
                 onClick={() => scrollToSection('zodiac-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <Globe className="w-3.5 h-3.5" />
@@ -378,8 +379,8 @@ export function LandingPage({
               <button
                 onClick={() => scrollToSection('panjika-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -388,8 +389,8 @@ export function LandingPage({
               <button
                 onClick={() => scrollToSection('remedies-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -398,18 +399,18 @@ export function LandingPage({
               <button
                 onClick={() => scrollToSection('blog-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>Blog</span>
+                <span>Blogs</span>
               </button>
               <button
                 onClick={() => scrollToSection('premium-section')}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
-                    ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                    : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
+                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
                 <Lock className="w-3.5 h-3.5" />
@@ -422,8 +423,8 @@ export function LandingPage({
               <button
                 onClick={toggleTheme}
                 className={`p-2.5 rounded-full transition-all border ${theme === 'dark'
-                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
+                  ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
+                  : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
                   }`}
                 title="Toggle Theme"
               >
@@ -443,8 +444,8 @@ export function LandingPage({
                   <button
                     onClick={onLoginClick}
                     className={`hidden sm:block px-5 py-2.5 rounded-full font-bold text-[13px] transition-all cursor-pointer border shadow-sm ${theme === 'dark'
-                        ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
-                        : 'bg-white border-gray-200 text-[#0D0D0F] hover:text-[#8C6B28] hover:border-[#C9A050]/50'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
+                      : 'bg-white border-gray-200 text-[#0D0D0F] hover:text-[#8C6B28] hover:border-[#C9A050]/50'
                       }`}
                   >
                     Log In
@@ -464,7 +465,7 @@ export function LandingPage({
 
       {/* Main Content Area */}
       <main className="flex-1 relative z-10 scroll-smooth">
-        
+
         {/* Universal Astrologer Background (Fixed across all sections) */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div
@@ -478,240 +479,267 @@ export function LandingPage({
         </div>
 
         {currentView === 'blogs' ? (
-          <BlogPage 
-            theme={theme} 
+          <BlogPage
+            theme={theme}
             initialBlog={selectedBlogForPage}
             onBack={() => {
               setSelectedBlogForPage(null);
               setCurrentView('landing');
               window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-            }} 
+            }}
+          />
+        ) : ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'].includes(currentView) ? (
+          <LegalInfoPage
+            view={currentView as LegalPageView}
+            onBack={() => {
+              setCurrentView('landing');
+              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }}
+            onNavigateView={(v) => {
+              setCurrentView(v);
+              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }}
+            theme={theme}
           />
         ) : (
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div id="hero-section" className="scroll-mt-24 min-h-[calc(100vh-5rem)] py-8 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-            {/* Left Column: Greetings */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
-              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
-                <Compass className="w-4 h-4" />
-                <span>Authentic Vedic Oracle</span>
+              {/* Left Column: Greetings */}
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
+                <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
+                  <Compass className="w-4 h-4" />
+                  <span>Authentic Vedic Oracle</span>
+                </div>
+
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                  <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    Decode Your
+                  </span>
+                  <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    Destiny with
+                  </span>
+                  <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start">
+                    {"ASTRO".split("").map((char, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
+                        className={`inline-block ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                    {"JUNCTION".split("").map((char, index) => (
+                      <motion.span
+                        key={`v-${index}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
+                        className="inline-block text-[#C9A050]"
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                  </span>
+                </h2>
+
+                <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed font-light ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
+                  Harness the profound wisdom of ancient <strong className="font-semibold text-[#C9A050]">Vedic astrology</strong>. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
+                  <button
+                    onClick={authUser ? onGoToDashboard : onRegisterClick}
+                    className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
+                  >
+                    <span>{authUser ? 'Go to Your Kundli Dashboard' : 'Unlock Your Future'}</span>
+                    <Sparkles className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
-                <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Decode Your
-                </span>
-                <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Destiny with
-                </span>
-                <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start">
-                  {"ASTRO".split("").map((char, index) => (
-                    <motion.span
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-                      className={`inline-block ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-                  {"JUNCTION".split("").map((char, index) => (
-                    <motion.span
-                      key={`v-${index}`}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
-                      className="inline-block text-[#C9A050]"
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-                </span>
-              </h2>
+              {/* Right Column: Hero Spinning Zodiac Wheel */}
+              <div className="relative group flex justify-center lg:justify-end order-1 lg:order-2 overflow-visible">
+                <div className="absolute inset-0 bg-[#C9A050]/20 rounded-full blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 lg:translate-x-16"></div>
 
-              <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed font-light ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
-                Harness the profound wisdom of ancient <strong className="font-semibold text-[#C9A050]">Vedic astrology</strong>. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.
-              </p>
+                {/* The wheel container */}
+                <div className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] flex items-center justify-center lg:translate-x-[15%]">
+                  <img
+                    src="/white_zodiac_wheel.png"
+                    alt="AstroJunction Zodiac Wheel"
+                    className="w-full h-full object-cover rounded-full shadow-[0_0_60px_rgba(201,160,80,0.4)] border border-[#C9A050]/40 relative z-10"
+                    style={{ animation: 'spin 60s linear infinite' }}
+                  />
 
-              <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
-                <button
-                  onClick={authUser ? onGoToDashboard : onRegisterClick}
-                  className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
-                >
-                  <span>{authUser ? 'Go to Your Kundli Dashboard' : 'Unlock Your Future'}</span>
-                  <Sparkles className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+                  {/* AstroJunction Premium Center Core */}
+                  <div className="absolute z-20 flex flex-col items-center justify-center pointer-events-none">
+                    {/* Outer glowing aura */}
+                    <div className="absolute inset-0 rounded-full bg-[#C9A050]/20 blur-2xl animate-pulse"></div>
 
-            {/* Right Column: Hero Spinning Zodiac Wheel */}
-            <div className="relative group flex justify-center lg:justify-end order-1 lg:order-2 overflow-visible">
-              <div className="absolute inset-0 bg-[#C9A050]/20 rounded-full blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 lg:translate-x-16"></div>
+                    {/* Rotating decorative dashed ring */}
+                    <div className="absolute w-28 h-28 sm:w-[150px] sm:h-[150px] rounded-full border-[1.5px] border-dashed border-[#C9A050]/50 animate-[spin_40s_linear_infinite_reverse]"></div>
 
-              {/* The wheel container */}
-              <div className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] flex items-center justify-center lg:translate-x-[15%]">
-                <img
-                  src="/white_zodiac_wheel.png"
-                  alt="AstroJunction Zodiac Wheel"
-                  className="w-full h-full object-cover rounded-full shadow-[0_0_60px_rgba(201,160,80,0.4)] border border-[#C9A050]/40 relative z-10"
-                  style={{ animation: 'spin 60s linear infinite' }}
-                />
+                    {/* Core Container */}
+                    <div className="relative bg-gradient-to-br from-[#1C1A14] to-[#0A0907] border-[2px] border-[#C9A050]/80 shadow-[0_0_40px_rgba(201,160,80,0.6),inset_0_0_15px_rgba(201,160,80,0.2)] rounded-full w-24 h-24 sm:w-32 sm:h-32 flex flex-col items-center justify-center overflow-hidden">
 
-                {/* AstroJunction Premium Center Core */}
-                <div className="absolute z-20 flex flex-col items-center justify-center pointer-events-none">
-                  {/* Outer glowing aura */}
-                  <div className="absolute inset-0 rounded-full bg-[#C9A050]/20 blur-2xl animate-pulse"></div>
-                  
-                  {/* Rotating decorative dashed ring */}
-                  <div className="absolute w-28 h-28 sm:w-[150px] sm:h-[150px] rounded-full border-[1.5px] border-dashed border-[#C9A050]/50 animate-[spin_40s_linear_infinite_reverse]"></div>
-                  
-                  {/* Core Container */}
-                  <div className="relative bg-gradient-to-br from-[#1C1A14] to-[#0A0907] border-[2px] border-[#C9A050]/80 shadow-[0_0_40px_rgba(201,160,80,0.6),inset_0_0_15px_rgba(201,160,80,0.2)] rounded-full w-24 h-24 sm:w-32 sm:h-32 flex flex-col items-center justify-center overflow-hidden">
-                    
-                    {/* Inner gold reflection / glass highlight */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent rounded-full pointer-events-none"></div>
+                      {/* Inner gold reflection / glass highlight */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent rounded-full pointer-events-none"></div>
 
-                    {/* Central Om Symbol with Glow */}
-                    <span className="text-[#D4AF37] text-2xl sm:text-3xl leading-none drop-shadow-[0_0_12px_rgba(201,160,80,0.9)] mb-1">
-                      ॐ
-                    </span>
-                    
-                    {/* Typography */}
-                    <span className="text-[#E5C170] font-serif font-bold text-[8px] sm:text-[10px] tracking-[0.25em] text-center flex flex-col items-center drop-shadow-md">
-                      <span>ASTRO</span>
-                      <span className="font-sans text-[8px] sm:text-[9.5px] tracking-normal mt-0.5 text-[#C9A050]">JUNCTION</span>
-                    </span>
+                      {/* Central Om Symbol with Glow */}
+                      <span className="text-[#D4AF37] text-2xl sm:text-3xl leading-none drop-shadow-[0_0_12px_rgba(201,160,80,0.9)] mb-1">
+                        ॐ
+                      </span>
+
+                      {/* Typography */}
+                      <span className="text-[#E5C170] font-serif font-bold text-[8px] sm:text-[10px] tracking-[0.25em] text-center flex flex-col items-center drop-shadow-md">
+                        <span>ASTRO</span>
+                        <span className="font-sans text-[8px] sm:text-[9.5px] tracking-normal mt-0.5 text-[#C9A050]">JUNCTION</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Stacked Layout for Zodiac and Panjika */}
-          <div className="flex flex-col gap-8 pt-6 pb-12 w-full">
-            {/* Full Global Zodiac Section */}
-            <div id="zodiac-section" className="scroll-mt-24 w-full text-left">
-              <GlobalZodiacView
+            {/* Stacked Layout for Zodiac and Panjika */}
+            <div className="flex flex-col gap-8 pt-6 pb-12 w-full">
+              {/* Full Global Zodiac Section */}
+              <div id="zodiac-section" className="scroll-mt-24 w-full text-left">
+                <GlobalZodiacView
+                  theme={theme}
+                  onAskAIForSign={handleAskAIForSign}
+                />
+              </div>
+
+              {/* Panjika & Calendar Section Below */}
+              <div id="panjika-section" className="scroll-mt-24 w-full text-left flex flex-col gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-center">
+                  <div className="w-full">
+                    <PanjikaCalendarView theme={theme} />
+                  </div>
+                  <div className="w-full hidden lg:flex items-center justify-center p-4">
+                    <div className="relative w-full max-w-[340px] xl:max-w-[380px] aspect-square rounded-full overflow-hidden shadow-[0_0_50px_rgba(201,160,80,0.2)] border-2 border-[#C9A050]/20 group">
+                      <img
+                        src="/vedic_calendar_alt.jpg"
+                        alt="Vedic Calendar"
+                        className="w-full h-full object-cover scale-[1.02]"
+                        style={{ animation: 'spin 120s linear infinite' }}
+                      />
+                      <div className="absolute inset-0 rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] pointer-events-none"></div>
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#C9A050]/10 to-transparent mix-blend-overlay pointer-events-none"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <ZodiacCompatibilityMatrix theme={theme} />
+              </div>
+            </div>
+
+            {/* Sacred Vedic Remedies Section (4 Hardcoded Remedies) */}
+            <div id="remedies-section" className="scroll-mt-24 w-full">
+              <VedicRemediesSection
                 theme={theme}
-                onAskAIForSign={handleAskAIForSign}
+                onAskAI={handleAskAIForSign}
               />
             </div>
 
-            {/* Panjika & Calendar Section Below */}
-            <div id="panjika-section" className="scroll-mt-24 w-full text-left flex flex-col gap-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-center">
-                <div className="w-full">
-                  <PanjikaCalendarView theme={theme} />
-                </div>
-                <div className="w-full hidden lg:flex items-center justify-center p-4">
-                  <div className="relative w-full max-w-[340px] xl:max-w-[380px] aspect-square rounded-full overflow-hidden shadow-[0_0_50px_rgba(201,160,80,0.2)] border-2 border-[#C9A050]/20 group">
-                    <img 
-                      src="/vedic_calendar_alt.jpg" 
-                      alt="Vedic Calendar" 
-                      className="w-full h-full object-cover scale-[1.02]"
-                      style={{ animation: 'spin 120s linear infinite' }}
-                    />
-                    <div className="absolute inset-0 rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] pointer-events-none"></div>
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#C9A050]/10 to-transparent mix-blend-overlay pointer-events-none"></div>
-                  </div>
-                </div>
+            <div id="blog-section" className="scroll-mt-24 w-full">
+              <BlogCarousel
+                theme={theme}
+                onSelectBlog={() => {
+                  setSelectedBlogForPage(null);
+                  setCurrentView('blogs');
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                }}
+                onViewAll={() => {
+                  setSelectedBlogForPage(null);
+                  setCurrentView('blogs');
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                }}
+              />
+            </div>
+
+            {/* Premium Features Teaser (Locked Cards) */}
+            <div id="premium-section" className="scroll-mt-24 w-full pt-8 pb-16">
+              <div className="text-center mb-10">
+                <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3 flex items-center justify-center space-x-2">
+                  <Lock className="w-6 h-6 text-[#C9A050]" />
+                  <span>Unlock Premium Features</span>
+                </h3>
+                <p className={`text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                  Log in to access your deeply personalized astrological and numerological journey.
+                </p>
               </div>
-              
-              <ZodiacCompatibilityMatrix theme={theme} />
-            </div>
-          </div>
 
-          {/* Sacred Vedic Remedies Section (4 Hardcoded Remedies) */}
-          <div id="remedies-section" className="scroll-mt-24 w-full">
-            <VedicRemediesSection
-              theme={theme}
-              onAskAI={handleAskAIForSign}
-            />
-          </div>
-
-          <div id="blog-section" className="scroll-mt-24 w-full">
-            <BlogCarousel 
-              theme={theme} 
-              onSelectBlog={() => {
-                setSelectedBlogForPage(null);
-                setCurrentView('blogs');
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-              }}
-              onViewAll={() => {
-                setSelectedBlogForPage(null);
-                setCurrentView('blogs');
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-              }}
-            />
-          </div>
-
-          {/* Premium Features Teaser (Locked Cards) */}
-          <div id="premium-section" className="scroll-mt-24 w-full pt-8 pb-16">
-            <div className="text-center mb-10">
-              <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3 flex items-center justify-center space-x-2">
-                <Lock className="w-6 h-6 text-[#C9A050]" />
-                <span>Unlock Premium Features</span>
-              </h3>
-              <p className={`text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
-                Log in to access your deeply personalized astrological and numerological journey.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {PREMIUM_FEATURES_CATALOG.map((feat) => {
-                const Icon = feat.icon;
-                return (
-                  <div
-                    key={feat.id}
-                    onClick={() => setSelectedFeatureForPreview(feat)}
-                    className={`relative overflow-hidden rounded-3xl p-6 md:p-8 text-left cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#C9A050]/20 group flex flex-col justify-between min-h-[220px] ${theme === 'dark'
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {PREMIUM_FEATURES_CATALOG.map((feat) => {
+                  const Icon = feat.icon;
+                  return (
+                    <div
+                      key={feat.id}
+                      onClick={() => setSelectedFeatureForPreview(feat)}
+                      className={`relative overflow-hidden rounded-3xl p-6 md:p-8 text-left cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#C9A050]/20 group flex flex-col justify-between min-h-[220px] ${theme === 'dark'
                         ? 'bg-gradient-to-br from-[#1C1C22]/90 to-[#0D0D0F]/90 border border-[#2A2A2E]/80 hover:border-[#C9A050]/50'
                         : 'bg-gradient-to-br from-white/90 to-[#F9F7F1]/80 border border-[#E5E1D8]/80 hover:border-[#C9A050]/50 shadow-sm'
-                      }`}
-                  >
-                    {/* Background Watermark Icon */}
-                    <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none transform group-hover:scale-110 group-hover:-rotate-6">
-                      <Icon className="w-40 h-40" />
-                    </div>
+                        }`}
+                    >
+                      {/* Background Watermark Icon */}
+                      <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none transform group-hover:scale-110 group-hover:-rotate-6">
+                        <Icon className="w-40 h-40" />
+                      </div>
 
-                    {/* Glassmorphism Video Demo Preview Overlay on Hover */}
-                    <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#0D0D0F]/80 backdrop-blur-sm p-4 text-center">
-                      <div className="flex flex-col items-center transform group-hover:scale-105 transition-transform duration-300">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#C9A050] to-[#8C6B28] text-white flex items-center justify-center shadow-[0_0_20px_rgba(201,160,80,0.5)] mb-3 relative overflow-hidden">
-                          <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                          <Play className="w-6 h-6 fill-current ml-1 relative z-10" />
+                      {/* Glassmorphism Video Demo Preview Overlay on Hover */}
+                      <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#0D0D0F]/80 backdrop-blur-sm p-4 text-center">
+                        <div className="flex flex-col items-center transform group-hover:scale-105 transition-transform duration-300">
+                          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#C9A050] to-[#8C6B28] text-white flex items-center justify-center shadow-[0_0_20px_rgba(201,160,80,0.5)] mb-3 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                            <Play className="w-6 h-6 fill-current ml-1 relative z-10" />
+                          </div>
+                          <span className="text-[#F0ECE1] font-serif font-bold text-sm tracking-wide mb-1">
+                            Play 15s Demo
+                          </span>
+                          <span className="text-[10px] text-[#C9A050] font-mono tracking-widest uppercase">
+                            Preview & Unlock
+                          </span>
                         </div>
-                        <span className="text-[#F0ECE1] font-serif font-bold text-sm tracking-wide mb-1">
-                          Play 15s Demo
-                        </span>
-                        <span className="text-[10px] text-[#C9A050] font-mono tracking-widest uppercase">
-                          Preview & Unlock
-                        </span>
+                      </div>
+
+                      <div className="relative z-10 opacity-90 group-hover:opacity-10 transition-opacity duration-300 flex-1 flex flex-col">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${theme === 'dark' ? 'bg-[#141418] border border-[#2A2A2E]' : 'bg-white border border-[#E5E1D8]'}`}>
+                            <Icon className="w-6 h-6 text-[#C9A050]" />
+                          </div>
+                          <span className={`text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#C9A050] border-[#2A2A2E]' : 'bg-white text-amber-700 border-[#E5E1D8]'}`}>
+                            Premium
+                          </span>
+                        </div>
+                        <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{feat.title}</h4>
+                        <p className={`text-sm leading-relaxed mt-auto ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>{feat.desc}</p>
                       </div>
                     </div>
-
-                    <div className="relative z-10 opacity-90 group-hover:opacity-10 transition-opacity duration-300 flex-1 flex flex-col">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${theme === 'dark' ? 'bg-[#141418] border border-[#2A2A2E]' : 'bg-white border border-[#E5E1D8]'}`}>
-                          <Icon className="w-6 h-6 text-[#C9A050]" />
-                        </div>
-                        <span className={`text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#C9A050] border-[#2A2A2E]' : 'bg-white text-amber-700 border-[#E5E1D8]'}`}>
-                          Premium
-                        </span>
-                      </div>
-                      <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{feat.title}</h4>
-                      <p className={`text-sm leading-relaxed mt-auto ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>{feat.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-          </div>
         )}
-        <Footer onOpenDisclaimer={onOpenDisclaimer} theme={theme} />
+        <Footer
+          onOpenDisclaimer={onOpenDisclaimer}
+          theme={theme}
+          onNavigatePage={(page) => {
+            setCurrentView(page);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
+          setActiveTab={(_tab) => {
+            if (authUser && onGoToDashboard) {
+              onGoToDashboard();
+            } else {
+              onLoginClick();
+            }
+          }}
+        />
       </main>
 
       {/* Feature 15-Second Video Preview & Details Modal */}
@@ -754,8 +782,8 @@ export function LandingPage({
                   <span className="font-bold text-sm">AstroJunction</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <button 
-                    onClick={handleResetChat} 
+                  <button
+                    onClick={handleResetChat}
                     title="Restart Chat"
                     className="hover:bg-black/10 p-1 rounded-md transition cursor-pointer"
                   >
@@ -773,11 +801,10 @@ export function LandingPage({
                   .map((m, i) => {
                     return (
                       <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`max-w-[88%] p-2.5 rounded-xl flex items-start space-x-2 shadow-sm ${
-                          m.role === 'user'
+                        <div className={`max-w-[88%] p-2.5 rounded-xl flex items-start space-x-2 shadow-sm ${m.role === 'user'
                             ? 'bg-[#C9A050] text-[#0D0D0F] rounded-tr-sm font-medium'
                             : (theme === 'dark' ? 'bg-[#1A1A1E] text-[#E5E1D8] border border-[#2A2A2E] rounded-tl-sm' : 'bg-[#FFFFFF] text-[#0D0D0F] border border-[#E5E1D8] rounded-tl-sm')
-                        }`}>
+                          }`}>
                           {m.role === 'assistant' && <Bot className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#C9A050]" />}
                           <div className="flex flex-col space-y-1.5 leading-relaxed w-full">
                             {(() => {
@@ -842,11 +869,10 @@ export function LandingPage({
 
               {/* Dedicated Separate Login Gate Section */}
               {(savedDob || msgCount >= 2) && (
-                <div className={`p-2.5 mx-3 my-1.5 rounded-xl border flex flex-col space-y-2 shadow-sm ${
-                  theme === 'dark'
+                <div className={`p-2.5 mx-3 my-1.5 rounded-xl border flex flex-col space-y-2 shadow-sm ${theme === 'dark'
                     ? 'bg-[#18181D] border-[#C9A050]/40 text-[#E5E1D8]'
                     : 'bg-[#FAF7F0] border-[#C9A050]/40 text-[#0D0D0F]'
-                }`}>
+                  }`}>
                   <div className="flex items-start space-x-2">
                     <Lock className="w-3.5 h-3.5 text-[#C9A050] mt-0.5 shrink-0" />
                     <p className="text-[11px] font-medium leading-relaxed">

@@ -238,19 +238,50 @@ export async function generateMasterFullReportPdf({
   // Helper to check if a horizon tier is locked for full report generation
   const isHorizonLockedForReport = (horizonKey: string): boolean => {
     if (profile?.isPremium) return false;
-    if (horizonKey === '0-5' || horizonKey === '0-10') return false;
+    if (horizonKey === '0-1') return false;
 
     const unlockedTiers: string[] = (profile as any)?.unlockedRoadmapTiers || [];
     if (unlockedTiers.includes('roadmap_25_subscription')) return false;
 
-    if (horizonKey === '0-15' && unlockedTiers.includes('roadmap_15_subscription')) return false;
+    if (horizonKey === '0-5' && (
+      unlockedTiers.includes('roadmap_5_subscription') ||
+      unlockedTiers.includes('roadmap_10_subscription') ||
+      unlockedTiers.includes('roadmap_15_subscription') ||
+      unlockedTiers.includes('roadmap_20_subscription')
+    )) return false;
+
+    if (horizonKey === '0-10' && (
+      unlockedTiers.includes('roadmap_10_subscription') ||
+      unlockedTiers.includes('roadmap_15_subscription') ||
+      unlockedTiers.includes('roadmap_20_subscription')
+    )) return false;
+
+    if (horizonKey === '0-15' && (
+      unlockedTiers.includes('roadmap_15_subscription') ||
+      unlockedTiers.includes('roadmap_20_subscription')
+    )) return false;
+
     if (horizonKey === '0-20' && unlockedTiers.includes('roadmap_20_subscription')) return false;
     if (horizonKey === '0-25' && unlockedTiers.includes('roadmap_25_subscription')) return false;
 
     try {
       if (typeof localStorage !== 'undefined') {
         if (localStorage.getItem('jyotish_roadmap_25_subscription_active') === 'true') return false;
-        if (horizonKey === '0-15' && localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true') return false;
+        if (horizonKey === '0-5' && (
+          localStorage.getItem('jyotish_roadmap_5_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_10_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
+        if (horizonKey === '0-10' && (
+          localStorage.getItem('jyotish_roadmap_10_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
+        if (horizonKey === '0-15' && (
+          localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
         if (horizonKey === '0-20' && localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true') return false;
         if (horizonKey === '0-25' && localStorage.getItem('jyotish_roadmap_25_subscription_active') === 'true') return false;
       }
@@ -259,8 +290,8 @@ export async function generateMasterFullReportPdf({
     return true;
   };
 
-  const horizonKeys = ['0-5', '0-10', '0-15', '0-20', '0-25'];
-  const hasMoreThanTwoHorizons = horizonKeys.some((k, idx) => idx >= 2 && !isHorizonLockedForReport(k));
+  const horizonKeys = ['0-1', '0-5', '0-10', '0-15', '0-20', '0-25'];
+  const hasMoreThanTwoHorizons = horizonKeys.some((k, idx) => idx >= 1 && !isHorizonLockedForReport(k));
   const totalReportPages = hasMoreThanTwoHorizons ? 8 : 7;
 
   // ==========================================

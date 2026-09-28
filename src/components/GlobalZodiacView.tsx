@@ -125,13 +125,14 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
 
       setIsFetchingForecast(true);
       try {
-        const data = await api.post<any>(API_ENDPOINTS.ZODIAC.GLOBAL_FORECAST, {
+        const res = await api.post<any>(API_ENDPOINTS.ZODIAC.GLOBAL_FORECAST, {
           sign: activeSign.name,
           timeframe,
           language,
         });
-        if (data) {
-          setDynamicZodiacData(prev => ({ ...prev, [cacheKey]: data }));
+        const forecastObj = (res && typeof res === 'object' && 'data' in res && res.data) ? res.data : res;
+        if (forecastObj) {
+          setDynamicZodiacData(prev => ({ ...prev, [cacheKey]: forecastObj }));
         }
       } catch (error) {
         console.error("Failed to fetch dynamic forecast:", error);
@@ -166,9 +167,10 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
 
   const t = (key: string) => getTranslation(key, language);
 
-
-
-  const currentDynamicData = dynamicZodiacData[`${activeSign.id}-${timeframe}-${language}`];
+  const rawDynamicData = dynamicZodiacData[`${activeSign.id}-${timeframe}-${language}`];
+  const currentDynamicData = (rawDynamicData && typeof rawDynamicData === 'object' && 'data' in rawDynamicData && rawDynamicData.data)
+    ? rawDynamicData.data
+    : rawDynamicData;
 
   const getForecastText = (sign: ZodiacSign) => {
     if (currentDynamicData && currentDynamicData.forecast) return currentDynamicData.forecast;
@@ -554,9 +556,9 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
           </div>
 
           <div className={`text-sm leading-relaxed min-h-[60px] ${isDark ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
-            {isFetchingForecast && !dynamicZodiacData[`${activeSign.id}-${timeframe}-${language}`] ? (
+            {isFetchingForecast && !currentDynamicData?.forecast ? (
               <div className="animate-pulse flex space-x-2 items-center text-[#C9A050]">
-                <Sparkles className="w-4 h-4 animate-spin-slow" />
+                <Sparkles className="w-4 h-4 animate-spin" />
                 <span>Consulting Daivajna for personalized transits...</span>
               </div>
             ) : (

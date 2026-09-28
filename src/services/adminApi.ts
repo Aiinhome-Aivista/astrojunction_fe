@@ -51,7 +51,20 @@ export interface SystemLog {
   created_at: string;
 }
 
+
+export interface SubscriptionPlan {
+  id: string;
+  plan_name: string;
+  plan_type: string;
+  price_inr: number;
+  price_usd: number;
+  description: string;
+  features_json: string[];
+  is_active: number;
+}
+
 export const adminApi = {
+  // Existing APIs...
   getDashboardStats: async (): Promise<DashboardStats> => {
     return api.get<DashboardStats>(API_ENDPOINTS.ADMIN.DASHBOARD_STATS);
   },
@@ -112,10 +125,28 @@ export const adminApi = {
   updateSeoConfig: async (seoConfig: Record<string, any>): Promise<any> => {
     return api.put(API_ENDPOINTS.ADMIN.SEO_CONFIG, seoConfig);
   },
+
+  // Subscription Plans
+  getSubscriptionPlans: async (): Promise<SubscriptionPlan[]> => {
+    const res = await api.get<any>('/api/admin/subscription-plans');
+    return res?.data || res;
+  },
+  
+  createSubscriptionPlan: async (plan: Partial<SubscriptionPlan>): Promise<any> => {
+    return api.post('/api/admin/subscription-plans', plan);
+  },
+
+  updateSubscriptionPlan: async (id: string, plan: Partial<SubscriptionPlan>): Promise<any> => {
+    return api.put(`/api/admin/subscription-plans/${id}`, plan);
+  },
+
+  deleteSubscriptionPlan: async (id: string): Promise<any> => {
+    return api.delete(`/api/admin/subscription-plans/${id}`);
+  }
 };
 
 export interface LLMConfig {
-  ACTIVE_LLM: 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai';
+  ACTIVE_LLM: 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai' | 'openrouter';
   MISTRAL_LOCAL_URL: string;
   MISTRAL_MODEL: string;
   GEMINI_API_KEY: string;
@@ -125,8 +156,11 @@ export interface LLMConfig {
   OPENAI_API_KEY: string;
   OPENAI_MODEL: string;
   OPENAI_BASE_URL: string;
+  OPENROUTER_API_KEY?: string;
+  OPENROUTER_MODEL?: string;
+  OPENROUTER_BASE_URL?: string;
   ENABLE_AUTO_FAILOVER?: string | boolean;
-  FALLBACK_LLM?: 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai';
+  FALLBACK_LLM?: 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai' | 'openrouter';
   LLM_TIMEOUT?: string | number;
   LLM_TEMPERATURE?: string | number;
   LLM_MAX_TOKENS?: string | number;
@@ -135,9 +169,11 @@ export interface LLMConfig {
     gemini?: boolean;
     mistral_cloud?: boolean;
     openai?: boolean;
+    openrouter?: boolean;
   };
   gemini?: { is_configured: boolean; model?: string; masked_key?: string };
   openai?: { is_configured: boolean; model?: string; masked_key?: string };
+  openrouter?: { is_configured: boolean; model?: string; masked_key?: string; base_url?: string };
   mistral_cloud?: { is_configured: boolean; model?: string; masked_key?: string };
   mistral_local?: { url?: string; model?: string };
 }

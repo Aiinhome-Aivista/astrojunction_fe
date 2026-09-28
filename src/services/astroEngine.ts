@@ -1069,17 +1069,17 @@ export const calculateDailyPanchang = getDailyPanchang;
 export const DEFAULT_CONSULTATION_TIERS = [
   {
     id: 'daily_vedic_subscription',
-    name: 'Daily Vedic Deep-Dive Subscription',
+    name: 'Comprehensive Vedic Synthesis (Parashari)',
     priceINR: 99,
     priceUSD: 1.5,
-    description: 'Comprehensive daily transit synthesis, personalized career, love & prana timing, audio forecast, and unlimited PDF downloads.',
+    description: 'Comprehensive Parashari birth chart synthesis, 12 Bhavas, active Dasha timeline, planetary yogas, remedial upayas, and high-resolution PDF dossier.',
     features: [
-      'Full Daily Transit Synthesis (12 Bhavas & Transits)',
-      'Career & Commerce auspicious action windows',
-      'Love & Relationship harmony timing',
-      'Health, Prana & Daily Vedic Nitya Sadhana',
-      'Audio reading feature (Listen to daily horoscope)',
-      'Unlimited 2-page Daily PDF Report downloads',
+      'Comprehensive Vedic Synthesis (Parashari & Multi-Tradition)',
+      'Full 12 Bhavas, Dasha Milestones & Planetary Yogas',
+      'Personalized Remedial Upayas & Sacred Mantras',
+      'Career, Relationship & Spiritual Karmic Guidance',
+      'Audio voice reading feature (Listen to synthesis)',
+      'Unlimited High-Resolution Birth Chart PDF Downloads',
       'Priority access to Astrologer consultations',
     ],
     isPopular: true,
@@ -1103,9 +1103,43 @@ export const DEFAULT_CONSULTATION_TIERS = [
     deliveryTime: 'Instant Activation',
   },
   {
+    id: 'roadmap_5_subscription',
+    name: '5-Year Vedic Destiny Roadmap',
+    priceINR: 100,
+    priceUSD: 1.5,
+    description: 'Comprehensive 5-year life roadmap unlock across all 8 life spheres, upcoming transit cycles, and personalized remedies.',
+    features: [
+      'Comprehensive 5-Year Life Horizon Unlock (0-5 Years)',
+      'All 8 Life Spheres & Vedic Dimensions Fully Open',
+      'Vimshottari Mahadasha & Antardasha Milestones',
+      'Jupiter & Saturn Transit Influence Windows',
+      'Personalized Remedial Upayas & Daily Sadhana',
+      'Downloadable High-Resolution 5-Year PDF Report',
+    ],
+    isPopular: false,
+    deliveryTime: 'Instant Activation',
+  },
+  {
+    id: 'roadmap_10_subscription',
+    name: '10-Year Vedic Destiny Roadmap',
+    priceINR: 150,
+    priceUSD: 2,
+    description: 'Decadal 10-year Vedic destiny roadmap with major life inflection points, career scaling, and wealth growth.',
+    features: [
+      'Complete 10-Year Life Horizon Unlock (0-10 Years)',
+      'All 8 Life Dimensions Fully Unlocked (including 0-5 Years)',
+      'Decadal Dasha Transitions & Bhukti Analysis',
+      'Major Inflection Years for Career, Marriage & Wealth',
+      'Personalized Remedial Sadhanas & Gemstone Guidance',
+      'Downloadable Comprehensive 10-Year PDF Report',
+    ],
+    isPopular: false,
+    deliveryTime: 'Instant Activation',
+  },
+  {
     id: 'roadmap_15_subscription',
     name: '15-Year Vedic Destiny Roadmap',
-    priceINR: 169,
+    priceINR: 200,
     priceUSD: 2.5,
     description: 'Comprehensive 15-year life roadmap unlock across all 8 life spheres, Saturn & Jupiter transit cycles, and personalized remedies.',
     features: [
@@ -1122,7 +1156,7 @@ export const DEFAULT_CONSULTATION_TIERS = [
   {
     id: 'roadmap_20_subscription',
     name: '20-Year Vedic Destiny Roadmap',
-    priceINR: 199,
+    priceINR: 250,
     priceUSD: 3,
     description: 'Multi-decade 20-year Vedic destiny roadmap with major life inflection points, Sade Sati timing, and career peaks.',
     features: [
@@ -1133,14 +1167,14 @@ export const DEFAULT_CONSULTATION_TIERS = [
       'Personalized Remedial Sadhanas & Gemstone Guidance',
       'Downloadable Comprehensive 20-Year PDF Report',
     ],
-    isPopular: true,
+    isPopular: false,
     deliveryTime: 'Instant Activation',
   },
   {
     id: 'roadmap_25_subscription',
     name: '25-Year Vedic Destiny Roadmap (Master Life Blueprint)',
-    priceINR: 249,
-    priceUSD: 3.5,
+    priceINR: 300,
+    priceUSD: 3.8,
     description: 'Quarter-century master Vedic life blueprint unlocking all horizons up to 25 years with comprehensive dasha & transit synthesis.',
     features: [
       'Complete 25-Year Master Life Blueprint (0-25 Years)',
@@ -1153,10 +1187,92 @@ export const DEFAULT_CONSULTATION_TIERS = [
     isPopular: true,
     deliveryTime: 'Instant Activation',
   },
-];
+].sort((a, b) => a.priceINR - b.priceINR);
 
 export const DEFAULT_ROADMAP = [
-  // --- 0-5 YEARS (ALL OPEN) ---
+  // --- 0-1 YEAR (100% FREE & UNLOCKED) ---
+  {
+    id: 'ms-0-1',
+    timeframe: '0-1 Year',
+    category: 'Career',
+    title: 'Current Year Professional Positioning & Q1-Q4 Execution',
+    guidance: 'Benefic solar and Mercury transit triggers sharp intellectual execution. Focus on skill consolidation, structured deliverables, and internal team visibility.',
+    favorableTransits: 'Sun-Mercury Budhaditya alignment in transit',
+    remedialAction: 'Chant Surya Gayatri or offer water to the rising Sun daily.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-2',
+    timeframe: '0-1 Year',
+    category: 'Wealth',
+    title: 'Liquidity Optimization & Budgetary Discipline',
+    guidance: 'Favorable aspect on 2nd house ensures steady cash inflow. Avoid impulsive speculative investments; prioritize emergency savings buffer.',
+    favorableTransits: 'Jupiter aspect on 2nd house of accumulated wealth',
+    remedialAction: 'Keep a clean silver coin in your wallet; chant Shree Suktam on Fridays.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-3',
+    timeframe: '0-1 Year',
+    category: 'Relationships',
+    title: 'Mutual Communication & Relationship Grounding',
+    guidance: 'Harmonious transit of Venus brings pleasant conversations, social bonding, and resolution of minor domestic misunderstandings.',
+    favorableTransits: 'Venus transit in favorable Kendra house',
+    remedialAction: 'Feed cows with green grass on Fridays for Venusian blessings.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-4',
+    timeframe: '0-1 Year',
+    category: 'Health',
+    title: 'Vitality Preservation & Circadian Harmony',
+    guidance: 'Focus on consistent sleep routines, hydration, and gentle morning yogasanas to balance Pitta and Vata energies.',
+    favorableTransits: 'Mars-Jupiter trine vitality reinforcement',
+    remedialAction: 'Drink warm water infused with tulsi leaves each morning.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-5',
+    timeframe: '0-1 Year',
+    category: 'Spirituality',
+    title: 'Daily Grounding & Sacred Mantra Initiation',
+    guidance: 'Setting aside 15 minutes each morning for silent meditation and japa anchors the mind against worldly stress.',
+    favorableTransits: '9th house auspicious transit activation',
+    remedialAction: 'Chant Om Namah Shivaya 108 times at dawn.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-6',
+    timeframe: '0-1 Year',
+    category: 'Family',
+    title: 'Domestic Harmony & Auspicious Gatherings',
+    guidance: 'Warmth and mutual respect among elders and family members. Favorable period for celebratory family events.',
+    favorableTransits: 'Moon-Jupiter benefic 4th house illumination',
+    remedialAction: 'Light a mustard oil lamp near the Tulsi plant on Thursdays.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-7',
+    timeframe: '0-1 Year',
+    category: 'Education',
+    title: 'Focused Study & Vocational Certifications',
+    guidance: 'Favorable Mercury energy accelerates cognitive retention, memory, and success in upcoming certification tests.',
+    favorableTransits: 'Mercury strong in 5th house of intellect',
+    remedialAction: 'Offer white flowers to Goddess Saraswati on Wednesdays.',
+    status: 'In-Progress' as const,
+  },
+  {
+    id: 'ms-0-8',
+    timeframe: '0-1 Year',
+    category: 'Travel',
+    title: 'Short Journeys & Purposeful Commuting',
+    guidance: 'Productive regional journeys for business networking or visit to sacred pilgrimage centers close to home.',
+    favorableTransits: '3rd Lord benefic transit favoring short trips',
+    remedialAction: 'Carry a piece of whole cardamom before starting journeys.',
+    status: 'In-Progress' as const,
+  },
+
+  // --- 0-5 YEARS ---
   {
     id: 'ms-1',
     timeframe: '0-5 Years',
@@ -1485,7 +1601,10 @@ export const generateCustomRoadmap = (profile?: any, chartData?: any): LifeMiles
     let personalizedGuidance = item.guidance;
     let personalizedTransits = item.favorableTransits;
 
-    if (item.category === 'Career' && item.timeframe === '0-5 Years') {
+    if (item.category === 'Career' && item.timeframe === '0-1 Year') {
+      personalizedGuidance = `Under the active ${currDasha} Mahadasha and ${ascSign} lagna, sharp solar and Mercury transits trigger swift professional execution, team deliverables, and quarterly visibility.`;
+      personalizedTransits = `Sun-Mercury Budhaditya alignment in transit for ${ascSign}`;
+    } else if (item.category === 'Career' && item.timeframe === '0-5 Years') {
       personalizedGuidance = `Under the active ${currDasha} Mahadasha and ${ascSign} lagna, Jupiter transit over your 10th house stimulates executive authority and strategic visibility.`;
       personalizedTransits = `Auspicious Jupiter transit trines your ${ascSign} Ascendant`;
     } else if (item.category === 'Career' && (item.timeframe === '0-10 Years' || item.timeframe === '5-10 Years')) {
@@ -1496,7 +1615,7 @@ export const generateCustomRoadmap = (profile?: any, chartData?: any): LifeMiles
       ...item,
       guidance: personalizedGuidance,
       favorableTransits: personalizedTransits,
-      status: item.timeframe === '0-5 Years' ? ('In-Progress' as const) : ('Pending' as const),
+      status: (item.timeframe === '0-1 Year' || item.timeframe === '0-5 Years') ? ('In-Progress' as const) : ('Pending' as const),
     };
   });
 };

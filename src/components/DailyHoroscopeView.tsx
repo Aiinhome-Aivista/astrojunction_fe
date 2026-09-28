@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Sun,
   Moon,
@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../services/api';
+import { api, getToken } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
 import { UserProfile, PanchangInfo, NumerologyReport } from '../types';
 
@@ -65,7 +65,6 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   // Helper to load image as base64 DataURL for jsPDF canvas rendering
   const loadImageBase64 = (url: string): Promise<string | null> => {
@@ -119,6 +118,8 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
     ))
   );
 
+  const isFetchingAiRef = useRef(false);
+
   // Check localStorage on mount or when profile/panchang date changes, and auto-fetch reading
   useEffect(() => {
     let isCancelled = false;
@@ -143,11 +144,6 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
         }
       }
 
-      if (!isUnlocked) {
-        if (!isCancelled) setAiInsights(null);
-        return;
-      }
-
       // Check cached reading in localStorage
       try {
         const storageKey = getDailyStorageKey();
@@ -161,7 +157,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
         }
       } catch {}
 
-      // Automatically generate/fetch reading for unlocked user!
+      // Automatically generate/fetch daily reading
       if (!isCancelled) {
         fetchDailyAiReading();
       }
@@ -174,20 +170,9 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
     };
   }, [profile?.id, profile?.fullName, profile?.isPremium, isPremiumUser, isHistoryUnlocked, panchang?.date]);
 
-  const handleUnlockClick = () => {
-    if (isPremiumUser) {
-      fetchDailyAiReading();
-    } else {
-      if (onNavigateToTab) {
-        onNavigateToTab('consultations', 'daily_vedic_subscription');
-      } else {
-        setIsSubscriptionModalOpen(true);
-      }
-    }
-  };
-
   const fetchDailyAiReading = async () => {
-    if (isLoadingAi || aiInsights) return;
+    if (isLoadingAi || aiInsights || isFetchingAiRef.current) return;
+    isFetchingAiRef.current = true;
     const storageKey = getDailyStorageKey();
 
     // Check if already in localStorage
@@ -197,11 +182,13 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
         const parsed = JSON.parse(cached);
         if (parsed && parsed.summary) {
           setAiInsights(parsed);
+          isFetchingAiRef.current = false;
           return;
         }
       }
     } catch {}
 
+    console.log('[DailyHoroscope] Requesting daily reading from backend...');
     setIsLoadingAi(true);
     try {
       const data = await api.post<{ insights: DailyAiInsights }>(API_ENDPOINTS.INSIGHTS.DAILY_HOROSCOPE, {
@@ -211,6 +198,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
         numerology,
       });
       if (data && data.insights) {
+        console.log('[DailyHoroscope] Daily AI reading received successfully:', data.insights);
         setAiInsights(data.insights);
         try {
           localStorage.setItem(storageKey, JSON.stringify(data.insights));
@@ -221,6 +209,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
     } catch (e) {
       console.error('Failed to fetch daily insights:', e);
     } finally {
+      isFetchingAiRef.current = false;
       setIsLoadingAi(false);
     }
   };
@@ -1347,36 +1336,6 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
                     </p>
                   </div>
                 </div>
-
-                <button
-                  onClick={handleUnlockClick}
-                  disabled={isLoadingAi}
-                  className={`w-full py-3.5 px-4 rounded-xl border flex items-center justify-center space-x-2.5 transition cursor-pointer font-sans text-xs sm:text-sm font-semibold shadow-sm ${
-                    isPremiumUser
-                      ? 'border-emerald-500/50 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200'
-                      : theme === 'dark'
-                      ? 'border-[#C9A050]/40 bg-gradient-to-r from-[#C9A050]/15 via-[#C9A050]/10 to-[#C9A050]/15 hover:bg-[#C9A050]/20 text-[#E5E1D8]'
-                      : 'border-[#C9A050]/50 bg-gradient-to-r from-[#C9A050]/15 via-[#FFFDF7] to-[#C9A050]/15 hover:bg-[#C9A050]/25 text-[#2A2A2E]'
-                  }`}
-                >
-                  {isPremiumUser ? (
-                    <>
-                      <Sparkles className={`w-4 h-4 text-emerald-400 ${isLoadingAi ? 'animate-spin' : ''}`} />
-                      <span>{isLoadingAi ? 'Synthesizing Your Unlocked Deep-Dive Reading...' : 'Generate / Refresh Unlocked Vedic Reading'}</span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500 text-black ml-1.5 shadow-sm">
-                        ✓ UNLOCKED
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4 text-[#C9A050]" />
-                      <span>Click to Unlock Comprehensive Vedic Deep-Dive Reading</span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] ml-1.5 shadow-sm">
-                        ₹99 / Subscription
-                      </span>
-                    </>
-                  )}
-                </button>
               </div>
             )}
           </div>
@@ -1499,134 +1458,6 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Subscription Paywall Modal */}
-      <AnimatePresence>
-        {isSubscriptionModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 20 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className={`relative w-full max-w-lg rounded-2xl border shadow-2xl p-6 sm:p-7 overflow-hidden ${
-                theme === 'dark'
-                  ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
-                  : 'bg-[#FFFDF7] border-[#DECFA6] text-[#2A2A2E]'
-              }`}
-            >
-              {/* Background ambient decorative glow */}
-              <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#C9A050]/20 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#C9A050]/15 rounded-full blur-3xl pointer-events-none" />
-
-              {/* Close Button */}
-              <button
-                onClick={() => setIsSubscriptionModalOpen(false)}
-                className={`absolute top-4 right-4 p-2 rounded-full border transition cursor-pointer ${
-                  theme === 'dark'
-                    ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white hover:bg-[#1A1A1E]'
-                    : 'border-[#E5E1D8] text-[#9E9A90] hover:text-black hover:bg-[#F0ECE1]'
-                }`}
-                title="Close"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              {/* Modal Header */}
-              <div className="flex flex-col items-center text-center space-y-3 pt-2">
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C9A050]/30 to-[#A07828]/10 border border-[#C9A050]/60 flex items-center justify-center shadow-lg shadow-[#C9A050]/20">
-                    <Lock className="w-8 h-8 text-[#C9A050]" />
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[#C9A050] text-[#0D0D0F]">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-
-                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
-                  <Crown className="w-3.5 h-3.5" />
-                  <span>Vedic Premium Subscription • ₹99 Only</span>
-                </div>
-
-                <h3 className={`text-xl sm:text-2xl font-serif font-bold ${
-                  theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
-                }`}>
-                  Unlock Daily Deep-Dive Interpretation
-                </h3>
-
-                <p className="text-xs font-sans text-[#9E9A90] max-w-md leading-relaxed">
-                  Deep personalized transit synthesis based on your specific Kundli (Ascendant, Moon sign, Bhava lords & active Vimshottari Mahadasha) for just ₹99 INR.
-                </p>
-              </div>
-
-              {/* Feature Highlights */}
-              <div className={`mt-5 p-4 rounded-xl border space-y-2.5 ${
-                theme === 'dark' ? 'bg-[#1A1A1E]/80 border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
-              }`}>
-                <div className="text-xs font-bold text-[#C9A050] uppercase tracking-wider font-sans mb-1">
-                  What is unlocked with your Subscription:
-                </div>
-                
-                <div className="flex items-start space-x-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span><strong>Full Daily Transit Synthesis:</strong> 12 Bhavas, Nakshatra lord vibrations & planetary aspects.</span>
-                </div>
-                
-                <div className="flex items-start space-x-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span><strong>Career & Finance Timing:</strong> Optimal negotiation windows, risk management & business foresight.</span>
-                </div>
-                
-                <div className="flex items-start space-x-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span><strong>Love & Harmony Forecast:</strong> Relationship harmonics, domestic peace & communication rhythms.</span>
-                </div>
-
-                <div className="flex items-start space-x-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span><strong>Health, Prana & Vedic Upayas:</strong> Tailored Mantras, Chanting Audio & personalized rituals.</span>
-                </div>
-
-                <div className="flex items-start space-x-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span><strong>Astrologer Consultations & Reports:</strong> Priority consultation bookings & unlimited PDF downloads.</span>
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
-                <button
-                  onClick={() => {
-                    setIsSubscriptionModalOpen(false);
-                    onNavigateToTab('consultations', 'daily_vedic_subscription');
-                  }}
-                  className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer flex items-center justify-center space-x-2"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Subscribe for ₹99 & Open Payment Gateway</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => setIsSubscriptionModalOpen(false)}
-                  className={`w-full sm:w-auto py-3.5 px-4 rounded-xl border text-xs font-semibold transition cursor-pointer ${
-                    theme === 'dark'
-                      ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white hover:bg-[#1A1A1E]'
-                      : 'border-[#E5E1D8] text-[#6E6A60] hover:text-black hover:bg-[#F0ECE1]'
-                  }`}
-                >
-                  Maybe Later
-                </button>
-              </div>
-
-              <div className="mt-4 flex items-center justify-center space-x-2 text-[11px] text-[#9E9A90]">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" />
-                <span>256-bit SSL Encrypted • Cancel Anytime</span>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

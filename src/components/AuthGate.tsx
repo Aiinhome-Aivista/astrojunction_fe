@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Lock, Mail, User, Loader2, Sparkles, X, ShieldCheck, RotateCcw, Calendar, MapPin, AlertCircle, Plus, UserCircle, CheckCircle2, Clock } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Lock, Mail, User, Loader2, Sparkles, X, ShieldCheck, RotateCcw, Calendar, MapPin, AlertCircle, Plus, UserCircle, CheckCircle2, Clock, Eye, EyeOff, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, register, loginWithGoogle, AuthUser } from '../services/authApi';
 import { ApiError } from '../services/api';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
+
 
 interface AuthGateProps {
   isOpen?: boolean;
@@ -113,6 +114,198 @@ const USER_GOOGLE_ACCOUNTS: GoogleAccountItem[] = [
   },
 ];
 
+interface CustomSelectProps {
+  value: string;
+  onChange: (val: string) => void;
+  options: { label: string; value: string }[];
+  placeholder?: string;
+  isDark: boolean;
+  className?: string;
+  dropUp?: boolean;
+}
+
+const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, placeholder, isDark, className, dropUp }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find(o => o.value === value);
+
+  return (
+    <div className={`relative ${className || ''}`} ref={ref}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full px-2.5 py-1.5 border rounded-xl text-[11px] font-bold cursor-pointer flex justify-between items-center transition-colors ${
+          isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
+        } ${isOpen ? 'border-[#C9A050]' : ''}`}
+      >
+        <span className={!selectedOption ? (isDark ? 'text-gray-500' : 'text-gray-400') : ''}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${isOpen ? 'rotate-180 text-[#C9A050]' : ''}`} />
+      </div>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: dropUp ? 5 : -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: dropUp ? 5 : -5 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute z-[110] left-0 right-0 max-h-[250px] overflow-y-auto border rounded-xl shadow-2xl ${
+              dropUp ? 'bottom-full mb-1' : 'top-full mt-1'
+            } ${
+              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+            } custom-scrollbar`}
+          >
+            {options.map((opt) => (
+              <div
+                key={opt.value}
+                onClick={() => { onChange(opt.value); setIsOpen(false); }}
+                className={`px-3 py-2 text-[11px] font-bold cursor-pointer transition-colors ${
+                  value === opt.value 
+                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
+                    : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
+                }`}
+              >
+                {opt.label}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+interface CustomTimePickerProps {
+  hour: string;
+  minute: string;
+  ampm: string;
+  onHourChange: (v: string) => void;
+  onMinuteChange: (v: string) => void;
+  onAmPmChange: (v: string) => void;
+  isDark: boolean;
+}
+
+const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm, onHourChange, onMinuteChange, onAmPmChange, isDark }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAmPmOpen, setIsAmPmOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+        setIsAmPmOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative w-full" ref={ref}>
+      <div 
+        className={`w-full flex items-center px-3 py-1.5 border rounded-xl text-xs font-medium cursor-pointer transition-colors ${
+          isDark
+            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white hover:border-[#C9A050]'
+            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black hover:border-[#C9A050]'
+        } ${(isOpen || isAmPmOpen) ? 'border-[#C9A050]' : ''}`}
+      >
+        <div className="flex-1 flex items-center" onClick={() => { setIsOpen(!isOpen); setIsAmPmOpen(false); }}>
+          <Clock className="w-3.5 h-3.5 text-gray-400 mr-2 shrink-0" />
+          <span className="tracking-wider">{hour} : {minute}</span>
+        </div>
+        <div 
+          className={`flex items-center font-bold px-1.5 py-0.5 rounded hover:bg-black/10 transition-colors ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}
+          onClick={(e) => { e.stopPropagation(); setIsAmPmOpen(!isAmPmOpen); setIsOpen(false); }}
+        >
+          <span>{ampm}</span>
+          <ChevronDown className={`w-3.5 h-3.5 ml-1 opacity-70 transition-transform ${isAmPmOpen ? 'rotate-180 text-[#C9A050]' : ''}`} />
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute z-[110] left-0 w-[180px] bottom-full mb-1 flex border rounded-xl shadow-2xl overflow-hidden ${
+              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+            }`}
+          >
+            {/* Hours Column */}
+            <div className={`flex-1 h-48 overflow-y-auto custom-scrollbar border-r ${isDark ? 'border-[#2A2A2E]' : 'border-gray-100'}`}>
+              <div className={`sticky top-0 p-1 text-center text-[10px] font-bold uppercase tracking-wider bg-opacity-90 backdrop-blur-sm ${isDark ? 'bg-[#1A1A1E] text-[#C9A050]' : 'bg-white text-[#8C6B28]'}`}>Hour</div>
+              {Array.from({ length: 12 }, (_, i) => {
+                const h = (i + 1).toString().padStart(2, '0');
+                return (
+                  <div key={h} onClick={() => onHourChange(h)} className={`p-2 text-center text-xs cursor-pointer ${hour === h ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold' : 'bg-[#C9A050]/10 text-[#8C6B28] font-bold') : (isDark ? 'hover:bg-[#2A2A2E]' : 'hover:bg-[#F9F7F1]')}`}>
+                    {h}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Minutes Column */}
+            <div className={`flex-1 h-48 overflow-y-auto custom-scrollbar border-r ${isDark ? 'border-[#2A2A2E]' : 'border-gray-100'}`}>
+              <div className={`sticky top-0 p-1 text-center text-[10px] font-bold uppercase tracking-wider bg-opacity-90 backdrop-blur-sm ${isDark ? 'bg-[#1A1A1E] text-[#C9A050]' : 'bg-white text-[#8C6B28]'}`}>Min</div>
+              {Array.from({ length: 60 }, (_, i) => {
+                const m = i.toString().padStart(2, '0');
+                return (
+                  <div key={m} onClick={() => onMinuteChange(m)} className={`p-2 text-center text-xs cursor-pointer ${minute === m ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold' : 'bg-[#C9A050]/10 text-[#8C6B28] font-bold') : (isDark ? 'hover:bg-[#2A2A2E]' : 'hover:bg-[#F9F7F1]')}`}>
+                    {m}
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isAmPmOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute z-[110] right-0 w-[80px] bottom-full mb-1 flex flex-col border rounded-xl shadow-2xl overflow-hidden ${
+              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+            }`}
+          >
+            {['AM', 'PM'].map(a => (
+              <div 
+                key={a} 
+                onClick={() => { onAmPmChange(a); setIsAmPmOpen(false); }} 
+                className={`p-2.5 text-center text-xs font-bold cursor-pointer ${
+                  ampm === a 
+                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]') 
+                    : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
+                }`}
+              >
+                {a}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export function AuthGate({
   isOpen = true,
   onClose,
@@ -123,6 +316,7 @@ export function AuthGate({
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
 
   // Registration Fields: Gender, Place, Date of Birth, Time of Birth
@@ -131,13 +325,22 @@ export function AuthGate({
   const [birthDay, setBirthDay] = useState('01');
   const [birthMonth, setBirthMonth] = useState('01');
   const [birthYear, setBirthYear] = useState('2000');
-  const [birthTime, setBirthTime] = useState('');
+  const [birthHour, setBirthHour] = useState('12');
+  const [birthMinute, setBirthMinute] = useState('00');
+  const [birthAmPm, setBirthAmPm] = useState('AM');
+
+  const getFormattedBirthTime = () => {
+    if (!birthHour || !birthMinute) return undefined;
+    let h = parseInt(birthHour, 10);
+    if (birthAmPm === 'PM' && h < 12) h += 12;
+    if (birthAmPm === 'AM' && h === 12) h = 0;
+    return `${h.toString().padStart(2, '0')}:${birthMinute}`;
+  };
 
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [justRegistered, setJustRegistered] = useState(false);
-  
+
   // Google Account Chooser State
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [showOtherAccountInput, setShowOtherAccountInput] = useState(false);
@@ -150,6 +353,7 @@ export function AuthGate({
   // Captcha state
   const [captchaCode, setCaptchaCode] = useState('');
   const [userCaptchaInput, setUserCaptchaInput] = useState('');
+  const birthTimeInputRef = useRef<HTMLInputElement>(null);
 
   const refreshCaptcha = () => {
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz';
@@ -214,7 +418,7 @@ export function AuthGate({
         gender,
         birthDate: formattedDob,
         birthPlace,
-        birthTime: birthTime.trim() || undefined,
+        birthTime: getFormattedBirthTime(),
       });
       setIsGoogleModalOpen(false);
       if (onClose) onClose();
@@ -298,6 +502,32 @@ export function AuthGate({
     return (currentYear - i).toString();
   });
 
+  // Pre-compute dropdown options
+  const daysOptions = days.map(d => ({ label: d, value: d }));
+  const monthsOptions = MONTHS.map(m => ({ label: m.name.slice(0, 3), value: m.value }));
+  const yearsOptions = years.map(y => ({ label: y, value: y }));
+  
+  const hoursOptions = Array.from({ length: 12 }, (_, i) => {
+    const val = (i + 1).toString().padStart(2, '0');
+    return { label: val, value: val };
+  });
+  
+  const minutesOptions = Array.from({ length: 60 }, (_, i) => {
+    const val = i.toString().padStart(2, '0');
+    return { label: val, value: val };
+  });
+
+  const genderOptions = [
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+    { label: 'Other', value: 'others' }
+  ];
+
+  const amPmOptions = [
+    { label: 'AM', value: 'AM' },
+    { label: 'PM', value: 'PM' }
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -318,28 +548,26 @@ export function AuthGate({
         await register(email, password, fullName, birthPlace, {
           gender,
           birthDate: formattedDob,
-          birthTime: birthTime.trim() || undefined,
+          birthTime: getFormattedBirthTime(),
           birthPlace: birthPlace.trim() || undefined,
         });
-        setSuccessMessage('Account created successfully! Please enter your password to log in.');
-        setJustRegistered(true);
-        setMode('login');
-        setPassword('');
-        setUserCaptchaInput('');
-        refreshCaptcha();
+
+        // 2. Auto-login after registration — go directly to dashboard
+        const user = await login(email, password);
+        onAuthenticated(user, {
+          gender,
+          birthDate: formattedDob,
+          birthPlace,
+          birthTime: getFormattedBirthTime(),
+        });
+        if (onClose) onClose();
         return;
       }
 
       // 2. Explicit login
       const user = await login(email, password);
-      const formattedDob = `${birthYear}-${birthMonth}-${birthDay}`;
-      
-      onAuthenticated(user, justRegistered ? {
-        gender,
-        birthDate: formattedDob,
-        birthPlace,
-        birthTime: birthTime.trim() || undefined,
-      } : undefined);
+
+      onAuthenticated(user);
 
       if (onClose) onClose();
     } catch (err) {
@@ -357,7 +585,7 @@ export function AuthGate({
 
   return (
     <AnimatePresence>
-      <div 
+      <div
         onClick={onClose}
         className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto overflow-x-hidden transition-opacity"
       >
@@ -367,21 +595,19 @@ export function AuthGate({
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full ${mode === 'register' ? 'max-w-lg sm:max-w-2xl' : 'max-w-md'} rounded-2xl border shadow-2xl relative max-h-[90vh] overflow-y-auto overflow-x-hidden my-auto transition-all duration-300 ${
-            isDark
-              ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
-              : 'bg-[#FFFFFF] border-[#C9A050]/40 text-[#0D0D0F]'
-          }`}
+          className={`w-full ${mode === 'register' ? 'max-w-lg sm:max-w-2xl' : 'max-w-md'} rounded-2xl border shadow-2xl relative max-h-[90vh] overflow-y-auto overflow-x-hidden my-auto transition-all duration-300 ${isDark
+            ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
+            : 'bg-[#FFFFFF] border-[#C9A050]/40 text-[#0D0D0F]'
+            }`}
         >
           {/* Close button */}
           {onClose && (
             <button
               onClick={onClose}
-              className={`absolute top-3.5 right-3.5 p-1.5 rounded-full transition-colors cursor-pointer z-10 ${
-                isDark
-                  ? 'hover:bg-white/10 text-gray-400 hover:text-white'
-                  : 'hover:bg-black/10 text-gray-600 hover:text-black'
-              }`}
+              className={`absolute top-3.5 right-3.5 p-1.5 rounded-full transition-colors cursor-pointer z-10 ${isDark
+                ? 'hover:bg-white/10 text-gray-400 hover:text-white'
+                : 'hover:bg-black/10 text-gray-600 hover:text-black'
+                }`}
               title="Close"
             >
               <X className="w-4 h-4" />
@@ -406,11 +632,10 @@ export function AuthGate({
                 type="button"
                 onClick={handleGoogleButtonClick}
                 disabled={loading}
-                className={`w-full py-2 px-4 rounded-xl border font-bold text-xs flex items-center justify-center space-x-2.5 transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-[0.99] ${
-                  isDark
-                    ? 'bg-[#1C1C22] border-[#2A2A2E] text-[#F0ECE1] hover:bg-[#25252B] hover:border-[#C9A050]/50'
-                    : 'bg-[#FFFFFF] border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#FAF8F2] hover:border-[#C9A050]/50'
-                }`}
+                className={`w-full py-2 px-4 rounded-xl border font-bold text-xs flex items-center justify-center space-x-2.5 transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-[0.99] ${isDark
+                  ? 'bg-[#1C1C22] border-[#2A2A2E] text-[#F0ECE1] hover:bg-[#25252B] hover:border-[#C9A050]/50'
+                  : 'bg-[#FFFFFF] border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#FAF8F2] hover:border-[#C9A050]/50'
+                  }`}
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -442,30 +667,27 @@ export function AuthGate({
             </div>
 
             {/* Mode Switcher Tabs */}
-            <div className={`flex mb-3 p-1 rounded-xl border shrink-0 ${
-              isDark
-                ? 'bg-[#0D0D0F] border-[#2A2A2E]'
-                : 'bg-[#F9F7F1] border-[#E5E1D8]'
-            }`}>
+            <div className={`flex mb-3 p-1 rounded-xl border shrink-0 ${isDark
+              ? 'bg-[#0D0D0F] border-[#2A2A2E]'
+              : 'bg-[#F9F7F1] border-[#E5E1D8]'
+              }`}>
               <button
                 type="button"
                 onClick={() => { setMode('login'); setError(null); setSuccessMessage(null); refreshCaptcha(); }}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  mode === 'login'
-                    ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
-                    : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
-                }`}
+                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${mode === 'login'
+                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
+                  : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
+                  }`}
               >
                 Log In
               </button>
               <button
                 type="button"
                 onClick={() => { setMode('register'); setError(null); setSuccessMessage(null); refreshCaptcha(); }}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  mode === 'register'
-                    ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
-                    : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
-                }`}
+                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${mode === 'register'
+                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
+                  : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
+                  }`}
               >
                 Register
               </button>
@@ -474,11 +696,10 @@ export function AuthGate({
             {/* Auth Form */}
             <form onSubmit={handleSubmit} className="space-y-2.5">
               {googleSelectedAccount && mode === 'register' && (
-                <div className={`p-2 px-3 rounded-xl border flex items-center justify-between transition-all ${
-                  isDark
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                }`}>
+                <div className={`p-2 px-3 rounded-xl border flex items-center justify-between transition-all ${isDark
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                  }`}>
                   <div className="flex items-center space-x-2 min-w-0">
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
                     <div className="min-w-0">
@@ -513,11 +734,10 @@ export function AuthGate({
                         required
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                         placeholder="e.g. Keya Biswas"
                       />
                     </div>
@@ -528,19 +748,12 @@ export function AuthGate({
                     <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
                       Gender
                     </label>
-                    <select
+                    <CustomSelect
                       value={gender}
-                      onChange={(e) => setGender(e.target.value as any)}
-                      className={`w-full px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-[#C9A050] cursor-pointer ${
-                        isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
-                      }`}
-                    >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="others">Other</option>
-                    </select>
+                      onChange={(val) => setGender(val as any)}
+                      options={genderOptions}
+                      isDark={isDark}
+                    />
                   </div>
 
                   {/* Email Address */}
@@ -556,11 +769,10 @@ export function AuthGate({
                         autoComplete="off"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                         placeholder="you@example.com"
                       />
                     </div>
@@ -573,44 +785,24 @@ export function AuthGate({
                       <span>Date of Birth</span>
                     </label>
                     <div className="grid grid-cols-3 gap-1">
-                      {/* Day */}
-                      <select
+                      <CustomSelect
                         value={birthDay}
-                        onChange={(e) => setBirthDay(e.target.value)}
-                        className={`w-full px-1 py-1.5 border rounded-xl text-[11px] font-bold focus:outline-none focus:border-[#C9A050] cursor-pointer ${
-                          isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
-                        }`}
-                      >
-                        {days.map((d) => (
-                          <option key={d} value={d}>{d}</option>
-                        ))}
-                      </select>
-
-                      {/* Month */}
-                      <select
+                        onChange={setBirthDay}
+                        options={daysOptions}
+                        isDark={isDark}
+                      />
+                      <CustomSelect
                         value={birthMonth}
-                        onChange={(e) => setBirthMonth(e.target.value)}
-                        className={`w-full px-1 py-1.5 border rounded-xl text-[10px] font-bold focus:outline-none focus:border-[#C9A050] cursor-pointer ${
-                          isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
-                        }`}
-                      >
-                        {MONTHS.map((m) => (
-                          <option key={m.value} value={m.value}>{m.name.slice(0, 3)}</option>
-                        ))}
-                      </select>
-
-                      {/* Year */}
-                      <select
+                        onChange={setBirthMonth}
+                        options={monthsOptions}
+                        isDark={isDark}
+                      />
+                      <CustomSelect
                         value={birthYear}
-                        onChange={(e) => setBirthYear(e.target.value)}
-                        className={`w-full px-1 py-1.5 border rounded-xl text-[11px] font-bold focus:outline-none focus:border-[#C9A050] cursor-pointer ${
-                          isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
-                        }`}
-                      >
-                        {years.map((y) => (
-                          <option key={y} value={y}>{y}</option>
-                        ))}
-                      </select>
+                        onChange={setBirthYear}
+                        options={yearsOptions}
+                        isDark={isDark}
+                      />
                     </div>
                   </div>
 
@@ -619,22 +811,35 @@ export function AuthGate({
                     <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
                       Password
                     </label>
-                    <div className="relative">
-                      <Lock className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
+                    <div className="relative flex items-center">
+                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         required
                         minLength={8}
                         autoComplete="new-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-10 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                         placeholder="Min. 8 characters"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        //title={showPassword ? 'Hide password' : 'Show password'}
+                        //aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
+                          }`}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
                     </div>
                   </div>
 
@@ -652,11 +857,10 @@ export function AuthGate({
                         value={birthPlace}
                         onChange={(e) => setBirthPlace(e.target.value)}
                         placeholder="e.g. 123 Main St, New Delhi, India"
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                       />
                     </div>
                   </div>
@@ -664,26 +868,21 @@ export function AuthGate({
                   {/* Time of Birth (Optional) */}
                   <div>
                     <label className={`block text-[10px] font-bold mb-0.5 flex items-center justify-between ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      <span className="flex items-center space-x-1">
+                      <span className="flex items-center space-x-1.5">
                         <Clock className="w-3 h-3" />
                         <span>Birth Time</span>
                       </span>
                       <span className="text-[9px] font-normal opacity-70">(Optional)</span>
                     </label>
-                    <div className="relative">
-                      <Clock className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="text"
-                        value={birthTime}
-                        onChange={(e) => setBirthTime(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
-                        placeholder="e.g. 14:30 or 02:30 PM"
-                      />
-                    </div>
+                    <CustomTimePicker
+                      hour={birthHour}
+                      minute={birthMinute}
+                      ampm={birthAmPm}
+                      onHourChange={setBirthHour}
+                      onMinuteChange={setBirthMinute}
+                      onAmPmChange={setBirthAmPm}
+                      isDark={isDark}
+                    />
                   </div>
 
                   {/* Captcha Section (Full Width Span 2) */}
@@ -692,12 +891,11 @@ export function AuthGate({
                       Security Verification (Captcha)
                     </label>
                     <div className="flex items-center space-x-2">
-                      <div 
-                        className={`flex items-center justify-between px-2.5 py-1 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${
-                          isDark
-                            ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
-                            : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
-                        }`}
+                      <div
+                        className={`flex items-center justify-between px-2.5 py-1 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${isDark
+                          ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
+                          : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
+                          }`}
                       >
                         <span className="line-through decoration-[#C9A050]/60 decoration-2">
                           {captchaCode}
@@ -720,11 +918,10 @@ export function AuthGate({
                           maxLength={6}
                           value={userCaptchaInput}
                           onChange={(e) => setUserCaptchaInput(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${
-                            isDark
-                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                              : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
+                          className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                            }`}
                           placeholder="Enter code"
                         />
                       </div>
@@ -746,11 +943,10 @@ export function AuthGate({
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                         placeholder="you@example.com"
                       />
                     </div>
@@ -761,20 +957,33 @@ export function AuthGate({
                     <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
                       Password
                     </label>
-                    <div className="relative">
-                      <Lock className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                    <div className="relative flex items-center">
+                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${
-                          isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                        }`}
+                        className={`w-full pl-8 pr-10 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                          }`}
                         placeholder="Enter your password"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        //title={showPassword ? 'Hide password' : 'Show password'}
+                        //aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
+                          }`}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
                     </div>
                   </div>
 
@@ -784,12 +993,11 @@ export function AuthGate({
                       Security Verification (Captcha)
                     </label>
                     <div className="flex items-center space-x-2">
-                      <div 
-                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${
-                          isDark
-                            ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
-                            : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
-                        }`}
+                      <div
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${isDark
+                          ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
+                          : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
+                          }`}
                       >
                         <span className="line-through decoration-[#C9A050]/60 decoration-2">
                           {captchaCode}
@@ -812,11 +1020,10 @@ export function AuthGate({
                           maxLength={6}
                           value={userCaptchaInput}
                           onChange={(e) => setUserCaptchaInput(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${
-                            isDark
-                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                              : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
+                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                            }`}
                           placeholder="Enter code"
                         />
                       </div>
@@ -826,11 +1033,10 @@ export function AuthGate({
               )}
 
               {successMessage && (
-                <div className={`text-[11px] rounded-xl px-3 py-2 font-medium flex items-center space-x-2 border transition-all ${
-                  isDark
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                }`}>
+                <div className={`text-[11px] rounded-xl px-3 py-2 font-medium flex items-center space-x-2 border transition-all ${isDark
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                  }`}>
                   <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
                   <span>{successMessage}</span>
                 </div>
@@ -857,7 +1063,7 @@ export function AuthGate({
 
       {/* Google Account Selector Dialog (Exact Google Account Chooser UI) */}
       {isGoogleModalOpen && (
-        <div 
+        <div
           onClick={() => setIsGoogleModalOpen(false)}
           className="fixed inset-0 z-[110] bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto overflow-x-hidden"
         >
@@ -914,7 +1120,7 @@ export function AuthGate({
                       <div className={`w-9 h-9 rounded-full bg-gradient-to-tr ${account.avatarBg} text-white font-medium text-sm flex items-center justify-center shrink-0 shadow`}>
                         {account.initial}
                       </div>
-                      
+
                       {/* Name & Email */}
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-white group-hover:text-white truncate">

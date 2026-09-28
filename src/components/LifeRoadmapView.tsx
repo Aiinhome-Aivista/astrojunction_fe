@@ -28,12 +28,15 @@ import { generateCustomRoadmap } from '../services/astroEngine';
 import { jsPDF } from 'jspdf';
 
 export const normalizeTimeframe = (rawTf?: string): string => {
-  if (!rawTf) return '0-5 Years';
+  if (!rawTf) return '0-1 Year';
   const clean = rawTf.trim().toLowerCase().replace(/–/g, '-').replace(/\s+/g, '');
-  if (clean === '0-5' || clean === '0-5years' || clean === '0-12months' || clean === '1-3years') {
+  if (clean === '0-1' || clean === '0-1year' || clean === '0-1years' || clean === '0-12months' || clean === '1year' || clean === '1y') {
+    return '0-1 Year';
+  }
+  if (clean === '0-5' || clean === '0-5years' || clean === '1-3years' || clean === '3-5years') {
     return '0-5 Years';
   }
-  if (clean === '0-10' || clean === '0-10years' || clean === '3-5years' || clean === '5-10years') {
+  if (clean === '0-10' || clean === '0-10years' || clean === '5-10years') {
     return '0-10 Years';
   }
   if (clean === '0-15' || clean === '0-15years' || clean === '10-15years') {
@@ -72,11 +75,11 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
   language = 'en',
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedHorizon, setSelectedHorizon] = useState<string>('0-5 Years');
+  const [selectedHorizon, setSelectedHorizon] = useState<string>('0-1 Year');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedHorizons, setGeneratedHorizons] = useState<Record<string, boolean>>({});
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [loadingText, setLoadingText] = useState<string>('0-5 Years');
+  const [loadingText, setLoadingText] = useState<string>('0-1 Year');
 
   const getStorageKey = () => `jyotish_roadmap_horizons_${profile?.id || profile?.fullName || 'user'}_${profile?.birthDate || ''}`;
 
@@ -86,6 +89,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     const key = getStorageKey();
     let hasLoadedCache = false;
     const normalizeTf = (tf: string) => {
+      if (tf === '0-1 Year' || tf === '0-1' || tf === '1 Year') return '0-1 Year';
       if (tf === '5-10 Years' || tf === '3-5 Years') return '0-10 Years';
       if (tf === '10-15 Years') return '0-15 Years';
       if (tf === '15-20 Years') return '0-20 Years';
@@ -103,7 +107,12 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
               ...m,
               timeframe: normalizeTf(m.timeframe || ''),
             }));
-            setRoadmap(updatedMilestones);
+            const defaultMilestones = generateCustomRoadmap(profile, chartData);
+            const has01 = updatedMilestones.some((m: any) => normalizeTf(m.timeframe) === '0-1 Year');
+            const finalMilestones = has01
+              ? updatedMilestones
+              : [...defaultMilestones.filter((m) => normalizeTf(m.timeframe) === '0-1 Year'), ...updatedMilestones];
+            setRoadmap(finalMilestones);
             hasLoadedCache = true;
           }
           if (parsed.generatedHorizons) {
@@ -122,7 +131,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     if (!hasLoadedCache && (!roadmap || roadmap.length < 25)) {
       setRoadmap(generateCustomRoadmap(profile, chartData));
     }
-    setSelectedHorizon('0-5 Years');
+    setSelectedHorizon('0-1 Year');
   }, [profile?.fullName, profile?.birthDate]);
 
   // Helper to load image as base64 DataURL for jsPDF canvas rendering
@@ -162,20 +171,27 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     { id: 'Spirituality', label: 'Spirituality', icon: Flame },
   ];
 
-  const horizons = ['0-5 Years', '0-10 Years', '0-15 Years', '0-20 Years', '0-25 Years'];
+  const horizons = ['0-1 Year', '0-5 Years', '0-10 Years', '0-15 Years', '0-20 Years', '0-25 Years'];
 
   const getHorizonTierId = (tf: string): string | null => {
-    if (tf === '0-15 Years' || tf === '10-15 Years') return 'roadmap_15_subscription';
-    if (tf === '0-20 Years' || tf === '15-20 Years') return 'roadmap_20_subscription';
-    if (tf === '0-25 Years' || tf === '20-25 Years') return 'roadmap_25_subscription';
+    const norm = normalizeTimeframe(tf);
+    if (norm === '0-1 Year') return null;
+    if (norm === '0-5 Years') return 'roadmap_5_subscription';
+    if (norm === '0-10 Years') return 'roadmap_10_subscription';
+    if (norm === '0-15 Years' || norm === '10-15 Years') return 'roadmap_15_subscription';
+    if (norm === '0-20 Years' || norm === '15-20 Years') return 'roadmap_20_subscription';
+    if (norm === '0-25 Years' || norm === '20-25 Years') return 'roadmap_25_subscription';
     return null;
   };
 
   const getHorizonPrice = (tf: string): number => {
     const norm = normalizeTimeframe(tf);
-    if (norm === '0-15 Years') return 169;
-    if (norm === '0-20 Years') return 199;
-    if (norm === '0-25 Years') return 249;
+    if (norm === '0-1 Year') return 0;
+    if (norm === '0-5 Years') return 100;
+    if (norm === '0-10 Years') return 150;
+    if (norm === '0-15 Years') return 200;
+    if (norm === '0-20 Years') return 250;
+    if (norm === '0-25 Years') return 300;
     return 0;
   };
 
@@ -185,36 +201,66 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
     const normTf = normalizeTimeframe(item.timeframe);
 
-    // 🌟 0-5 Years & 0-10 Years: 100% FREE & UNLOCKED for all 8 life spheres
-    if (normTf === '0-5 Years' || normTf === '0-10 Years') {
+    // 🌟 0-1 Year is 100% FREE & UNLOCKED for everyone
+    if (normTf === '0-1 Year') {
       return false;
     }
 
     const tierId = getHorizonTierId(normTf);
     const unlockedTiers: string[] = (profile as any)?.unlockedRoadmapTiers || [];
 
-    // Check if user has purchased this specific tier or the master 25-yr tier
-    if (tierId && (unlockedTiers.includes(tierId) || unlockedTiers.includes('roadmap_25_subscription'))) {
+    // Master 25-Year tier unlocks ALL horizons!
+    if (unlockedTiers.includes('roadmap_25_subscription')) {
       return false;
     }
 
+    // Check specific tier and hierarchy (higher tier unlocks lower ones)
+    if (tierId) {
+      if (unlockedTiers.includes(tierId)) return false;
+      if (normTf === '0-5 Years' && (
+        unlockedTiers.includes('roadmap_10_subscription') ||
+        unlockedTiers.includes('roadmap_15_subscription') ||
+        unlockedTiers.includes('roadmap_20_subscription')
+      )) return false;
+      if (normTf === '0-10 Years' && (
+        unlockedTiers.includes('roadmap_15_subscription') ||
+        unlockedTiers.includes('roadmap_20_subscription')
+      )) return false;
+      if (normTf === '0-15 Years' && (
+        unlockedTiers.includes('roadmap_20_subscription')
+      )) return false;
+    }
+
     try {
-      if (tierId && localStorage.getItem(`jyotish_${tierId}_active`) === 'true') {
-        return false;
-      }
-      if (localStorage.getItem('jyotish_roadmap_25_subscription_active') === 'true') {
-        return false;
+      if (typeof window !== 'undefined') {
+        if (localStorage.getItem('jyotish_roadmap_25_subscription_active') === 'true') {
+          return false;
+        }
+        if (tierId && localStorage.getItem(`jyotish_${tierId}_active`) === 'true') {
+          return false;
+        }
+        if (normTf === '0-5 Years' && (
+          localStorage.getItem('jyotish_roadmap_10_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
+        if (normTf === '0-10 Years' && (
+          localStorage.getItem('jyotish_roadmap_15_subscription_active') === 'true' ||
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
+        if (normTf === '0-15 Years' && (
+          localStorage.getItem('jyotish_roadmap_20_subscription_active') === 'true'
+        )) return false;
       }
     } catch {}
 
-    // 0-15 Years (₹169), 0-20 Years (₹199), 0-25 Years (₹249) require subscription
     return true;
   };
 
   const isHorizonLocked = (tf?: string): boolean => {
-    const horizon = tf || selectedHorizon || '0-5 Years';
+    const horizon = tf || selectedHorizon || '0-1 Year';
     const norm = normalizeTimeframe(horizon);
-    if (norm === '0-5 Years' || norm === '0-10 Years') return false;
+    if (norm === '0-1 Year') return false;
     return isMilestoneLocked({ timeframe: norm } as any);
   };
 
@@ -356,9 +402,16 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     }
   };
 
-  const safeRoadmap = Array.isArray(roadmap) && roadmap.length > 0 
+  const defaultRoadmap = generateCustomRoadmap(profile, chartData);
+  const baseRoadmap = Array.isArray(roadmap) && roadmap.length > 0 
     ? roadmap 
-    : generateCustomRoadmap(profile, chartData);
+    : defaultRoadmap;
+
+  // Guarantee that 0-1 Year milestones are present even if previous cache lacked them
+  const has01InBase = baseRoadmap.some((m) => normalizeTimeframe(m?.timeframe) === '0-1 Year');
+  const safeRoadmap = has01InBase
+    ? baseRoadmap
+    : [...defaultRoadmap.filter((m) => normalizeTimeframe(m?.timeframe) === '0-1 Year'), ...baseRoadmap];
 
   const normalizedRoadmap = safeRoadmap.map((m) => {
     if (!m) return m;
@@ -373,12 +426,20 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     return 0;
   });
 
-  const filteredRoadmap = sortedRoadmap.filter((m) => {
+  let filteredRoadmap = sortedRoadmap.filter((m) => {
     if (!m) return false;
     const matchCat = !selectedCategory || selectedCategory === 'all' || m.category === selectedCategory;
     const matchHor = !selectedHorizon || selectedHorizon === 'all' || normalizeTimeframe(m.timeframe) === normalizeTimeframe(selectedHorizon);
     return matchCat && matchHor;
   });
+
+  // Extra safety net: If 0-1 Year filtered is empty, inject default 0-1 Year items
+  if (filteredRoadmap.length === 0 && normalizeTimeframe(selectedHorizon) === '0-1 Year') {
+    filteredRoadmap = defaultRoadmap.filter((m) => {
+      const matchCat = !selectedCategory || selectedCategory === 'all' || m.category === selectedCategory;
+      return normalizeTimeframe(m.timeframe) === '0-1 Year' && matchCat;
+    });
+  }
 
   const categoryContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -849,7 +910,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
         <div className="flex flex-wrap gap-2 pt-4 font-sans">
           {horizons.map((hor) => {
             const isSelected = selectedHorizon === hor;
-            const isFree = hor === '0-5 Years' || hor === '0-10 Years';
+            const isFree = hor === '0-1 Year';
             const price = getHorizonPrice(hor);
             const isLocked = !isFree && isMilestoneLocked({ timeframe: hor } as any);
 
@@ -1047,20 +1108,20 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                         : 'border-[#C9A050] text-[#96721E] hover:bg-[#C9A050]/10'
                     }`}
                   >
-                    <span>Unlock All Horizons (Up to 25 Years) • ₹249</span>
+                    <span>Unlock All Horizons (Up to 25 Years) • ₹300</span>
                   </button>
                 )}
               </div>
 
-              {/* Return to Free horizons */}
+              {/* Return to Free horizon */}
               <div className="pt-2">
                 <button
-                  onClick={() => handleHorizonTabClick('0-5 Years')}
+                  onClick={() => handleHorizonTabClick('0-1 Year')}
                   className={`text-xs font-medium underline underline-offset-4 transition cursor-pointer ${
                     theme === 'dark' ? 'text-[#9E9A90] hover:text-[#F0ECE1]' : 'text-gray-500 hover:text-black'
                   }`}
                 >
-                  ← Return to Free 0-5 Years &amp; 0-10 Years Roadmap
+                  ← Return to Free 0-1 Year Horizon
                 </button>
               </div>
             </div>
@@ -1182,7 +1243,25 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
               );
             })}
           </>
-        ) : null}
+        ) : (
+          <div className={`p-8 rounded-2xl border text-center space-y-3.5 ${
+            theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'
+          }`}>
+            <Clock className="w-8 h-8 text-[#C9A050] mx-auto opacity-70" />
+            <h3 className={`font-serif font-bold text-base ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
+              Predictive Insights for {selectedHorizon}
+            </h3>
+            <p className="text-xs text-[#9E9A90] max-w-md mx-auto">
+              Generate full planetary transit insights and dasha milestones across all 8 life spheres for {selectedHorizon}.
+            </p>
+            <button
+              onClick={() => handleGenerateHorizon(selectedHorizon)}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs cursor-pointer shadow-md transition"
+            >
+              Generate {selectedHorizon} Insights
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

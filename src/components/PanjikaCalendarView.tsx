@@ -184,11 +184,8 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
   };
 
   const handleLanguageChange = (newLang: 'all' | 'bn' | 'hi' | 'en') => {
-    setLangLoading(true);
+    // Do NOT reset selectedDay — we don't want modal to close when language changes
     setCalendarLang(newLang);
-    setTimeout(() => {
-      setLangLoading(false);
-    }, 300);
   };
 
   const fetchFullPanjika = async (dateStr: string) => {
@@ -271,6 +268,16 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
     const mObj = BENGALI_MONTHS_LIST.find((m) => m.en.toLowerCase() === monthEn.toLowerCase());
     const monthBn = mObj ? mObj.bn : monthEn;
     return `${toBengaliNum(day)} ${monthBn} ${toBengaliNum(year)} বঙ্গাব্দ`;
+  };
+
+  // Format Helper for Bengali dates — English display
+  const formatBengaliDisplayEn = (rawBengaliStr: string) => {
+    if (!rawBengaliStr) return rawBengaliStr;
+    const parts = rawBengaliStr.split(' ');
+    const day = parts[0] || '';
+    const monthEn = parts[1] || '';
+    const year = parts[2] || '';
+    return `${day} ${monthEn} ${year} BS`;
   };
 
   // Format Helper for Hindi dates
@@ -1063,32 +1070,35 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+            className="fixed top-[64px] inset-x-0 bottom-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto flex items-start justify-center p-3 sm:p-4"
             onClick={() => setSelectedDay(null)}
           >
             <motion.div
-              initial={{ scale: 0.92, y: 20 }}
+              initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.92, y: 20 }}
+              exit={{ scale: 0.95, y: 10 }}
               onClick={(e) => e.stopPropagation()}
-              className={`w-full max-w-2xl rounded-t-2xl sm:rounded-2xl border shadow-2xl overflow-hidden transition-all my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto ${
+              className={`w-full max-w-xl rounded-2xl border shadow-2xl flex flex-col my-auto ${
                 isDark ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]' : 'bg-white border-[#C9A050]/40 text-[#0D0D0F]'
               }`}
             >
-              {/* Modal Header */}
-              <div className="bg-gradient-to-r from-[#C9A050] to-[#8C6B28] p-4 sm:p-5 text-[#0D0D0F] flex items-center justify-between relative overflow-hidden">
+              {/* Modal Header - sticky */}
+              <div className="bg-gradient-to-r from-[#C9A050] to-[#8C6B28] p-4 text-[#0D0D0F] flex items-center justify-between relative overflow-hidden flex-shrink-0">
                 <div className="relative z-10">
                   <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#0D0D0F]/80">
                     <Sparkles className="w-4 h-4" />
                     <span>Panchang & Panjika</span>
                   </div>
                   <h3 className="text-xl sm:text-2xl font-serif font-bold mt-0.5">
-                    {new Date(selectedDay.english_date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
+                    {new Date(selectedDay.english_date).toLocaleDateString(
+                      calendarLang === 'bn' ? 'bn-IN' : (calendarLang === 'hi' ? 'hi-IN' : 'en-US'),
+                      {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      }
+                    )}
                   </h3>
                 </div>
 
@@ -1101,32 +1111,73 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
               </div>
 
               {/* Modal Body */}
-              <div className="p-5 sm:p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+              <div className="p-4 sm:p-5 space-y-5 overflow-y-auto flex-1">
                 
                 {/* 3-Way Date Parallel Banner */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* English Date Card */}
                   <div className={`p-3 rounded-xl border text-center ${
                     isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                   }`}>
                     <div className="text-[10px] font-bold text-[#C9A050] uppercase tracking-wider mb-1">
-                      Bangabda (Bengali)
+                      {calendarLang === 'bn' ? 'গ্রেগরিয়ান (ইংরেজি)' : (calendarLang === 'hi' ? 'ग्रेगोरियन (अंग्रेज़ी)' : 'Gregorian (English)')}
                     </div>
-                    <div className="font-serif font-bold text-sm sm:text-base text-[#F0ECE1] dark:text-[#F0ECE1]">
-                      {formatBengaliDisplay(selectedDay.bengali_date)}
+                    <div className={`font-serif font-bold text-sm sm:text-base ${
+                      isDark ? 'text-[#F0ECE1]' : 'text-[#1A1816]'
+                    }`}>
+                      {new Date(selectedDay.english_date).toLocaleDateString(
+                        calendarLang === 'bn' ? 'bn-IN' : (calendarLang === 'hi' ? 'hi-IN' : 'en-GB'),
+                        { day: 'numeric', month: 'short', year: 'numeric' }
+                      )}
                     </div>
-                    <div className="text-[11px] text-[#9E9A90] mt-0.5">{selectedDay.bengali_date}</div>
+                    <div className="text-[11px] text-[#9E9A90] mt-0.5">
+                      {new Date(selectedDay.english_date).toLocaleDateString(
+                        calendarLang === 'bn' ? 'bn-IN' : (calendarLang === 'hi' ? 'hi-IN' : 'en-US'),
+                        { weekday: 'long' }
+                      )}
+                    </div>
                   </div>
 
+                  {/* Bengali Date Card */}
                   <div className={`p-3 rounded-xl border text-center ${
                     isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                   }`}>
                     <div className="text-[10px] font-bold text-[#C9A050] uppercase tracking-wider mb-1">
-                      Vikram Samvat (Hindi)
+                      {calendarLang === 'en' ? 'Bengali Era (Bangabda)' : 'Bangabda (Bengali)'}
                     </div>
-                    <div className="font-serif font-bold text-sm sm:text-base text-[#F0ECE1] dark:text-[#F0ECE1]">
-                      {formatHindiDisplay(selectedDay.hindi_date)}
+                    <div className={`font-serif font-bold text-sm sm:text-base ${
+                      isDark ? 'text-[#F0ECE1]' : 'text-[#1A1816]'
+                    }`}>
+                      {calendarLang === 'en'
+                        ? formatBengaliDisplayEn(selectedDay.bengali_date)
+                        : formatBengaliDisplay(selectedDay.bengali_date)}
                     </div>
-                    <div className="text-[11px] text-[#9E9A90] mt-0.5">{selectedDay.hindi_date}</div>
+                    <div className="text-[11px] text-[#9E9A90] mt-0.5">
+                      {calendarLang === 'en'
+                        ? formatBengaliDisplay(selectedDay.bengali_date)
+                        : formatBengaliDisplayEn(selectedDay.bengali_date)}
+                    </div>
+                  </div>
+
+                  {/* Hindi Date Card */}
+                  <div className={`p-3 rounded-xl border text-center ${
+                    isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
+                  }`}>
+                    <div className="text-[10px] font-bold text-[#C9A050] uppercase tracking-wider mb-1">
+                      {calendarLang === 'en' ? 'Vikram Samvat (Hindi Era)' : 'Vikram Samvat (Hindi)'}
+                    </div>
+                    <div className={`font-serif font-bold text-sm sm:text-base ${
+                      isDark ? 'text-[#F0ECE1]' : 'text-[#1A1816]'
+                    }`}>
+                      {calendarLang === 'en'
+                        ? selectedDay.hindi_date
+                        : formatHindiDisplay(selectedDay.hindi_date)}
+                    </div>
+                    <div className="text-[11px] text-[#9E9A90] mt-0.5">
+                      {calendarLang === 'en'
+                        ? formatHindiDisplay(selectedDay.hindi_date)
+                        : selectedDay.hindi_date}
+                    </div>
                   </div>
                 </div>
 
@@ -1149,44 +1200,84 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       }`}>
                         {[
                           {
-                            labelEn: 'Tithi & Paksha (তিথি ও পক্ষ)',
+                            labelBn: 'Day (বার)',
+                            labelHi: 'दिन (वार)',
+                            labelEn: 'Day (Vara)',
+                            valueEn: new Date(selectedDay.english_date).toLocaleDateString('en-US', { weekday: 'long' }),
+                            valueBn: new Date(selectedDay.english_date).toLocaleDateString('bn-IN', { weekday: 'long' }),
+                            valueHi: new Date(selectedDay.english_date).toLocaleDateString('hi-IN', { weekday: 'long' }),
+                          },
+                          {
+                            labelBn: 'Tithi & Paksha (তিথি ও পক্ষ)',
+                            labelHi: 'तिथि और पक्ष',
+                            labelEn: 'Tithi & Paksha',
                             valueEn: `${fullPanjika.tithi} (${fullPanjika.paksha} Paksha)`,
                             valueBn: `${TITHI_MAP[fullPanjika.tithi]?.bn || fullPanjika.tithi} (${fullPanjika.paksha === 'Shukla' ? 'শুক্লপক্ষ' : 'কৃষ্ণপক্ষ'})`,
+                            valueHi: `${TITHI_MAP[fullPanjika.tithi]?.hi || fullPanjika.tithi} (${fullPanjika.paksha === 'Shukla' ? 'शुक्लपक्ष' : 'कृष्णपक्ष'})`,
                           },
                           {
-                            labelEn: 'Nakshatra (নক্ষত্র)',
+                            labelBn: 'Nakshatra (নক্ষত্র)',
+                            labelHi: 'नक्षत्र',
+                            labelEn: 'Nakshatra',
                             valueEn: fullPanjika.nakshatra,
                             valueBn: fullPanjika.nakshatra,
+                            valueHi: fullPanjika.nakshatra,
                           },
                           {
-                            labelEn: 'Yoga (যোগ)',
+                            labelBn: 'Yoga (যোগ)',
+                            labelHi: 'योग',
+                            labelEn: 'Yoga',
                             valueEn: fullPanjika.yoga,
                             valueBn: fullPanjika.yoga,
+                            valueHi: fullPanjika.yoga,
                           },
                           {
-                            labelEn: 'Karana (করণ)',
+                            labelBn: 'Karana (করণ)',
+                            labelHi: 'करण',
+                            labelEn: 'Karana',
                             valueEn: fullPanjika.karana,
                             valueBn: fullPanjika.karana,
+                            valueHi: fullPanjika.karana,
                           },
                           {
-                            labelEn: 'Chandra Rashi (চন্দ্র রাশি)',
+                            labelBn: 'Chandra Rashi (চন্দ্র রাশি)',
+                            labelHi: 'चंद्र राशि',
+                            labelEn: 'Chandra Rashi (Moon Sign)',
                             valueEn: fullPanjika.rashi,
                             valueBn: fullPanjika.rashi,
+                            valueHi: fullPanjika.rashi,
                           },
                           {
-                            labelEn: 'Ritu (ঋতু / Season)',
+                            labelBn: 'Ritu (ঋতু / Season)',
+                            labelHi: 'ऋतु / मौसम',
+                            labelEn: 'Ritu (Season)',
                             valueEn: fullPanjika.ritu,
                             valueBn: fullPanjika.ritu,
+                            valueHi: fullPanjika.ritu,
                           },
-                        ].map((item, idx) => (
+                        ].map((item, idx) => {
+                          const displayLabel =
+                            calendarLang === 'hi' ? item.labelHi :
+                            calendarLang === 'en' ? item.labelEn :
+                            item.labelBn;
+                          const displayValue =
+                            calendarLang === 'hi' ? item.valueHi :
+                            calendarLang === 'en' ? item.valueEn :
+                            item.valueBn;
+                          const subValue =
+                            calendarLang === 'hi' ? item.valueEn :
+                            calendarLang === 'en' ? '' :
+                            item.valueEn;
+                          return (
                           <div key={idx} className="flex items-center justify-between p-3 text-xs">
-                            <span className="font-medium text-[#9E9A90]">{item.labelEn}</span>
+                            <span className="font-medium text-[#9E9A90]">{displayLabel}</span>
                             <div className="text-right">
-                              <span className="font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{item.valueBn}</span>
-                              <span className="block text-[10px] text-gray-500">{item.valueEn}</span>
+                              <span className="font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{displayValue}</span>
+                              {subValue && <span className="block text-[10px] text-gray-500">{subValue}</span>}
                             </div>
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
 
@@ -1230,7 +1321,11 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30">
                         <h5 className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-2 flex items-center space-x-1.5">
                           <Star className="w-3.5 h-3.5" />
-                          <span>Auspicious Festivals & Observances (ব্রত ও পর্ব)</span>
+                          <span>
+                            {calendarLang === 'bn' 
+                              ? 'ব্রত ও পর্ব (Festivals)' 
+                              : (calendarLang === 'hi' ? 'व्रत और पर्व (Festivals)' : 'Auspicious Festivals & Observances')}
+                          </span>
                         </h5>
                         <ul className="list-disc list-inside space-y-1 text-xs font-semibold text-[#F0ECE1] dark:text-[#F0ECE1]">
                           {fullPanjika.festivals.map((fest: string, i: number) => (
@@ -1243,8 +1338,8 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                 )}
               </div>
 
-              {/* Modal Footer */}
-              <div className={`p-4 border-t flex justify-end ${
+              {/* Modal Footer - sticky at bottom */}
+              <div className={`p-3 border-t flex justify-end flex-shrink-0 ${
                 isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F0ECE1] border-[#E5E1D8]'
               }`}>
                 <button

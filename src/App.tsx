@@ -17,7 +17,9 @@ import { AdminLogsView } from './components/AdminLogsView';
 import { AdminRevenueView } from './components/AdminRevenueView';
 import { AdminLLMConfigView } from './components/AdminLLMConfigView';
 import { AdminSEOView } from './components/AdminSEOView';
+import { AdminSubscriptionsView } from './components/AdminSubscriptionsView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
+import { LegalInfoPage, LegalPageView } from './components/LegalInfoPage';
 
 import { API_ENDPOINTS } from './config/api_config';
 import { api } from './services/api';
@@ -150,8 +152,17 @@ export function App() {
             const hasDaily = txList.some((tx: any) => tx.status === 'success' && (tx.item_id === 'daily_vedic_subscription' || Number(tx.amount) === 99));
             const hasMatchmaking = txList.some((tx: any) => tx.status === 'success' && (tx.item_id === 'matchmaking_regenerate_subscription' || Number(tx.amount) === 149));
             const unlockedRoadmaps = txList
-              .filter((tx: any) => tx.status === 'success' && (tx.item_id?.startsWith('roadmap_') || [169, 199, 249].includes(Number(tx.amount))))
-              .map((tx: any) => tx.item_id || 'roadmap_15_subscription');
+              .filter((tx: any) => tx.status === 'success' && (tx.item_id?.startsWith('roadmap_') || [100, 150, 169, 200, 199, 250, 249, 300].includes(Number(tx.amount))))
+              .map((tx: any) => {
+                if (tx.item_id) return tx.item_id;
+                const amt = Number(tx.amount);
+                if (amt === 100) return 'roadmap_5_subscription';
+                if (amt === 150) return 'roadmap_10_subscription';
+                if (amt === 200 || amt === 169) return 'roadmap_15_subscription';
+                if (amt === 250 || amt === 199) return 'roadmap_20_subscription';
+                if (amt === 300 || amt === 249) return 'roadmap_25_subscription';
+                return 'roadmap_5_subscription';
+              });
 
             if (hasDaily) {
               localStorage.setItem('jyotish_user_premium', 'true');
@@ -188,8 +199,10 @@ export function App() {
   const [activeTab, setActiveTab] = useState<string>('daily');
   const [selectedConsultationTierId, setSelectedConsultationTierId] = useState<string | null>(null);
   const [dynamicSeoMap, setDynamicSeoMap] = useState<Record<string, any>>({});
+  const [activePlans, setActivePlans] = useState<any[]>([]);
 
   useEffect(() => {
+    // Fetch SEO Config
     api.get<any>('/api/seo-config')
       .then((res) => {
         const data = res?.data || res;
@@ -198,6 +211,29 @@ export function App() {
         }
       })
       .catch(() => {});
+
+    // Fetch Active Subscription Plans
+    api.get<any>('/api/subscription-plans/active')
+      .then((res) => {
+        const data = res?.data || res;
+        if (Array.isArray(data)) {
+          // Map to match the frontend ConsultationTier structure
+          const mapped = data.map(p => ({
+            id: p.id,
+            name: p.plan_name,
+            priceINR: Number(p.price_inr),
+            priceUSD: p.price_usd ? Number(p.price_usd) : null,
+            description: p.description,
+            features: typeof p.features_json === 'string' ? JSON.parse(p.features_json) : (p.features_json || []),
+            isPopular: p.plan_type === 'MATCHMAKING' || p.price_inr === 99 || p.price_inr === 300,
+            deliveryTime: 'Instant Activation',
+            planType: p.plan_type // Add custom field for filtering
+          })).sort((a, b) => a.priceINR - b.priceINR);
+          console.log("🔥 Loaded Plans from Database:", mapped);
+          setActivePlans(mapped);
+        }
+      })
+      .catch((err) => console.error('Failed to load subscription plans:', err));
   }, []);
 
   useEffect(() => {
@@ -631,6 +667,7 @@ export function App() {
         onLogout={handleLogout}
         isAdmin={authUser?.role === 'admin'}
         userEmail={authUser?.email}
+        chartData={chartData}
       />
 
       {/* Main Container */}
@@ -700,6 +737,10 @@ export function App() {
               <AdminSEOView theme={theme} />
             )}
 
+            {activeTab === 'admin_subscriptions' && (
+              <AdminSubscriptionsView theme={theme} />
+            )}
+
             {activeTab === 'horoscope' && (
               <HoroscopeTraditionsView
                 profile={currentProfile}
@@ -709,7 +750,12 @@ export function App() {
                 numerology={numerology}
                 language={language}
                 theme={theme}
-                onNavigateToTab={setActiveTab}
+                onNavigateToTab={(tab, tierId) => {
+                  if (tierId) {
+                    setSelectedConsultationTierId(tierId);
+                  }
+                  setActiveTab(tab);
+                }}
               />
             )}
 
@@ -774,7 +820,7 @@ export function App() {
             {activeTab === 'consultations' && (
               <ConsultationsPaymentView
                 profile={currentProfile}
-                tiers={DEFAULT_CONSULTATION_TIERS}
+                tiers={activePlans.length > 0 ? activePlans : DEFAULT_CONSULTATION_TIERS}
                 initialSelectedTierId={selectedConsultationTierId}
                 theme={theme}
                 onNavigateTab={(tab) => setActiveTab(tab as any)}
@@ -822,6 +868,18 @@ export function App() {
                 profiles={profiles}
               />
             )}
+            {['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'].includes(activeTab) && (
+              <LegalInfoPage
+                view={activeTab as LegalPageView}
+                onBack={() => setActiveTab('daily')}
+                onNavigateView={(v) => {
+                  setActiveTab(v);
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }}
+                theme={theme}
+                language={language}
+              />
+            )}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -851,7 +909,12 @@ export function App() {
         onOpenDisclaimer={() =>
           setIsDisclaimerModalOpen(true)
         }
+        onNavigatePage={(page) => {
+          setActiveTab(page);
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }}
         setActiveTab={setActiveTab}
+        setTradition={setTradition}
         theme={theme}
         language={language}
       />

@@ -10,6 +10,11 @@ import {
   FileText,
   Loader2,
   Milestone,
+  Lock,
+  Crown,
+  ArrowRight,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import ReactMarkdown from 'react-markdown';
@@ -27,7 +32,7 @@ import {
 } from '../types';
 
 import { getTranslation } from '../services/translations';
-import { api } from '../services/api';
+import { api, getToken } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
 
 const PlanetBadge = ({
@@ -103,7 +108,7 @@ interface HoroscopeTraditionsViewProps {
   numerology: NumerologyReport;
   language?: string;
   theme?: 'light' | 'dark';
-  onNavigateToTab?: (tab: string) => void;
+  onNavigateToTab?: (tab: string, tierId?: string) => void;
 }
 
 export const HoroscopeTraditionsView: React.FC<
@@ -135,6 +140,57 @@ export const HoroscopeTraditionsView: React.FC<
 
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+
+  const [isHistoryUnlocked, setIsHistoryUnlocked] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        localStorage.getItem('jyotish_user_premium') === 'true' ||
+        localStorage.getItem('jyotish_birth_chart_subscription_active') === 'true' ||
+        localStorage.getItem('jyotish_daily_vedic_subscription_active') === 'true'
+      );
+    }
+    return false;
+  });
+
+  const isPremiumUser = Boolean(
+    profile?.isPremium ||
+    isHistoryUnlocked ||
+    (typeof window !== 'undefined' && (
+      localStorage.getItem('jyotish_user_premium') === 'true' ||
+      localStorage.getItem('jyotish_birth_chart_subscription_active') === 'true' ||
+      localStorage.getItem('jyotish_daily_vedic_subscription_active') === 'true'
+    ))
+  );
+
+  // Sync unlock status from backend payment history
+  React.useEffect(() => {
+    let isCancelled = false;
+    const syncStatus = async () => {
+      if (isPremiumUser) return;
+      try {
+        const token = getToken();
+        if (token) {
+          const res = await api.get<any>(API_ENDPOINTS.PAYMENT.HISTORY);
+          const list = Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []);
+          if (list.some((tx: any) => tx.status === 'success' && (tx.item_id === 'daily_vedic_subscription' || tx.item_id === 'birth_chart_subscription' || Number(tx.amount) === 99))) {
+            if (!isCancelled) {
+              setIsHistoryUnlocked(true);
+              localStorage.setItem('jyotish_user_premium', 'true');
+              localStorage.setItem('jyotish_birth_chart_subscription_active', 'true');
+              localStorage.setItem('jyotish_daily_vedic_subscription_active', 'true');
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Could not sync history in HoroscopeTraditionsView:', err);
+      }
+    };
+    syncStatus();
+    return () => {
+      isCancelled = true;
+    };
+  }, [profile?.id, profile?.isPremium, isPremiumUser]);
 
   const loadImageBase64 = (url: string): Promise<string | null> => {
     return new Promise((resolve) => {
@@ -2067,16 +2123,28 @@ export const HoroscopeTraditionsView: React.FC<
       }`}>
         <div className="flex items-center justify-between pb-4 border-b border-[#C9A050]/20 flex-wrap gap-3">
           <div>
-            <h3 className={`text-base sm:text-lg font-serif font-bold flex items-center space-x-2 ${
-              isDark ? 'text-[#F0ECE1]' : 'text-gray-900'
-            }`}>
-              <Sparkles className="w-4 h-4 text-[#C9A050]" />
-              <span>
-                Comprehensive Vedic Synthesis ({tradition.toUpperCase()})
-              </span>
-            </h3>
-            <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-              Deep Vedic analysis integrating chart positions, dashas &amp; ancient rules
+            <div className="flex items-center space-x-2">
+              <h3 className={`text-base sm:text-lg font-serif font-bold flex items-center space-x-2 ${
+                isDark ? 'text-[#F0ECE1]' : 'text-gray-900'
+              }`}>
+                <Sparkles className="w-4 h-4 text-[#C9A050]" />
+                <span>
+                  Comprehensive Vedic Synthesis ({tradition.toUpperCase()})
+                </span>
+              </h3>
+              {isPremiumUser ? (
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                  ✓ UNLOCKED
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40 flex items-center space-x-1">
+                  <Lock className="w-2.5 h-2.5" />
+                  <span>PREMIUM ₹99</span>
+                </span>
+              )}
+            </div>
+            <p className={`text-xs mt-1 ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+              Deep Vedic analysis integrating chart positions, 12 Bhavas, dashas &amp; ancient rules
             </p>
           </div>
 
@@ -2095,24 +2163,34 @@ export const HoroscopeTraditionsView: React.FC<
               </button>
             )}
 
-            <button
-              onClick={handleGenerateAIInterpretation}
-              disabled={isLoadingAi}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 transition cursor-pointer flex items-center space-x-1.5 disabled:opacity-50"
-            >
-              <Sparkles
-                className={`w-3.5 h-3.5 ${
-                  isLoadingAi ? 'animate-spin' : ''
-                }`}
-              />
-              <span>
-                {isLoadingAi
-                  ? 'Synthesizing...'
-                  : aiInterpretation
-                  ? 'Regenerate Analysis'
-                  : 'Run Full Synthesis'}
-              </span>
-            </button>
+            {isPremiumUser ? (
+              <button
+                onClick={handleGenerateAIInterpretation}
+                disabled={isLoadingAi}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 transition cursor-pointer flex items-center space-x-1.5 disabled:opacity-50"
+              >
+                <Sparkles
+                  className={`w-3.5 h-3.5 ${
+                    isLoadingAi ? 'animate-spin' : ''
+                  }`}
+                />
+                <span>
+                  {isLoadingAi
+                    ? 'Synthesizing...'
+                    : aiInterpretation
+                    ? 'Regenerate Analysis'
+                    : 'Run Full Synthesis'}
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsSubscriptionModalOpen(true)}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 transition cursor-pointer flex items-center space-x-1.5"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Unlock for ₹99</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -2123,7 +2201,7 @@ export const HoroscopeTraditionsView: React.FC<
               AstroJunction synthesizing multi-tradition Vedic sutras...
             </p>
           </div>
-        ) : aiInterpretation ? (
+        ) : aiInterpretation && isPremiumUser ? (
           <div className={`p-6 sm:p-8 rounded-2xl border shadow-inner ${
             isDark
               ? 'bg-[#0B0B0E] border-[#2A2A2E]'
@@ -2188,23 +2266,192 @@ export const HoroscopeTraditionsView: React.FC<
               {cleanAiInterpretation(aiInterpretation)}
             </ReactMarkdown>
           </div>
-        ) : (
+        ) : isPremiumUser ? (
           <div className={`text-center py-8 rounded-xl border ${
             isDark ? 'bg-[#1A1A1E]/40 border-[#2A2A2E]' : 'bg-[#FAF7F0] border-[#E8E2D5]'
           }`}>
             <p className={`text-xs font-sans ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
               Ready to generate a comprehensive synthesis combining{' '}
-              <strong className="text-[#C9A050]">{tradition}</strong> rules with your active Dasha timeline and yogas.
+              <strong className="text-[#C9A050]">{tradition.toUpperCase()}</strong> rules with your active Dasha timeline and yogas.
             </p>
             <button
               onClick={handleGenerateAIInterpretation}
-              className="mt-3.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 cursor-pointer transition"
+              className="mt-3.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 cursor-pointer transition inline-flex items-center space-x-2"
             >
-              Click to Generate Deep Interpretation
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Click to Generate Deep Interpretation</span>
             </button>
+          </div>
+        ) : (
+          /* Subscription Locked Banner */
+          <div className={`relative overflow-hidden rounded-xl border p-6 sm:p-8 text-center space-y-4 ${
+            isDark ? 'bg-[#1A1A1E]/60 border-[#C9A050]/30' : 'bg-gradient-to-b from-[#FAF7F0] to-[#F5EEDC] border-[#DFC896]'
+          }`}>
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#C9A050]/15 border border-[#C9A050]/40 flex items-center justify-center text-[#C9A050] shadow-lg shadow-[#C9A050]/10">
+              <Lock className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-1.5 max-w-lg mx-auto">
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
+                <Crown className="w-3.5 h-3.5" />
+                <span>Vedic Premium Subscription • ₹99 Only</span>
+              </div>
+              <h4 className={`text-lg sm:text-xl font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
+                Unlock Comprehensive Vedic Synthesis ({tradition.toUpperCase()})
+              </h4>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                Gain access to deep personalized multi-tradition synthesis integrating your Lagna, 12 Bhavas, active Vimshottari Mahadashas, planetary yogas, and classical Vedic sutras.
+              </p>
+            </div>
+
+            {/* Quick feature pills */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 max-w-2xl mx-auto pt-2 text-left">
+              <div className={`p-3 rounded-lg border text-xs flex items-center space-x-2 ${isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E8E2D5]'}`}>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span className="text-[11px] font-medium">12-Bhava &amp; Yoga Audit</span>
+              </div>
+              <div className={`p-3 rounded-lg border text-xs flex items-center space-x-2 ${isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E8E2D5]'}`}>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span className="text-[11px] font-medium">Dasha Milestones &amp; Timing</span>
+              </div>
+              <div className={`p-3 rounded-lg border text-xs flex items-center space-x-2 ${isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E8E2D5]'}`}>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span className="text-[11px] font-medium">Remedies &amp; Sacred Mantras</span>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() => setIsSubscriptionModalOpen(true)}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer inline-flex items-center space-x-2"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Subscribe for ₹99 &amp; Unlock Synthesis</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Vedic Premium Subscription Modal */}
+      {isSubscriptionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div
+            className={`relative w-full max-w-lg rounded-2xl border p-6 sm:p-8 shadow-2xl overflow-hidden transition-all ${
+              isDark
+                ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
+                : 'bg-[#FFFDF7] border-[#DECFA6] text-[#2A2A2E]'
+            }`}
+          >
+            {/* Background ambient decorative glow */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#C9A050]/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#C9A050]/15 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsSubscriptionModalOpen(false)}
+              className={`absolute top-4 right-4 p-2 rounded-full border transition cursor-pointer ${
+                isDark
+                  ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white hover:bg-[#1A1A1E]'
+                  : 'border-[#E5E1D8] text-[#9E9A90] hover:text-black hover:bg-[#F0ECE1]'
+              }`}
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex flex-col items-center text-center space-y-3 pt-2">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C9A050]/30 to-[#A07828]/10 border border-[#C9A050]/60 flex items-center justify-center shadow-lg shadow-[#C9A050]/20">
+                  <Lock className="w-8 h-8 text-[#C9A050]" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[#C9A050] text-[#0D0D0F]">
+                  <Sparkles className="w-3.5 h-3.5" />
+                </div>
+              </div>
+
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
+                <Crown className="w-3.5 h-3.5" />
+                <span>Vedic Premium Subscription • ₹99 Only</span>
+              </div>
+
+              <h3 className={`text-xl sm:text-2xl font-serif font-bold ${
+                isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
+              }`}>
+                Unlock Comprehensive Vedic Synthesis ({tradition.toUpperCase()})
+              </h3>
+
+              <p className="text-xs font-sans text-[#9E9A90] max-w-md leading-relaxed">
+                Deep personalized Vedic synthesis integrating your Lagna, 12 Bhavas, active Vimshottari Mahadashas, planetary yogas, and classical sutras for just ₹99 INR.
+              </p>
+            </div>
+
+            {/* Feature Highlights */}
+            <div className={`mt-5 p-4 rounded-xl border space-y-2.5 ${
+              isDark ? 'bg-[#1A1A1E]/80 border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
+            }`}>
+              <div className="text-xs font-bold text-[#C9A050] uppercase tracking-wider font-sans mb-1">
+                What is unlocked with your Subscription:
+              </div>
+              
+              <div className="flex items-start space-x-2.5 text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Comprehensive Vedic Synthesis:</strong> Detailed Parashari, Jaimini, Lal Kitab &amp; KP multi-tradition cross-audits.</span>
+              </div>
+              
+              <div className="flex items-start space-x-2.5 text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>12 Bhavas &amp; Planetary Yogas:</strong> Wealth, Career, Raj Yogas, Viparita Yogas &amp; Neecha Bhanga analysis.</span>
+              </div>
+              
+              <div className="flex items-start space-x-2.5 text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Vimshottari Dasha Milestones:</strong> Antardasha timing windows, career shifts &amp; karmic turning points.</span>
+              </div>
+
+              <div className="flex items-start space-x-2.5 text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Vedic Upayas &amp; Remedies:</strong> Customized Vedic Mantras, Gemstones, Rudraksha, and ritual guidelines.</span>
+              </div>
+
+              <div className="flex items-start space-x-2.5 text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Full PDF Dossier &amp; Voice Reading:</strong> Listen to your reading via audio and download full formatted chart reports.</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
+              <button
+                onClick={() => {
+                  setIsSubscriptionModalOpen(false);
+                  if (onNavigateToTab) {
+                    onNavigateToTab('consultations', 'daily_vedic_subscription');
+                  }
+                }}
+                className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer flex items-center justify-center space-x-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Subscribe for ₹99 &amp; Open Payment Gateway</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setIsSubscriptionModalOpen(false)}
+                className={`w-full sm:w-auto py-3.5 px-4 rounded-xl border text-xs font-semibold transition cursor-pointer ${
+                  isDark
+                    ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white hover:bg-[#1A1A1E]'
+                    : 'border-[#E5E1D8] text-[#6E6A60] hover:text-black hover:bg-[#F0ECE1]'
+                }`}
+              >
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

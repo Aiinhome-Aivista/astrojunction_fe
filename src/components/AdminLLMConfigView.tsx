@@ -5,6 +5,7 @@ import {
   Server,
   Cloud,
   Zap,
+  Globe,
   CheckCircle2,
   AlertCircle,
   RefreshCw,
@@ -23,7 +24,7 @@ interface AdminLLMConfigViewProps {
   theme: 'dark' | 'light';
 }
 
-export type LLMProvider = 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai';
+export type LLMProvider = 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai' | 'openrouter';
 
 interface ProviderMeta {
   id: LLMProvider;
@@ -59,6 +60,17 @@ const PROVIDERS: ProviderMeta[] = [
     accentColor: '#10B981',
     docsUrl: 'https://aistudio.google.com/app/apikey',
     docsName: 'Get Gemini Key',
+  },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter',
+    tagline: 'Llama 3.3 / DeepSeek / Free',
+    description: 'Unified gateway providing access to 20+ free LLMs (Meta Llama 3.3 70B, DeepSeek R1, Mistral, Gemma).',
+    icon: Globe,
+    badge: 'Free Tier Available',
+    accentColor: '#6366F1',
+    docsUrl: 'https://openrouter.ai/keys',
+    docsName: 'Get OpenRouter Key',
   },
   {
     id: 'mistral_cloud',
@@ -105,6 +117,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
   const [showGeminiKey, setShowGeminiKey] = useState(false);
   const [showMistralCloudKey, setShowMistralCloudKey] = useState(false);
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
+  const [showOpenRouterKey, setShowOpenRouterKey] = useState(false);
 
   // Form data
   const [formData, setFormData] = useState<Partial<LLMConfig>>({});
@@ -186,23 +199,28 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
     }
   };
 
-  // Save settings without changing active engine
+  // Save settings and activate selected provider as the active engine
   const handleSaveSettings = async () => {
     setSaving(true);
     setSaveSuccess(null);
     setErrorMessage(null);
 
     try {
-      // Exclude ACTIVE_LLM so saving settings does not trigger unnecessary active engine re-verification
-      const { ACTIVE_LLM, ...settingsToSave } = formData;
-      const res: any = await adminApi.updateLLMConfig(settingsToSave);
+      const payload: Partial<LLMConfig> = {
+        ...formData,
+        ACTIVE_LLM: selectedProvider,
+      };
+      const res: any = await adminApi.updateLLMConfig(payload);
       const updated = res?.settings || res?.data || res;
       if (updated && typeof updated === 'object') {
-        setConfig((prev) => ({ ...prev, ...updated }));
-        setFormData((prev) => ({ ...prev, ...updated }));
+        setConfig((prev) => ({ ...prev, ...updated, ACTIVE_LLM: selectedProvider }));
+        setFormData((prev) => ({ ...prev, ...updated, ACTIVE_LLM: selectedProvider }));
+      } else {
+        setConfig((prev) => (prev ? { ...prev, ACTIVE_LLM: selectedProvider } : prev));
       }
-      setSaveSuccess('Configuration saved to database successfully.');
-      setTimeout(() => setSaveSuccess(null), 3000);
+      const pName = PROVIDERS.find((p) => p.id === selectedProvider)?.name || selectedProvider;
+      setSaveSuccess(`${pName} saved and set as Active Engine successfully.`);
+      setTimeout(() => setSaveSuccess(null), 3500);
     } catch (err: any) {
       setErrorMessage(err?.message || 'Failed to save configuration');
     } finally {
@@ -216,6 +234,8 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
         return Boolean(formData.GEMINI_API_KEY?.trim() || config?.gemini?.is_configured || config?.is_configured?.gemini);
       case 'openai':
         return Boolean(formData.OPENAI_API_KEY?.trim() || config?.openai?.is_configured || config?.is_configured?.openai);
+      case 'openrouter':
+        return Boolean(formData.OPENROUTER_API_KEY?.trim() || config?.openrouter?.is_configured || config?.is_configured?.openrouter);
       case 'mistral_cloud':
         return Boolean(formData.MISTRAL_CLOUD_API_KEY?.trim() || config?.mistral_cloud?.is_configured || config?.is_configured?.mistral_cloud);
       case 'mistral_local':
@@ -324,7 +344,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
           Select Engine to Configure
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
           {PROVIDERS.map((provider) => {
             const isSelected = selectedProvider === provider.id;
             const isLive = config?.ACTIVE_LLM === provider.id;
@@ -357,10 +377,23 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     </div>
 
                     <div className="flex items-center space-x-1">
-                      {isLive && (
+                      {isLive ? (
                         <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
                           Active
                         </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProvider(provider.id);
+                            handleSetActive(provider.id);
+                          }}
+                          className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-[#C9A050]/40 text-[#C9A050] hover:bg-[#C9A050] hover:text-[#0D0D0F] transition cursor-pointer"
+                          title={`Set ${provider.name} as Active`}
+                        >
+                          Activate
+                        </button>
                       )}
                     </div>
                   </div>
@@ -786,6 +819,122 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                       : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
+              </div>
+            </div>
+          )}
+
+          {/* OpenRouter */}
+          {selectedProvider === 'openrouter' && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${
+                    isDark ? 'text-[#C9A050]' : 'text-amber-800'
+                  }`}>
+                    OpenRouter API Key
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showOpenRouterKey ? 'text' : 'password'}
+                      value={formData.OPENROUTER_API_KEY || ''}
+                      onChange={(e) => handleInputChange('OPENROUTER_API_KEY', e.target.value)}
+                      placeholder="sk-or-v1-..."
+                      className={`w-full px-3.5 py-2.5 pr-10 rounded-xl border text-xs font-mono transition-colors ${
+                        isDark
+                          ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                          : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#C9A050] focus:outline-none'
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowOpenRouterKey(!showOpenRouterKey)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
+                    >
+                      {showOpenRouterKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                    Key is securely masked and stored encrypted in MySQL database.
+                  </p>
+                </div>
+
+                <div>
+                  <label className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${
+                    isDark ? 'text-[#C9A050]' : 'text-amber-800'
+                  }`}>
+                    Model Identifier (Free or Paid)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.OPENROUTER_MODEL || ''}
+                    onChange={(e) => handleInputChange('OPENROUTER_MODEL', e.target.value)}
+                    placeholder="meta-llama/llama-3.3-70b-instruct:free"
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
+                      isDark
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#C9A050] focus:outline-none'
+                    }`}
+                  />
+                  <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                    Type any valid OpenRouter model tag (e.g. <code>meta-llama/llama-3.3-70b-instruct:free</code>).
+                  </p>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${
+                    isDark ? 'text-[#C9A050]' : 'text-amber-800'
+                  }`}>
+                    OpenRouter Base URL (Editable)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.OPENROUTER_BASE_URL || ''}
+                    onChange={(e) => handleInputChange('OPENROUTER_BASE_URL', e.target.value)}
+                    placeholder="https://openrouter.ai/api/v1"
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
+                      isDark
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#C9A050] focus:outline-none'
+                    }`}
+                  />
+                  <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                    Default: <code>https://openrouter.ai/api/v1</code>. Can be redirected to any custom gateway or proxy.
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Free Models Preset Pills */}
+              <div className={`p-4 rounded-xl border ${
+                isDark ? 'bg-[#1C1C22]/70 border-[#2A2A2E]' : 'bg-indigo-50/60 border-indigo-100'
+              }`}>
+                <div className="text-[11px] font-bold text-[#C9A050] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
+                  <span>Popular 100% Free OpenRouter Models (Click to Select)</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { label: 'Meta Llama 3.3 70B Free', id: 'meta-llama/llama-3.3-70b-instruct:free' },
+                    { label: 'DeepSeek R1 Free', id: 'deepseek/deepseek-r1:free' },
+                    { label: 'Gemini 2.0 Flash Exp Free', id: 'google/gemini-2.0-flash-exp:free' },
+                    { label: 'Mistral 7B Instruct Free', id: 'mistralai/mistral-7b-instruct:free' },
+                    { label: 'Qwen 2.5 72B Free', id: 'qwen/qwen-2.5-72b-instruct:free' },
+                  ].map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => handleInputChange('OPENROUTER_MODEL', preset.id)}
+                      className={`text-[11px] font-mono px-3 py-1.5 rounded-lg border transition-all ${
+                        formData.OPENROUTER_MODEL === preset.id
+                          ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] font-bold shadow-sm'
+                          : isDark
+                          ? 'bg-[#141418] border-[#2A2A2E] text-gray-300 hover:border-[#C9A050]/50'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}

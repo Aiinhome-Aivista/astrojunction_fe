@@ -698,7 +698,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         doc.text(`Certificate ID: ${certId}  |  Generated: ${genDate}`, 14, footerY + 5);
         doc.text(`Page ${pageNum} of ${totalPages}`, pageWidth - 14, footerY + 5, { align: 'right' });
         doc.setFont('helvetica', 'italic'); doc.setFontSize(6.5); doc.setTextColor(140, 130, 100);
-        doc.text('AstroJunction Daivajna AI Engine  |  Vedic Relationship Intelligence', 14, footerY + 9.5);
+        doc.text('AstroJunction Daivajna Engine  |  Vedic Relationship Intelligence', 14, footerY + 9.5);
       };
 
       // ── Shared section title helper ───────────────────────────────────────
@@ -2122,25 +2122,29 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('ai_counsel')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 cursor-pointer border-2 shadow-sm ${
             activeTab === 'ai_counsel'
-              ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
+              ? 'bg-gradient-to-r from-[#C9A050] to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-md shadow-[#C9A050]/30 font-bold'
               : theme === 'dark'
-              ? 'bg-[#141418] text-[#9E9A90] hover:text-[#E5E1D8] border border-[#2A2A2E]'
-              : 'bg-[#F9F7F1] text-[#544B3D] hover:text-[#0D0D0F] hover:bg-[#F0ECE1] border border-[#E5E1D8]'
+              ? 'bg-[#1A1812] text-[#E8C470] border-[#C9A050] hover:bg-[#252117]'
+              : 'bg-[#FFFDF7] text-[#8C6218] border-[#C9A050] hover:bg-[#FAF4E4]'
           }`}
         >
-          {isMatchmakingSubscribed ? (
-            <Sparkles className="w-4 h-4" />
-          ) : (
-            <Crown className="w-4 h-4 text-[#C9A050]" />
-          )}
+          <Sparkles
+            className={`w-4 h-4 shrink-0 ${
+              activeTab === 'ai_counsel' ? 'text-[#0D0D0F]' : 'text-[#C9A050]'
+            }`}
+          />
           <span>Astrological Counsel</span>
-          {!isMatchmakingSubscribed && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40 ml-1">
-              ₹149
-            </span>
-          )}
+          <span
+            className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase tracking-wider ml-1 shadow-xs ${
+              activeTab === 'ai_counsel'
+                ? 'bg-[#0D0D0F] text-[#C9A050]'
+                : 'bg-[#8C6218] text-white'
+            }`}
+          >
+            FEATURED
+          </span>
         </button>
 
         <button

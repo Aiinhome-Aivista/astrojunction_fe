@@ -156,11 +156,11 @@ export function useZodiacData() {
               affirmation: z.affirmation || AFFIRMATIONS[canonicalId] || 'I align with the cosmic flow.',
               resonantChakra: z.resonantChakra || CHAKRAS[canonicalId] || 'Solar Plexus',
               
-              // Forecast placeholders
-              todayForecast: z.todayForecast || 'Click refresh to consult Daivajna for today\'s personalized cosmic reading.',
-              weeklyForecast: z.weeklyForecast || 'Click refresh to consult Daivajna for this week\'s transit overview.',
-              monthlyForecast: z.monthlyForecast || 'Click refresh to consult Daivajna for monthly planetary ingress analysis.',
-              yearly2026Forecast: z.yearly2026Forecast || 'Click refresh to consult Daivajna for your 2026/2027 long-range panorama.',
+              // Forecast defaults (linked to translation keys)
+              todayForecast: z.todayForecast || `zodiac.${canonicalId}.todayForecast`,
+              weeklyForecast: z.weeklyForecast || `zodiac.${canonicalId}.todayForecast`,
+              monthlyForecast: z.monthlyForecast || `zodiac.${canonicalId}.todayForecast`,
+              yearly2026Forecast: z.yearly2026Forecast || `zodiac.${canonicalId}.todayForecast`,
               
               // Match arrays
               bestRomanceMatches: Array.isArray(z.bestRomanceMatches) ? z.bestRomanceMatches : [],

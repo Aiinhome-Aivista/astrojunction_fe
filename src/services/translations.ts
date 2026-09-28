@@ -50,14 +50,14 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     // Navigation Tabs
     'tab.home': 'Home',
     'tab.daily': 'Daily Insights',
-    'tab.zodiac': 'Global Zodiac & Diaspora',
-    'tab.horoscope': 'Birth Chart & Traditions',
-    'tab.matchmaking': 'Kundli Milan & Matchmaking',
-    'tab.numerology': 'Numerology & Lo Shu',
+    'tab.zodiac': 'Global Zodiac',
+    'tab.horoscope': 'Birth Chart',
+    'tab.matchmaking': 'Kundli Milan',
+    'tab.numerology': 'Numerology',
     'tab.counsellor': 'Astrological Counsellor',
     'tab.roadmap': '25-Year Roadmap',
-    'tab.consultations': 'Consultations & Gateway',
-    'tab.admin': 'Admin & K-Graph',
+    'tab.consultations': 'Consultations',
+    'tab.admin': 'Admin Console',
 
     // Matchmaking Section
     'matchmaking.title': 'Vedic Ashta Koota Matchmaking & Synastry',

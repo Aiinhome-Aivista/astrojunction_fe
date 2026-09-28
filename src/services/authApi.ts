@@ -46,7 +46,9 @@ export async function register(
     longitude: extra?.longitude,
     timezone: extra?.timezone,
   });
-  // Token is only set upon explicit login
+  if (data.token) {
+    setToken(data.token);
+  }
   return data.user;
 }
 
