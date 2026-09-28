@@ -194,6 +194,19 @@ export function App() {
   const handleLogout = () => {
     logoutRequest();
     setAuthUser(null);
+    
+    // Clear user-specific premium keys from local storage so they don't leak to other users
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('jyotish_') && key.endsWith('_active')) {
+          localStorage.removeItem(key);
+        }
+      });
+      localStorage.removeItem('jyotish_user_premium');
+      localStorage.removeItem('jyotish_matchmaking_subscribed');
+    } catch (e) {
+      console.warn('Failed to clear local storage premium keys', e);
+    }
   };
 
   const [activeTab, setActiveTab] = useState<string>('daily');
