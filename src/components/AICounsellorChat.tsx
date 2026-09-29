@@ -68,7 +68,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
     counsellingApi
       .listSessions()
       .then((all) => setSessions(all.filter((s) => s.profileId === profile.id)))
-      .catch((err) => console.warn('Could not load AI sessions:', err));
+      .catch((err) => console.warn('Could not load sessions:', err));
   };
 
   // Always start with a clean, fresh consultation session on mount or profile switch
@@ -186,7 +186,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
       setMessages((prev) => [...prev, assistantMessage]);
       loadSessions();
     } catch (err: any) {
-      console.error('Error generating AI response:', err);
+      console.error('Error generating response:', err);
       const isGuardrail = err?.message?.includes('This is not my content');
 
       const errorMessage: ChatMessage = {

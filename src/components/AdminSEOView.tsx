@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Globe, 
-  Save, 
-  RotateCcw, 
-  CheckCircle, 
-  AlertCircle, 
-  Search, 
-  Share2, 
-  Sparkles, 
-  Image as ImageIcon, 
-  Tag, 
-  Compass, 
-  Sun, 
-  HeartHandshake, 
-  Hash, 
-  Calendar, 
-  CreditCard, 
-  BookOpen, 
-  Layout, 
-  ExternalLink 
+import {
+  Globe,
+  Save,
+  RotateCcw,
+  CheckCircle,
+  AlertCircle,
+  Search,
+  Share2,
+  Sparkles,
+  Image as ImageIcon,
+  Tag,
+  Compass,
+  Sun,
+  HeartHandshake,
+  Hash,
+  Calendar,
+  CreditCard,
+  BookOpen,
+  Layout,
+  ExternalLink
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
 import { TAB_SEO_CONFIG, DEFAULT_SEO, SEOProps } from '../config/seoConfig';
@@ -42,7 +42,7 @@ const PAGES_LIST: PageMetaItem[] = [
   { id: 'numerology', name: 'Vedic Numerology', icon: Hash, path: '/#numerology' },
   { id: 'panjika', name: 'Vedic Panjika Calendar', icon: Calendar, path: '/#panjika' },
   { id: 'consultations', name: 'Astrologer Consultations', icon: CreditCard, path: '/#consultations' },
-  { id: 'counsellor', name: 'AI Daivajna Counsellor', icon: Sparkles, path: '/#counsellor' },
+  { id: 'counsellor', name: 'Daivajna Counsellor', icon: Sparkles, path: '/#counsellor' },
   { id: 'blogs', name: 'Blogs & Articles', icon: BookOpen, path: '/#blogs' },
 ];
 
@@ -146,9 +146,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
         <div className="flex items-center space-x-3">
           <button
             onClick={handleResetToDefault}
-            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-              isDark ? 'border-[#2A2A2E] text-[#9E9A90] hover:bg-[#1C1C22] hover:text-white' : 'border-gray-200 text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${isDark ? 'border-[#2A2A2E] text-[#9E9A90] hover:bg-[#1C1C22] hover:text-white' : 'border-gray-200 text-gray-700 hover:bg-gray-100'
+              }`}
             title="Reset selected page to recommended defaults"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -188,13 +187,12 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
             <button
               key={page.id}
               onClick={() => setSelectedPageId(page.id)}
-              className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer shrink-0 ${
-                isSelected
+              className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer shrink-0 ${isSelected
                   ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm font-bold'
                   : isDark
-                  ? 'text-[#E5E1D8] hover:bg-white/5 hover:text-[#C9A050] border border-transparent hover:border-[#2A2A2E]'
-                  : 'text-gray-700 hover:bg-black/5 hover:text-[#8C6218] border border-transparent hover:border-gray-200'
-              }`}
+                    ? 'text-[#E5E1D8] hover:bg-white/5 hover:text-[#C9A050] border border-transparent hover:border-[#2A2A2E]'
+                    : 'text-gray-700 hover:bg-black/5 hover:text-[#8C6218] border border-transparent hover:border-gray-200'
+                }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span>{page.name}</span>
@@ -232,9 +230,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.title}
               onChange={(e) => handleFieldChange('title', e.target.value)}
               placeholder="Enter page title..."
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-              }`}
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
+                }`}
             />
           </div>
 
@@ -253,9 +250,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.description}
               onChange={(e) => handleFieldChange('description', e.target.value)}
               placeholder="Enter comprehensive meta description for search engines..."
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all resize-y ${
-                isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-              }`}
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all resize-y ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
+                }`}
             />
           </div>
 
@@ -270,18 +266,16 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={Array.isArray(currentPage.keywords) ? currentPage.keywords.join(', ') : (currentPage.keywords || '')}
               onChange={handleKeywordsChange}
               placeholder="vedic astrology, janam kundli, daily horoscope..."
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-              }`}
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
+                }`}
             />
             {Array.isArray(currentPage.keywords) && currentPage.keywords.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {currentPage.keywords.map((kw, i) => (
                   <span
                     key={i}
-                    className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${
-                      isDark ? 'bg-[#C9A050]/15 text-[#E8C470]' : 'bg-[#FAF2DA] text-[#8C6218] border border-[#DFC896]'
-                    }`}
+                    className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${isDark ? 'bg-[#C9A050]/15 text-[#E8C470]' : 'bg-[#FAF2DA] text-[#8C6218] border border-[#DFC896]'
+                      }`}
                   >
                     {kw}
                   </span>
@@ -301,9 +295,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.ogImage || ''}
               onChange={(e) => handleFieldChange('ogImage', e.target.value)}
               placeholder="/golden_zodiac_wheel.jpg or https://..."
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-              }`}
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
+                }`}
             />
           </div>
         </div>
@@ -318,11 +311,10 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
             </div>
 
             <div
-              className={`p-4 rounded-xl font-sans space-y-1 border transition-colors ${
-                isDark
+              className={`p-4 rounded-xl font-sans space-y-1 border transition-colors ${isDark
                   ? 'bg-[#18181D] border-[#2A2A2E] text-[#e8eaed]'
                   : 'bg-white border-gray-200 text-gray-900 shadow-inner'
-              }`}
+                }`}
             >
               <div className="flex items-center space-x-2 text-[11px]">
                 <span className="w-4 h-4 rounded-full bg-[#C9A050] text-[9px] text-[#0D0D0F] flex items-center justify-center font-bold">
@@ -333,9 +325,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
                 </span>
               </div>
               <h4
-                className={`text-base font-medium line-clamp-1 leading-snug cursor-pointer hover:underline ${
-                  isDark ? 'text-[#8ab4f8]' : 'text-[#1a0dab]'
-                }`}
+                className={`text-base font-medium line-clamp-1 leading-snug cursor-pointer hover:underline ${isDark ? 'text-[#8ab4f8]' : 'text-[#1a0dab]'
+                  }`}
               >
                 {currentPage.title || 'Page Title'}
               </h4>
@@ -353,11 +344,10 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
             </div>
 
             <div
-              className={`rounded-xl overflow-hidden border transition-colors ${
-                isDark
+              className={`rounded-xl overflow-hidden border transition-colors ${isDark
                   ? 'border-[#2A2A2E] bg-[#18181D] shadow-lg shadow-black/40'
                   : 'border-gray-200 bg-white shadow-sm'
-              }`}
+                }`}
             >
               <div className="aspect-[1.91/1] w-full bg-black/20 overflow-hidden relative">
                 <img
@@ -370,9 +360,8 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
                 />
               </div>
               <div
-                className={`p-3 space-y-1 border-t transition-colors ${
-                  isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-gray-50 border-gray-200'
-                }`}
+                className={`p-3 space-y-1 border-t transition-colors ${isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-gray-50 border-gray-200'
+                  }`}
               >
                 <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   ASTROJUNCTION.COM

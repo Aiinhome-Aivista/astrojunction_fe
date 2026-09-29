@@ -198,7 +198,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
         numerology,
       });
       if (data && data.insights) {
-        console.log('[DailyHoroscope] Daily AI reading received successfully:', data.insights);
+        console.log('[DailyHoroscope] Daily reading received successfully:', data.insights);
         setAiInsights(data.insights);
         try {
           localStorage.setItem(storageKey, JSON.stringify(data.insights));

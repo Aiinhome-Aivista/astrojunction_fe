@@ -343,7 +343,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
         }
       }
     } catch (e) {
-      console.warn('Roadmap filtered AI generation error/fallback:', e);
+      console.warn('Roadmap filtered generation error/fallback:', e);
     } finally {
       const nextGeneratedHorizons = {
         ...generatedHorizons,

@@ -7,7 +7,7 @@
 A Vedic astrology, numerology, and AI-counselling platform.
 
 **Current build status:** Authentication, profile persistence, numerology &
-Kundli Milan report saving, AI Counsellor sessions (with a real RAG +
+Kundli Milan report saving, Counsellor sessions (with a real RAG +
 LLM-routing backend), and server-generated Kundli Milan PDF reports are all
 built, wired end-to-end, and tested against a live MySQL instance. Birth
 chart / numerology calculation still runs client-side in
@@ -15,9 +15,9 @@ chart / numerology calculation still runs client-side in
 Still to build: consultations/payments, admin panel, knowledge graph,
 runbooks, and i18n.
 
-### AI Counsellor setup note
+### Counsellor setup note
 
-The AI Counsellor calls whichever LLM `ACTIVE_LLM` in `backend/.env`
+The Counsellor calls whichever LLM `ACTIVE_LLM` in `backend/.env`
 points to (`mistral_local`, `mistral_cloud`, or `gemini`). If that LLM is
 unreachable or misconfigured, the API returns a clear error — it never
 fabricates a reply. To use it:
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 Edit `backend\.env` — at minimum set `MYSQL_PASSWORD` to your MySQL root
 password. Leave `MISTRAL_LOCAL_URL` / `GEMINI_API_KEY` / payment keys blank
-for now; those are used by later phases (AI counsellor, payments) and are
+for now; those are used by later phases (counsellor, payments) and are
 not required for auth/profiles to work.
 
 Start the backend:
