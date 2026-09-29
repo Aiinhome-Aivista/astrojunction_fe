@@ -109,6 +109,96 @@ const MONTH_NAMES_EN = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+export const PANCHANG_TERMS_MAP: Record<string, {bn: string; hi: string}> = {
+  'Ashwini': { bn: 'অশ্বিনী', hi: 'अश्विनी' },
+  'Bharani': { bn: 'ভরণী', hi: 'भरणी' },
+  'Krittika': { bn: 'কৃত্তিকা', hi: 'कृत्तिका' },
+  'Rohini': { bn: 'রোহিণী', hi: 'रोहिणी' },
+  'Mrigashira': { bn: 'মৃগশিরা', hi: 'मृगशिरा' },
+  'Ardra': { bn: 'আর্দ্রা', hi: 'आर्द्रा' },
+  'Punarvasu': { bn: 'পুনর্বসু', hi: 'पुनर्वसु' },
+  'Pushya': { bn: 'পুষ্যা', hi: 'पुष्य' },
+  'Ashlesha': { bn: 'অশ্লেষা', hi: 'आश्लेषा' },
+  'Magha': { bn: 'মঘা', hi: 'मघा' },
+  'Purva Phalguni': { bn: 'পূর্ব ফাল্গুনী', hi: 'पूर्वाफाल्गुनी' },
+  'Uttara Phalguni': { bn: 'উত্তর ফাল্গুনী', hi: 'उत्तराफाल्गुनी' },
+  'Hasta': { bn: 'হস্তা', hi: 'हस्त' },
+  'Chitra': { bn: 'চিত্রা', hi: 'चित्रा' },
+  'Swati': { bn: 'স্বাতী', hi: 'स्वाती' },
+  'Vishakha': { bn: 'বিশাখা', hi: 'विशाखा' },
+  'Anuradha': { bn: 'অনুরাধা', hi: 'अनुराधा' },
+  'Jyeshtha': { bn: 'জ্যেষ্ঠা', hi: 'ज्येष्ठा' },
+  'Mula': { bn: 'মূলা', hi: 'मूल' },
+  'Purva Ashadha': { bn: 'পূর্বাষাঢ়া', hi: 'पूर्वाषाढ़ा' },
+  'Uttara Ashadha': { bn: 'উত্তরাষাঢ়া', hi: 'उत्तराषाढ़ा' },
+  'Shravana': { bn: 'শ্রবণা', hi: 'श्रवण' },
+  'Dhanishta': { bn: 'ধনিষ্ঠা', hi: 'धनिष्ठा' },
+  'Shatabhisha': { bn: 'শতভিষা', hi: 'शतभिषा' },
+  'Purva Bhadrapada': { bn: 'পূর্বভাদ্রপদ', hi: 'पूर्वाभाद्रपद' },
+  'Uttara Bhadrapada': { bn: 'উত্তরভাদ্রপদ', hi: 'उत्तराभाद्रपद' },
+  'Revati': { bn: 'রেবতী', hi: 'रेवती' },
+
+  'Vishkumbha': { bn: 'বিষ্কুম্ভ', hi: 'विष्कुम्भ' },
+  'Priti': { bn: 'প্রীতি', hi: 'प्रीति' },
+  'Ayushman': { bn: 'আয়ুষ্মান', hi: 'आयुष्मान' },
+  'Saubhagya': { bn: 'সৌভাগ্য', hi: 'सौभाग्य' },
+  'Shobhana': { bn: 'শোভন', hi: 'शोभन' },
+  'Atiganda': { bn: 'অতিগণ্ড', hi: 'अतिगण्ड' },
+  'Sukarma': { bn: 'সুকর্মা', hi: 'सुकर्मा' },
+  'Dhriti': { bn: 'ধৃতি', hi: 'धृति' },
+  'Shula': { bn: 'শূল', hi: 'शूल' },
+  'Ganda': { bn: 'গণ্ড', hi: 'गण्ड' },
+  'Vriddhi': { bn: 'বৃদ্ধি', hi: 'वृद्धि' },
+  'Dhruva': { bn: 'ধ্রুব', hi: 'ध्रुव' },
+  'Vyaghata': { bn: 'ব্যাঘাত', hi: 'व्याघात' },
+  'Harshana': { bn: 'হর্ষণ', hi: 'हर्षण' },
+  'Vajra': { bn: 'বজ্র', hi: 'वज्र' },
+  'Siddhi': { bn: 'সিদ্ধি', hi: 'सिद्धि' },
+  'Vyatipata': { bn: 'ব্যতিপাত', hi: 'व्यतीपात' },
+  'Variyan': { bn: 'বরীয়ান', hi: 'वरीयान' },
+  'Parigha': { bn: 'পরিঘ', hi: 'परिघ' },
+  'Shiva': { bn: 'শিব', hi: 'शिव' },
+  'Siddha': { bn: 'সিদ্ধ', hi: 'सिद्ध' },
+  'Sadhya': { bn: 'সাধ্য', hi: 'साध्य' },
+  'Shubha': { bn: 'শুভ', hi: 'शुभ' },
+  'Shukla': { bn: 'শুক্ল', hi: 'शुक्ल' },
+  'Brahma': { bn: 'ব্রহ্ম', hi: 'ब्रह्म' },
+  'Indra': { bn: 'ইন্দ্র', hi: 'इन्द्र' },
+  'Vaidhriti': { bn: 'বৈধৃতি', hi: 'वैधृति' },
+
+  'Bava': { bn: 'বব', hi: 'बव' },
+  'Balava': { bn: 'বালব', hi: 'बालव' },
+  'Kaulava': { bn: 'কৌলব', hi: 'कौलव' },
+  'Taitila': { bn: 'তৈতিল', hi: 'तैतिल' },
+  'Gara': { bn: 'গর', hi: 'गर' },
+  'Vanija': { bn: 'বণিজ', hi: 'वणिज' },
+  'Vishti': { bn: 'বিষ্টি', hi: 'विष्टि' },
+  'Shakuni': { bn: 'শকুনি', hi: 'शकुनि' },
+  'Chatushpada': { bn: 'চতুষ্পদ', hi: 'चतुष्पद' },
+  'Naga': { bn: 'নাগ', hi: 'नाग' },
+  'Kintughna': { bn: 'কিস্তুঘ্ন', hi: 'किस्तुघ्न' },
+
+  'Mesha (Aries)': { bn: 'মেষ', hi: 'मेष' },
+  'Vrishabha (Taurus)': { bn: 'বৃষ', hi: 'वृषभ' },
+  'Mithuna (Gemini)': { bn: 'মিথুন', hi: 'मिथुन' },
+  'Karka (Cancer)': { bn: 'কর্কট', hi: 'कर्क' },
+  'Simha (Leo)': { bn: 'সিংহ', hi: 'सिंह' },
+  'Kanya (Virgo)': { bn: 'কন্যা', hi: 'कन्या' },
+  'Tula (Libra)': { bn: 'তুলা', hi: 'तुला' },
+  'Vrishchika (Scorpio)': { bn: 'বৃশ্চিক', hi: 'वृश्चिक' },
+  'Dhanu (Sagittarius)': { bn: 'ধনু', hi: 'धनु' },
+  'Makara (Capricorn)': { bn: 'মকর', hi: 'मकर' },
+  'Kumbha (Aquarius)': { bn: 'কুম্ভ', hi: 'कुंभ' },
+  'Meena (Pisces)': { bn: 'মীন', hi: 'मीन' },
+
+  'Vasant (Spring)': { bn: 'বসন্ত', hi: 'वसंत' },
+  'Grishma (Summer)': { bn: 'গ্রীষ্ম', hi: 'ग्रीष्म' },
+  'Varsha (Monsoon)': { bn: 'বর্ষা', hi: 'वर्षा' },
+  'Sharad (Autumn)': { bn: 'শরৎ', hi: 'शरद' },
+  'Hemant (Pre-Winter)': { bn: 'হেমন্ত', hi: 'हेमंत' },
+  'Shishir (Winter)': { bn: 'শীত', hi: 'शिशिर' }
+};
+
 interface PanjikaCalendarViewProps {
   theme?: 'light' | 'dark';
 }
@@ -295,31 +385,35 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
     return s;
   };
 
-  // Format Helper for Hindi dates
-  const formatHindiDisplay = (rawHindiStr: string) => {
-    if (!rawHindiStr) return '';
-    const mapped = rawHindiStr
-      .replace('Pratipada', 'प्रतिपदा')
-      .replace('Dwitiya', 'द्वितीया')
-      .replace('Tritiya', 'तृतीया')
-      .replace('Chaturthi', 'चतुर्थी')
-      .replace('Panchami', 'पंचमी')
-      .replace('Shashthi', 'षष्ठी')
-      .replace('Saptami', 'सप्तमी')
-      .replace('Ashtami', 'अष्टमी')
-      .replace('Navami', 'नवमी')
-      .replace('Dashami', 'दशमी')
-      .replace('Ekadashi', 'एकादशी')
-      .replace('Dwadashi', 'द्वादशी')
-      .replace('Trayodashi', 'त्रयोदशी')
-      .replace('Chaturdashi', 'चतुर्दशी')
-      .replace('Purnima', 'पूर्णिमा')
-      .replace('Amavasya', 'अमावस्या')
-      .replace('Shukla', 'शुक्ल')
-      .replace('Krishna', 'कृष्ण')
-      .replace('Paksha', 'पक्ष')
-      .replace('VS', 'वि.सं.');
-    return localizeString(mapped, 'hi');
+  // Unified format helper to completely localize ANY date string
+  const formatLocalizedDate = (rawStr: string, lang: 'bn' | 'hi' | 'en' | 'all') => {
+    if (!rawStr || lang === 'en' || lang === 'all') return String(rawStr);
+    let mapped = String(rawStr);
+    
+    Object.keys(TITHI_MAP).forEach(key => {
+      const trans = TITHI_MAP[key][lang as 'bn' | 'hi'];
+      if (trans) mapped = mapped.replace(new RegExp(`\\b${key}\\b`, 'g'), trans);
+    });
+    Object.keys(PANCHANG_TERMS_MAP).forEach(key => {
+      const trans = PANCHANG_TERMS_MAP[key][lang as 'bn' | 'hi'];
+      if (trans) mapped = mapped.replace(new RegExp(`\\b${key}\\b`, 'g'), trans);
+    });
+    BENGALI_MONTHS_LIST.forEach(m => {
+      const trans = m[lang as 'bn' | 'hi'];
+      if (trans) mapped = mapped.replace(new RegExp(`\\b${m.en}\\b`, 'gi'), trans);
+    });
+    HINDI_MONTHS_LIST.forEach(m => {
+      const trans = m[lang as 'bn' | 'hi'];
+      if (trans) mapped = mapped.replace(new RegExp(`\\b${m.en}\\b`, 'gi'), trans);
+    });
+
+    if (lang === 'bn') {
+      mapped = mapped.replace('VS', 'বি.সং.').replace('Paksha', 'পক্ষ').replace('Shukla', 'শুক্ল').replace('Krishna', 'কৃষ্ণ').replace('BS', 'বঙ্গাব্দ');
+    } else if (lang === 'hi') {
+      mapped = mapped.replace('VS', 'वि.सं.').replace('Paksha', 'पक्ष').replace('Shukla', 'शुक्ल').replace('Krishna', 'कृष्ण').replace('BS', 'बंगाब्द');
+    }
+    
+    return localizeString(mapped, lang);
   };
 
   const getTithiShort = (tithiEn: string, lang: 'all' | 'en' | 'bn' | 'hi') => {
@@ -975,8 +1069,8 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           {!conversionLoading && conversionResult && !conversionResult.error && (
                             <>
                               {convertTo === 'english' && conversionResult.english}
-                              {convertTo === 'bengali' && formatBengaliDisplay(conversionResult.bengali)}
-                              {convertTo === 'hindi' && formatHindiDisplay(conversionResult.hindi)}
+                              {convertTo === 'bengali' && formatLocalizedDate(conversionResult.bengali + " BS", 'bn')}
+                              {convertTo === 'hindi' && formatLocalizedDate(conversionResult.hindi, 'hi')}
                             </>
                           )}
                           {!conversionLoading && conversionResult?.error && (
@@ -1047,7 +1141,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           <span className="text-[10px] text-[#C9A050] font-mono">Bengali</span>
                         </div>
                         <div className="text-sm font-serif font-bold text-[#C9A050]">
-                          {formatBengaliDisplay(conversionResult.bengali)}
+                          {formatLocalizedDate(conversionResult.bengali + " BS", 'bn')}
                         </div>
                         <div className="text-[11px] text-gray-400 mt-1">
                           {conversionResult.bengali}
@@ -1063,7 +1157,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           <span className="text-[10px] text-[#C9A050] font-mono">Hindi</span>
                         </div>
                         <div className="text-sm font-serif font-bold text-[#C9A050]">
-                          {formatHindiDisplay(conversionResult.hindi)}
+                          {formatLocalizedDate(conversionResult.hindi, 'hi')}
                         </div>
                         <div className="text-[11px] text-gray-400 mt-1">
                           {conversionResult.tithi} ({conversionResult.paksha} Paksha)
@@ -1166,7 +1260,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     }`}>
                       {calendarLang === 'en'
                         ? formatBengaliDisplayEn(selectedDay.bengali_date)
-                        : formatBengaliDisplay(selectedDay.bengali_date)}
+                        : formatLocalizedDate(formatBengaliDisplayEn(selectedDay.bengali_date), calendarLang as 'bn' | 'hi')}
                     </div>
                   </div>
 
@@ -1182,7 +1276,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     }`}>
                       {calendarLang === 'en'
                         ? selectedDay.hindi_date
-                        : formatHindiDisplay(selectedDay.hindi_date)}
+                        : formatLocalizedDate(selectedDay.hindi_date, calendarLang as 'bn' | 'hi')}
                     </div>
                   </div>
                 </div>
@@ -1206,7 +1300,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       }`}>
                         {[
                           {
-                            labelBn: 'Day (বার)',
+                            labelBn: 'বার',
                             labelHi: 'दिन (वार)',
                             labelEn: 'Day (Vara)',
                             valueEn: new Date(selectedDay.english_date).toLocaleDateString('en-US', { weekday: 'long' }),
@@ -1214,7 +1308,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             valueHi: new Date(selectedDay.english_date).toLocaleDateString('hi-IN', { weekday: 'long' }),
                           },
                           {
-                            labelBn: 'Tithi & Paksha (তিথি ও পক্ষ)',
+                            labelBn: 'তিথি ও পক্ষ',
                             labelHi: 'तिथि और पक्ष',
                             labelEn: 'Tithi & Paksha',
                             valueEn: `${fullPanjika.tithi} (${fullPanjika.paksha} Paksha)`,
@@ -1222,44 +1316,44 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             valueHi: `${TITHI_MAP[fullPanjika.tithi]?.hi || fullPanjika.tithi} (${fullPanjika.paksha === 'Shukla' ? 'शुक्लपक्ष' : 'कृष्णपक्ष'})`,
                           },
                           {
-                            labelBn: 'Nakshatra (নক্ষত্র)',
+                            labelBn: 'নক্ষত্র',
                             labelHi: 'नक्षत्र',
                             labelEn: 'Nakshatra',
                             valueEn: fullPanjika.nakshatra,
-                            valueBn: fullPanjika.nakshatra,
-                            valueHi: fullPanjika.nakshatra,
+                            valueBn: PANCHANG_TERMS_MAP[fullPanjika.nakshatra]?.bn || fullPanjika.nakshatra,
+                            valueHi: PANCHANG_TERMS_MAP[fullPanjika.nakshatra]?.hi || fullPanjika.nakshatra,
                           },
                           {
-                            labelBn: 'Yoga (যোগ)',
+                            labelBn: 'যোগ',
                             labelHi: 'योग',
                             labelEn: 'Yoga',
                             valueEn: fullPanjika.yoga,
-                            valueBn: fullPanjika.yoga,
-                            valueHi: fullPanjika.yoga,
+                            valueBn: PANCHANG_TERMS_MAP[fullPanjika.yoga]?.bn || fullPanjika.yoga,
+                            valueHi: PANCHANG_TERMS_MAP[fullPanjika.yoga]?.hi || fullPanjika.yoga,
                           },
                           {
-                            labelBn: 'Karana (করণ)',
+                            labelBn: 'করণ',
                             labelHi: 'करण',
                             labelEn: 'Karana',
                             valueEn: fullPanjika.karana,
-                            valueBn: fullPanjika.karana,
-                            valueHi: fullPanjika.karana,
+                            valueBn: PANCHANG_TERMS_MAP[fullPanjika.karana]?.bn || fullPanjika.karana,
+                            valueHi: PANCHANG_TERMS_MAP[fullPanjika.karana]?.hi || fullPanjika.karana,
                           },
                           {
-                            labelBn: 'Chandra Rashi (চন্দ্র রাশি)',
+                            labelBn: 'চন্দ্র রাশি',
                             labelHi: 'चंद्र राशि',
                             labelEn: 'Chandra Rashi (Moon Sign)',
                             valueEn: fullPanjika.rashi,
-                            valueBn: fullPanjika.rashi,
-                            valueHi: fullPanjika.rashi,
+                            valueBn: PANCHANG_TERMS_MAP[fullPanjika.rashi]?.bn || fullPanjika.rashi,
+                            valueHi: PANCHANG_TERMS_MAP[fullPanjika.rashi]?.hi || fullPanjika.rashi,
                           },
                           {
-                            labelBn: 'Ritu (ঋতু / Season)',
-                            labelHi: 'ऋतु / मौसम',
+                            labelBn: 'ঋতু',
+                            labelHi: 'ऋतु',
                             labelEn: 'Ritu (Season)',
                             valueEn: fullPanjika.ritu,
-                            valueBn: fullPanjika.ritu,
-                            valueHi: fullPanjika.ritu,
+                            valueBn: PANCHANG_TERMS_MAP[fullPanjika.ritu]?.bn || fullPanjika.ritu,
+                            valueHi: PANCHANG_TERMS_MAP[fullPanjika.ritu]?.hi || fullPanjika.ritu,
                           },
                         ].map((item, idx) => {
                           const displayLabel =
@@ -1277,7 +1371,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           return (
                           <div key={idx} className="flex items-center justify-between p-3 text-xs">
                             <span className="font-medium text-[#9E9A90]">
-                              {calendarLang === 'hi' ? displayLabel.split('(')[0].trim() : (calendarLang === 'bn' ? displayLabel.split('(')[0].trim() : displayLabel)}
+                              {displayLabel}
                             </span>
                             <div className="text-right">
                               <span className="font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{localizeString(displayValue, calendarLang)}</span>
