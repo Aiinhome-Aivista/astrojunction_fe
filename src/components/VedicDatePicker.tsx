@@ -303,23 +303,6 @@ export const VedicDatePicker: React.FC<VedicDatePickerProps> = ({
           className="w-full py-2 text-sm bg-transparent outline-none tracking-wide placeholder:opacity-40"
         />
 
-        {/* Dropdown Chevron */}
-        <div className="flex items-center pr-2.5 shrink-0">
-          <button
-            type="button"
-            disabled={disabled}
-            onClick={() => {
-              if (!disabled) setIsOpen(!isOpen);
-            }}
-            className="p-1 text-gray-400 hover:text-[#C9A050] transition cursor-pointer"
-          >
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                isOpen ? 'rotate-180 text-[#C9A050]' : ''
-              }`}
-            />
-          </button>
-        </div>
       </div>
 
       {/* Floating Vedic Astrological Datepicker Popover */}

@@ -197,7 +197,6 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
   const isMilestoneLocked = (item: LifeMilestone): boolean => {
     if (!item) return false;
-    if (profile?.isPremium) return false;
 
     const normTf = normalizeTimeframe(item.timeframe);
 

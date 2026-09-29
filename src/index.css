@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Nunito", ui-serif, Georgia, serif;
+  --font-mono: "Nunito", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
   :root {
     --bg-canvas: #0D0D0F;
@@ -55,13 +64,18 @@
   input::-ms-clear {
     display: none !important;
   }
+
+  /* Global Paragraph Justification */
+  p {
+    text-align: justify;
+  }
 }
 
 /* Universal Clean Font Enforcement */
 *,
 *::before,
 *::after {
-  font-family: 'Nunito';
+  font-family: 'Nunito' !important;
 }
 
 h1,
@@ -73,7 +87,7 @@ h6,
 .font-serif,
 .font-display,
 .font-heading {
-  font-family: 'Nunito';
+  font-family: 'Nunito' !important;
   letter-spacing: 0.01em;
 }
 
@@ -112,7 +126,7 @@ footer,
 main,
 .font-sans,
 .font-body {
-  font-family: 'Nunito';
+  font-family: 'Nunito' !important;
 }
 
 .font-mono,
@@ -120,7 +134,7 @@ code,
 pre,
 kbd,
 samp {
-  font-family: 'Nunito';
+  font-family: 'Nunito' !important;
   font-variant-numeric: tabular-nums;
 }
 

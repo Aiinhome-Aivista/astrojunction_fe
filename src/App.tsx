@@ -926,6 +926,7 @@ export function App() {
           setActiveTab(page);
           window.scrollTo({ top: 0, behavior: 'instant' });
         }}
+        activePage={activeTab}
         setActiveTab={setActiveTab}
         setTradition={setTradition}
         theme={theme}

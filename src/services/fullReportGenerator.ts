@@ -235,9 +235,7 @@ export async function generateMasterFullReportPdf({
   const todayStr = sanitize(now.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }));
   const currentYear = now.getFullYear();
 
-  // Helper to check if a horizon tier is locked for full report generation
   const isHorizonLockedForReport = (horizonKey: string): boolean => {
-    if (profile?.isPremium) return false;
     if (horizonKey === '0-1') return false;
 
     const unlockedTiers: string[] = (profile as any)?.unlockedRoadmapTiers || [];

@@ -70,6 +70,8 @@ export function LandingPage({
   const [selectedBlogForPage, setSelectedBlogForPage] = useState<BlogPost | null>(null);
   const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>('landing');
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const isClickScrolling = useRef(false);
+  const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
 
@@ -105,6 +107,12 @@ export function LandingPage({
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
+
+    isClickScrolling.current = true;
+    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
+    clickScrollTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 1000);
     if (currentView !== 'landing') {
       setCurrentView('landing');
       setTimeout(() => {
@@ -126,6 +134,8 @@ export function LandingPage({
     if (currentView !== 'landing') return;
 
     const handleScroll = () => {
+      if (isClickScrolling.current) return;
+
       const sections = ['hero-section', 'zodiac-section', 'panjika-section', 'remedies-section', 'blog-section', 'premium-section'];
       const scrollPosition = window.scrollY + 120;
 
@@ -432,13 +442,42 @@ export function LandingPage({
               </button>
 
               {authUser ? (
-                <button
-                  onClick={onGoToDashboard}
-                  className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-[13px] hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_15px_rgba(201,160,80,0.3)] hover:shadow-[0_0_20px_rgba(201,160,80,0.5)] hover:-translate-y-0.5 flex items-center space-x-1.5"
-                >
-                  <span>Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                <div className="flex items-center space-x-2 shrink-0">
+                  <button
+                    onClick={onGoToDashboard}
+                    title="Dashboard"
+                    className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${
+                      theme === 'dark'
+                        ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                        : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                    }`}
+                  >
+                    <Home className="w-3.5 h-3.5 text-[#C9A050]" />
+                    <span className="hidden sm:inline font-semibold">Dashboard</span>
+                  </button>
+
+                  <div className="relative flex items-center">
+                    <button
+                      onClick={onGoToDashboard}
+                      className={`group focus:outline-none flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${
+                        theme === 'dark'
+                          ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
+                          : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
+                      }`}
+                    >
+                      <div className="relative">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] shadow-sm flex items-center justify-center">
+                          <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${
+                            theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
+                          }`}>
+                            {authUser?.user_metadata?.full_name ? authUser.user_metadata.full_name.charAt(0).toUpperCase() : authUser?.email ? authUser.email.charAt(0).toUpperCase() : 'U'}
+                          </div>
+                        </div>
+                        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#141418]" />
+                      </div>
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <>
                   <button
@@ -728,6 +767,7 @@ export function LandingPage({
         <Footer
           onOpenDisclaimer={onOpenDisclaimer}
           theme={theme}
+          activePage={currentView}
           onNavigatePage={(page) => {
             setCurrentView(page);
             window.scrollTo({ top: 0, behavior: 'instant' });

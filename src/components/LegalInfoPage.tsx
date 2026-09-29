@@ -74,7 +74,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: ABOUT US ================= */}
         {view === 'about-us' && (
-          <article className="space-y-6">
+          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-8 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -150,7 +150,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: FAQ ================= */}
         {view === 'faq' && (
-          <article className="space-y-6">
+          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-8 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -206,7 +206,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: PRIVACY POLICY ================= */}
         {view === 'privacy-policy' && (
-          <article className="space-y-6">
+          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -268,7 +268,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: COOKIE POLICY ================= */}
         {view === 'cookie-policy' && (
-          <article className="space-y-6">
+          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -326,7 +326,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: TERMS & CONDITIONS ================= */}
         {view === 'terms-and-conditions' && (
-          <article className="space-y-6">
+          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
