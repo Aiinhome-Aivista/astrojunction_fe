@@ -441,7 +441,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
         localStorage.setItem('jyotish_matchmaking_regenerate_subscription_active', 'true');
       }
-    } catch {}
+    } catch { }
 
     if (onNavigateTab) {
       if (tierId.startsWith('roadmap_')) {
@@ -586,35 +586,30 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
   return (
     <div className="space-y-8 font-sans">
       {/* Top Cosmic Hero Banner */}
-      <div className={`relative overflow-hidden rounded-3xl p-7 md:p-9 shadow-2xl backdrop-blur-xl border transition-colors duration-300 ${
-        isDark ? 'bg-[#121217]/95 border-[#2E2E38]' : 'bg-white/95 border-[#E5E1D8] shadow-xl'
-      }`}>
+      <div className={`relative overflow-hidden rounded-3xl p-7 md:p-9 shadow-2xl backdrop-blur-xl border transition-colors duration-300 ${isDark ? 'bg-[#121217]/95 border-[#2E2E38]' : 'bg-white/95 border-[#E5E1D8] shadow-xl'
+        }`}>
         {/* Background Ambient Radial Glow */}
         <div className={`absolute -top-24 -left-24 w-96 h-96 rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-[#C9A050]/10' : 'bg-[#C9A050]/15'}`} />
         <div className={`absolute top-1/2 -right-24 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDark ? 'bg-amber-500/10' : 'bg-amber-500/10'}`} />
 
-        <div className={`relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b ${
-          isDark ? 'border-[#2A2A35]' : 'border-[#EAE6DC]'
-        }`}>
+        <div className={`relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b ${isDark ? 'border-[#2A2A35]' : 'border-[#EAE6DC]'
+          }`}>
           <div className="max-w-2xl space-y-2.5">
-            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wider uppercase backdrop-blur-md ${
-              isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#E2C378]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
-            }`}>
+            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wider uppercase backdrop-blur-md ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#E2C378]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+              }`}>
               <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
               <span>Certified Vedic Consultations & Premium Gateways</span>
             </div>
 
-            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight ${
-              isDark
+            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight ${isDark
                 ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F0DFB0] to-[#C9A050]'
                 : 'text-transparent bg-clip-text bg-gradient-to-r from-[#1A1A1E] via-[#5C451D] to-[#996F19]'
-            }`}>
+              }`}>
               Unlock Deeper Planetary Wisdom & 1-on-1 Guidance
             </h1>
 
-            <p className={`text-xs sm:text-sm leading-relaxed max-w-xl ${
-              isDark ? 'text-[#A8A49C]' : 'text-[#666258]'
-            }`}>
+            <p className={`text-xs sm:text-sm leading-relaxed max-w-xl ${isDark ? 'text-[#A8A49C]' : 'text-[#666258]'
+              }`}>
               Certified astrological accuracy backed by Swiss Ephemeris, 256-bit SSL encrypted transactions, and sacred Vedic remediations.
             </p>
           </div>
@@ -623,19 +618,17 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <button
               onClick={fetchPaymentHistory}
               title="View Payment History"
-              className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer shadow-md ${
-                isDark
+              className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer shadow-md ${isDark
                   ? 'bg-[#1A1A20] hover:bg-[#25252D] border border-[#C9A050]/40 hover:border-[#C9A050] text-[#E2C378]'
                   : 'bg-[#FAF7F0] hover:bg-[#F3EFE6] border border-[#C9A050]/50 hover:border-[#C9A050] text-[#8C6517]'
-              }`}
+                }`}
             >
               <History className="w-4 h-4 text-[#C9A050]" />
               <span>Payment History</span>
             </button>
 
-            <div className={`flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-medium border ${
-              isDark ? 'bg-[#1A1A20] border-emerald-500/30 text-emerald-300' : 'bg-emerald-50 border-emerald-500/40 text-emerald-800'
-            }`}>
+            <div className={`flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-medium border ${isDark ? 'bg-[#1A1A20] border-emerald-500/30 text-emerald-300' : 'bg-emerald-50 border-emerald-500/40 text-emerald-800'
+              }`}>
               <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
               <span>100% Certified Astrological Precision</span>
             </div>
@@ -644,9 +637,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
         {/* Feature Highlights Ribbon */}
         <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
-          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
-            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
-          }`}>
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+            }`}>
             <div className="w-8 h-8 rounded-lg bg-[#C9A050]/15 flex items-center justify-center text-[#C9A050] shrink-0">
               <FileText className="w-4 h-4" />
             </div>
@@ -656,9 +648,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
-            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
-          }`}>
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+            }`}>
             <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-500 shrink-0">
               <BookOpen className="w-4 h-4" />
             </div>
@@ -668,9 +659,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
-            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
-          }`}>
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+            }`}>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-500 shrink-0">
               <Award className="w-4 h-4" />
             </div>
@@ -680,9 +670,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${
-            isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
-          }`}>
+          <div className={`p-3 rounded-xl border flex items-center space-x-2.5 transition ${isDark ? 'bg-[#181820]/70 border-[#2A2A34] hover:border-[#C9A050]/30' : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40 shadow-sm'
+            }`}>
             <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-500 shrink-0">
               <Zap className="w-4 h-4" />
             </div>
@@ -702,19 +691,18 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           return (
             <div
               key={tier.id}
-              className={`group rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 relative ${
-                unlocked
+              className={`group rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 relative ${unlocked
                   ? isDark
                     ? 'bg-[#141A16]/90 border-2 border-emerald-500/60 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.22)] ring-1 ring-emerald-500/30 text-[#E5E1D8]'
                     : 'bg-[#F0FAF4] border-2 border-emerald-600/60 shadow-lg ring-1 ring-emerald-500/20 text-[#1A1A1E]'
                   : meta.highlight
-                  ? isDark
-                    ? 'bg-gradient-to-b from-[#1E1C15] via-[#141419] to-[#101014] border-2 border-[#C9A050] shadow-[0_8px_30px_-6px_rgba(201,160,80,0.28)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#E5E1D8]'
-                    : 'bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EC] to-[#F5EFE0] border-2 border-[#C9A050] shadow-[0_10px_30px_-6px_rgba(201,160,80,0.22)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#1A1A1E]'
-                  : isDark
-                  ? 'bg-[#131318]/90 hover:bg-[#17171E] border border-[#2A2A34] hover:border-[#C9A050]/50 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-[#E5E1D8]'
-                  : 'bg-white hover:bg-[#FAF9F5] border border-[#E5E1D8] hover:border-[#C9A050]/60 shadow-md hover:shadow-xl hover:-translate-y-0.5 text-[#1A1A1E]'
-              }`}
+                    ? isDark
+                      ? 'bg-gradient-to-b from-[#1E1C15] via-[#141419] to-[#101014] border-2 border-[#C9A050] shadow-[0_8px_30px_-6px_rgba(201,160,80,0.28)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#E5E1D8]'
+                      : 'bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EC] to-[#F5EFE0] border-2 border-[#C9A050] shadow-[0_10px_30px_-6px_rgba(201,160,80,0.22)] ring-1 ring-[#C9A050]/40 -translate-y-1 text-[#1A1A1E]'
+                    : isDark
+                      ? 'bg-[#131318]/90 hover:bg-[#17171E] border border-[#2A2A34] hover:border-[#C9A050]/50 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-[#E5E1D8]'
+                      : 'bg-white hover:bg-[#FAF9F5] border border-[#E5E1D8] hover:border-[#C9A050]/60 shadow-md hover:shadow-xl hover:-translate-y-0.5 text-[#1A1A1E]'
+                }`}
             >
               {/* Top Floating Badge */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
@@ -724,13 +712,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     <span>PLAN UNLOCKED & ACTIVE</span>
                   </span>
                 ) : (
-                  <span className={`px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 ${
-                    meta.highlight
+                  <span className={`px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 ${meta.highlight
                       ? meta.badgeBg
                       : isDark
-                      ? meta.badgeBg
-                      : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/35 font-bold shadow-sm'
-                  }`}>
+                        ? meta.badgeBg
+                        : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/35 font-bold shadow-sm'
+                    }`}>
                     <meta.icon className="w-3 h-3" />
                     <span>{meta.badge}</span>
                   </span>
@@ -740,53 +727,46 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <div>
                 {/* Header with Icon and Delivery */}
                 <div className="flex items-center justify-between pt-0.5 mb-2.5">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                    unlocked
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${unlocked
                       ? isDark ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-emerald-100 text-emerald-700 border border-emerald-300'
                       : isDark ? meta.iconBox : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/30'
-                  }`}>
+                    }`}>
                     <meta.icon className="w-4.5 h-4.5" />
                   </div>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
-                    unlocked
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${unlocked
                       ? isDark ? 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' : 'text-emerald-800 bg-emerald-100/90 border-emerald-300'
                       : isDark ? 'text-[#A09C92] bg-[#1A1A22] border-[#2B2B36]' : 'text-[#666258] bg-[#F3EFE6] border-[#E2DDD0]'
-                  }`}>
+                    }`}>
                     {unlocked ? 'Active on Profile' : (tier.deliveryTime || 'Instant Access')}
                   </span>
                 </div>
 
-                <h3 className={`text-base sm:text-lg font-serif font-bold transition ${
-                  isDark ? 'text-[#F5F2EA] group-hover:text-[#F3E5AB]' : 'text-[#1A1A1E] group-hover:text-[#8C6517]'
-                }`}>
+                <h3 className={`text-base sm:text-lg font-serif font-bold transition ${isDark ? 'text-[#F5F2EA] group-hover:text-[#F3E5AB]' : 'text-[#1A1A1E] group-hover:text-[#8C6517]'
+                  }`}>
                   {tier.name}
                 </h3>
-                <p className={`text-[11px] mt-1 leading-snug min-h-[32px] line-clamp-2 ${
-                  isDark ? 'text-[#9E9A90]' : 'text-[#666258]'
-                }`}>
+                <p className={`text-[11px] mt-1 leading-snug min-h-[32px] line-clamp-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'
+                  }`}>
                   {tier.description}
                 </p>
 
                 {/* Price Display */}
-                <div className={`mt-3 pt-2.5 pb-3 border-y flex items-baseline justify-between ${
-                  isDark ? 'border-[#282832]' : 'border-[#EAE6DC]'
-                }`}>
+                <div className={`mt-3 pt-2.5 pb-3 border-y flex items-baseline justify-between ${isDark ? 'border-[#282832]' : 'border-[#EAE6DC]'
+                  }`}>
                   <div className="flex items-baseline space-x-1">
-                    <span className={`text-2xl sm:text-3xl font-serif font-bold ${
-                      isDark
+                    <span className={`text-2xl sm:text-3xl font-serif font-bold ${isDark
                         ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF4D0] to-[#C9A050]'
                         : 'text-transparent bg-clip-text bg-gradient-to-r from-[#8C6517] to-[#C9A050]'
-                    }`}>
+                      }`}>
                       {tier.priceINR === 0 ? 'FREE (₹0)' : `₹${tier.priceINR.toLocaleString()}`}
                     </span>
                     <span className={`text-[10px] font-sans font-medium ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>INR</span>
                   </div>
                   <div className="text-right">
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
-                      isDark
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${isDark
                         ? 'text-[#C9A050] bg-[#C9A050]/10 border-[#C9A050]/25'
                         : 'text-[#8C6517] bg-[#C9A050]/15 border-[#C9A050]/35'
-                    }`}>
+                      }`}>
                       ~ ${tier.priceUSD} USD
                     </span>
                   </div>
@@ -794,22 +774,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                 {/* Features List */}
                 <div className="mt-3 space-y-2">
-                  <p className={`text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 ${
-                    isDark ? 'text-[#C9A050]' : 'text-[#8C6517]'
-                  }`}>
+                  <p className={`text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6517]'
+                    }`}>
                     <Star className="w-2.5 h-2.5 text-[#C9A050] fill-[#C9A050]" />
                     <span>Included Benefits:</span>
                   </p>
                   <ul className="space-y-1.5 text-[11px]">
                     {tier.features.map((feat, i) => (
-                      <li key={i} className={`flex items-start space-x-2 leading-snug ${
-                        isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'
-                      }`}>
-                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${
-                          unlocked
+                      <li key={i} className={`flex items-start space-x-2 leading-snug ${isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'
+                        }`}>
+                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${unlocked
                             ? isDark ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-emerald-100 text-emerald-700 border-emerald-400'
                             : isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
-                        }`}>
+                          }`}>
                           <Check className="w-2 h-2 stroke-[3]" />
                         </div>
                         <span>{feat}</span>
@@ -823,11 +800,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               {unlocked ? (
                 <button
                   onClick={() => handleViewUnlockedData(tier.id)}
-                  className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${
-                    isDark
+                  className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${isDark
                       ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400'
                       : 'bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600 shadow-md'
-                  }`}
+                    }`}
                 >
                   <BookOpen className={`w-3.5 h-3.5 ${isDark ? 'text-emerald-400' : 'text-white'}`} />
                   <span>View Unlocked Plan Data ➔</span>
@@ -835,13 +811,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               ) : (
                 <button
                   onClick={() => handleInitiatePayment(tier)}
-                  className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${
-                    meta.highlight
+                  className={`w-full mt-4 py-2.5 rounded-xl font-sans font-bold text-xs shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1.5 ${meta.highlight
                       ? 'bg-gradient-to-r from-[#C9A050] via-[#E2C378] to-[#C9A050] hover:brightness-110 active:scale-[0.99] text-[#0A0A0D] shadow-[#C9A050]/30'
                       : isDark
-                      ? 'bg-[#1E1E26] hover:bg-[#C9A050] text-[#F0ECE1] hover:text-[#0A0A0D] border border-[#2D2D38] hover:border-[#C9A050] shadow-md hover:shadow-[#C9A050]/25'
-                      : 'bg-[#F7F4EC] hover:bg-[#C9A050] text-[#2A2A2E] hover:text-white border border-[#DDD6C7] hover:border-[#C9A050] shadow-sm hover:shadow-[#C9A050]/25'
-                  }`}
+                        ? 'bg-[#1E1E26] hover:bg-[#C9A050] text-[#F0ECE1] hover:text-[#0A0A0D] border border-[#2D2D38] hover:border-[#C9A050] shadow-md hover:shadow-[#C9A050]/25'
+                        : 'bg-[#F7F4EC] hover:bg-[#C9A050] text-[#2A2A2E] hover:text-white border border-[#DDD6C7] hover:border-[#C9A050] shadow-sm hover:shadow-[#C9A050]/25'
+                    }`}
                 >
                   <Zap className="w-3.5 h-3.5" />
                   <span>Unlock Consultation & Pay</span>
@@ -855,9 +830,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
       {/* Trust & Security 4-Pillar Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
-          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
-        }`}>
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+          }`}>
           <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[#C9A050] shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
@@ -867,9 +841,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           </div>
         </div>
 
-        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
-          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
-        }`}>
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+          }`}>
           <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-500 shrink-0">
             <Zap className="w-5 h-5" />
           </div>
@@ -879,9 +852,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           </div>
         </div>
 
-        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
-          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
-        }`}>
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+          }`}>
           <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-500 shrink-0">
             <BookOpen className="w-5 h-5" />
           </div>
@@ -891,9 +863,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           </div>
         </div>
 
-        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${
-          isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
-        }`}>
+        <div className={`p-4 rounded-2xl border flex items-center space-x-3.5 transition ${isDark ? 'bg-[#131317]/80 border-[#272730] hover:border-[#C9A050]/30' : 'bg-white border-[#E5E1D8] shadow-sm hover:border-[#C9A050]/40'
+          }`}>
           <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/25 text-purple-500 shrink-0">
             <Lock className="w-5 h-5" />
           </div>
@@ -905,12 +876,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       </div>
 
       {/* Frequently Asked Questions Accordion */}
-      <div className={`rounded-3xl p-6 md:p-8 space-y-4 shadow-xl border ${
-        isDark ? 'bg-[#121217]/90 border-[#2A2A35]' : 'bg-white border-[#E5E1D8] shadow-lg'
-      }`}>
-        <div className={`flex items-center space-x-2.5 border-b pb-4 ${
-          isDark ? 'border-[#282834]' : 'border-[#EAE6DC]'
+      <div className={`rounded-3xl p-6 md:p-8 space-y-4 shadow-xl border ${isDark ? 'bg-[#121217]/90 border-[#2A2A35]' : 'bg-white border-[#E5E1D8] shadow-lg'
         }`}>
+        <div className={`flex items-center space-x-2.5 border-b pb-4 ${isDark ? 'border-[#282834]' : 'border-[#EAE6DC]'
+          }`}>
           <HelpCircle className="w-5 h-5 text-[#C9A050]" />
           <div>
             <h3 className={`text-lg font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
@@ -928,16 +897,14 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             return (
               <div
                 key={idx}
-                className={`rounded-2xl border overflow-hidden transition ${
-                  isDark ? 'border-[#2A2A34] bg-[#171720]/60' : 'border-[#E8E4DA] bg-[#FAF8F4]'
-                }`}
+                className={`rounded-2xl border overflow-hidden transition ${isDark ? 'border-[#2A2A34] bg-[#171720]/60' : 'border-[#E8E4DA] bg-[#FAF8F4]'
+                  }`}
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className={`w-full p-4 text-left flex items-center justify-between text-xs font-semibold transition cursor-pointer ${
-                    isDark ? 'text-[#F0ECE1] hover:text-[#C9A050]' : 'text-[#1A1A1E] hover:text-[#8C6517]'
-                  }`}
+                  className={`w-full p-4 text-left flex items-center justify-between text-xs font-semibold transition cursor-pointer ${isDark ? 'text-[#F0ECE1] hover:text-[#C9A050]' : 'text-[#1A1A1E] hover:text-[#8C6517]'
+                    }`}
                 >
                   <span>{faq.q}</span>
                   {isOpen ? (
@@ -947,9 +914,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   )}
                 </button>
                 {isOpen && (
-                  <div className={`px-4 pb-4 pt-1 text-xs leading-relaxed border-t ${
-                    isDark ? 'text-[#A8A49C] border-[#2A2A34]/50' : 'text-[#4A463E] border-[#EAE6DC]'
-                  }`}>
+                  <div className={`px-4 pb-4 pt-1 text-xs leading-relaxed border-t ${isDark ? 'text-[#A8A49C] border-[#2A2A34]/50' : 'text-[#4A463E] border-[#EAE6DC]'
+                    }`}>
                     {faq.a}
                   </div>
                 )}
@@ -962,19 +928,17 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       {/* User Information & Direct Pay Modal */}
       {selectedTier && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className={`border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative font-sans max-h-[92vh] flex flex-col ${
-            isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
-          }`}>
+          <div className={`border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative font-sans max-h-[92vh] flex flex-col ${isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
+            }`}>
             {/* Top Right Actions: History & Close */}
             <div className="absolute top-4 right-4 flex items-center space-x-1.5 z-10">
               <button
                 type="button"
                 onClick={fetchPaymentHistory}
-                className={`p-1.5 rounded-lg cursor-pointer transition flex items-center space-x-1 text-xs ${
-                  isDark
+                className={`p-1.5 rounded-lg cursor-pointer transition flex items-center space-x-1 text-xs ${isDark
                     ? 'text-[#9E9A90] hover:text-[#C9A050] bg-[#1A1A1E] hover:bg-[#2A2A2E]'
                     : 'text-[#787266] hover:text-[#8C6517] bg-[#F2EFE8] hover:bg-[#EAE5DA]'
-                }`}
+                  }`}
                 title="View Payment History"
               >
                 <History className="w-4 h-4" />
@@ -982,11 +946,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               </button>
               <button
                 onClick={() => setSelectedTier(null)}
-                className={`p-1.5 rounded-lg cursor-pointer transition ${
-                  isDark
+                className={`p-1.5 rounded-lg cursor-pointer transition ${isDark
                     ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]'
                     : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
-                }`}
+                  }`}
                 title="Close"
               >
                 <X className="w-5 h-5" />
@@ -997,9 +960,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             {!paymentSuccess && (
               <div className={`pb-4 border-b pr-10 ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-                    isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
-                  }`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                    }`}>
                     {selectedTier.name}
                   </span>
                 </div>
@@ -1043,19 +1005,16 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   {(() => {
                     const unlockedInfo = getTierUnlockedDetails(paymentSuccess.tier.id);
                     return (
-                      <div className={`rounded-2xl p-4 border-2 shadow-lg space-y-3.5 font-sans ${
-                        isDark
+                      <div className={`rounded-2xl p-4 border-2 shadow-lg space-y-3.5 font-sans ${isDark
                           ? 'bg-gradient-to-b from-[#181F1B] via-[#141A17] to-[#101512] border-emerald-500/50 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.25)] text-[#E5E1D8]'
                           : 'bg-gradient-to-b from-[#F0FAF4] via-[#EAF7EE] to-[#E2F2E9] border-emerald-500/60 text-[#1A1A1E]'
-                      }`}>
-                        <div className={`flex items-center justify-between border-b pb-2.5 ${
-                          isDark ? 'border-emerald-500/25' : 'border-emerald-500/30'
                         }`}>
+                        <div className={`flex items-center justify-between border-b pb-2.5 ${isDark ? 'border-emerald-500/25' : 'border-emerald-500/30'
+                          }`}>
                           <div className="flex items-center space-x-2">
                             <Crown className="w-4 h-4 text-[#C9A050]" />
-                            <span className={`text-xs font-bold font-serif tracking-wide ${
-                              isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'
-                            }`}>
+                            <span className={`text-xs font-bold font-serif tracking-wide ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'
+                              }`}>
                               {unlockedInfo.title}
                             </span>
                           </div>
@@ -1065,9 +1024,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </div>
 
                         {/* Profile Binding Summary */}
-                        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] p-2.5 rounded-xl border ${
-                          isDark ? 'bg-black/30 border-emerald-500/20' : 'bg-white/80 border-emerald-500/30'
-                        }`}>
+                        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] p-2.5 rounded-xl border ${isDark ? 'bg-black/30 border-emerald-500/20' : 'bg-white/80 border-emerald-500/30'
+                          }`}>
                           <div>
                             <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Client / Chart:</span>
                             <span className={`font-semibold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{userData.fullName}</span>
@@ -1082,17 +1040,15 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                         {/* Unlocked Features / Data List */}
                         <div className="space-y-2">
-                          <p className={`text-[11px] font-bold flex items-center space-x-1.5 uppercase tracking-wider ${
-                            isDark ? 'text-[#E5C378]' : 'text-[#8C6517]'
-                          }`}>
+                          <p className={`text-[11px] font-bold flex items-center space-x-1.5 uppercase tracking-wider ${isDark ? 'text-[#E5C378]' : 'text-[#8C6517]'
+                            }`}>
                             <Sparkles className="w-3 h-3 text-[#C9A050]" />
                             <span>Unlocked Data &amp; Calculations:</span>
                           </p>
                           <div className="grid grid-cols-1 gap-2">
                             {unlockedInfo.highlights.map((h, i) => (
-                              <div key={i} className={`flex items-start space-x-2 text-xs p-2 rounded-lg border ${
-                                isDark ? 'bg-[#1A221D]/60 border-emerald-500/15' : 'bg-white/90 border-emerald-500/25 shadow-sm'
-                              }`}>
+                              <div key={i} className={`flex items-start space-x-2 text-xs p-2 rounded-lg border ${isDark ? 'bg-[#1A221D]/60 border-emerald-500/15' : 'bg-white/90 border-emerald-500/25 shadow-sm'
+                                }`}>
                                 <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
                                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                                 </div>
@@ -1118,12 +1074,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   })()}
 
                   {/* Payment Verification Receipt Slip Details */}
-                  <div className={`p-3 rounded-xl border text-left text-xs space-y-2 font-sans ${
-                    isDark ? 'bg-[#16161B] border-[#2A2A32]' : 'bg-[#FAF8F4] border-[#E8E4DA]'
-                  }`}>
-                    <div className={`flex items-center justify-between border-b pb-1.5 ${
-                      isDark ? 'border-[#2A2A32]' : 'border-[#EAE6DC]'
+                  <div className={`p-3 rounded-xl border text-left text-xs space-y-2 font-sans ${isDark ? 'bg-[#16161B] border-[#2A2A32]' : 'bg-[#FAF8F4] border-[#E8E4DA]'
                     }`}>
+                    <div className={`flex items-center justify-between border-b pb-1.5 ${isDark ? 'border-[#2A2A32]' : 'border-[#EAE6DC]'
+                      }`}>
                       <span className={`text-[11px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Transaction ID:</span>
                       <span className="text-[#C9A050] font-mono font-bold text-[11px]">{paymentSuccess.txId}</span>
                     </div>
@@ -1163,18 +1117,16 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     </button>
                     <button
                       onClick={() => window.print()}
-                      className={`px-4 py-2.5 rounded-xl border font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition ${
-                        isDark ? 'bg-[#1A1A22] hover:bg-[#252530] text-[#E5E1D8] border-[#2D2D3A]' : 'bg-[#F3EFE6] hover:bg-[#EAE5DA] text-[#2A2A2E] border-[#DDD6C7]'
-                      }`}
+                      className={`px-4 py-2.5 rounded-xl border font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition ${isDark ? 'bg-[#1A1A22] hover:bg-[#252530] text-[#E5E1D8] border-[#2D2D3A]' : 'bg-[#F3EFE6] hover:bg-[#EAE5DA] text-[#2A2A2E] border-[#DDD6C7]'
+                        }`}
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Print Slip</span>
                     </button>
                     <button
                       onClick={() => setSelectedTier(null)}
-                      className={`px-3 py-2.5 rounded-xl border text-xs transition cursor-pointer ${
-                        isDark ? 'bg-[#141418] hover:bg-[#1E1E26] text-[#9E9A90] hover:text-white border-[#25252E]' : 'bg-[#FAF8F4] hover:bg-[#F0ECE1] text-[#787266] hover:text-black border-[#E2DDD0]'
-                      }`}
+                      className={`px-3 py-2.5 rounded-xl border text-xs transition cursor-pointer ${isDark ? 'bg-[#141418] hover:bg-[#1E1E26] text-[#9E9A90] hover:text-white border-[#25252E]' : 'bg-[#FAF8F4] hover:bg-[#F0ECE1] text-[#787266] hover:text-black border-[#E2DDD0]'
+                        }`}
                     >
                       Close
                     </button>
@@ -1197,11 +1149,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           value={userData.fullName}
                           onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
                           placeholder="Your legal or chart name"
-                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${
-                            isDark
+                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${isDark
                               ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                               : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
-                          }`}
+                            }`}
                         />
                       </div>
                       {formErrors.fullName && (
@@ -1219,13 +1170,15 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           type="tel"
                           required
                           value={userData.phone}
-                          onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                            setUserData({ ...userData, phone: val });
+                          }}
                           placeholder="+91 98765 43210"
-                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition font-mono border ${
-                            isDark
+                          className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition font-mono border ${isDark
                               ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                               : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
-                          }`}
+                            }`}
                         />
                       </div>
                       {formErrors.phone && (
@@ -1247,11 +1200,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         value={userData.currentAddress}
                         onChange={(e) => setUserData({ ...userData, currentAddress: e.target.value })}
                         placeholder="House/Flat No, Street, Landmark, City, State, Pincode"
-                        className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${
-                          isDark
+                        className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${isDark
                             ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                             : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
-                        }`}
+                          }`}
                       />
                     </div>
                     {formErrors.currentAddress && (
@@ -1285,11 +1237,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </>
                       )}
                     </button>
-                    <div className={`flex items-center justify-center space-x-1.5 mt-2.5 text-xs font-medium ${
-                      isDark ? 'text-[#E5E1D8]' : 'text-[#666258]'
-                    }`}>
+                    <div className={`flex items-center justify-center space-x-1.5 mt-2.5 text-xs font-medium ${isDark ? 'text-[#E5E1D8]' : 'text-[#666258]'
+                      }`}>
                       <Lock className="w-3.5 h-3.5 text-[#C9A050]" />
-                      <span>256-Bit SSL Encrypted • 100% Safe & Secure Payment</span>
+                      <span>100% Safe & Secure Payment</span>
                     </div>
                   </div>
                 </form>
@@ -1302,15 +1253,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       {/* Payment History Modal */}
       {showHistoryModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-          <div className={`border rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col ${
-            isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
-          }`}>
+          <div className={`border rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col ${isDark ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#1A1A1E]'
+            }`}>
             {/* Header */}
             <div className={`flex items-center justify-between pb-4 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
               <div className="flex items-center space-x-2.5">
-                <div className={`p-2 rounded-xl border ${
-                  isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
-                }`}>
+                <div className={`p-2 rounded-xl border ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                  }`}>
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
@@ -1324,9 +1273,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               </div>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className={`p-1.5 rounded-lg transition cursor-pointer ${
-                  isDark ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]' : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
-                }`}
+                className={`p-1.5 rounded-lg transition cursor-pointer ${isDark ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]' : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
+                  }`}
                 title="Close"
               >
                 <X className="w-5 h-5" />
@@ -1361,15 +1309,14 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   return (
                     <div
                       key={tx.id || idx}
-                      className={`p-4 rounded-xl border transition space-y-2.5 ${
-                        isSuccess
+                      className={`p-4 rounded-xl border transition space-y-2.5 ${isSuccess
                           ? isDark
                             ? 'bg-gradient-to-r from-[#141A16] to-[#171E1A] border-emerald-500/40 shadow-md'
                             : 'bg-gradient-to-r from-[#F0FAF4] to-[#EAF7EE] border-emerald-500/50 shadow-sm'
                           : isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] hover:border-[#C9A050]/40'
-                          : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40'
-                      }`}
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] hover:border-[#C9A050]/40'
+                            : 'bg-[#FAF8F4] border-[#E8E4DA] hover:border-[#C9A050]/40'
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
@@ -1377,13 +1324,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                             {itemInfo.name}
                           </span>
                           <span
-                            className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
-                              isSuccess
+                            className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${isSuccess
                                 ? 'bg-emerald-500/20 text-emerald-600 border border-emerald-500/40 flex items-center space-x-1'
                                 : tx.status === 'failed'
-                                ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
-                                : 'bg-amber-500/15 text-amber-600 border border-amber-500/30'
-                            }`}
+                                  ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
+                                  : 'bg-amber-500/15 text-amber-600 border border-amber-500/30'
+                              }`}
                           >
                             {isSuccess ? (
                               <>
@@ -1402,9 +1348,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                       {/* Unlocked Data Box for Successful Transactions */}
                       {isSuccess && (
-                        <div className={`p-3 rounded-lg border text-left text-xs space-y-2 ${
-                          isDark ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-emerald-50/80 border-emerald-300'
-                        }`}>
+                        <div className={`p-3 rounded-lg border text-left text-xs space-y-2 ${isDark ? 'bg-emerald-950/30 border-emerald-500/30' : 'bg-emerald-50/80 border-emerald-300'
+                          }`}>
                           <div className="flex items-center justify-between">
                             <span className="text-emerald-600 font-bold flex items-center space-x-1 text-[11px]">
                               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
@@ -1428,9 +1373,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         </div>
                       )}
 
-                      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1 border-t ${
-                        isDark ? 'text-[#9E9A90] border-[#2A2A2E]/60' : 'text-[#787266] border-[#EAE6DC]'
-                      }`}>
+                      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1 border-t ${isDark ? 'text-[#9E9A90] border-[#2A2A2E]/60' : 'text-[#787266] border-[#EAE6DC]'
+                        }`}>
                         {tx.razorpay_payment_id && (
                           <div>
                             Payment ID:{' '}
@@ -1448,12 +1392,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           <span className={isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}>
                             {tx.created_at
                               ? new Date(tx.created_at).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
                               : 'Recently'}
                           </span>
                         </div>
@@ -1471,9 +1415,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <div className={`pt-3 border-t flex justify-end ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition ${
-                  isDark ? 'bg-[#2A2A2E] hover:bg-[#3A3A3E] text-[#F0ECE1]' : 'bg-[#F2EFE8] hover:bg-[#EAE5DA] text-[#1A1A1E] border border-[#DDD6C7]'
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition ${isDark ? 'bg-[#2A2A2E] hover:bg-[#3A3A3E] text-[#F0ECE1]' : 'bg-[#F2EFE8] hover:bg-[#EAE5DA] text-[#1A1A1E] border border-[#DDD6C7]'
+                  }`}
               >
                 Close
               </button>

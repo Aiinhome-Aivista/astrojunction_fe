@@ -446,11 +446,10 @@ export function LandingPage({
                   <button
                     onClick={onGoToDashboard}
                     title="Dashboard"
-                    className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${
-                      theme === 'dark'
+                    className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${theme === 'dark'
                         ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
                         : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
-                    }`}
+                      }`}
                   >
                     <LayoutDashboard className="w-3.5 h-3.5 text-[#C9A050]" />
                     <span className="hidden sm:inline font-semibold">Dashboard</span>
@@ -459,17 +458,15 @@ export function LandingPage({
                   <div className="relative flex items-center">
                     <button
                       onClick={onGoToDashboard}
-                      className={`group focus:outline-none flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${
-                        theme === 'dark'
+                      className={`group focus:outline-none flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
                           ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
                           : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
-                      }`}
+                        }`}
                     >
                       <div className="relative">
                         <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] shadow-sm flex items-center justify-center">
-                          <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${
-                            theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
-                          }`}>
+                          <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
+                            }`}>
                             {authUser?.user_metadata?.full_name ? authUser.user_metadata.full_name.charAt(0).toUpperCase() : authUser?.email ? authUser.email.charAt(0).toUpperCase() : 'U'}
                           </div>
                         </div>
@@ -842,8 +839,8 @@ export function LandingPage({
                     return (
                       <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                         <div className={`max-w-[88%] p-2.5 rounded-xl flex items-start space-x-2 shadow-sm ${m.role === 'user'
-                            ? 'bg-[#C9A050] text-[#0D0D0F] rounded-tr-sm font-medium'
-                            : (theme === 'dark' ? 'bg-[#1A1A1E] text-[#E5E1D8] border border-[#2A2A2E] rounded-tl-sm' : 'bg-[#FFFFFF] text-[#0D0D0F] border border-[#E5E1D8] rounded-tl-sm')
+                          ? 'bg-[#C9A050] text-[#0D0D0F] rounded-tr-sm font-medium'
+                          : (theme === 'dark' ? 'bg-[#1A1A1E] text-[#E5E1D8] border border-[#2A2A2E] rounded-tl-sm' : 'bg-[#FFFFFF] text-[#0D0D0F] border border-[#E5E1D8] rounded-tl-sm')
                           }`}>
                           {m.role === 'assistant' && <Bot className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#C9A050]" />}
                           <div className="flex flex-col space-y-1.5 leading-relaxed w-full">
@@ -910,8 +907,8 @@ export function LandingPage({
               {/* Dedicated Separate Login Gate Section */}
               {(savedDob || msgCount >= 2) && (
                 <div className={`p-2.5 mx-3 my-1.5 rounded-xl border flex flex-col space-y-2 shadow-sm ${theme === 'dark'
-                    ? 'bg-[#18181D] border-[#C9A050]/40 text-[#E5E1D8]'
-                    : 'bg-[#FAF7F0] border-[#C9A050]/40 text-[#0D0D0F]'
+                  ? 'bg-[#18181D] border-[#C9A050]/40 text-[#E5E1D8]'
+                  : 'bg-[#FAF7F0] border-[#C9A050]/40 text-[#0D0D0F]'
                   }`}>
                   <div className="flex items-start space-x-2">
                     <Lock className="w-3.5 h-3.5 text-[#C9A050] mt-0.5 shrink-0" />
@@ -930,7 +927,7 @@ export function LandingPage({
                     }}
                     className="w-full py-1.5 px-3 rounded-lg bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] font-bold text-xs transition shadow-sm cursor-pointer flex items-center justify-center space-x-1"
                   >
-                    <span>{authUser ? 'Go to Kundli Dashboard' : 'Log In to Continue'}</span>
+                    <span>{authUser ? 'Go to Kundli Dashboard' : 'Login To Continue'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
