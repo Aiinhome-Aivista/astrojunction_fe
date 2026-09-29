@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight } from 'lucide-react';
+import { Sparkles, MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight } from 'lucide-react';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
@@ -452,7 +452,7 @@ export function LandingPage({
                         : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
                     }`}
                   >
-                    <Home className="w-3.5 h-3.5 text-[#C9A050]" />
+                    <LayoutDashboard className="w-3.5 h-3.5 text-[#C9A050]" />
                     <span className="hidden sm:inline font-semibold">Dashboard</span>
                   </button>
 
