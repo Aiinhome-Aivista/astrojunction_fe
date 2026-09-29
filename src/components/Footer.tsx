@@ -94,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                About us
+                About Us
               </button>
               <button onClick={() => handlePageClick('faq')}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'faq'
@@ -108,7 +108,7 @@ export const Footer: React.FC<FooterProps> = ({
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                Privacy policy
+                Privacy Policy
               </button>
               <button onClick={() => handlePageClick('cookie-policy')}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'cookie-policy'
@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                Terms &amp; conditions
+                Terms &amp; Conditions
               </button>
             </div>
           </div>

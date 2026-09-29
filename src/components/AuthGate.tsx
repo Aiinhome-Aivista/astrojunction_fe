@@ -559,11 +559,15 @@ export function AuthGate({
       // 2. Explicit login
       const user = await login(email, password);
 
+      if (user.role === 'admin') {
+        throw new Error('Admins must log in via the dedicated admin portal.');
+      }
+
       onAuthenticated(user);
 
       if (onClose) onClose();
-    } catch (err) {
-      const message = err instanceof ApiError ? err.message : 'Something went wrong. Please try again.';
+    } catch (err: any) {
+      const message = err instanceof ApiError ? err.message : (err.message || 'Something went wrong. Please try again.');
       setError(message);
       refreshCaptcha();
     } finally {

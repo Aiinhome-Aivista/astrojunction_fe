@@ -647,7 +647,6 @@ export const HoroscopeTraditionsView: React.FC<
       
       // Parse markdown-like text into blocks for better PDF rendering
       const paragraphs = aiText.split('\n').filter(p => p.trim() !== '');
-      let calculatedLines = 0;
       const parsedBlocks: { lines: string[], isHeader: boolean, isList: boolean, prefix?: string }[] = [];
       
       paragraphs.forEach(p => {
@@ -674,67 +673,88 @@ export const HoroscopeTraditionsView: React.FC<
         doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
         const lines = doc.splitTextToSize(text, pageWidth - (isList ? 38 : 34));
         parsedBlocks.push({ lines, isHeader, isList, prefix });
-        calculatedLines += lines.length + (isHeader ? 1.0 : 0.5);
       });
-      
-      const maxAllowedHeight = 250;
-      const rawBoxHeight = 14 + (calculatedLines * 3.8);
-      const aiBoxHeight = Math.min(rawBoxHeight, maxAllowedHeight); // cap it if it gets insanely large
-      
-      // Page break check if the box doesn't fit
-      if (yPos + aiBoxHeight > 280) {
+
+      if (yPos > 240) {
         doc.addPage();
         yPos = 20;
       }
 
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, aiBoxHeight, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text(`VEDIC DEEP SYNTHESIS (${tradition.toUpperCase()} METHODOLOGY)`, 17, yPos + 5);
-
-      let currentY = yPos + 10.5;
+      // Pre-calculate pages for AI text
+      const aiPages: { blocks: typeof parsedBlocks, height: number }[] = [];
+      let currentHeight = 10.5;
+      let currentBlocks: typeof parsedBlocks = [];
+      let simYPos = yPos;
       
       parsedBlocks.forEach(block => {
-         if (currentY > yPos + aiBoxHeight - 5) return; // Prevent text from bleeding out of the box
-         
-         if (block.isHeader) {
-            currentY += 1.5;
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(7.5);
-            doc.setTextColor(126, 95, 24);
+         const estimatedBlockHeight = block.lines.length * 3.8 + (block.isHeader ? 2 : 1.5);
+         if (simYPos + currentHeight + estimatedBlockHeight > 275) {
+            aiPages.push({ blocks: currentBlocks, height: currentHeight });
+            currentBlocks = [block];
+            currentHeight = 10.5 + estimatedBlockHeight;
+            simYPos = 20;
          } else {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(7.2);
-            doc.setTextColor(40, 40, 45);
+            currentBlocks.push(block);
+            currentHeight += estimatedBlockHeight;
          }
-         
-         if (block.isList && block.prefix) {
-            // Print prefix at the original margin
-            doc.text(block.prefix, 17, currentY);
-            // Print lines with hanging indent
-            block.lines.forEach((line: string) => {
-               if (currentY > yPos + aiBoxHeight - 3) return;
-               doc.text(line, 21, currentY); // Indented margin
-               currentY += 3.8;
-            });
-         } else {
-            block.lines.forEach((line: string) => {
-               if (currentY > yPos + aiBoxHeight - 3) return;
-               doc.text(line, 17, currentY);
-               currentY += 3.8;
-            });
-         }
-         
-         if (block.isHeader) currentY += 0.5;
-         else currentY += 1.5;
       });
+      if (currentBlocks.length > 0) {
+         aiPages.push({ blocks: currentBlocks, height: currentHeight });
+      }
 
-      yPos += aiBoxHeight + 8;
+      aiPages.forEach((pageData, index) => {
+         if (index > 0) {
+            doc.addPage();
+            yPos = 20;
+         }
+         
+         const aiBoxHeight = pageData.height + 5;
+         doc.setFillColor(255, 255, 255);
+         doc.setDrawColor(201, 160, 80);
+         doc.setLineWidth(0.4);
+         doc.roundedRect(13, yPos, pageWidth - 26, aiBoxHeight, 1.5, 1.5, 'FD');
+
+         doc.setFont('helvetica', 'bold');
+         doc.setFontSize(8);
+         doc.setTextColor(126, 95, 24);
+         if (index === 0) {
+            doc.text(`VEDIC DEEP SYNTHESIS (${tradition.toUpperCase()} METHODOLOGY)`, 17, yPos + 5);
+         } else {
+            doc.text(`VEDIC DEEP SYNTHESIS (CONTINUED)`, 17, yPos + 5);
+         }
+
+         let currentY = yPos + 10.5;
+         pageData.blocks.forEach(block => {
+            if (block.isHeader) {
+               currentY += 1.5;
+               doc.setFont('helvetica', 'bold');
+               doc.setFontSize(7.5);
+               doc.setTextColor(126, 95, 24);
+            } else {
+               doc.setFont('helvetica', 'normal');
+               doc.setFontSize(7.2);
+               doc.setTextColor(40, 40, 45);
+            }
+            
+            if (block.isList && block.prefix) {
+               doc.text(block.prefix, 17, currentY);
+               block.lines.forEach((line: string) => {
+                  doc.text(line, 21, currentY);
+                  currentY += 3.8;
+               });
+            } else {
+               block.lines.forEach((line: string) => {
+                  doc.text(line, 17, currentY);
+                  currentY += 3.8;
+               });
+            }
+            
+            if (block.isHeader) currentY += 0.5;
+            else currentY += 1.5;
+         });
+         
+         yPos += aiBoxHeight + 8;
+      });
       
       // Check if Gemstone box fits
       const numGems = chartData.gemstones ? Math.min(chartData.gemstones.length, 4) : 0;

@@ -704,7 +704,7 @@ export function LandingPage({
                   <Lock className="w-6 h-6 text-[#C9A050]" />
                   <span>Unlock Premium Features</span>
                 </h3>
-                <p className={`text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                <p className={`text-sm text-center mx-auto max-w-lg ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                   Log in to access your deeply personalized astrological and numerological journey.
                 </p>
               </div>
