@@ -644,32 +644,127 @@ export const HoroscopeTraditionsView: React.FC<
       doc.setFontSize(7.5);
 
       const aiText = aiInterpretation || `Planetary positions synthesized across ${activeTraditionTitle}. The ascendant ${ascSign} lord and active Vimshottari Mahadasha indicate key milestones in professional leadership, intellectual growth, and dharmic alignment. Maintain focus on planetary harmonization during transition periods.`;
-      const aiLines = doc.splitTextToSize(aiText.replace(/[#*`_>-]/g, ' '), pageWidth - 34);
       
-      const maxAiLines = 15;
-      const visibleAiLines = aiLines.slice(0, maxAiLines);
-      const aiBoxHeight = 14 + (visibleAiLines.length * 4.0);
+      // Parse markdown-like text into blocks for better PDF rendering
+      const paragraphs = aiText.split('\n').filter(p => p.trim() !== '');
+      const parsedBlocks: { lines: string[], isHeader: boolean, isList: boolean, prefix?: string }[] = [];
       
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, aiBoxHeight, 1.5, 1.5, 'FD');
+      paragraphs.forEach(p => {
+        let text = p.trim();
+        let isHeader = false;
+        let isList = false;
+        let prefix = '';
+        
+        if (text.startsWith('###')) {
+           isHeader = true;
+           text = text.replace(/^#+\s*/, '');
+        } else {
+           const listMatch = text.match(/^(-\s*|\*\s*|\d+\.\s*)/);
+           if (listMatch) {
+              isList = true;
+              prefix = listMatch[1];
+              text = text.substring(prefix.length); // The rest of the text
+           }
+        }
+        
+        // Clean up bold/italic markers
+        text = text.replace(/\*\*/g, '').replace(/__/g, '').replace(/`/g, '');
+        
+        doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
+        const lines = doc.splitTextToSize(text, pageWidth - (isList ? 38 : 34));
+        parsedBlocks.push({ lines, isHeader, isList, prefix });
+      });
 
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text(`VEDIC DEEP SYNTHESIS (${tradition.toUpperCase()} METHODOLOGY)`, 17, yPos + 5);
+      if (yPos > 240) {
+        doc.addPage();
+        yPos = 20;
+      }
 
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(40, 40, 45);
-      doc.text(visibleAiLines, 17, yPos + 10);
+      // Pre-calculate pages for AI text
+      const aiPages: { blocks: typeof parsedBlocks, height: number }[] = [];
+      let currentHeight = 10.5;
+      let currentBlocks: typeof parsedBlocks = [];
+      let simYPos = yPos;
+      
+      parsedBlocks.forEach(block => {
+         const estimatedBlockHeight = block.lines.length * 3.8 + (block.isHeader ? 2 : 1.5);
+         if (simYPos + currentHeight + estimatedBlockHeight > 275) {
+            aiPages.push({ blocks: currentBlocks, height: currentHeight });
+            currentBlocks = [block];
+            currentHeight = 10.5 + estimatedBlockHeight;
+            simYPos = 20;
+         } else {
+            currentBlocks.push(block);
+            currentHeight += estimatedBlockHeight;
+         }
+      });
+      if (currentBlocks.length > 0) {
+         aiPages.push({ blocks: currentBlocks, height: currentHeight });
+      }
 
-      yPos += aiBoxHeight + 8;
+      aiPages.forEach((pageData, index) => {
+         if (index > 0) {
+            doc.addPage();
+            yPos = 20;
+         }
+         
+         const aiBoxHeight = pageData.height + 5;
+         doc.setFillColor(255, 255, 255);
+         doc.setDrawColor(201, 160, 80);
+         doc.setLineWidth(0.4);
+         doc.roundedRect(13, yPos, pageWidth - 26, aiBoxHeight, 1.5, 1.5, 'FD');
 
-      // 8. Recommended Gemstones & Upayas
+         doc.setFont('helvetica', 'bold');
+         doc.setFontSize(8);
+         doc.setTextColor(126, 95, 24);
+         if (index === 0) {
+            doc.text(`VEDIC DEEP SYNTHESIS (${tradition.toUpperCase()} METHODOLOGY)`, 17, yPos + 5);
+         } else {
+            doc.text(`VEDIC DEEP SYNTHESIS (CONTINUED)`, 17, yPos + 5);
+         }
+
+         let currentY = yPos + 10.5;
+         pageData.blocks.forEach(block => {
+            if (block.isHeader) {
+               currentY += 1.5;
+               doc.setFont('helvetica', 'bold');
+               doc.setFontSize(7.5);
+               doc.setTextColor(126, 95, 24);
+            } else {
+               doc.setFont('helvetica', 'normal');
+               doc.setFontSize(7.2);
+               doc.setTextColor(40, 40, 45);
+            }
+            
+            if (block.isList && block.prefix) {
+               doc.text(block.prefix, 17, currentY);
+               block.lines.forEach((line: string) => {
+                  doc.text(line, 21, currentY);
+                  currentY += 3.8;
+               });
+            } else {
+               block.lines.forEach((line: string) => {
+                  doc.text(line, 17, currentY);
+                  currentY += 3.8;
+               });
+            }
+            
+            if (block.isHeader) currentY += 0.5;
+            else currentY += 1.5;
+         });
+         
+         yPos += aiBoxHeight + 8;
+      });
+      
+      // Check if Gemstone box fits
       const numGems = chartData.gemstones ? Math.min(chartData.gemstones.length, 4) : 0;
       const gemBoxHeight = numGems > 0 ? (12 + numGems * 5.5) : 22;
+      if (yPos + gemBoxHeight > 280) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      // 8. Recommended Gemstones & Upayas
       doc.setFillColor(255, 255, 255);
       doc.setDrawColor(201, 160, 80);
       doc.setLineWidth(0.4);

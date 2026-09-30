@@ -10,7 +10,7 @@ export interface SEOProps {
 
 export const DEFAULT_SEO: SEOProps = {
   title: "ASTROJUNCTION • Vedic Astrology, Kundli & Daily Oracle",
-  description: "Ancient Knowledge • Modern Intelligence. Accurate Vedic Janam Kundli, Daily Panchang & Horoscope, Kundli Milan (Matchmaking), Numerology, and AI Life Counselling.",
+  description: "Ancient Knowledge • Modern Intelligence. Accurate Vedic Janam Kundli, Daily Panchang & Horoscope, Kundli Milan (Matchmaking), Numerology, and Life Counselling.",
   keywords: [
     "vedic astrology",
     "janam kundli",
@@ -124,8 +124,8 @@ export const TAB_SEO_CONFIG: Record<string, SEOProps> = {
     ogType: "website",
   },
   counsellor: {
-    title: "AI Daivajna Astrological Life Counsellor • ASTROJUNCTION",
-    description: "Get instant, personalized Vedic life counselling powered by AI Daivajna intelligence combined with classical Jyotish shastras.",
+    title: "Daivajna Astrological Life Counsellor • ASTROJUNCTION",
+    description: "Get instant, personalized Vedic life counselling powered by Daivajna intelligence combined with classical Jyotish shastras.",
     keywords: ["ai astrologer", "daivajna", "astrology counselling", "vedic ai oracle"],
     ogImage: "/golden_zodiac_wheel.jpg",
     ogType: "website",

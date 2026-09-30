@@ -142,40 +142,36 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, p
 
   return (
     <div className={`relative ${className || ''}`} ref={ref}>
-      <div 
+      <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-2.5 py-1.5 border rounded-xl text-[11px] font-bold cursor-pointer flex justify-between items-center transition-colors ${
-          isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
-        } ${isOpen ? 'border-[#C9A050]' : ''}`}
+        className={`w-full px-2.5 py-1.5 border rounded-xl text-[11px] font-bold cursor-pointer flex justify-between items-center transition-colors ${isDark ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white' : 'bg-[#F9F7F1] border-[#E5E1D8] text-black'
+          } ${isOpen ? 'border-[#C9A050]' : ''}`}
       >
         <span className={!selectedOption ? (isDark ? 'text-gray-500' : 'text-gray-400') : ''}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${isOpen ? 'rotate-180 text-[#C9A050]' : ''}`} />
       </div>
-      
+
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: dropUp ? 5 : -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: dropUp ? 5 : -5 }}
             transition={{ duration: 0.15 }}
-            className={`absolute z-[110] left-0 right-0 max-h-[250px] overflow-y-auto border rounded-xl shadow-2xl ${
-              dropUp ? 'bottom-full mb-1' : 'top-full mt-1'
-            } ${
-              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
-            } custom-scrollbar`}
+            className={`absolute z-[110] left-0 right-0 max-h-[250px] overflow-y-auto border rounded-xl shadow-2xl ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'
+              } ${isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+              } custom-scrollbar`}
           >
             {options.map((opt) => (
               <div
                 key={opt.value}
                 onClick={() => { onChange(opt.value); setIsOpen(false); }}
-                className={`px-3 py-2 text-[11px] font-bold cursor-pointer transition-colors ${
-                  value === opt.value 
+                className={`px-3 py-2 text-[11px] font-bold cursor-pointer transition-colors ${value === opt.value
                     ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
                     : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
-                }`}
+                  }`}
               >
                 {opt.label}
               </div>
@@ -215,18 +211,17 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
 
   return (
     <div className="relative w-full" ref={ref}>
-      <div 
-        className={`w-full flex items-center px-3 py-1.5 border rounded-xl text-xs font-medium cursor-pointer transition-colors ${
-          isDark
+      <div
+        className={`w-full flex items-center px-3 py-1.5 border rounded-xl text-xs font-medium cursor-pointer transition-colors ${isDark
             ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white hover:border-[#C9A050]'
             : 'bg-[#F9F7F1] border-[#E5E1D8] text-black hover:border-[#C9A050]'
-        } ${(isOpen || isAmPmOpen) ? 'border-[#C9A050]' : ''}`}
+          } ${(isOpen || isAmPmOpen) ? 'border-[#C9A050]' : ''}`}
       >
         <div className="flex-1 flex items-center" onClick={() => { setIsOpen(!isOpen); setIsAmPmOpen(false); }}>
           <Clock className="w-3.5 h-3.5 text-gray-400 mr-2 shrink-0" />
           <span className="tracking-wider">{hour} : {minute}</span>
         </div>
-        <div 
+        <div
           className={`flex items-center font-bold px-1.5 py-0.5 rounded hover:bg-black/10 transition-colors ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}
           onClick={(e) => { e.stopPropagation(); setIsAmPmOpen(!isAmPmOpen); setIsOpen(false); }}
         >
@@ -237,14 +232,13 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 0.15 }}
-            className={`absolute z-[110] left-0 w-[180px] bottom-full mb-1 flex border rounded-xl shadow-2xl overflow-hidden ${
-              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
-            }`}
+            className={`absolute z-[110] left-0 w-[180px] bottom-full mb-1 flex border rounded-xl shadow-2xl overflow-hidden ${isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+              }`}
           >
             {/* Hours Column */}
             <div className={`flex-1 h-48 overflow-y-auto custom-scrollbar border-r ${isDark ? 'border-[#2A2A2E]' : 'border-gray-100'}`}>
@@ -258,7 +252,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
                 );
               })}
             </div>
-            
+
             {/* Minutes Column */}
             <div className={`flex-1 h-48 overflow-y-auto custom-scrollbar border-r ${isDark ? 'border-[#2A2A2E]' : 'border-gray-100'}`}>
               <div className={`sticky top-0 p-1 text-center text-[10px] font-bold uppercase tracking-wider bg-opacity-90 backdrop-blur-sm ${isDark ? 'bg-[#1A1A1E] text-[#C9A050]' : 'bg-white text-[#8C6B28]'}`}>Min</div>
@@ -277,24 +271,22 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
 
       <AnimatePresence>
         {isAmPmOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 0.15 }}
-            className={`absolute z-[110] right-0 w-[80px] bottom-full mb-1 flex flex-col border rounded-xl shadow-2xl overflow-hidden ${
-              isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
-            }`}
+            className={`absolute z-[110] right-0 w-[80px] bottom-full mb-1 flex flex-col border rounded-xl shadow-2xl overflow-hidden ${isDark ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'
+              }`}
           >
             {['AM', 'PM'].map(a => (
-              <div 
-                key={a} 
-                onClick={() => { onAmPmChange(a); setIsAmPmOpen(false); }} 
-                className={`p-2.5 text-center text-xs font-bold cursor-pointer ${
-                  ampm === a 
-                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]') 
+              <div
+                key={a}
+                onClick={() => { onAmPmChange(a); setIsAmPmOpen(false); }}
+                className={`p-2.5 text-center text-xs font-bold cursor-pointer ${ampm === a
+                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
                     : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
-                }`}
+                  }`}
               >
                 {a}
               </div>
@@ -506,12 +498,12 @@ export function AuthGate({
   const daysOptions = days.map(d => ({ label: d, value: d }));
   const monthsOptions = MONTHS.map(m => ({ label: m.name.slice(0, 3), value: m.value }));
   const yearsOptions = years.map(y => ({ label: y, value: y }));
-  
+
   const hoursOptions = Array.from({ length: 12 }, (_, i) => {
     const val = (i + 1).toString().padStart(2, '0');
     return { label: val, value: val };
   });
-  
+
   const minutesOptions = Array.from({ length: 60 }, (_, i) => {
     const val = i.toString().padStart(2, '0');
     return { label: val, value: val };
@@ -567,11 +559,15 @@ export function AuthGate({
       // 2. Explicit login
       const user = await login(email, password);
 
+      if (user.role === 'admin') {
+        throw new Error('Admins must log in via the dedicated admin portal.');
+      }
+
       onAuthenticated(user);
 
       if (onClose) onClose();
-    } catch (err) {
-      const message = err instanceof ApiError ? err.message : 'Something went wrong. Please try again.';
+    } catch (err: any) {
+      const message = err instanceof ApiError ? err.message : (err.message || 'Something went wrong. Please try again.');
       setError(message);
       refreshCaptcha();
     } finally {
@@ -1054,7 +1050,7 @@ export function AuthGate({
                 className="w-full mt-1.5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] hover:from-[#D4AF37] hover:to-[#A37B2F] text-white font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all shadow-md shadow-[#C9A050]/20 disabled:opacity-60 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
               >
                 {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                <span>{mode === 'login' ? 'Log In to Continue' : 'Create Free Account'}</span>
+                <span>{mode === 'login' ? 'Login To Continue' : 'Create Free Account'}</span>
               </button>
             </form>
           </div>

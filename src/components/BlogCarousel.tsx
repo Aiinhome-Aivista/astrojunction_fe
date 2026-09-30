@@ -76,7 +76,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
             Cosmic & <span className="italic font-light text-[#C9A050]">Insights</span>
           </h2>
         </div>
-        <p className={`text-sm md:text-base ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+        <p className={`text-sm md:text-base text-center mx-auto max-w-lg ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
           Deep dives into authentic Vedic astrology, planetary yogas, and spiritual wisdom.
         </p>
       </div>

@@ -76,7 +76,7 @@ const PROVIDERS: ProviderMeta[] = [
     id: 'mistral_cloud',
     name: 'Mistral Cloud',
     tagline: 'Official Mistral API',
-    description: 'Cloud-hosted Mistral Large/Small models directly from Mistral AI with high synthesis accuracy.',
+    description: 'Cloud-hosted Mistral Large/Small models directly from Mistral with high synthesis accuracy.',
     icon: Cloud,
     badge: 'Cloud API',
     accentColor: '#F59E0B',
@@ -291,7 +291,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
       <div className="flex flex-col items-center justify-center h-[50vh] space-y-4">
         <Activity className="w-8 h-8 text-[#C9A050] animate-spin" />
         <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-          Loading AI engine settings...
+          Loading engine settings...
         </p>
       </div>
     );
@@ -313,7 +313,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-serif font-bold tracking-wide">
-                AI Engine <span className="text-[#C9A050]">Settings</span>
+                Engine <span className="text-[#C9A050]">Settings</span>
               </h1>
               <p className={`text-xs font-sans mt-0.5 ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                 Configure and select the LLM powering all predictions and Vedic counsel.
@@ -953,7 +953,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                 </label>
               </div>
               <p className={`mt-0.5 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-                Maximum duration to wait for AI response before timing out (saved in MySQL).
+                Maximum duration to wait for response before timing out (saved in MySQL).
               </p>
             </div>
 

@@ -534,7 +534,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       : matchResult;
 
     if (!validResult || !p1.birthDate || !p2.birthDate) {
-      console.warn('Cannot generate AI synthesis without valid matchResult and partner birthDates');
+      console.warn('Cannot generate synthesis without valid matchResult and partner birthDates');
       return;
     }
 
@@ -565,7 +565,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         throw new Error(data?.message || 'Failed to generate synthesis');
       }
     } catch (err) {
-      console.error('Failed to generate AI Kundli Milan synthesis:', err);
+      console.error('Failed to generate Kundli Milan synthesis:', err);
     } finally {
       setIsGeneratingAI(false);
     }
@@ -645,7 +645,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       setIsGeneratingPdf(false);
       return;
     } catch (apiErr) {
-      console.warn('Backend AI Counsel PDF endpoint error or offline, falling back to client-side:', apiErr);
+      console.warn('Backend Counsel PDF endpoint error or offline, falling back to client-side:', apiErr);
     }
 
     // 2. Client-side fallback jsPDF AI Counsel Report
@@ -734,7 +734,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       doc.setFontSize(8.5); doc.setTextColor(126, 95, 24);
       doc.text('DAIVAJNA DEEP RELATIONSHIP SYNTHESIS & ASTROLOGICAL COUNSEL', 33, 24.5);
       doc.setFont('helvetica', 'italic'); doc.setFontSize(7); doc.setTextColor(100, 95, 85);
-      doc.text('Multidimensional Karmic Counsel  |  AI Vedic Intelligence Engine  |  Lahiri Ephemeris', 33, 28);
+      doc.text('Multidimensional Karmic Counsel  |  Vedic Intelligence Engine  |  Lahiri Ephemeris', 33, 28);
 
       let yPos = 33;
 
@@ -781,7 +781,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(126, 95, 24);
       doc.text('REPORT TYPE', pageWidth - 17, yPos + 6, { align: 'right' });
       doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(60, 60, 60);
-      doc.text('AI Daivajna Synthesis', pageWidth - 17, yPos + 11, { align: 'right' });
+      doc.text('Daivajna Synthesis', pageWidth - 17, yPos + 11, { align: 'right' });
 
       yPos += 21;
 
@@ -935,14 +935,14 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         doc.text('DAIVAJNA ASTROLOGICAL AUTHENTICITY SEAL', pageWidth / 2, y2 + 6.5, { align: 'center' });
         doc.setFont('helvetica', 'italic'); doc.setFontSize(6.8); doc.setTextColor(90, 85, 70);
         doc.text(
-          '"Om Shri Gurubhyo Namah — This sacred relationship synthesis was generated through AstroJunction AI Intelligence aligned with classical Vedic Jyotish sutras and Lahiri Ayanamsa."',
+          '"Om Shri Gurubhyo Namah — This sacred relationship synthesis was generated through AstroJunction Intelligence aligned with classical Vedic Jyotish sutras and Lahiri Ayanamsa."',
           pageWidth / 2, y2 + 11.5, { align: 'center', maxWidth: pageWidth - 36 }
         );
       }
 
       doc.save(fileName);
     } catch (err) {
-      console.error('Fatal AI Counsel PDF generation error:', err);
+      console.error('Fatal Counsel PDF generation error:', err);
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -1349,7 +1349,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
           const aiBoxH    = Math.min(48, Math.max(22, 10 + aiLines.length * 3.8));
           doc.roundedRect(13, y2, pageWidth - 26, aiBoxH, 1.5, 1.5, 'FD');
           doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(126, 95, 24);
-          doc.text('AI VEDIC PLANETARY SYNTHESIS & PARTNERSHIP COUNSEL', 17, y2 + 5.5);
+          doc.text('VEDIC PLANETARY SYNTHESIS & PARTNERSHIP COUNSEL', 17, y2 + 5.5);
           doc.setFont('helvetica', 'italic'); doc.setFontSize(6.2); doc.setTextColor(155, 125, 60);
           doc.text('Personalized Jyotish Intelligence | Daivajna Analysis Engine', pageWidth - 17, y2 + 5.5, { align: 'right' });
           doc.setFont('helvetica', 'normal'); doc.setFontSize(6.8); doc.setTextColor(45, 45, 50);
@@ -2077,10 +2077,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className={`flex items-center space-x-2 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} pb-3 overflow-x-auto no-scrollbar`}>
+      <div className={`flex flex-wrap items-center justify-center gap-1.5 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} pb-3`}>
         <button
           onClick={() => setActiveTab('kootas')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'kootas'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2094,7 +2094,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('doshas')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'doshas'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2108,7 +2108,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('synastry')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'synastry'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2122,7 +2122,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('ai_counsel')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 cursor-pointer border-2 shadow-sm ${
+          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer border-2 shadow-sm ${
             activeTab === 'ai_counsel'
               ? 'bg-gradient-to-r from-[#C9A050] to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-md shadow-[#C9A050]/30 font-bold'
               : theme === 'dark'
@@ -2149,7 +2149,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('remedies')}
-          className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
             activeTab === 'remedies'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2610,7 +2610,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer"
                 >
                   <Crown className="w-4 h-4 text-[#0D0D0F]" />
-                  <span>Unlock AI Counsel (₹149)</span>
+                  <span>Unlock Counsel (₹149)</span>
                 </button>
               ) : (
                 <button
@@ -2906,7 +2906,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   Daivajna Deep Relationship Synthesis
                 </h4>
                 <p className={`text-xs sm:text-sm font-sans ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
-                  Generate an exhaustive AI consultation covering psychological affinity, biological vitality, wealth generation, marital timing, and conflict resolution.
+                  Generate an exhaustive consultation covering psychological affinity, biological vitality, wealth generation, marital timing, and conflict resolution.
                 </p>
               </div>
               <div className="pt-2">

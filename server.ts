@@ -134,7 +134,7 @@ Deliver an empowering, detailed, spiritually grounded consultation in ${targetLa
   }
 });
 
-// API: Interactive AI Vedic Astrologer & Counsellor Chat
+// API: Interactive Vedic Astrologer & Counsellor Chat
 app.post('/api/gemini/chat', async (req, res) => {
   try {
     const { message, history, profile, chartData, numerology, tradition, language = 'en' } = req.body;
@@ -228,7 +228,7 @@ Instructions:
   }
 });
 
-// API: AI Life Roadmap Generator
+// API: Life Roadmap Generator
 app.post('/api/gemini/roadmap', async (req, res) => {
   try {
     const { profile, chartData, numerology } = req.body;
@@ -299,7 +299,7 @@ Return a valid JSON array of milestones where each item has:
   }
 });
 
-// API: AI Kundli Milan & Matchmaking Deep Synthesis
+// API: Kundli Milan & Matchmaking Deep Synthesis
 app.post('/api/gemini/matchmaking-synthesis', async (req, res) => {
   try {
     const { partner1, partner2, matchResult, language = 'en' } = req.body;
@@ -464,7 +464,7 @@ Format as JSON with:
         newNodes = parsed.entities || [];
         extractedCount = newNodes.length || 8;
       } catch (e) {
-        console.warn('Runbook extraction AI parse error:', e);
+        console.warn('Runbook extraction parse error:', e);
       }
     }
 
@@ -787,8 +787,8 @@ const SEO_SERVER_CONFIG: Record<string, { title: string; description: string; og
     ogImage: "/astrologer_bg.jpg"
   },
   counsellor: {
-    title: "AI Daivajna Astrological Life Counsellor • ASTROJUNCTION",
-    description: "Get instant, personalized Vedic life counselling powered by AI Daivajna intelligence combined with classical Jyotish shastras.",
+    title: "Daivajna Astrological Life Counsellor • ASTROJUNCTION",
+    description: "Get instant, personalized Vedic life counselling powered by Daivajna intelligence combined with classical Jyotish shastras.",
     ogImage: "/golden_zodiac_wheel.jpg"
   },
   blogs: {
