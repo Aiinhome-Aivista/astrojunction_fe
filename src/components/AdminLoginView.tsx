@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Mail, Lock, Loader2, ArrowRight, Eye, EyeOff, RotateCcw } from 'lucide-react';
 import { login, AuthUser } from '../services/authApi';
 import { ApiError } from '../services/api';
 
@@ -15,11 +15,37 @@ export function AdminLoginView({ onAuthenticated, theme = 'dark' }: AdminLoginVi
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Captcha state (Identical to User AuthGate)
+  const [captchaCode, setCaptchaCode] = useState('');
+  const [userCaptchaInput, setUserCaptchaInput] = useState('');
+
   const isDark = theme === 'dark';
+
+  const refreshCaptcha = () => {
+    const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz';
+    let code = '';
+    for (let i = 0; i < 5; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptchaCode(code);
+    setUserCaptchaInput('');
+  };
+
+  useEffect(() => {
+    refreshCaptcha();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Captcha validation
+    if (userCaptchaInput.trim().toUpperCase() !== captchaCode.toUpperCase()) {
+      setError('Invalid Captcha code. Please enter the characters shown.');
+      refreshCaptcha();
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -29,8 +55,10 @@ export function AdminLoginView({ onAuthenticated, theme = 'dark' }: AdminLoginVi
         onAuthenticated(user);
       } else {
         setError('Unauthorized: Admin access only.');
+        refreshCaptcha();
       }
     } catch (err: any) {
+      refreshCaptcha();
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
@@ -130,9 +158,54 @@ export function AdminLoginView({ onAuthenticated, theme = 'dark' }: AdminLoginVi
             </div>
           </div>
 
+          {/* Captcha Section (Matching User AuthGate) */}
+          <div>
+            <label className={`block text-xs font-bold mb-1.5 ${isDark ? 'text-white' : 'text-black'}`}>
+              Security Verification (Captcha)
+            </label>
+            <div className="flex items-center space-x-2">
+              <div
+                className={`flex items-center justify-between px-3 py-2 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${
+                  isDark
+                    ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
+                    : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
+                }`}
+              >
+                <span className="line-through decoration-[#C9A050]/60 decoration-2">
+                  {captchaCode}
+                </span>
+                <button
+                  type="button"
+                  onClick={refreshCaptcha}
+                  className="ml-2 p-1 rounded hover:bg-black/10 transition-colors cursor-pointer text-gray-400 hover:text-[#C9A050]"
+                  title="Generate new captcha"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="relative flex-1">
+                <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  required
+                  maxLength={6}
+                  value={userCaptchaInput}
+                  onChange={(e) => setUserCaptchaInput(e.target.value)}
+                  className={`w-full pl-9 pr-3 py-2.5 rounded-xl text-sm font-semibold tracking-wider focus:outline-none transition border-2 ${
+                    isDark
+                      ? 'bg-[#1A1A1E] border-[#333338] text-white placeholder-gray-500 focus:border-[#C9A050] focus:bg-[#202026]'
+                      : 'bg-[#FAF8F4] border-[#DCD3C1] text-black placeholder-gray-500 focus:border-[#C9A050] focus:bg-white'
+                  }`}
+                  placeholder="Enter code"
+                />
+              </div>
+            </div>
+          </div>
+
           <button
             type="submit"
-            disabled={loading || !email || !password}
+            disabled={loading || !email || !password || !userCaptchaInput.trim()}
             className={`w-full mt-2 py-3 rounded-xl font-black text-sm flex items-center justify-center space-x-2 transition-all shadow-xl cursor-pointer disabled:opacity-60 ${
               isDark
                 ? 'bg-gradient-to-r from-[#F5CA53] to-[#DFB03E] hover:from-[#FCD768] hover:to-[#E8BE55] text-black shadow-[#F5CA53]/25 hover:shadow-[#F5CA53]/40'
