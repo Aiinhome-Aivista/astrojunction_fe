@@ -10,7 +10,7 @@ import { AICounsellorChat } from './components/AICounsellorChat';
 import { LifeRoadmapView } from './components/LifeRoadmapView';
 import { ConsultationsPaymentView } from './components/ConsultationsPaymentView';
 import { AdminKGraphView } from './components/AdminKGraphView';
-import { AdminBlogsView } from './components/AdminBlogsView';
+import { AdminBlogsView } from './components/Blogs';
 import { AdminDashboardView } from './components/AdminDashboardView';
 import { AdminUsersView } from './components/AdminUsersView';
 import { AdminLogsView } from './components/AdminLogsView';
@@ -20,6 +20,7 @@ import { AdminSEOView } from './components/AdminSEOView';
 import { AdminSubscriptionsView } from './components/AdminSubscriptionsView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
 import { LegalInfoPage, LegalPageView } from './components/LegalInfoPage';
+import { AdminLoginView } from './components/AdminLoginView';
 
 import { API_ENDPOINTS } from './config/api_config';
 import { api } from './services/api';
@@ -128,6 +129,9 @@ export function App() {
         setAuthUser(user);
         if (user.role === 'admin') {
           setActiveTab('admin_dashboard');
+        }
+        if (window.location.pathname === '/admin') {
+          window.history.replaceState({}, '', '/');
         }
         try {
           const remoteProfiles = await profileApi.fetchProfiles();
@@ -608,11 +612,24 @@ export function App() {
     } else {
       setActiveTab('daily');
     }
+    if (window.location.pathname === '/admin') {
+      window.history.replaceState({}, '', '/');
+    }
     setAuthUser(user);
   };
 
   if (!authUser || activeTab === 'landing' || activeTab === 'home') {
     const landingSeo = dynamicSeoMap['landing'] || TAB_SEO_CONFIG['landing'] || DEFAULT_SEO;
+    
+    if (window.location.pathname === '/admin') {
+      return (
+        <>
+          <SEO {...landingSeo} title="Admin Login • ASTROJUNCTION" />
+          <AdminLoginView onAuthenticated={handleAuthenticated} theme={theme} />
+        </>
+      );
+    }
+
     return (
       <>
         <SEO {...landingSeo} />
@@ -884,7 +901,7 @@ export function App() {
             {['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'].includes(activeTab) && (
               <LegalInfoPage
                 view={activeTab as LegalPageView}
-                onBack={() => setActiveTab('daily')}
+                onBack={() => setActiveTab(authUser?.role === 'admin' ? 'admin_dashboard' : 'daily')}
                 onNavigateView={(v) => {
                   setActiveTab(v);
                   window.scrollTo({ top: 0, behavior: 'instant' });
