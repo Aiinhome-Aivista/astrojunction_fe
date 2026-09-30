@@ -37,7 +37,7 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
   const bgClass = theme === 'dark' ? 'bg-[#141418]' : 'bg-white';
   const borderClass = theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]';
   const textClass = theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]';
-  const textMutedClass = theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500';
+  const textMutedClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-700 font-medium';
 
   return (
     <div className="max-w-7xl mx-auto space-y-3.5 animate-in fade-in duration-500">
@@ -57,7 +57,7 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
       <div className={`flex border-b ${borderClass} gap-4 text-xs`}>
         <button
           onClick={() => setActiveSubTab('ai')}
-          className={`pb-2.5 px-1 font-medium transition-colors ${activeSubTab === 'ai' ? 'text-[#C9A050] border-b-2 border-[#C9A050] font-bold' : textMutedClass}`}
+          className={`pb-2.5 px-1 font-bold transition-colors ${activeSubTab === 'ai' ? 'text-[#C9A050] border-b-2 border-[#C9A050]' : textMutedClass}`}
         >
           <div className="flex items-center gap-1.5">
             <Bot className="w-4 h-4" /> Oracle Consultations
@@ -65,7 +65,7 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
         </button>
         <button
           onClick={() => setActiveSubTab('system')}
-          className={`pb-2.5 px-1 font-medium transition-colors ${activeSubTab === 'system' ? 'text-red-500 border-b-2 border-red-500 font-bold' : textMutedClass}`}
+          className={`pb-2.5 px-1 font-bold transition-colors ${activeSubTab === 'system' ? 'text-red-500 border-b-2 border-red-500' : textMutedClass}`}
         >
           <div className="flex items-center gap-1.5">
             <ShieldAlert className="w-4 h-4" /> System Errors
@@ -73,7 +73,10 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
         </button>
       </div>
 
-      <div className={`rounded-xl border ${borderClass} overflow-hidden shadow-sm ${bgClass}`}>
+      <div 
+        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+        className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl ${bgClass}`}
+      >
         {loading ? (
           <div className="p-10 flex justify-center">
             <Terminal className="w-6 h-6 text-[#C9A050] animate-pulse" />

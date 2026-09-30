@@ -67,12 +67,44 @@ export function LandingPage({
 
   const [selectedFeatureForPreview, setSelectedFeatureForPreview] = useState<PremiumFeatureDetail | null>(null);
   const [selectedBlogForPage, setSelectedBlogForPage] = useState<BlogPost | null>(null);
-  const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path === '/blogs' || path.startsWith('/blogs/') || new URLSearchParams(window.location.search).has('blog')) {
+        return 'blogs';
+      }
+      const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];
+      const matchedLegal = legalPaths.find(p => path === `/${p}`);
+      if (matchedLegal) return matchedLegal;
+    }
+    return 'landing';
+  });
   const chatEndRef = useRef<HTMLDivElement>(null);
   const isClickScrolling = useRef(false);
   const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path === '/blogs' || path.startsWith('/blogs/')) {
+        setCurrentView('blogs');
+      } else if (path === '/' || path === '') {
+        setCurrentView('landing');
+        setSelectedBlogForPage(null);
+      } else {
+        const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];
+        const matchedLegal = legalPaths.find(p => path === `/${p}`);
+        if (matchedLegal) {
+          setCurrentView(matchedLegal);
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -114,6 +146,9 @@ export function LandingPage({
     }, 1000);
     if (currentView !== 'landing') {
       setCurrentView('landing');
+      if (window.location.pathname !== '/') {
+        window.history.pushState({}, '', '/');
+      }
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
@@ -520,6 +555,9 @@ export function LandingPage({
             onBack={() => {
               setSelectedBlogForPage(null);
               setCurrentView('landing');
+              if (window.location.pathname !== '/') {
+                window.history.pushState({}, '', '/');
+              }
               window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             }}
           />
@@ -686,11 +724,18 @@ export function LandingPage({
                 onSelectBlog={(blog) => {
                   setSelectedBlogForPage(blog);
                   setCurrentView('blogs');
+                  const slug = blog.slug || blog.id;
+                  if (window.location.pathname !== `/blogs/${slug}`) {
+                    window.history.pushState({ blogSlug: slug }, '', `/blogs/${slug}`);
+                  }
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 }}
                 onViewAll={() => {
                   setSelectedBlogForPage(null);
                   setCurrentView('blogs');
+                  if (window.location.pathname !== '/blogs') {
+                    window.history.pushState({}, '', '/blogs');
+                  }
                   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 }}
               />

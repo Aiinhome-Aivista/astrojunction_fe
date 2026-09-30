@@ -74,7 +74,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({ theme }) => {
   const bgClass = theme === 'dark' ? 'bg-[#141418]' : 'bg-white';
   const borderClass = theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]';
   const textClass = theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]';
-  const textMutedClass = theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500';
+  const textMutedClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-700 font-medium';
 
   return (
     <div className="max-w-7xl mx-auto space-y-3.5 animate-in fade-in duration-500">
@@ -97,29 +97,32 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({ theme }) => {
         </div>
       )}
 
-      <div className={`rounded-xl border ${borderClass} overflow-hidden shadow-sm ${bgClass}`}>
+      <div 
+        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+        className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl relative z-10 ${bgClass}`}
+      >
         <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-320px)] min-h-[220px] custom-scrollbar">
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-10">
-              <tr className={`border-b ${borderClass} ${theme === 'dark' ? 'bg-[#0D0D0F]' : 'bg-[#FAF8F2]'}`}>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass}`}>Name</th>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass}`}>Email</th>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass}`}>Joined</th>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass}`}>Role</th>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass}`}>Status</th>
-                <th className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider ${textMutedClass} text-right`}>Actions</th>
+              <tr className={`border-b-2 ${borderClass} ${theme === 'dark' ? 'bg-[#0D0D0F]' : 'bg-[#FAF8F2]'}`}>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass}`}>Name</th>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass}`}>Email</th>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass}`}>Joined</th>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass}`}>Role</th>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass}`}>Status</th>
+                <th className={`px-4 py-3.5 text-xs font-bold uppercase tracking-wider ${textMutedClass} text-right`}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2A2A2E]/30">
+            <tbody className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/60 bg-[#141418]' : 'divide-gray-100 bg-white'}`}>
               {users.map((user) => (
-                <tr key={user.id} className={`transition-colors hover:bg-black/5 ${theme === 'dark' ? 'hover:bg-white/5' : ''}`}>
-                  <td className={`px-4 py-3 font-medium text-xs ${textClass}`}>
+                <tr key={user.id} className={`transition-colors ${theme === 'dark' ? 'bg-[#141418] hover:bg-[#1C1C22]' : 'bg-white hover:bg-[#FAF7F2]'}`}>
+                  <td className={`px-4 py-3.5 font-bold text-xs ${textClass}`}>
                     {user.full_name}
                   </td>
-                  <td className={`px-4 py-3 text-xs ${textMutedClass}`}>
+                  <td className={`px-4 py-3.5 text-xs font-medium ${textMutedClass}`}>
                     {user.email}
                   </td>
-                  <td className={`px-4 py-3 text-xs ${textMutedClass}`}>
+                  <td className={`px-4 py-3.5 text-xs font-medium ${textMutedClass}`}>
                     {new Date(user.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">

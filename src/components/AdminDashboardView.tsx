@@ -50,14 +50,14 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
           <h2 className="text-3xl font-serif font-bold tracking-wide">
             Admin <span className="text-[#C9A050]">Overview</span>
           </h2>
-          <p className={`mt-1 text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
+          <p className={`mt-1 text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}`}>
             Real-time analytics and platform metrics.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-xl text-red-500 text-xs">
+        <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-xl text-red-500 text-xs font-semibold">
           {error}
         </div>
       )}
@@ -68,7 +68,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
         <div className={cardClasses}>
           <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-[#C9A050]/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#C9A050]' : 'text-gray-900'}`}>
               Total Users
             </h3>
             <div className="p-2.5 bg-[#C9A050]/20 rounded-xl">
@@ -76,9 +76,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
             </div>
           </div>
           <div className="relative z-10 my-auto pt-4">
-            <span className="text-5xl font-bold font-serif tracking-tight">{stats?.total_users || 0}</span>
+            <span className={`text-5xl font-bold font-serif tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stats?.total_users || 0}</span>
           </div>
-          <div className={`relative z-10 text-[11px] font-medium ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-400'}`}>
+          <div className={`relative z-10 text-xs font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Registered user accounts
           </div>
         </div>
@@ -87,7 +87,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
         <div className={cardClasses}>
           <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-green-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-green-400' : 'text-gray-900'}`}>
               New Users Today
             </h3>
             <div className="p-2.5 bg-green-500/20 rounded-xl">
@@ -95,9 +95,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
             </div>
           </div>
           <div className="relative z-10 my-auto pt-4">
-            <span className="text-5xl font-bold font-serif tracking-tight text-green-500">{stats?.new_users_today || 0}</span>
+            <span className="text-5xl font-bold font-serif tracking-tight text-green-600 dark:text-green-400">{stats?.new_users_today || 0}</span>
           </div>
-          <div className={`relative z-10 text-[11px] font-medium ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-400'}`}>
+          <div className={`relative z-10 text-xs font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Joined in the last 24 hours
           </div>
         </div>
@@ -106,7 +106,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
         <div className={cardClasses}>
           <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-purple-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-purple-400' : 'text-gray-900'}`}>
               Premium Subscribers
             </h3>
             <div className="p-2.5 bg-purple-500/20 rounded-xl">
@@ -114,9 +114,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
             </div>
           </div>
           <div className="relative z-10 my-auto pt-4">
-            <span className="text-5xl font-bold font-serif tracking-tight text-purple-500">{stats?.premium_subscribers || 0}</span>
+            <span className="text-5xl font-bold font-serif tracking-tight text-purple-600 dark:text-purple-400">{stats?.premium_subscribers || 0}</span>
           </div>
-          <div className={`relative z-10 text-[11px] font-medium ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-400'}`}>
+          <div className={`relative z-10 text-xs font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Active membership subscriptions
           </div>
         </div>
@@ -125,7 +125,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
         <div className={cardClasses}>
           <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
-            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+            <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-blue-400' : 'text-gray-900'}`}>
               Total Blogs
             </h3>
             <div className="p-2.5 bg-blue-500/20 rounded-xl">
@@ -133,9 +133,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
             </div>
           </div>
           <div className="relative z-10 my-auto pt-4">
-            <span className="text-5xl font-bold font-serif tracking-tight text-blue-500">{stats?.total_blogs || 0}</span>
+            <span className="text-5xl font-bold font-serif tracking-tight text-blue-600 dark:text-blue-400">{stats?.total_blogs || 0}</span>
           </div>
-          <div className={`relative z-10 text-[11px] font-medium ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-400'}`}>
+          <div className={`relative z-10 text-xs font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Published & draft articles
           </div>
         </div>

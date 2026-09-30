@@ -13,7 +13,8 @@ import {
   ArrowRight, 
   Compass,
   Bookmark,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft
 } from 'lucide-react';
 import { BlogPost } from './BlogCarousel';
 import { blogApi } from '../services/blogApi';
@@ -46,7 +47,38 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    if (selectedBlog) {
+      const slug = selectedBlog.slug || selectedBlog.id;
+      const targetPath = `/blogs/${slug}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ blogSlug: slug }, '', targetPath);
+      }
+    } else {
+      if (window.location.pathname.startsWith('/blogs/')) {
+        window.history.pushState({}, '', '/blogs');
+      }
+    }
   }, [selectedBlog]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.startsWith('/blogs/')) {
+        const slug = decodeURIComponent(path.replace(/^\/blogs\/?/, '').split('/')[0].split('?')[0]);
+        if (slug) {
+          const found = blogs.find((b: any) => b.slug === slug || String(b.id) === slug);
+          if (found) {
+            setSelectedBlog(found);
+            return;
+          }
+        }
+      } else if (path === '/blogs') {
+        setSelectedBlog(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [blogs]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -55,7 +87,24 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         const data = await blogApi.getBlogs();
         if (Array.isArray(data)) {
           const published = data.filter((b: BlogPost) => b.status === 'Published');
-          setBlogs(published.length > 0 ? published : data);
+          const finalBlogs = published.length > 0 ? published : data;
+          setBlogs(finalBlogs);
+
+          let slugParam = '';
+          const path = window.location.pathname;
+          if (path.startsWith('/blogs/')) {
+            slugParam = decodeURIComponent(path.replace(/^\/blogs\/?/, '').split('/')[0].split('?')[0]);
+          } else {
+            const params = new URLSearchParams(window.location.search);
+            slugParam = params.get('blog') || '';
+          }
+
+          if (slugParam && !initialBlog) {
+            const found = finalBlogs.find((b: any) => b.slug === slugParam || String(b.id) === slugParam);
+            if (found) {
+              setSelectedBlog(found);
+            }
+          }
         }
       } catch (err) {
         console.error('Error fetching blogs in BlogPage:', err);
@@ -65,15 +114,29 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
     };
 
     fetchBlogs();
-  }, []);
+  }, [initialBlog]);
 
   const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+    if (selectedBlog) {
+      const slug = selectedBlog.slug || selectedBlog.id;
+      const shareUrl = `${window.location.origin}/blogs/${slug}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
+      if (selectedBlog.id) {
+        blogApi.shareBlog(selectedBlog.id).catch(() => {});
+      }
     }
   };
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const BLOGS_PER_PAGE = 9;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory]);
 
   // Extract distinct categories
   const categories = React.useMemo(() => {
@@ -99,6 +162,21 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
       return matchCat && (titleMatch || excerptMatch || catMatch || tagsMatch);
     });
   }, [blogs, selectedCategory, searchQuery]);
+
+  const totalPages = Math.ceil(filteredBlogs.length / BLOGS_PER_PAGE);
+
+  const paginatedBlogs = React.useMemo(() => {
+    const startIndex = (currentPage - 1) * BLOGS_PER_PAGE;
+    return filteredBlogs.slice(startIndex, startIndex + BLOGS_PER_PAGE);
+  }, [filteredBlogs, currentPage]);
+
+  const currentBlogIndex = React.useMemo(() => {
+    if (!selectedBlog) return -1;
+    return blogs.findIndex((b) => b.id === selectedBlog.id);
+  }, [blogs, selectedBlog]);
+
+  const prevBlog = currentBlogIndex > 0 ? blogs[currentBlogIndex - 1] : null;
+  const nextBlog = currentBlogIndex >= 0 && currentBlogIndex < blogs.length - 1 ? blogs[currentBlogIndex + 1] : null;
 
   // Related blogs for the single article view (excluding currently selected blog)
   const relatedBlogs = React.useMemo(() => {
@@ -160,14 +238,14 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             {/* Back Button to Blogs Directory */}
             <button 
               onClick={() => setSelectedBlog(null)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all border shadow-sm cursor-pointer group ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all border-2 shadow-sm cursor-pointer group ${
                 isDark 
-                  ? 'text-[#F0ECE1] hover:text-[#C9A050] hover:bg-[#C9A050]/10 border-[#2A2A2E] hover:border-[#C9A050]/40 bg-[#18181C]' 
-                  : 'text-gray-800 hover:text-amber-800 hover:bg-amber-500/10 border-gray-200 hover:border-amber-600 bg-white'
+                  ? 'text-[#F0ECE1] hover:text-[#C9A050] hover:bg-[#C9A050]/10 border-[#C9A050]/60 hover:border-[#C9A050] bg-[#18181C]' 
+                  : 'text-black hover:text-black hover:bg-amber-50/60 border-[#D4A328] hover:border-[#B88714] bg-white'
               }`}
             >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              <span className="text-xs sm:text-sm font-semibold">Back to All Articles</span>
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-black" />
+              <span className="text-xs sm:text-sm font-black text-black">Back</span>
             </button>
 
             {/* Breadcrumb Info on Desktop */}
@@ -342,20 +420,80 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             </div>
           </div>
 
+          {/* Previous & Next Article Navigation Cards */}
+          {(prevBlog || nextBlog) && (
+            <div className={`my-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t ${
+              isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+            }`}>
+              {prevBlog ? (
+                <div
+                  onClick={() => {
+                    setSelectedBlog(prevBlog);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group shadow-md hover:shadow-lg ${
+                    isDark 
+                      ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60' 
+                      : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
+                  }`}
+                >
+                  <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
+                    <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                    <span>Previous Article</span>
+                  </div>
+                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
+                    isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
+                  } transition-colors`}>
+                    {prevBlog.title}
+                  </h5>
+                </div>
+              ) : (
+                <div className="hidden sm:block"></div>
+              )}
+
+              {nextBlog ? (
+                <div
+                  onClick={() => {
+                    setSelectedBlog(nextBlog);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between items-end text-right group shadow-md hover:shadow-lg ${
+                    isDark 
+                      ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60' 
+                      : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
+                  }`}
+                >
+                  <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
+                    <span>Next Article</span>
+                    <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
+                    isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
+                  } transition-colors`}>
+                    {nextBlog.title}
+                  </h5>
+                </div>
+              ) : (
+                <div className="hidden sm:block"></div>
+              )}
+            </div>
+          )}
+
           {/* Bottom Actions Bar */}
           <div className={`pt-8 pb-12 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${
             isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
           }`}>
             <button
               onClick={() => setSelectedBlog(null)}
-              className={`w-full sm:w-auto px-6 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
+              style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
+              className={`w-full sm:w-auto px-7 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg border-2 group ${
                 isDark 
-                  ? 'bg-[#18181C] text-[#F0ECE1] hover:text-[#C9A050] border border-[#2A2A2E] hover:border-[#C9A050]/50' 
-                  : 'bg-white text-gray-800 hover:text-amber-800 border border-gray-200 shadow-sm'
+                  ? 'border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
+                  : 'border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
               }`}
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to All Articles</span>
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#C9A050] group-hover:text-inherit" />
+              <span className="font-bold tracking-wider">Back</span>
             </button>
 
             <button
@@ -363,14 +501,14 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 setSelectedBlog(null);
                 onBack();
               }}
-              className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#C9A050]/20 cursor-pointer flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-8 py-3 rounded-full font-black text-xs uppercase tracking-wider transition-all shadow-xl cursor-pointer flex items-center justify-center space-x-2 bg-gradient-to-r from-[#D4AF37] via-[#C9A050] to-[#B89040] hover:from-[#E5C158] hover:to-[#C9A050] text-[#0D0D0F] border-2 border-[#E5C158] hover:scale-105 active:scale-95 group shadow-[#C9A050]/20"
             >
-              <span>Explore Oracle & Charts</span>
-              <ArrowRight className="w-4 h-4" />
+              <span className="text-[#0D0D0F] font-black tracking-wider">Explore Oracle &amp; Charts</span>
+              <ArrowRight className="w-4 h-4 text-[#0D0D0F] transition-transform group-hover:translate-x-1" />
             </button>
           </div>
 
-          {/* Related Articles Section */}
+          {/* Related Articles Section (Commented out per user request)
           {relatedBlogs.length > 0 && (
             <div className="pt-8 border-t border-white/10">
               <div className="text-center mb-8">
@@ -426,6 +564,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               </div>
             </div>
           )}
+          */}
         </article>
       </div>
     );
@@ -553,99 +692,167 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
         {/* Blog Grid */}
         {!loading && filteredBlogs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredBlogs.map((blog) => {
-              const tagString = Array.isArray(blog.tags) && blog.tags.length > 0
-                ? blog.tags.slice(0, 2).join(' • ')
-                : blog.sub_category || 'VEDIC JYOTISH';
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {paginatedBlogs.map((blog) => {
+                const tagString = Array.isArray(blog.tags) && blog.tags.length > 0
+                  ? blog.tags.slice(0, 2).join(' • ')
+                  : blog.sub_category || 'VEDIC JYOTISH';
 
-              const cleanExcerpt = blog.preview || 
-                (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 130) + '...' : '');
+                const cleanExcerpt = blog.preview || 
+                  (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 130) + '...' : '');
 
-              return (
-                <div 
-                  key={blog.id}
-                  onClick={() => setSelectedBlog(blog)}
-                  style={{
-                    backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                  }}
-                  className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
-                    isDark 
-                      ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                      : 'bg-[#FFFFFF] border-[#E2D9C8] shadow-xl shadow-stone-900/10 hover:border-[#C9A050] hover:shadow-2xl'
-                  }`}
-                >
-                  {/* Card Image */}
-                  <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-black/20">
-                    <img 
-                      src={blog.image_url || '/blog_1.jpg'} 
-                      alt={blog.title} 
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/blog_1.jpg';
-                      }}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    
-                    {blog.pinned === 1 && (
-                      <span className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] text-[10px] font-bold uppercase tracking-wider shadow-md">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Card Content - 100% Solid White background */}
+                return (
                   <div 
+                    key={blog.id}
+                    onClick={() => setSelectedBlog(blog)}
                     style={{
                       backgroundColor: isDark ? '#141418' : '#FFFFFF',
                     }}
-                    className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-[#FFFFFF]'}`}
+                    className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
+                      isDark 
+                        ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
+                        : 'bg-[#FFFFFF] border-[#E2D9C8] shadow-xl shadow-stone-900/10 hover:border-[#C9A050] hover:shadow-2xl'
+                    }`}
                   >
-                    <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
-                      <span className={`text-[11px] font-extrabold uppercase tracking-[0.15em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
-                        {blog.category || 'VEDIC ASTROLOGY'}
-                      </span>
-                      <span className={`text-[10px] ${isDark ? 'text-[#50505A]' : 'text-[#A0988A]'}`}>•</span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider truncate max-w-[170px] ${isDark ? 'text-[#9E9A90]' : 'text-[#5A544A]'}`}>
-                        {tagString}
-                      </span>
-                    </div>
-
-                    <h3 className={`text-lg sm:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${
-                      isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
-                    }`}>
-                      {blog.title}
-                    </h3>
-                    
-                    <p className={`text-xs sm:text-sm leading-relaxed mb-5 line-clamp-3 ${
-                      isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
-                    }`}>
-                      {cleanExcerpt}
-                    </p>
-
-                    <div className={`mt-auto pt-3.5 border-t flex items-center justify-between ${
-                      isDark ? 'border-white/10' : 'border-[#EAE3D4]'
-                    }`}>
-                      <span className={`text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 ${
-                        isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
-                      }`}>
-                        <span>Read Article</span>
-                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                      </span>
-
-                      {blog.created_at && (
-                        <div className={`flex items-center space-x-1.5 text-[11px] font-bold ${isDark ? 'text-gray-400' : 'text-[#7A7366]'}`}>
-                          <Calendar className="w-3.5 h-3.5 text-[#C9A050]" />
-                          <span>
-                            {new Date(blog.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </span>
-                        </div>
+                    {/* Card Image */}
+                    <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-black/20">
+                      <img 
+                        src={blog.image_url || '/blog_1.jpg'} 
+                        alt={blog.title} 
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                        }}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      
+                      {blog.pinned === 1 && (
+                        <span className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] text-[10px] font-bold uppercase tracking-wider shadow-md">
+                          Featured
+                        </span>
                       )}
                     </div>
+                    
+                    {/* Card Content - 100% Solid White background */}
+                    <div 
+                      style={{
+                        backgroundColor: isDark ? '#141418' : '#FFFFFF',
+                      }}
+                      className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-[#FFFFFF]'}`}
+                    >
+                      <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
+                        <span className={`text-[11px] font-extrabold uppercase tracking-[0.15em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
+                          {blog.category || 'VEDIC ASTROLOGY'}
+                        </span>
+                        <span className={`text-[10px] ${isDark ? 'text-[#50505A]' : 'text-[#A0988A]'}`}>•</span>
+                        <span className={`text-[11px] font-bold uppercase tracking-wider truncate max-w-[170px] ${isDark ? 'text-[#9E9A90]' : 'text-[#5A544A]'}`}>
+                          {tagString}
+                        </span>
+                      </div>
+
+                      <h3 className={`text-lg sm:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${
+                        isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
+                      }`}>
+                        {blog.title}
+                      </h3>
+                      
+                      <p className={`text-xs sm:text-sm leading-relaxed mb-5 line-clamp-3 ${
+                        isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
+                      }`}>
+                        {cleanExcerpt}
+                      </p>
+
+                      <div className={`mt-auto pt-3.5 border-t flex items-center justify-between ${
+                        isDark ? 'border-white/10' : 'border-[#EAE3D4]'
+                      }`}>
+                        <span className={`text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 ${
+                          isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                        }`}>
+                          <span>Read Article</span>
+                          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                        </span>
+
+                        {blog.created_at && (
+                          <div className={`flex items-center space-x-1.5 text-[11px] font-bold ${isDark ? 'text-gray-400' : 'text-[#7A7366]'}`}>
+                            <Calendar className="w-3.5 h-3.5 text-[#C9A050]" />
+                            <span>
+                              {new Date(blog.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+
+            {/* Numbered Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                <button
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(prev => prev - 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${
+                    currentPage === 1
+                      ? 'opacity-30 cursor-not-allowed border-gray-700/20'
+                      : isDark
+                        ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
+                        : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
+                  }`}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Previous</span>
+                </button>
+
+                <div className="flex items-center space-x-1 sm:space-x-1.5">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center ${
+                        currentPage === page
+                          ? 'bg-gradient-to-r from-[#F7D36D] via-[#F3C54E] to-[#EBB738] text-black shadow-md border border-[#D4A328] font-black scale-105'
+                          : isDark
+                            ? 'bg-[#141418] text-[#9E9A90] hover:text-white border border-[#2A2A2E] hover:border-[#C9A050]/40'
+                            : 'bg-white text-gray-700 hover:text-black border border-gray-200 hover:border-amber-400 shadow-sm'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
+
+                <button
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      setCurrentPage(prev => prev + 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${
+                    currentPage === totalPages
+                      ? 'opacity-30 cursor-not-allowed border-gray-700/20'
+                      : isDark
+                        ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
+                        : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
+                  }`}
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -38,7 +38,7 @@ export const AdminRevenueView: React.FC<AdminRevenueViewProps> = ({ theme }) => 
   const bgClass = theme === 'dark' ? 'bg-[#141418]' : 'bg-white';
   const borderClass = theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]';
   const textClass = theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]';
-  const textMutedClass = theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500';
+  const textMutedClass = theme === 'dark' ? 'text-gray-300' : 'text-gray-700 font-medium';
 
   if (loading) {
     return (
@@ -136,7 +136,10 @@ export const AdminRevenueView: React.FC<AdminRevenueViewProps> = ({ theme }) => 
       </div>
 
       {/* Transactions Table with Internal Vertical Scrolling */}
-      <div className={`rounded-xl border ${borderClass} overflow-hidden shadow-sm ${bgClass}`}>
+      <div 
+        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+        className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl ${bgClass}`}
+      >
         <div className={`p-2.5 px-3.5 border-b ${borderClass} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2`}>
           <h3 className={`text-sm font-bold font-serif ${textClass}`}>Recent Transactions</h3>
           <div className="flex flex-wrap bg-black/5 dark:bg-white/5 rounded-lg p-0.5 gap-1">
