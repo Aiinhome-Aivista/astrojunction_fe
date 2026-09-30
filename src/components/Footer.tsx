@@ -89,41 +89,41 @@ export const Footer: React.FC<FooterProps> = ({
 
             {/* Right: Quick Links */}
             <div className="flex flex-wrap items-center justify-center sm:justify-end gap-4 sm:gap-6 text-xs font-medium">
-              <button onClick={() => handlePageClick('about-us')}
+              <a href="/about-us" onClick={(e) => { e.preventDefault(); handlePageClick('about-us'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'about-us'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
                 About Us
-              </button>
-              <button onClick={() => handlePageClick('faq')}
+              </a>
+              <a href="/faq" onClick={(e) => { e.preventDefault(); handlePageClick('faq'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'faq'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
                 FAQ
-              </button>
-              <button onClick={() => handlePageClick('privacy-policy')}
+              </a>
+              <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); handlePageClick('privacy-policy'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'privacy-policy'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
                 Privacy Policy
-              </button>
-              <button onClick={() => handlePageClick('cookie-policy')}
+              </a>
+              <a href="/cookie-policy" onClick={(e) => { e.preventDefault(); handlePageClick('cookie-policy'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'cookie-policy'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
                 Cookie Policy
-              </button>
-              <button onClick={() => handlePageClick('terms-and-conditions')}
+              </a>
+              <a href="/terms-and-conditions" onClick={(e) => { e.preventDefault(); handlePageClick('terms-and-conditions'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'terms-and-conditions'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
                 Terms &amp; Conditions
-              </button>
+              </a>
             </div>
           </div>
 

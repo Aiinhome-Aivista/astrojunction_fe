@@ -154,12 +154,12 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
           <span>Time-Tested Vedic Upayas & Remedies</span>
         </div>
 
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">
           <span className={theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}>
             Sacred Vedic Remedies &
           </span>{' '}
           <span className="text-[#C9A050]">Planetary Upayas</span>
-        </h3>
+        </h2>
 
         <p className={`text-sm sm:text-base text-center mx-auto max-w-lg leading-relaxed ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
           Authentic scriptural prescriptions from the <em>Brihat Parashara Hora Shastra</em> and classical Jyotish canons to alleviate planetary doshas, awaken dormant houses, and invite cosmic harmony.
