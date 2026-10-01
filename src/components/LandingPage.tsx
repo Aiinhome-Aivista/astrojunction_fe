@@ -389,9 +389,9 @@ export function LandingPage({
             >
               <AncientTraditionLogo size="md" isLight={theme === 'light'} />
               <div>
-                <h1 className="text-xl font-serif font-bold tracking-wider flex items-center">
+                <span className="text-xl font-serif font-bold tracking-wider flex items-center">
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
-                </h1>
+                </span>
                 <p className={`text-[9px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   Authentic Vedic Wisdom
                 </p>
@@ -400,8 +400,9 @@ export function LandingPage({
 
             {/* Center Links (Desktop only) */}
             <div className={`hidden lg:flex items-center space-x-1 px-1.5 py-1.5 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
-              <button
-                onClick={() => scrollToSection('hero-section')}
+              <a
+                href="#hero-section"
+                onClick={(e) => { e.preventDefault(); scrollToSection('hero-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -409,9 +410,10 @@ export function LandingPage({
               >
                 <Home className="w-3.5 h-3.5" />
                 <span>Home</span>
-              </button>
-              <button
-                onClick={() => scrollToSection('zodiac-section')}
+              </a>
+              <a
+                href="#zodiac-section"
+                onClick={(e) => { e.preventDefault(); scrollToSection('zodiac-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -419,9 +421,10 @@ export function LandingPage({
               >
                 <Globe className="w-3.5 h-3.5" />
                 <span>Global Zodiac</span>
-              </button>
-              <button
-                onClick={() => scrollToSection('panjika-section')}
+              </a>
+              <a
+                href="#panjika-section"
+                onClick={(e) => { e.preventDefault(); scrollToSection('panjika-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -429,9 +432,10 @@ export function LandingPage({
               >
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Panjika</span>
-              </button>
-              <button
-                onClick={() => scrollToSection('remedies-section')}
+              </a>
+              <a
+                href="#remedies-section"
+                onClick={(e) => { e.preventDefault(); scrollToSection('remedies-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -439,9 +443,10 @@ export function LandingPage({
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Remedies</span>
-              </button>
-              <button
-                onClick={() => scrollToSection('blog-section')}
+              </a>
+              <a
+                href="/blogs"
+                onClick={(e) => { e.preventDefault(); scrollToSection('blog-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -449,9 +454,10 @@ export function LandingPage({
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>Blogs</span>
-              </button>
-              <button
-                onClick={() => scrollToSection('premium-section')}
+              </a>
+              <a
+                href="#premium-section"
+                onClick={(e) => { e.preventDefault(); scrollToSection('premium-section'); }}
                 className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
@@ -459,7 +465,7 @@ export function LandingPage({
               >
                 <Lock className="w-3.5 h-3.5" />
                 <span>Premium</span>
-              </button>
+              </a>
             </div>
 
             {/* Right Controls */}
@@ -585,7 +591,7 @@ export function LandingPage({
                   <span>Authentic Vedic Oracle</span>
                 </div>
 
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
                   <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     Decode Your
                   </span>
@@ -616,7 +622,7 @@ export function LandingPage({
                       </motion.span>
                     ))}
                   </span>
-                </h2>
+                </h1>
 
                 <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed font-light ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
                   Harness the profound wisdom of ancient <strong className="font-semibold text-[#C9A050]">Vedic astrology</strong>. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.
@@ -744,10 +750,10 @@ export function LandingPage({
             {/* Premium Features Teaser (Locked Cards) */}
             <div id="premium-section" className="scroll-mt-24 w-full pt-8 pb-16">
               <div className="text-center mb-10">
-                <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3 flex items-center justify-center space-x-2">
+                <h2 className="text-2xl md:text-3xl font-serif font-bold mb-3 flex items-center justify-center space-x-2">
                   <Lock className="w-6 h-6 text-[#C9A050]" />
                   <span>Unlock Premium Features</span>
-                </h3>
+                </h2>
                 <p className={`text-sm text-center mx-auto max-w-lg ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                   Log in to access your deeply personalized astrological and numerological journey.
                 </p>
