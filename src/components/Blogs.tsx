@@ -1278,9 +1278,9 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         {viewMode === 'list' && (
           <div 
             style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-            className={`rounded-2xl border-2 overflow-hidden shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
+            className={`rounded-2xl border-2 overflow-hidden shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}
           >
-            <div className="p-3 border-b border-[#2A2A2E]/40 flex items-center justify-between gap-4">
+            <div className={`p-3.5 border-b-2 flex items-center justify-between gap-4 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}>
               <div className="relative w-full max-w-xs">
                 <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9A90]" />
                 <input
@@ -1288,99 +1288,108 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   placeholder="Search articles..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F]'
+                  className={`w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
+                    theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' : 'bg-white border-[#DFC896] text-[#0D0D0F] shadow-xs'
                   }`}
                 />
               </div>
-              <div className="text-xs text-[#9E9A90]">
+              <div className={`text-xs font-semibold ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                 Total: <span className="font-bold text-[#C9A050]">{filteredBlogs.length}</span> posts
               </div>
             </div>
 
-            <div className="overflow-x-auto overflow-y-auto max-h-[380px] md:max-h-[calc(100vh-320px)] min-h-[160px] custom-scrollbar">
-              <table className="w-full text-left text-xs whitespace-nowrap border-collapse">
-                <thead className={`sticky top-0 z-10 text-[11px] font-bold uppercase tracking-wider ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#9E9A90] border-b border-[#2A2A2E]' : 'bg-[#F9F7F1] text-[#6C6960] border-b border-[#E5E1D8]'}`}>
+            <div 
+              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+              className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-340px)] min-h-[220px] custom-scrollbar bg-white dark:bg-[#141418]"
+            >
+              <table 
+                style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+                className="w-full text-left text-xs whitespace-nowrap border-collapse bg-white dark:bg-[#141418]"
+              >
+                <thead className={`sticky top-0 z-10 text-[11px] font-bold uppercase tracking-wider border-b-2 ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#9E9A90] border-[#2A2A2E]' : 'bg-[#FAF8F2] text-gray-700 border-[#DFC896]'}`}>
                   <tr>
-                    <th className="px-3.5 py-2.5">ID</th>
-                    <th className="px-3.5 py-2.5">Title</th>
-                    <th className="px-3.5 py-2.5">Preview</th>
-                    <th className="px-3.5 py-2.5">Image</th>
-                    <th className="px-3.5 py-2.5">Category</th>
-                    <th className="px-3.5 py-2.5">Tags</th>
-                    <th className="px-3.5 py-2.5">Status</th>
-                    <th className="px-3.5 py-2.5">Date</th>
-                    <th className="px-3.5 py-2.5 text-center">Action</th>
+                    <th className="px-4 py-3">ID</th>
+                    <th className="px-4 py-3">Title</th>
+                    <th className="px-4 py-3">Preview</th>
+                    <th className="px-4 py-3">Image</th>
+                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3">Tags</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Date</th>
+                    <th className="px-4 py-3 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#2A2A2E]/40">
+                <tbody 
+                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
+                  className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/60 bg-[#141418]' : 'divide-gray-100 bg-white'}`}
+                >
                   {loading && blogs.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className="px-4 py-8 text-center text-[#9E9A90]">Loading blogs...</td>
+                    <tr className={theme === 'dark' ? 'bg-[#141418]' : 'bg-white'}>
+                      <td colSpan={9} className="px-4 py-12 text-center text-[#9E9A90]">Loading blogs...</td>
                     </tr>
                   ) : filteredBlogs.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className="px-4 py-8 text-center text-[#9E9A90]">No blogs found.</td>
+                    <tr className={theme === 'dark' ? 'bg-[#141418]' : 'bg-white'}>
+                      <td colSpan={9} className="px-4 py-12 text-center text-[#9E9A90]">No blogs found.</td>
                     </tr>
                   ) : filteredBlogs.map((blog) => (
-                    <tr key={blog.id} className={`transition-colors ${theme === 'dark' ? 'hover:bg-[#2A2A2E]/30' : 'hover:bg-[#F9F7F1]'}`}>
-                      <td className="px-3.5 py-2.5">{blog.id}</td>
-                      <td className="px-3.5 py-2.5">
-                        <div className="font-semibold max-w-[200px] truncate" title={blog.title}>{blog.title}</div>
+                    <tr key={blog.id} className={`transition-colors ${theme === 'dark' ? 'bg-[#141418] hover:bg-[#1C1C22]' : 'bg-white hover:bg-[#FAF7F2]'}`}>
+                      <td className={`px-4 py-3.5 font-bold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{blog.id}</td>
+                      <td className="px-4 py-3.5">
+                        <div className={`font-semibold max-w-[200px] truncate ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1A1816]'}`} title={blog.title}>{blog.title}</div>
                         {blog.slug && <div className="text-[10px] text-[#9E9A90] font-mono truncate max-w-[200px]" title={blog.slug}>/{blog.slug}</div>}
                         {blog.pinned === 1 && <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-[#C9A050]/20 text-[#C9A050] mt-0.5 inline-block font-bold">Pinned</span>}
                       </td>
-                      <td className={`px-3.5 py-2.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
+                      <td className={`px-4 py-3.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
                         <div className="max-w-[200px] truncate text-[11px]" title={blog.preview}>{blog.preview}</div>
                       </td>
-                      <td className="px-3.5 py-2.5">
+                      <td className="px-4 py-3.5">
                         {blog.image_url ? (
                            <img 
                              src={getBlogImageUrl(blog.image_url)} 
                              alt="Thumb" 
-                             className="w-7 h-7 rounded object-cover" 
+                             className="w-7 h-7 rounded object-cover border border-[#DFC896]/50" 
                              onError={(e) => { (e.target as HTMLImageElement).src = '/blog_1.jpg'; }}
                            />
                         ) : (
-                           <div className={`w-7 h-7 rounded flex items-center justify-center ${theme === 'dark' ? 'bg-[#2A2A2E]' : 'bg-[#E5E1D8]'}`}>
+                           <div className={`w-7 h-7 rounded flex items-center justify-center ${theme === 'dark' ? 'bg-[#2A2A2E]' : 'bg-[#FAF2DA] border border-[#DFC896]'}`}>
                              <ImageIcon className="w-3.5 h-3.5 text-[#9E9A90]" />
                            </div>
                         )}
                       </td>
-                      <td className="px-3.5 py-2.5 text-[#4A90E2] font-semibold">{blog.category}</td>
-                      <td className="px-3.5 py-2.5">
+                      <td className="px-4 py-3.5 text-[#4A90E2] font-semibold">{blog.category}</td>
+                      <td className="px-4 py-3.5">
                         <div className="flex gap-1 flex-wrap max-w-[150px]">
                           {blog.tags && blog.tags.map((tag: string) => (
-                            <span key={tag} className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${theme === 'dark' ? 'bg-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#E5E1D8] text-[#0D0D0F]'}`}>
+                            <span key={tag} className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${theme === 'dark' ? 'bg-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#FAF2DA] text-[#8C6218] border border-[#DFC896]'}`}>
                               {tag}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="px-3.5 py-2.5">
+                      <td className="px-4 py-3.5">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           blog.status === 'Published' 
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                            ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' 
+                            : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
                         }`}>
                           {blog.status}
                         </span>
                       </td>
-                      <td className={`px-3.5 py-2.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
+                      <td className={`px-4 py-3.5 text-[11px] font-medium ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
                         {blog.created_at ? new Date(blog.created_at).toLocaleDateString() : '-'}
                       </td>
-                      <td className="px-3.5 py-2.5 text-center">
-                        <div className="flex items-center justify-center space-x-1">
+                      <td className="px-4 py-3.5 text-center">
+                        <div className="flex items-center justify-center space-x-1.5">
                           <button
                             onClick={() => handleEditBlog(blog)}
-                            className="p-1 rounded hover:bg-[#C9A050]/20 text-[#C9A050] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-[#C9A050]/20 text-[#C9A050] transition-colors border border-transparent hover:border-[#C9A050]/40"
                             title="Edit Blog"
                           >
                             <Edit className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDeleteBlog(blog.id)}
-                            className="p-1 rounded hover:bg-red-500/20 text-red-400 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-500 transition-colors border border-transparent hover:border-red-500/40"
                             title="Delete Blog"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1391,6 +1400,16 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Bottom Footer Bar matching User Management */}
+            <div className={`px-4 py-3 border-t-2 flex items-center justify-between text-xs ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#FAF8F2] border-[#DFC896]'}`}>
+              <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600 font-medium'}>
+                Showing <span className="font-bold text-[#C9A050]">{filteredBlogs.length}</span> editorial posts
+              </span>
+              <span className={`text-[11px] font-semibold ${theme === 'dark' ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
+                AstroJunction Editorial CMS
+              </span>
             </div>
           </div>
         )}

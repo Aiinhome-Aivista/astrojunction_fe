@@ -200,13 +200,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   // Close mobile drawer on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      const breakpoint = isAdmin ? 1024 : 768;
+      if (window.innerWidth >= breakpoint) {
         setIsMobileDrawerOpen(false);
       }
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isAdmin]);
 
   // User & Admin tabs (Panjika is excluded for logged-in users)
   const tabs = isAdmin
@@ -218,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         { id: 'admin_subscriptions', label: 'Subscriptions', icon: Package },
         { id: 'admin_logs', label: 'Logs', icon: Terminal },
         { id: 'blogs', label: 'Blogs', icon: FileText },
-        { id: 'admin', label: t('tab.admin'), icon: Network },
+        { id: 'admin', label: 'K-Graph', icon: Network },
       ]
     : [
         { id: 'daily', label: t('tab.daily'), icon: Sun },
@@ -260,27 +261,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 lg:gap-4">
             {/* Logo & Brand */}
             <div
-              className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none shrink-0"
-              onClick={() => setActiveTab('landing')}
-              title={t('tab.home') || 'Home'}
+              className="flex items-center space-x-2 sm:space-x-3 cursor-pointer select-none shrink-0"
+              onClick={() => setActiveTab(isAdmin ? 'admin_dashboard' : 'landing')}
+              title={isAdmin ? 'Dashboard' : (t('tab.home') || 'Home')}
             >
               <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
               <div>
                 <div className="flex items-center space-x-1.5 sm:space-x-2">
-                  <span className={`text-lg sm:text-xl font-bold tracking-wider ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
+                  <span className={`text-base sm:text-lg lg:text-xl font-bold tracking-wider ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
                     ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                   </span>
                   {isAdmin ? (
-                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                    <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold tracking-widest uppercase bg-amber-500/20 text-amber-400 border border-amber-500/40 shrink-0">
                       ADMIN CONSOLE
                     </span>
                   ) : (
-                    <span className="hidden xs:inline-block px-1.5 sm:px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold tracking-widest uppercase bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
+                    <span className="hidden xs:inline-block px-1.5 sm:px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold tracking-widest uppercase bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30 shrink-0">
                       {t('brand.subtitle')}
                     </span>
                   )}
                 </div>
-                <p className={`text-[10px] sm:text-[11px] leading-tight ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'} hidden xl:block whitespace-nowrap`}>
+                <p className={`text-[10px] sm:text-[11px] leading-tight ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'} hidden 2xl:block whitespace-nowrap`}>
                   {t('brand.tagline')}
                 </p>
               </div>
@@ -288,7 +289,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Center: Single Unified Navigation Tabs */}
             <nav
-              className="hidden md:flex flex-1 items-center justify-center space-x-1.5 lg:space-x-2.5 px-2 overflow-x-auto scrollbar-none"
+              className={`${
+                isAdmin ? 'hidden lg:flex' : 'hidden md:flex'
+              } flex-1 items-center justify-start xl:justify-center space-x-1 xl:space-x-1.5 px-1 sm:px-2 overflow-x-auto scrollbar-none min-w-0 py-1`}
               aria-label="Navigation Tabs"
             >
               {tabs.map((tab) => {
@@ -298,7 +301,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-1.5 px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center space-x-1 xl:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${
                       isActive
                         ? theme === 'dark'
                           ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
@@ -319,48 +322,54 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Controls: Home Button, All-in-One Profile Dropdown & Mobile Menu Button */}
-            <div className="flex items-center space-x-2 shrink-0">
-              {/* Home Navigation Button */}
-              <button
-                onClick={() => setActiveTab('landing')}
-                title={t('tab.home') || 'Home'}
-                className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${
-                  activeTab === 'landing' || activeTab === 'home'
-                    ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
-                    : theme === 'dark'
-                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
-                    : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
-                }`}
-                aria-label="Home"
-              >
-                <Home className="w-3.5 h-3.5 text-[#C9A050]" />
-                <span className="hidden sm:inline font-semibold">{t('tab.home') || 'Home'}</span>
-              </button>
+            {/* Controls: Home Button (User only), All-in-One Profile Dropdown & Mobile Menu Button */}
+            <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+              {/* Home Navigation Button - Only for normal users */}
+              {!isAdmin && (
+                <button
+                  onClick={() => setActiveTab('landing')}
+                  title={t('tab.home') || 'Home'}
+                  className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm shrink-0 ${
+                    activeTab === 'landing' || activeTab === 'home'
+                      ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
+                      : theme === 'dark'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                  }`}
+                  aria-label="Home"
+                >
+                  <Home className="w-3.5 h-3.5 text-[#C9A050]" />
+                  <span className="hidden sm:inline font-semibold">{t('tab.home') || 'Home'}</span>
+                </button>
+              )}
 
               {/* Profile in Top Right Corner with Dropdown (Edit Profile, Theme Options, Logout) */}
               {isAdmin ? (
                 <div
-                  className={`relative flex items-center border rounded-xl p-1.5 sm:p-2 text-xs shadow-sm transition-colors ${
-                    theme === 'dark'
-                      ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60'
-                      : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050]'
-                  }`}
+                  className="relative flex items-center shrink-0"
                   ref={profileMenuRef}
                 >
                   <button
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                    className={`bg-transparent focus:outline-none cursor-pointer text-xs flex items-center space-x-1.5 text-left ${
-                      theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2C2825]'
+                    className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${
+                      theme === 'dark'
+                        ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
+                        : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
                     }`}
+                    title={userEmail || 'Admin Profile'}
+                    aria-label="Admin Profile"
                   >
-                    <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">
-                      <Shield className="w-3.5 h-3.5" />
+                    {/* Glowing Round Avatar with First Letter */}
+                    <div className="relative">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] shadow-sm flex items-center justify-center">
+                        <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${
+                          theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
+                        }`}>
+                          {userEmail ? userEmail.charAt(0).toUpperCase() : 'A'}
+                        </div>
+                      </div>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#141418]" />
                     </div>
-                    <span className="font-semibold text-[#C9A050] truncate max-w-[90px] sm:max-w-[130px]">
-                      {userEmail?.split('@')[0] || 'Admin'}
-                    </span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-[#9E9A90] transition-transform duration-200 ${isProfileMenuOpen ? 'rotate-180 text-[#C9A050]' : ''}`} />
                   </button>
 
                   {isProfileMenuOpen && (
@@ -552,10 +561,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
 
-              {/* Mobile Drawer Menu Toggle */}
+              {/* Mobile / Tablet Drawer Menu Toggle */}
               <button
                 onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
-                className={`md:hidden flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${
+                className={`${
+                  isAdmin ? 'lg:hidden' : 'md:hidden'
+                } flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${
                   theme === 'dark'
                     ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
                     : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:text-[#C9A050] hover:border-[#C9A050]'
@@ -571,7 +582,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Slide-Out Navigation Drawer */}
       {isMobileDrawerOpen && (
-        <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in">
+        <div className={`fixed inset-0 z-50 ${isAdmin ? 'lg:hidden' : 'md:hidden'} bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in`}>
           <div className="w-[82%] max-w-sm h-full bg-[#141418] border-l border-[#2A2A2E] p-5 shadow-2xl flex flex-col justify-between overflow-y-auto font-sans">
             <div>
               {/* Drawer Header */}
@@ -595,10 +606,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               {/* User Profile Card in Drawer */}
               {isAdmin ? (
-                <div className="my-4 p-3 rounded-xl bg-[#1A1A1E] border border-[#C9A050]/30 flex items-center justify-between">
+                <div className="my-4 p-3 rounded-2xl bg-gradient-to-r from-[#17161F] via-[#1D1B26] to-[#14131C] border border-[#C9A050]/35 flex items-center justify-between shadow-md">
                   <div className="flex items-center space-x-2.5">
-                    <div className="w-8 h-8 rounded-full bg-[#C9A050]/20 text-[#C9A050] flex items-center justify-center font-bold text-xs">
-                      <Shield className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] flex items-center justify-center shrink-0">
+                      <div className="w-full h-full rounded-full bg-[#0F0E14] text-[#F0E6CD] flex items-center justify-center font-bold text-xs">
+                        {userEmail ? userEmail.charAt(0).toUpperCase() : 'A'}
+                      </div>
                     </div>
                     <div>
                       <div className="font-bold text-xs text-[#F0ECE1]">Admin Account</div>

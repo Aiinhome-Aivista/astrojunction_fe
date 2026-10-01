@@ -399,10 +399,10 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
         </div>
 
         {/* View Switcher */}
-        <div className="flex flex-wrap gap-2 pt-4 font-sans">
+        <div className="flex flex-nowrap md:flex-wrap items-center gap-2 pt-4 font-sans overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveTab('graph')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap ${
               activeTab === 'graph'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                 : isDark
@@ -415,7 +415,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('llm_extractor')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap ${
               activeTab === 'llm_extractor'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                 : isDark
@@ -428,7 +428,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('runbooks')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap ${
               activeTab === 'runbooks'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                 : isDark
@@ -441,7 +441,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap ${
               activeTab === 'users'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                 : isDark
@@ -454,7 +454,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('telemetry')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap ${
               activeTab === 'telemetry'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                 : isDark
