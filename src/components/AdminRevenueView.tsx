@@ -137,7 +137,6 @@ export const AdminRevenueView: React.FC<AdminRevenueViewProps> = ({ theme }) => 
 
       {/* Transactions Table with Internal Vertical Scrolling */}
       <div 
-        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
         className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl ${bgClass}`}
       >
         <div className={`p-2.5 px-3.5 border-b ${borderClass} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2`}>

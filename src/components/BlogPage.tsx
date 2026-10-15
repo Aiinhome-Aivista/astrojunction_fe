@@ -393,9 +393,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             className={`article-content prose max-w-none space-y-6 leading-relaxed text-base sm:text-lg font-sans transition-colors ${
               isDark ? 'prose-invert text-[#E5E1D8]' : 'text-gray-900'
             }`}
-            style={{
-              lineHeight: '1.85',
-            }}
             dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
           />
 
@@ -485,11 +482,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           }`}>
             <button
               onClick={() => setSelectedBlog(null)}
-              style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
               className={`w-full sm:w-auto px-7 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg border-2 group ${
                 isDark 
-                  ? 'border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
-                  : 'border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
+                  ? 'bg-[#141418] border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
+                  : 'bg-white border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
               }`}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#C9A050] group-hover:text-inherit" />
@@ -525,9 +521,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   <div
                     key={relBlog.id}
                     onClick={() => setSelectedBlog(relBlog)}
-                    style={{
-                      backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                    }}
                     className={`rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 border shadow-lg group ${
                       isDark 
                         ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/50' 
@@ -706,9 +699,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   <div 
                     key={blog.id}
                     onClick={() => setSelectedBlog(blog)}
-                    style={{
-                      backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                    }}
                     className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
                       isDark 
                         ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
@@ -735,9 +725,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     
                     {/* Card Content - 100% Solid White background */}
                     <div 
-                      style={{
-                        backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                      }}
                       className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-[#FFFFFF]'}`}
                     >
                       <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">

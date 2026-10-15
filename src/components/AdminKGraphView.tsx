@@ -46,9 +46,9 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
   profiles,
 }) => {
   const isDark = theme === 'dark';
-  const cardBg = isDark ? '#141418' : '#FFFFFF';
-  const subCardBg = isDark ? '#1A1A1E' : '#FFFFFF';
-  const innerBg = isDark ? '#08080A' : '#F9F7F1';
+  const cardBg = isDark ? 'bg-[#141418]' : 'bg-white';
+  const subCardBg = isDark ? 'bg-[#1A1A1E]' : 'bg-white';
+  const innerBg = isDark ? 'bg-[#08080A]' : 'bg-[#F9F7F1]';
   const borderCol = isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]';
   const textMain = isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]';
   const textMuted = isDark ? 'text-[#9E9A90]' : 'text-gray-700';
@@ -337,8 +337,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
     <div className="space-y-6">
       {/* Top Banner */}
       <div 
-        style={{ backgroundColor: cardBg }}
-        className={`border-2 ${borderCol} rounded-2xl p-6 shadow-xl relative z-10`}
+        className={`${cardBg} border-2 ${borderCol} rounded-2xl p-6 shadow-xl relative z-10`}
       >
         <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
           <div>
@@ -367,8 +366,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
             <button
               onClick={fetchKnowledgeGraphFromDB}
               disabled={isSyncing}
-              style={{ backgroundColor: subCardBg }}
-              className={`px-3 py-2.5 rounded-xl text-[#C9A050] border ${borderCol} font-bold text-xs flex items-center justify-center space-x-1.5 transition cursor-pointer disabled:opacity-50 shadow-sm`}
+              className={`${subCardBg} px-3 py-2.5 rounded-xl text-[#C9A050] border ${borderCol} font-bold text-xs flex items-center justify-center space-x-1.5 transition cursor-pointer disabled:opacity-50 shadow-sm`}
               title="Sync fresh data from MySQL database"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
@@ -377,8 +375,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
 
             <div className="flex items-center space-x-2">
               <div 
-                style={{ backgroundColor: subCardBg }}
-                className={`border ${borderCol} px-3.5 py-1.5 rounded-xl text-center min-w-[70px] shadow-sm`}
+                className={`${subCardBg} border ${borderCol} px-3.5 py-1.5 rounded-xl text-center min-w-[70px] shadow-sm`}
               >
                 <div className={`text-[9px] ${textMuted} uppercase font-bold tracking-wider`}>Nodes</div>
                 <div className="text-base font-serif font-bold text-[#C9A050]">
@@ -386,8 +383,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                 </div>
               </div>
               <div 
-                style={{ backgroundColor: subCardBg }}
-                className={`border ${borderCol} px-3.5 py-1.5 rounded-xl text-center min-w-[70px] shadow-sm`}
+                className={`${subCardBg} border ${borderCol} px-3.5 py-1.5 rounded-xl text-center min-w-[70px] shadow-sm`}
               >
                 <div className={`text-[9px] ${textMuted} uppercase font-bold tracking-wider`}>Edges</div>
                 <div className="text-base font-serif font-bold text-[#C9A050]">
@@ -473,8 +469,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left 8 Cols: Node Explorer & Canvas */}
           <div 
-            style={{ backgroundColor: cardBg }}
-            className={`lg:col-span-8 border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
+            className={`${cardBg} lg:col-span-8 border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
           >
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
               <div className="flex items-center space-x-2">
@@ -484,8 +479,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   placeholder="Search Sanskrit sutras, grahas, yogas..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ backgroundColor: subCardBg }}
-                  className={`px-3 py-1.5 rounded-lg text-xs border ${borderCol} focus:outline-none focus:border-[#C9A050] w-64 ${textMain}`}
+                  className={`${subCardBg} px-3 py-1.5 rounded-lg text-xs border ${borderCol} focus:outline-none focus:border-[#C9A050] w-64 ${textMain}`}
                 />
               </div>
 
@@ -541,8 +535,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
 
           {/* Right 4 Cols: Active Node Inspector */}
           <div 
-            style={{ backgroundColor: cardBg }}
-            className={`lg:col-span-4 border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 relative z-10`}
+            className={`${cardBg} lg:col-span-4 border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 relative z-10`}
           >
             {selectedNode ? (
               <div className="space-y-4 font-sans">
@@ -562,8 +555,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   <div>
                     <span className={`text-[9px] uppercase font-bold ${textMuted} block mb-1 tracking-wider`}>Classical Description</span>
                     <p 
-                      style={{ backgroundColor: subCardBg }}
-                      className={`p-3 rounded-xl border ${borderCol} leading-relaxed font-medium ${textMain}`}
+                      className={`${subCardBg} p-3 rounded-xl border ${borderCol} leading-relaxed font-medium ${textMain}`}
                     >
                       {selectedNode.description}
                     </p>
@@ -571,8 +563,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
 
                   {selectedNode.sanskritSutra && (
                     <div 
-                      style={{ backgroundColor: subCardBg }}
-                      className={`p-3 rounded-xl border border-[#C9A050]/50`}
+                      className={`${subCardBg} p-3 rounded-xl border border-[#C9A050]/50`}
                     >
                       <span className="text-[9px] uppercase font-bold text-[#C9A050] block mb-1 tracking-wider">Original Sanskrit Sutra</span>
                       <p className={`font-serif text-xs leading-relaxed font-medium ${textMain}`}>{selectedNode.sanskritSutra}</p>
@@ -582,8 +573,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   <div>
                     <span className={`text-[9px] uppercase font-bold ${textMuted} block mb-1 tracking-wider`}>Ontological Node Properties</span>
                     <div 
-                      style={{ backgroundColor: innerBg }}
-                      className={`p-3 rounded-xl border ${borderCol} font-mono text-[11px] space-y-1 ${textMain}`}
+                      className={`${innerBg} p-3 rounded-xl border ${borderCol} font-mono text-[11px] space-y-1 ${textMain}`}
                     >
                       {Object.entries(selectedNode.properties || {}).map(([k, v]) => (
                         <div key={k} className="flex justify-between">
@@ -603,8 +593,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                         .map((edge) => (
                           <div
                             key={edge.id}
-                            style={{ backgroundColor: subCardBg }}
-                            className={`p-2 rounded-lg border ${borderCol} flex justify-between text-[11px]`}
+                            className={`${subCardBg} p-2 rounded-lg border ${borderCol} flex justify-between text-[11px]`}
                           >
                             <span className="text-[#C9A050] font-bold">{edge.relation}</span>
                             <span className={textMuted}>
@@ -629,8 +618,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
       {activeTab === 'llm_extractor' && (
         <div className="space-y-6 font-sans">
           <div 
-            style={{ backgroundColor: cardBg }}
-            className={`border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-5 relative z-10`}
+            className={`${cardBg} border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-5 relative z-10`}
           >
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
               <div>
@@ -693,8 +681,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                 {llmTopics.map((topic, index) => (
                   <div
                     key={index}
-                    style={{ backgroundColor: subCardBg }}
-                    className={`p-3.5 border ${borderCol} hover:border-[#C9A050]/50 rounded-xl flex items-center justify-between gap-3 text-xs transition shadow-xs`}
+                    className={`${subCardBg} p-3.5 border ${borderCol} hover:border-[#C9A050]/50 rounded-xl flex items-center justify-between gap-3 text-xs transition shadow-xs`}
                   >
                     <div className="flex items-center space-x-2.5 overflow-hidden">
                       <span className="w-5 h-5 rounded-full bg-[#C9A050]/20 text-[#C9A050] font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
@@ -722,8 +709,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   onChange={(e) => setNewCustomTopic(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddTopic()}
                   placeholder="Add custom topic (e.g. 'Planetary Yogas for Wealth and Raj Yoga combinations')..."
-                  style={{ backgroundColor: subCardBg }}
-                  className={`flex-1 border ${borderCol} rounded-xl px-4 py-2.5 text-xs ${textMain} placeholder:text-gray-400 focus:outline-none focus:border-[#C9A050]`}
+                  className={`${subCardBg} flex-1 border ${borderCol} rounded-xl px-4 py-2.5 text-xs ${textMain} placeholder:text-gray-400 focus:outline-none focus:border-[#C9A050]`}
                 />
                 <button
                   onClick={handleAddTopic}
@@ -738,22 +724,19 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
             {/* Pipeline Configuration Specs */}
             <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} text-xs`}>
               <div 
-                style={{ backgroundColor: innerBg }}
-                className={`p-3 rounded-xl border ${borderCol}`}
+                className={`${innerBg} p-3 rounded-xl border ${borderCol}`}
               >
                 <span className={`text-[10px] ${textMuted} uppercase font-bold block mb-1`}>API Target</span>
                 <span className="font-mono text-[#C9A050] text-[11px] font-bold">POST /api/knowledge/generate-from-llm</span>
               </div>
               <div 
-                style={{ backgroundColor: innerBg }}
-                className={`p-3 rounded-xl border ${borderCol}`}
+                className={`${innerBg} p-3 rounded-xl border ${borderCol}`}
               >
                 <span className={`text-[10px] ${textMuted} uppercase font-bold block mb-1`}>Knowledge Source</span>
                 <span className={`font-mono ${textMain} text-[11px] font-bold`}>LLM_Internal_Knowledge</span>
               </div>
               <div 
-                style={{ backgroundColor: innerBg }}
-                className={`p-3 rounded-xl border ${borderCol}`}
+                className={`${innerBg} p-3 rounded-xl border ${borderCol}`}
               >
                 <span className={`text-[10px] ${textMuted} uppercase font-bold block mb-1`}>Execution Mode</span>
                 <span className="font-mono text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">Background Daemon Thread</span>
@@ -786,8 +769,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
               return (
                 <div
                   key={rb.id}
-                  style={{ backgroundColor: cardBg }}
-                  className={`border-2 ${borderCol} rounded-2xl p-5 shadow-xl space-y-3 flex flex-col justify-between relative z-10`}
+                  className={`${cardBg} border-2 ${borderCol} rounded-2xl p-5 shadow-xl space-y-3 flex flex-col justify-between relative z-10`}
                 >
                   <div>
                     <div className="flex justify-between items-start">
@@ -801,8 +783,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                         </div>
                       </div>
                       <span 
-                        style={{ backgroundColor: subCardBg }}
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${textMuted} border ${borderCol}`}
+                        className={`${subCardBg} text-[10px] font-bold px-2 py-0.5 rounded-lg ${textMuted} border ${borderCol}`}
                       >
                         {rb.entitiesExtracted} Extracted
                       </span>
@@ -819,8 +800,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                     <button
                       onClick={() => handleExecuteRunbook(rb)}
                       disabled={isExecuting}
-                      style={{ backgroundColor: subCardBg }}
-                      className={`px-3.5 py-1.5 rounded-xl text-[#C9A050] font-bold text-xs border ${borderCol} hover:bg-[#C9A050] hover:text-[#0D0D0F] transition cursor-pointer flex items-center space-x-1.5 disabled:opacity-50 shadow-xs`}
+                      className={`${subCardBg} px-3.5 py-1.5 rounded-xl text-[#C9A050] font-bold text-xs border ${borderCol} hover:bg-[#C9A050] hover:text-[#0D0D0F] transition cursor-pointer flex items-center space-x-1.5 disabled:opacity-50 shadow-xs`}
                     >
                       <Play className={`w-3.5 h-3.5 ${isExecuting ? 'animate-spin' : ''}`} />
                       <span>{isExecuting ? 'Executing Pipeline...' : 'Execute Runbook'}</span>
@@ -835,8 +815,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           {isAddingRunbook && (
             <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
               <div 
-                style={{ backgroundColor: cardBg }}
-                className={`border-2 ${borderCol} rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 font-sans`}
+                className={`${cardBg} border-2 ${borderCol} rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 font-sans`}
               >
                 <h3 className={`text-lg font-serif font-bold ${textMain}`}>Create New Knowledge Runbook</h3>
                 <form onSubmit={handleCreateRunbook} className="space-y-3 text-xs">
@@ -848,8 +827,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                       value={newRunbookTitle}
                       onChange={(e) => setNewRunbookTitle(e.target.value)}
                       placeholder="e.g. Bhrigu Samhita Karma Extractor"
-                      style={{ backgroundColor: subCardBg }}
-                      className={`w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
+                      className={`${subCardBg} w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
                     />
                   </div>
                   <div>
@@ -857,8 +835,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                     <select
                       value={newRunbookType}
                       onChange={(e: any) => setNewRunbookType(e.target.value)}
-                      style={{ backgroundColor: subCardBg }}
-                      className={`w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
+                      className={`${subCardBg} w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
                     >
                       <option value="text_corpus_ingestion">Classical Text Corpus Ingestion</option>
                       <option value="user_session_ingestion">User Session Query Extractor</option>
@@ -873,16 +850,14 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                       value={newRunbookDesc}
                       onChange={(e) => setNewRunbookDesc(e.target.value)}
                       placeholder="e.g. Ingests karmic conjunctions from ancient manuscripts..."
-                      style={{ backgroundColor: subCardBg }}
-                      className={`w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
+                      className={`${subCardBg} w-full px-3 py-2 border ${borderCol} rounded-xl ${textMain} focus:outline-none focus:border-[#C9A050]`}
                     />
                   </div>
                   <div className="flex justify-end space-x-2 pt-2">
                     <button
                       type="button"
                       onClick={() => setIsAddingRunbook(false)}
-                      style={{ backgroundColor: subCardBg }}
-                      className={`px-3.5 py-2 rounded-xl ${textMuted} border ${borderCol} font-semibold`}
+                      className={`${subCardBg} px-3.5 py-2 rounded-xl ${textMuted} border ${borderCol} font-semibold`}
                     >
                       Cancel
                     </button>
@@ -903,8 +878,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
       {/* Tab 4: User Profiles & Recorded Data */}
       {activeTab === 'users' && (
         <div 
-          style={{ backgroundColor: cardBg }}
-          className={`border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
+          className={`${cardBg} border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
         >
           <div className={`flex justify-between items-center pb-3 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
             <div>
@@ -921,8 +895,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   <div className="flex items-center space-x-2">
                     <span className={`font-serif font-bold text-sm ${textMain}`}>{p.fullName}</span>
                     <span 
-                      style={{ backgroundColor: subCardBg }}
-                      className={`px-2 py-0.5 rounded-lg text-[10px] text-[#C9A050] uppercase font-bold border ${borderCol}`}
+                      className={`${subCardBg} px-2 py-0.5 rounded-lg text-[10px] text-[#C9A050] uppercase font-bold border ${borderCol}`}
                     >
                       {p.gender}
                     </span>
@@ -941,8 +914,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   {p.focusAreas.map((f, i) => (
                     <span 
                       key={i} 
-                      style={{ backgroundColor: subCardBg }}
-                      className={`px-2 py-0.5 rounded-lg ${textMuted} text-[10px] font-semibold border ${borderCol}`}
+                      className={`${subCardBg} px-2 py-0.5 rounded-lg ${textMuted} text-[10px] font-semibold border ${borderCol}`}
                     >
                       {f}
                     </span>
@@ -957,8 +929,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
       {/* Tab 5: Telemetry & Live Terminal */}
       {activeTab === 'telemetry' && (
         <div 
-          style={{ backgroundColor: cardBg }}
-          className={`border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
+          className={`${cardBg} border-2 ${borderCol} rounded-2xl p-6 shadow-xl space-y-4 font-sans relative z-10`}
         >
           <div className={`flex items-center justify-between pb-3 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
             <div className="flex items-center space-x-2">
@@ -974,8 +945,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
           </div>
 
           <div 
-            style={{ backgroundColor: isDark ? '#08080A' : '#141418' }}
-            className="p-4 rounded-xl border border-[#2A2A2E] font-mono text-xs text-[#C9A050] space-y-1.5 max-h-96 overflow-y-auto custom-scrollbar"
+            className={`p-4 rounded-xl border border-[#2A2A2E] font-mono text-xs text-[#C9A050] space-y-1.5 max-h-96 overflow-y-auto custom-scrollbar ${isDark ? 'bg-[#08080A]' : 'bg-[#141418]'}`}
           >
             {executionLogs.map((log, i) => (
               <div key={i} className="leading-relaxed">
@@ -990,8 +960,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
       {isLLMModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div 
-            style={{ backgroundColor: cardBg }}
-            className={`border-2 ${borderCol} rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 font-sans animate-in fade-in zoom-in-95 duration-200`}
+            className={`${cardBg} border-2 ${borderCol} rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 font-sans animate-in fade-in zoom-in-95 duration-200`}
           >
             <div className={`flex items-center justify-between pb-3 border-b ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
               <div className="flex items-center space-x-2.5">
@@ -1009,8 +978,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
               </div>
               <button
                 onClick={() => setIsLLMModalOpen(false)}
-                style={{ backgroundColor: subCardBg }}
-                className={`p-1.5 rounded-lg ${textMuted} hover:text-black dark:hover:text-white cursor-pointer border ${borderCol}`}
+                className={`${subCardBg} p-1.5 rounded-lg ${textMuted} hover:text-black dark:hover:text-white cursor-pointer border ${borderCol}`}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1043,8 +1011,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                 {llmTopics.map((topic, idx) => (
                   <div
                     key={idx}
-                    style={{ backgroundColor: subCardBg }}
-                    className={`p-2.5 border ${borderCol} rounded-xl flex items-center justify-between text-xs shadow-xs`}
+                    className={`${subCardBg} p-2.5 border ${borderCol} rounded-xl flex items-center justify-between text-xs shadow-xs`}
                   >
                     <span className={`font-semibold truncate mr-2 ${textMain}`}>
                       {idx + 1}. {topic}
@@ -1066,8 +1033,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
                   onChange={(e) => setNewCustomTopic(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddTopic()}
                   placeholder="Add custom topic..."
-                  style={{ backgroundColor: subCardBg }}
-                  className={`flex-1 border ${borderCol} rounded-xl px-3 py-2 text-xs ${textMain} placeholder:text-gray-400 focus:outline-none focus:border-[#C9A050]`}
+                  className={`${subCardBg} flex-1 border ${borderCol} rounded-xl px-3 py-2 text-xs ${textMain} placeholder:text-gray-400 focus:outline-none focus:border-[#C9A050]`}
                 />
                 <button
                   onClick={handleAddTopic}
@@ -1081,8 +1047,7 @@ export const AdminKGraphView: React.FC<AdminKGraphViewProps> = ({
             <div className={`flex items-center justify-between pt-3 border-t ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}>
               <button
                 onClick={() => setIsLLMModalOpen(false)}
-                style={{ backgroundColor: subCardBg }}
-                className={`px-4 py-2 rounded-xl ${textMuted} hover:text-black dark:hover:text-white text-xs font-bold cursor-pointer border ${borderCol}`}
+                className={`${subCardBg} px-4 py-2 rounded-xl ${textMuted} hover:text-black dark:hover:text-white text-xs font-bold cursor-pointer border ${borderCol}`}
               >
                 Close
               </button>

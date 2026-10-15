@@ -82,11 +82,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
       </div>
 
       <div 
-        className="relative w-full overflow-hidden pb-8"
-        style={{ 
-          maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)'
-        }}
+        className="relative w-full overflow-hidden pb-8 astro-marquee-mask"
       >
         <div className="flex w-max animate-marquee gap-6 px-4 hover:pause">
           {displayBlogs.map((blog, idx) => {
@@ -104,13 +100,10 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                   if (onSelectBlog) onSelectBlog(blog);
                   else if (onViewAll) onViewAll();
                 }}
-                style={{
-                  backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                }}
                 className={`shrink-0 w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
                   isDark 
-                    ? 'border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                    : 'border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
+                    ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
+                    : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
                 }`}
               >
                 <div className="relative h-[220px] w-full overflow-hidden bg-black/20">
@@ -130,10 +123,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                 </div>
                 
                 <div 
-                  style={{
-                    backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                  }}
-                  className="p-6 md:p-7 flex-1 flex flex-col"
+                  className={`p-6 md:p-7 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-white'}`}
                 >
                   <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
                     <span className={`text-[11px] font-extrabold uppercase tracking-[0.18em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>

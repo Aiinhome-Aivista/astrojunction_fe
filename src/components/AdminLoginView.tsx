@@ -74,11 +74,7 @@ export function AdminLoginView({ onAuthenticated, theme = 'dark' }: AdminLoginVi
       {/* Universal Astrologer Background (Babaji image) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div
-          className={`absolute inset-0 bg-no-repeat bg-cover bg-center transition-opacity duration-700 ${isDark ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
-          style={{
-            backgroundImage: 'url(/astrologer_bg.jpg)',
-            backgroundPosition: 'center center'
-          }}
+          className={`absolute inset-0 bg-no-repeat bg-cover bg-center bg-[url('/astrologer_bg.jpg')] transition-opacity duration-700 ${isDark ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
         ></div>
         <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-transparent ${isDark ? 'to-[#0D0D0F]/90' : 'to-[#F0ECE1]/90'}`}></div>
       </div>

@@ -545,11 +545,7 @@ export function LandingPage({
         {/* Universal Astrologer Background (Fixed across all sections) */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div
-            className={`absolute inset-0 bg-no-repeat bg-cover bg-center transition-opacity duration-700 ${theme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
-            style={{
-              backgroundImage: 'url(/astrologer_bg.jpg)',
-              backgroundPosition: 'center center'
-            }}
+            className={`absolute inset-0 bg-no-repeat bg-cover bg-center bg-[url('/astrologer_bg.jpg')] transition-opacity duration-700 ${theme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
           ></div>
           <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-transparent ${theme === 'dark' ? 'to-[#0D0D0F]/90' : 'to-[#F0ECE1]/90'}`}></div>
         </div>
@@ -659,8 +655,7 @@ export function LandingPage({
                   <img
                     src="/white_zodiac_wheel.png"
                     alt="AstroJunction Zodiac Wheel"
-                    className="w-full h-full object-cover rounded-full shadow-[0_0_60px_rgba(201,160,80,0.4)] border border-[#C9A050]/40 relative z-10"
-                    style={{ animation: 'spin 60s linear infinite' }}
+                    className="w-full h-full object-cover rounded-full shadow-[0_0_60px_rgba(201,160,80,0.4)] border border-[#C9A050]/40 relative z-10 animate-[spin_60s_linear_infinite]"
                   />
 
                   {/* AstroJunction Premium Center Core */}
@@ -714,8 +709,7 @@ export function LandingPage({
                       <img
                         src="/vedic_calendar_alt.jpg"
                         alt="Vedic Calendar"
-                        className="w-full h-full object-cover scale-[1.02]"
-                        style={{ animation: 'spin 120s linear infinite' }}
+                        className="w-full h-full object-cover scale-[1.02] animate-[spin_120s_linear_infinite]"
                       />
                       <div className="absolute inset-0 rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] pointer-events-none"></div>
                       <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#C9A050]/10 to-transparent mix-blend-overlay pointer-events-none"></div>

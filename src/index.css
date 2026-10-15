@@ -11,6 +11,36 @@
 
 @layer base {
   :root {
+    /* ========================================================================= */
+    /* 1. MASTER TYPOGRAPHY CONTROLLER                                           */
+    /* Changing --site-font-size-root will scale all typography across the app!  */
+    /* ========================================================================= */
+    --site-font-size-root: 14px;
+    --site-font-size-2xs: 0.6875rem; /* ~11px */
+    --site-font-size-xs: 0.75rem;     /* ~12px */
+    --site-font-size-sm: 0.8125rem;   /* ~13px */
+    --site-font-size-base: 0.875rem;  /* ~14px (Site Default Text Size) */
+    --site-font-size-md: 0.9375rem;   /* ~15px */
+    --site-font-size-lg: 1rem;        /* ~16px */
+    --site-font-size-xl: 1.125rem;    /* ~18px */
+    --site-font-size-2xl: 1.375rem;   /* ~22px */
+    --site-font-size-3xl: 1.75rem;    /* ~28px */
+    --site-font-size-4xl: 2.25rem;    /* ~36px */
+
+    /* Line Heights */
+    --site-line-height-tight: 1.25;
+    --site-line-height-normal: 1.5;
+    --site-line-height-relaxed: 1.75;
+
+    /* Spacing & Radii */
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Theme Colors (Dark default) */
     --bg-canvas: #0D0D0F;
     --bg-card: #141418;
     --bg-card-elevated: #1A1A1E;
@@ -25,6 +55,17 @@
     --gold-hover: #D4AF37;
     --gold-bg: rgba(201, 160, 80, 0.12);
     --gold-border: rgba(201, 160, 80, 0.35);
+
+    /* Form & UI Tokens */
+    --input-bg: #1A1A1E;
+    --input-border: #2A2A2E;
+    --input-text: #F0ECE1;
+    --input-placeholder: #6E6860;
+    --input-focus-border: #C9A050;
+
+    --btn-primary-bg: #C9A050;
+    --btn-primary-text: #0D0D0F;
+    --btn-primary-hover: #D4AF37;
   }
 
   .light {
@@ -42,6 +83,20 @@
     --gold-hover: #AF7F26;
     --gold-bg: rgba(148, 105, 30, 0.12);
     --gold-border: rgba(148, 105, 30, 0.35);
+
+    --input-bg: #FFFFFF;
+    --input-border: #DDD5C7;
+    --input-text: #1A1816;
+    --input-placeholder: #9E9A90;
+    --input-focus-border: #94691E;
+
+    --btn-primary-bg: #94691E;
+    --btn-primary-text: #FFFFFF;
+    --btn-primary-hover: #AF7F26;
+  }
+
+  html {
+    font-size: var(--site-font-size-root);
   }
 
   html,
@@ -54,20 +109,53 @@
   body {
     background-color: var(--bg-canvas);
     color: var(--text-secondary);
-    font-family: 'Nunito';
+    font-family: 'Nunito', sans-serif;
+    font-size: var(--site-font-size-base);
+    line-height: var(--site-line-height-normal);
     letter-spacing: 0.01em;
     transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Headings Default Hierarchy */
+  h1 {
+    font-size: var(--site-font-size-3xl);
+    font-weight: 700;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+  }
+
+  h2 {
+    font-size: var(--site-font-size-2xl);
+    font-weight: 700;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+  }
+
+  h3 {
+    font-size: var(--site-font-size-xl);
+    font-weight: 600;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+  }
+
+  h4 {
+    font-size: var(--site-font-size-lg);
+    font-weight: 600;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+  }
+
+  /* Paragraph Default */
+  p {
+    font-size: var(--site-font-size-base);
+    line-height: var(--site-line-height-relaxed);
+    text-align: justify;
   }
 
   /* Hide browser native password reveal and clear buttons (e.g. Edge) so only custom eye toggle shows */
   input::-ms-reveal,
   input::-ms-clear {
     display: none !important;
-  }
-
-  /* Global Paragraph Justification */
-  p {
-    text-align: justify;
   }
 }
 
@@ -174,6 +262,11 @@ samp {
 
   .animate-marquee:hover {
     animation-play-state: paused;
+  }
+
+  .astro-marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
 
 /* Light Mode Overrides for Hardcoded Theme Classes */
@@ -418,6 +511,335 @@ samp {
 
 .light .matchmaking-circle-track {
   color: #E5E1D8 !important;
+}
+
+/* ========================================================================= */
+/* MASTER UI COMPONENT CLASSES (Reusable Global Classes, Avoid Inline CSS)  */
+/* ========================================================================= */
+
+/* Master Typography Utilities */
+.astro-text-root {
+  font-size: var(--site-font-size-root);
+}
+
+.astro-text-base {
+  font-size: var(--site-font-size-base);
+  line-height: var(--site-line-height-normal);
+}
+
+.astro-text-sm {
+  font-size: var(--site-font-size-sm);
+  line-height: var(--site-line-height-normal);
+}
+
+.astro-text-xs {
+  font-size: var(--site-font-size-xs);
+  line-height: var(--site-line-height-tight);
+}
+
+.astro-text-2xs {
+  font-size: var(--site-font-size-2xs);
+  line-height: var(--site-line-height-tight);
+}
+
+.astro-heading-xl {
+  font-size: var(--site-font-size-3xl);
+  font-weight: 700;
+  line-height: var(--site-line-height-tight);
+  color: var(--text-primary);
+}
+
+.astro-heading-lg {
+  font-size: var(--site-font-size-2xl);
+  font-weight: 700;
+  line-height: var(--site-line-height-tight);
+  color: var(--text-primary);
+}
+
+.astro-heading-md {
+  font-size: var(--site-font-size-xl);
+  font-weight: 600;
+  line-height: var(--site-line-height-tight);
+  color: var(--text-primary);
+}
+
+.astro-heading-sm {
+  font-size: var(--site-font-size-lg);
+  font-weight: 600;
+  line-height: var(--site-line-height-tight);
+  color: var(--text-primary);
+}
+
+/* Master Form Controls */
+.astro-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--site-font-size-sm);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  color: var(--input-text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.astro-input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 2px var(--gold-bg);
+}
+
+.astro-input::placeholder {
+  color: var(--input-placeholder);
+}
+
+.astro-input-icon-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.astro-input-icon-wrap .astro-input {
+  padding-left: 2.25rem;
+}
+
+.astro-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.astro-label {
+  display: block;
+  font-size: var(--site-font-size-xs);
+  font-weight: 600;
+  color: var(--gold-primary);
+  margin-bottom: 0.35rem;
+}
+
+/* Master Buttons */
+.astro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: var(--site-font-size-sm);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.astro-btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: 0 2px 8px var(--gold-bg);
+}
+
+.astro-btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+  box-shadow: 0 4px 14px var(--gold-bg);
+}
+
+.astro-btn-secondary {
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.astro-btn-secondary:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.astro-btn-google {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  font-size: var(--site-font-size-xs);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card-elevated);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.astro-btn-google:hover {
+  border-color: var(--gold-border);
+  background-color: var(--bg-card);
+}
+
+/* Master Modals */
+.astro-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.astro-modal-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.astro-modal-card-lg {
+  max-width: 42rem;
+}
+
+.astro-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.35rem;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+  border: none;
+}
+
+.astro-modal-close:hover {
+  color: var(--text-primary);
+  background-color: var(--border-color);
+}
+
+/* Master Tabs */
+.astro-tab-group {
+  display: flex;
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-inner);
+  margin-bottom: 0.75rem;
+}
+
+.astro-tab-btn {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--site-font-size-xs);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+}
+
+.astro-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.astro-tab-btn-active {
+  background-color: var(--gold-primary);
+  color: var(--btn-primary-text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Master Cards & Chips */
+.astro-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.astro-card-interactive:hover {
+  border-color: var(--gold-border);
+  background-color: var(--bg-card-elevated);
+}
+
+.astro-chip {
+  padding: 0.2rem 0.65rem;
+  font-size: var(--site-font-size-2xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card-elevated);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.astro-chip:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.astro-chip-active {
+  border-color: var(--gold-primary);
+  background-color: var(--gold-bg);
+  color: var(--gold-primary);
+  font-weight: 700;
+}
+
+.astro-captcha-code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gold-border);
+  background-color: var(--bg-inner);
+  color: var(--gold-primary);
+  font-family: monospace;
+  font-size: var(--site-font-size-sm);
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  font-style: italic;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.astro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  font-size: var(--site-font-size-2xs);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card-elevated);
+  color: var(--text-muted);
+}
+
+.astro-badge-gold {
+  border-color: var(--gold-border);
+  background-color: var(--gold-bg);
+  color: var(--gold-primary);
+}
+
+.astro-emoji-text {
+  font-variant-emoji: text;
 }
 
 /* Theme utility classes */

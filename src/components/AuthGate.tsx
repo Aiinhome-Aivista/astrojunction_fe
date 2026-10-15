@@ -485,7 +485,7 @@ export function AuthGate({
     <AnimatePresence>
       <div
         onClick={onClose}
-        className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto overflow-x-hidden transition-opacity"
+        className="astro-modal-backdrop transition-opacity"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -493,19 +493,13 @@ export function AuthGate({
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full max-w-md rounded-2xl border shadow-2xl relative max-h-[90vh] overflow-y-auto overflow-x-hidden my-auto transition-all duration-300 ${isDark
-            ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
-            : 'bg-[#FFFFFF] border-[#C9A050]/40 text-[#0D0D0F]'
-            }`}
+          className="astro-modal-card my-auto"
         >
           {/* Close button */}
           {onClose && (
             <button
               onClick={onClose}
-              className={`absolute top-3.5 right-3.5 p-1.5 rounded-full transition-colors cursor-pointer z-10 ${isDark
-                ? 'hover:bg-white/10 text-gray-400 hover:text-white'
-                : 'hover:bg-black/10 text-gray-600 hover:text-black'
-                }`}
+              className="astro-modal-close"
               title="Close"
             >
               <X className="w-4 h-4" />
@@ -513,27 +507,24 @@ export function AuthGate({
           )}
 
           {/* Header */}
-          <div className="p-4 sm:p-5 pb-1 flex flex-col items-center text-center shrink-0">
+          <div className="pb-1 flex flex-col items-center text-center shrink-0">
             <AncientTraditionLogo size="sm" isLight={!isDark} className="mb-1" />
-            <h2 className="text-lg sm:text-xl font-serif font-bold tracking-wide flex items-center">
+            <h2 className="astro-heading-md tracking-wide flex items-center">
               ASTRO<span className="text-[#C9A050]">JUNCTION</span>
             </h2>
-            <p className={`text-[11px] mt-0.5 font-medium ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+            <p className="astro-text-xs mt-0.5 astro-text-muted">
               {mode === 'login' ? 'Welcome back! Log in to continue.' : 'Create your account to unlock personalized astrological insights.'}
             </p>
           </div>
 
-          <div className="p-4 sm:p-5 pt-2">
+          <div className="pt-2">
             {/* Google Authentication Button */}
             <div className="mb-3 flex flex-col items-center">
               <button
                 type="button"
                 onClick={handleGoogleButtonClick}
                 disabled={loading}
-                className={`w-full py-2 px-4 rounded-xl border font-bold text-xs flex items-center justify-center space-x-2.5 transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-[0.99] ${isDark
-                  ? 'bg-[#1C1C22] border-[#2A2A2E] text-[#F0ECE1] hover:bg-[#25252B] hover:border-[#C9A050]/50'
-                  : 'bg-[#FFFFFF] border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#FAF8F2] hover:border-[#C9A050]/50'
-                  }`}
+                className="astro-btn-google"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -565,27 +556,18 @@ export function AuthGate({
             </div>
 
             {/* Mode Switcher Tabs */}
-            <div className={`flex mb-3 p-1 rounded-xl border shrink-0 ${isDark
-              ? 'bg-[#0D0D0F] border-[#2A2A2E]'
-              : 'bg-[#F9F7F1] border-[#E5E1D8]'
-              }`}>
+            <div className="astro-tab-group">
               <button
                 type="button"
                 onClick={() => { setMode('login'); setError(null); setSuccessMessage(null); refreshCaptcha(); }}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${mode === 'login'
-                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
-                  : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
-                  }`}
+                className={`astro-tab-btn ${mode === 'login' ? 'astro-tab-btn-active' : ''}`}
               >
                 Log In
               </button>
               <button
                 type="button"
                 onClick={() => { setMode('register'); setError(null); setSuccessMessage(null); setAgreeTerms(false); refreshCaptcha(); }}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${mode === 'register'
-                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
-                  : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
-                  }`}
+                className={`astro-tab-btn ${mode === 'register' ? 'astro-tab-btn-active' : ''}`}
               >
                 Register
               </button>
@@ -597,20 +579,17 @@ export function AuthGate({
                 <div className="space-y-2.5">
                     {/* Full Name */}
                     <div>
-                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                      <label className="astro-label">
                         Full Name <span className="text-rose-500">*</span>
                       </label>
-                      <div className="relative">
-                        <User className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                      <div className="astro-input-icon-wrap">
+                        <User className="astro-input-icon" />
                         <input
                           type="text"
                           required
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                            }`}
+                          className="astro-input"
                           placeholder="e.g. Keya Biswas"
                         />
                       </div>
@@ -618,21 +597,18 @@ export function AuthGate({
 
                     {/* Email Address */}
                     <div>
-                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                      <label className="astro-label">
                         Email Address <span className="text-rose-500">*</span>
                       </label>
-                      <div className="relative">
-                        <Mail className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                      <div className="astro-input-icon-wrap">
+                        <Mail className="astro-input-icon" />
                         <input
                           type="email"
                           required
                           autoComplete="off"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                            }`}
+                          className="astro-input"
                           placeholder="you@example.com"
                         />
                       </div>
@@ -640,20 +616,17 @@ export function AuthGate({
 
                     {/* Phone Number (Optional) */}
                     <div>
-                      <label className={`block text-[10px] font-bold mb-0.5 flex items-center justify-between ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                      <label className="astro-label flex items-center justify-between">
                         <span>Phone Number</span>
                         <span className="text-[9px] font-normal opacity-70">(Optional)</span>
                       </label>
-                      <div className="relative">
-                        <Phone className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                      <div className="astro-input-icon-wrap">
+                        <Phone className="astro-input-icon" />
                         <input
                           type="tel"
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                            }`}
+                          className="astro-input"
                           placeholder="e.g. +91 98765 43210"
                         />
                       </div>
@@ -661,11 +634,11 @@ export function AuthGate({
 
                     {/* Password */}
                     <div>
-                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                      <label className="astro-label">
                         Password <span className="text-rose-500">*</span>
                       </label>
-                      <div className="relative flex items-center">
-                        <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                      <div className="astro-input-icon-wrap">
+                        <Lock className="astro-input-icon" />
                         <input
                           type={showPassword ? 'text' : 'password'}
                           required
@@ -673,17 +646,13 @@ export function AuthGate({
                           autoComplete="new-password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className={`w-full pl-8 pr-10 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                            }`}
+                          className="astro-input pr-10"
                           placeholder="Min. 8 characters"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword((prev) => !prev)}
-                          className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
-                            }`}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                         >
                           {showPassword ? (
                             <EyeOff className="w-4 h-4" />
@@ -734,23 +703,18 @@ export function AuthGate({
                             className="font-semibold underline text-[#C9A050] hover:text-[#D4AF37] cursor-pointer"
                           >
                             Privacy Policy
-                          </a>.
+                          </a>
                         </span>
                       </label>
                     </div>
 
                     {/* Captcha Section (Compact) */}
                     <div className="pt-1 max-w-[270px]">
-                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                      <label className="astro-label">
                         Security Verification (Captcha)
                       </label>
                       <div className="flex items-center space-x-2">
-                        <div
-                          className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner shrink-0 ${isDark
-                            ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
-                            : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
-                            }`}
-                        >
+                        <div className="astro-captcha-code">
                           <span className="line-through decoration-[#C9A050]/60 decoration-2">
                             {captchaCode}
                           </span>
@@ -764,18 +728,15 @@ export function AuthGate({
                           </button>
                         </div>
 
-                        <div className="relative flex-1">
-                          <ShieldCheck className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                        <div className="astro-input-icon-wrap flex-1">
+                          <ShieldCheck className="astro-input-icon" />
                           <input
                             type="text"
                             required
                             maxLength={6}
                             value={userCaptchaInput}
                             onChange={(e) => setUserCaptchaInput(e.target.value)}
-                            className={`w-full pl-8 pr-2 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
-                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                              : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                              }`}
+                            className="astro-input"
                             placeholder="Enter code"
                           />
                         </div>
@@ -787,20 +748,17 @@ export function AuthGate({
                 <div className="space-y-2.5">
                   {/* Email Address */}
                   <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                    <label className="astro-label">
                       Email Address
                     </label>
-                    <div className="relative">
-                      <Mail className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                    <div className="astro-input-icon-wrap">
+                      <Mail className="astro-input-icon" />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
+                        className="astro-input"
                         placeholder="you@example.com"
                       />
                     </div>
@@ -808,27 +766,23 @@ export function AuthGate({
 
                   {/* Password */}
                   <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                    <label className="astro-label">
                       Password
                     </label>
-                    <div className="relative flex items-center">
-                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                    <div className="astro-input-icon-wrap">
+                      <Lock className="astro-input-icon" />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`w-full pl-8 pr-10 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
+                        className="astro-input pr-10"
                         placeholder="Enter your password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
-                          }`}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                       >
                         {showPassword ? (
                           <EyeOff className="w-4 h-4" />
@@ -841,16 +795,11 @@ export function AuthGate({
 
                   {/* Captcha Section (Compact) */}
                   <div className="pt-1 max-w-[270px]">
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                    <label className="astro-label">
                       Security Verification (Captcha)
                     </label>
                     <div className="flex items-center space-x-2">
-                      <div
-                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner shrink-0 ${isDark
-                          ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
-                          : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
-                          }`}
-                      >
+                      <div className="astro-captcha-code">
                         <span className="line-through decoration-[#C9A050]/60 decoration-2">
                           {captchaCode}
                         </span>
@@ -864,18 +813,15 @@ export function AuthGate({
                         </button>
                       </div>
 
-                      <div className="relative flex-1">
-                        <ShieldCheck className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                      <div className="astro-input-icon-wrap flex-1">
+                        <ShieldCheck className="astro-input-icon" />
                         <input
                           type="text"
                           required
                           maxLength={6}
                           value={userCaptchaInput}
                           onChange={(e) => setUserCaptchaInput(e.target.value)}
-                          className={`w-full pl-8 pr-2 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
-                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                            }`}
+                          className="astro-input"
                           placeholder="Enter code"
                         />
                       </div>
@@ -904,7 +850,7 @@ export function AuthGate({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-auto min-w-[200px] max-w-xs py-2.5 px-6 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] hover:from-[#D4AF37] hover:to-[#A37B2F] text-white font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all shadow-md shadow-[#C9A050]/20 disabled:opacity-60 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+                  className="astro-btn astro-btn-primary min-w-[200px] max-w-xs"
                 >
                   {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>

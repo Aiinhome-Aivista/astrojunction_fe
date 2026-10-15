@@ -1898,13 +1898,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 mx-auto flex items-center justify-center">
                 {/* Outer dashed spinning celestial ring */}
                 <div
-                  className="absolute inset-0 rounded-full border-2 border-dashed border-[#C9A050]/60 animate-spin"
-                  style={{ animationDuration: '8s' }}
+                  className="absolute inset-0 rounded-full border-2 border-dashed border-[#C9A050]/60 animate-[spin_8s_linear_infinite]"
                 />
                 {/* Middle counter-spinning ring */}
                 <div
-                  className="absolute inset-2 rounded-full border-2 border-t-[#C9A050] border-r-[#C9A050]/40 border-b-transparent border-l-transparent animate-spin"
-                  style={{ animationDirection: 'reverse', animationDuration: '3s' }}
+                  className="absolute inset-2 rounded-full border-2 border-t-[#C9A050] border-r-[#C9A050]/40 border-b-transparent border-l-transparent animate-[spin_3s_linear_infinite_reverse]"
                 />
                 {/* Inner glowing core with sparkles */}
                 <div
@@ -3095,7 +3093,6 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
         ref={printableRef}
         id="printable-certificate"
         className="hidden print:block bg-white text-black p-8 max-w-4xl mx-auto border-8 border-double border-[#C9A050] my-6 font-sans"
-        style={{ fontFamily: "'Nunito'" }}
       >
         {/* Certificate Header */}
         <div className="text-center border-b-2 border-[#C9A050] pb-6 mb-6">

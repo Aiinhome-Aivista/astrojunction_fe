@@ -304,9 +304,8 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
     <div className="max-w-6xl mx-auto space-y-6 pb-16 animate-in fade-in duration-300">
       {/* Clean Top Header */}
       <div 
-        style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
         className={`p-6 sm:p-7 rounded-2xl border-2 transition-all shadow-xl relative z-10 ${
-          isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+          isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'
         }`}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -326,9 +325,8 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
 
           {/* Current Active Badge */}
           <div 
-            style={{ backgroundColor: isDark ? '#1C1C22' : '#FAF8F5' }}
             className={`px-4 py-2.5 rounded-xl border flex items-center space-x-2.5 self-start sm:self-auto ${
-              isDark ? 'border-[#2A2A2E]' : 'border-[#E8E4DC]'
+              isDark ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-[#FAF8F5] border-[#E8E4DC]'
             }`}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
@@ -360,15 +358,14 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
               <div
                 key={provider.id}
                 onClick={() => setSelectedProvider(provider.id)}
-                style={{ backgroundColor: isDark ? (isSelected ? '#1C1C22' : '#141418') : '#FFFFFF' }}
                 className={`rounded-2xl p-4 sm:p-5 cursor-pointer transition-all duration-200 border-2 flex flex-col justify-between shadow-md ${
                   isSelected
                     ? isDark
-                      ? 'border-[#C9A050] ring-1 ring-[#C9A050]'
-                      : 'border-[#C9A050] ring-1 ring-[#C9A050]'
+                      ? 'bg-[#1C1C22] border-[#C9A050] ring-1 ring-[#C9A050]'
+                      : 'bg-white border-[#C9A050] ring-1 ring-[#C9A050]'
                     : isDark
-                    ? 'border-[#2A2A2E] hover:border-[#3E3E46]'
-                    : 'border-[#E5E1D8] hover:border-[#C9A050]/50'
+                    ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#3E3E46]'
+                    : 'bg-white border-[#E5E1D8] hover:border-[#C9A050]/50'
                 }`}
               >
                 <div>
@@ -512,9 +509,8 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
 
       {/* Configuration Form for Selected Provider (Box 2) */}
       <div 
-        style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
         className={`p-6 sm:p-7 rounded-2xl border-2 transition-all shadow-xl relative z-10 ${
-          isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+          isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'
         }`}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-5 border-b border-gray-700/20 gap-2">
@@ -598,11 +594,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.MISTRAL_LOCAL_URL || ''}
                   onChange={(e) => handleInputChange('MISTRAL_LOCAL_URL', e.target.value)}
                   placeholder="http://localhost:11434 or http://<server-ip>:<port>"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
                 <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -621,11 +616,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.MISTRAL_MODEL || ''}
                   onChange={(e) => handleInputChange('MISTRAL_MODEL', e.target.value)}
                   placeholder="mistral:latest"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
                 <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -650,11 +644,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     value={formData.GEMINI_API_KEY || ''}
                     onChange={(e) => handleInputChange('GEMINI_API_KEY', e.target.value)}
                     placeholder="AIzaSy..."
-                    style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                     className={`w-full px-3.5 py-2.5 pr-10 rounded-xl border text-xs font-mono transition-colors ${
                       isDark
-                        ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                        : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                     }`}
                   />
                   <button
@@ -681,11 +674,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.GEMINI_MODEL || ''}
                   onChange={(e) => handleInputChange('GEMINI_MODEL', e.target.value)}
                   placeholder="gemini-2.5-flash"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
                 <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -710,11 +702,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     value={formData.MISTRAL_CLOUD_API_KEY || ''}
                     onChange={(e) => handleInputChange('MISTRAL_CLOUD_API_KEY', e.target.value)}
                     placeholder="mis_..."
-                    style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                     className={`w-full px-3.5 py-2.5 pr-10 rounded-xl border text-xs font-mono transition-colors ${
                       isDark
-                        ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                        : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                     }`}
                   />
                   <button
@@ -738,11 +729,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.MISTRAL_MODEL || ''}
                   onChange={(e) => handleInputChange('MISTRAL_MODEL', e.target.value)}
                   placeholder="mistral-large-latest"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
               </div>
@@ -758,11 +748,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.MISTRAL_CLOUD_URL || ''}
                   onChange={(e) => handleInputChange('MISTRAL_CLOUD_URL', e.target.value)}
                   placeholder="https://api.mistral.ai"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
               </div>
@@ -784,11 +773,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     value={formData.OPENAI_API_KEY || ''}
                     onChange={(e) => handleInputChange('OPENAI_API_KEY', e.target.value)}
                     placeholder="sk-proj-..."
-                    style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                     className={`w-full px-3.5 py-2.5 pr-10 rounded-xl border text-xs font-mono transition-colors ${
                       isDark
-                        ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                        : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                     }`}
                   />
                   <button
@@ -812,11 +800,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.OPENAI_MODEL || ''}
                   onChange={(e) => handleInputChange('OPENAI_MODEL', e.target.value)}
                   placeholder="gpt-4o-mini"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
               </div>
@@ -832,11 +819,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   value={formData.OPENAI_BASE_URL || ''}
                   onChange={(e) => handleInputChange('OPENAI_BASE_URL', e.target.value)}
                   placeholder="https://api.openai.com/v1"
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                 />
               </div>
@@ -859,11 +845,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                       value={formData.OPENROUTER_API_KEY || ''}
                       onChange={(e) => handleInputChange('OPENROUTER_API_KEY', e.target.value)}
                       placeholder="sk-or-v1-..."
-                      style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                       className={`w-full px-3.5 py-2.5 pr-10 rounded-xl border text-xs font-mono transition-colors ${
                         isDark
-                          ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                          : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                          ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                          : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                       }`}
                     />
                     <button
@@ -890,11 +875,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     value={formData.OPENROUTER_MODEL || ''}
                     onChange={(e) => handleInputChange('OPENROUTER_MODEL', e.target.value)}
                     placeholder="meta-llama/llama-3.3-70b-instruct:free"
-                    style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                       isDark
-                        ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                        : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                     }`}
                   />
                   <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -913,11 +897,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                     value={formData.OPENROUTER_BASE_URL || ''}
                     onChange={(e) => handleInputChange('OPENROUTER_BASE_URL', e.target.value)}
                     placeholder="https://openrouter.ai/api/v1"
-                    style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono transition-colors ${
                       isDark
-                        ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                        : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                        ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                        : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                     }`}
                   />
                   <p className={`mt-1 text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -928,9 +911,8 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
 
               {/* Quick Free Models Preset Pills */}
               <div 
-                style={{ backgroundColor: isDark ? '#1C1C22' : '#F9F8F5' }}
                 className={`p-4 rounded-xl border ${
-                  isDark ? 'border-[#2A2A2E]' : 'border-amber-200/70 shadow-sm'
+                  isDark ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-[#F9F8F5] border-amber-200/70 shadow-sm'
                 }`}
               >
                 <div className="text-[11px] font-bold text-[#C9A050] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
@@ -1010,11 +992,10 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                   max="300"
                   value={formData.LLM_TIMEOUT ?? 30}
                   onChange={(e) => handleInputChange('LLM_TIMEOUT', e.target.value)}
-                  style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
                   className={`w-16 px-2.5 py-1.5 rounded-lg border text-xs font-mono text-center transition-colors ${
                     isDark
-                      ? 'border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
-                      : 'border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
+                      ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050] focus:outline-none'
+                      : 'bg-white border-gray-300 text-black focus:border-[#C9A050] focus:outline-none'
                   }`}
                   placeholder="30"
                 />

@@ -179,7 +179,6 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({ theme }) => {
 
       {/* Main Table Container */}
       <div
-        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
         className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl relative z-10 ${bgClass}`}
       >
         <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-340px)] min-h-[220px] custom-scrollbar">

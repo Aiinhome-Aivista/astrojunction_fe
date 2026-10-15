@@ -366,15 +366,12 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
 
           {/* Data Table with Internal Scroll */}
           <div 
-            style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
             className={`rounded-2xl border-2 overflow-hidden shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}
           >
             <div 
-              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
               className="overflow-x-auto overflow-y-auto max-h-[380px] md:max-h-[calc(100vh-320px)] min-h-[220px] custom-scrollbar bg-white dark:bg-[#141418]"
             >
               <table 
-                style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                 className="w-full text-left text-xs whitespace-nowrap border-collapse bg-white dark:bg-[#141418]"
               >
                 <thead className={`sticky top-0 z-10 text-[11px] font-bold uppercase tracking-wider border-b-2 ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#9E9A90] border-[#2A2A2E]' : 'bg-[#FAF8F2] text-gray-700 border-[#DFC896]'}`}>
@@ -391,7 +388,6 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   </tr>
                 </thead>
                 <tbody 
-                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                   className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/60 bg-[#141418]' : 'divide-gray-100 bg-white'}`}
                 >
                   {loading && blogs.length === 0 ? (

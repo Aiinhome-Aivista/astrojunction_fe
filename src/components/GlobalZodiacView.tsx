@@ -399,8 +399,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span 
-                    className="text-2xl font-serif text-[#C9A050] group-hover:scale-110 transition duration-200"
-                    style={{ fontVariantEmoji: 'text' }}
+                    className="text-2xl font-serif text-[#C9A050] group-hover:scale-110 transition duration-200 astro-emoji-text"
                   >
                     {sign.symbol}&#xFE0E;
                   </span>
@@ -439,7 +438,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
           isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
         }`}>
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-2xl bg-[#C9A050]/15 border border-[#C9A050]/30 flex items-center justify-center text-[#C9A050] font-serif text-3xl font-bold shadow-sm" style={{ fontVariantEmoji: 'text' }}>
+            <div className="w-16 h-16 rounded-2xl bg-[#C9A050]/15 border border-[#C9A050]/30 flex items-center justify-center text-[#C9A050] font-serif text-3xl font-bold shadow-sm astro-emoji-text">
               {activeSign.symbol}&#xFE0E;
             </div>
             <div>

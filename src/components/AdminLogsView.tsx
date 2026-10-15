@@ -74,7 +74,6 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
       </div>
 
       <div 
-        style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
         className={`rounded-2xl border-2 ${borderClass} overflow-hidden shadow-xl ${bgClass}`}
       >
         {loading ? (

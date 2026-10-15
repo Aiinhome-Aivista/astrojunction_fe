@@ -124,20 +124,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div
-        className={`backdrop-blur-2xl border rounded-t-2xl sm:rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[92vh] sm:max-h-[90vh] overflow-y-auto font-sans transition-colors ${theme === 'light'
-            ? 'bg-[#FAF7F0] border-[#E2DBD0] text-[#1A1816]'
-            : 'bg-[#141418]/95 border-[#2A2A2E]/80 text-[#E5E1D8] shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
-          }`}
-      >
+    <div className="astro-modal-backdrop">
+      <div className="astro-modal-card astro-modal-card-lg">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className={`absolute top-4 right-4 p-1.5 rounded-lg border transition cursor-pointer ${theme === 'light'
-              ? 'bg-[#EFE9DC] border-[#DDD5C7] text-[#5C574F] hover:bg-[#E5DDCD] hover:text-[#1A1816]'
-              : 'bg-[#1A1A1E] border-[#2A2A2E] text-[#9E9A90] hover:text-[#F0ECE1] hover:bg-[#2A2A2E]'
-            }`}
+          className="astro-modal-close"
+          title="Close"
         >
           <X className="w-5 h-5" />
         </button>
@@ -146,10 +139,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className={`flex items-center space-x-3 mb-6 pb-4 border-b ${theme === 'light' ? 'border-[#E2DBD0]' : 'border-[#2A2A2E]'}`}>
           <AncientTraditionLogo size="md" isLight={theme === 'light'} />
           <div>
-            <h2 className={`text-xl font-serif font-bold ${theme === 'light' ? 'text-[#1A1816]' : 'text-[#F0ECE1]'}`}>
+            <h2 className="astro-heading-lg font-serif">
               {initialProfile ? 'Edit Astrological Profile' : 'New Astrological & Numerology Profile'}
             </h2>
-            <p className={`text-xs mt-0.5 ${theme === 'light' ? 'text-[#6E685E]' : 'text-[#9E9A90]'}`}>
+            <p className="astro-text-xs mt-0.5 astro-text-muted">
               Accurate birth date, time, and coordinates ensure mathematically exact Ascendant, houses, and forecasts.
             </p>
           </div>
@@ -160,34 +153,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* Full Name & Gender */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className={`block text-xs font-semibold mb-1 ${theme === 'light' ? 'text-[#8C6218]' : 'text-[#C9A050]'}`}>
+              <label className="astro-label">
                 Full Name (for Chaldean & Vedic Name Vibrations)
               </label>
-              <div className="relative">
-                <User className="absolute left-3 top-2.5 w-4 h-4 text-[#9E9A90]" />
+              <div className="astro-input-icon-wrap">
+                <User className="astro-input-icon" />
                 <input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Aarav Sharma"
-                  className={`w-full pl-9 pr-3 py-2 rounded-lg text-sm focus:outline-none focus:border-[#C9A050] ${theme === 'light'
-                      ? 'bg-[#FFFFFF] border border-[#DDD5C7] text-[#1A1816] placeholder-[#9E9A90]'
-                      : 'bg-[#1A1A1E] border border-[#2A2A2E] text-[#F0ECE1] placeholder-[#9E9A90]/60'
-                    }`}
+                  className="astro-input"
                 />
               </div>
             </div>
 
             <div>
-              <label className={`block text-xs font-semibold mb-1 ${theme === 'light' ? 'text-[#8C6218]' : 'text-[#C9A050]'}`}>Gender</label>
+              <label className="astro-label">Gender</label>
               <select
                 value={gender}
                 onChange={(e: any) => setGender(e.target.value)}
-                className={`w-full px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-[#C9A050] cursor-pointer ${theme === 'light'
-                    ? 'bg-[#FFFFFF] border border-[#DDD5C7] text-[#1A1816]'
-                    : 'bg-[#1A1A1E] border border-[#2A2A2E] text-[#F0ECE1]'
-                  }`}
+                className="astro-input cursor-pointer"
               >
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -199,8 +186,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* Birth Date & Time */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={`block text-xs font-semibold mb-1 flex items-center space-x-1 ${theme === 'light' ? 'text-[#8C6218]' : 'text-[#C9A050]'}`}>
-                <Calendar className="w-3.5 h-3.5 text-[#C9A050]" />
+              <label className="astro-label flex items-center space-x-1">
+                <Calendar className="w-3.5 h-3.5" />
                 <span>Date of Birth</span>
               </label>
               <VedicDatePicker
@@ -212,12 +199,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             <div>
-              <label className={`block text-xs font-semibold mb-1 flex items-center justify-between ${theme === 'light' ? 'text-[#8C6218]' : 'text-[#C9A050]'}`}>
+              <label className="astro-label flex items-center justify-between">
                 <span className="flex items-center space-x-1">
-                  <Clock className="w-3.5 h-3.5 text-[#C9A050]" />
+                  <Clock className="w-3.5 h-3.5" />
                   <span>Exact Time of Birth</span>
                 </span>
-                <span className={`text-[10px] font-normal ${theme === 'light' ? 'text-[#6E685E]' : 'text-gray-400'}`}>(Optional)</span>
+                <span className="text-[10px] font-normal astro-text-muted">(Optional)</span>
               </label>
               <VedicTimePicker
                 value={birthTime}
@@ -230,8 +217,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
           {/* Birth Place */}
           <div>
-            <label className={`block text-xs font-semibold mb-1 flex items-center space-x-1 ${theme === 'light' ? 'text-[#8C6218]' : 'text-[#C9A050]'}`}>
-              <MapPin className="w-3.5 h-3.5 text-[#C9A050]" />
+            <label className="astro-label flex items-center space-x-1">
+              <MapPin className="w-3.5 h-3.5" />
               <span>Place of Birth (City, Country)</span>
             </label>
             <div className="flex gap-2">
@@ -241,19 +228,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 value={birthPlace}
                 onChange={(e) => setBirthPlace(e.target.value)}
                 placeholder="e.g. New Delhi, India"
-                className={`flex-1 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-[#C9A050] ${theme === 'light'
-                    ? 'bg-[#FFFFFF] border border-[#DDD5C7] text-[#1A1816] placeholder-[#9E9A90]'
-                    : 'bg-[#1A1A1E] border border-[#2A2A2E] text-[#F0ECE1] placeholder-[#9E9A90]/60'
-                  }`}
+                className="astro-input flex-1"
               />
               <button
                 type="button"
                 onClick={() => handleLocationSearch(birthPlace)}
                 disabled={isSearchingLocation || !birthPlace.trim()}
-                className={`px-3 py-2 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer ${theme === 'light'
-                    ? 'bg-[#EAE3D2] hover:bg-[#C9A050] text-[#5C574F] hover:text-[#0D0D0F] border border-[#DDD5C7]'
-                    : 'bg-[#2A2A2E] hover:bg-[#C9A050] text-[#9E9A90] hover:text-[#0D0D0F] border border-[#3A3A3E]'
-                  }`}
+                className="astro-btn astro-btn-secondary px-3 py-2 text-xs"
               >
                 {isSearchingLocation ? 'Detecting...' : 'Auto Detect'}
               </button>
@@ -261,20 +242,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Quick preset city chips */}
             <div className="flex flex-wrap gap-1.5 pt-2">
-              <span className={`text-[11px] self-center mr-1 ${theme === 'light' ? 'text-[#6E685E]' : 'text-[#9E9A90]'}`}>Quick Select:</span>
+              <span className="text-[11px] self-center mr-1 astro-text-muted">Quick Select:</span>
               {PRESET_CITIES.slice(0, 8).map((city) => (
                 <button
                   type="button"
                   key={city.name}
                   onClick={() => handleCitySelect(city)}
-                  className={`text-[11px] px-2.5 py-0.5 rounded-full border transition cursor-pointer ${birthPlace === city.name
-                      ? theme === 'light'
-                        ? 'bg-[#F4EBD9] text-[#7A5210] border-[#C9A050] font-bold'
-                        : 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]/40 font-bold'
-                      : theme === 'light'
-                        ? 'bg-[#FFFFFF] text-[#5C574F] border-[#DDD5C7] hover:border-[#C9A050]'
-                        : 'bg-[#1A1A1E] text-[#9E9A90] border-[#2A2A2E] hover:border-[#9E9A90]'
-                    }`}
+                  className={`astro-chip ${birthPlace === city.name ? 'astro-chip-active' : ''}`}
                 >
                   {city.name.split(',')[0]}
                 </button>
@@ -283,9 +257,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </div>
 
           {/* Coordinates (Auto-calculated / Advanced) */}
-          <div className={`grid grid-cols-2 gap-4 p-3 rounded-lg border ${theme === 'light' ? 'bg-[#F2ECE0] border-[#E2DBD0]' : 'bg-[#08080A] border-[#2A2A2E]'}`}>
+          <div className="grid grid-cols-2 gap-4 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-inner)]">
             <div>
-              <label className={`block text-[11px] mb-1 ${theme === 'light' ? 'text-[#6E685E]' : 'text-[#9E9A90]'}`}>Latitude (°N/S)</label>
+              <label className="astro-label text-[11px]">Latitude (°N/S)</label>
               <input
                 type="number"
                 step="any"
@@ -295,14 +269,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 required
                 value={latitude}
                 onChange={(e) => setLatitude(parseFloat(e.target.value))}
-                className={`w-full px-2.5 py-1.5 rounded text-xs focus:outline-none focus:border-[#C9A050] ${theme === 'light'
-                    ? 'bg-[#FFFFFF] border border-[#DDD5C7] text-[#1A1816]'
-                    : 'bg-[#1A1A1E] border border-[#2A2A2E] text-[#F0ECE1]'
-                  }`}
+                className="astro-input py-1 text-xs"
               />
             </div>
             <div>
-              <label className={`block text-[11px] mb-1 ${theme === 'light' ? 'text-[#6E685E]' : 'text-[#9E9A90]'}`}>Longitude (°E/W)</label>
+              <label className="astro-label text-[11px]">Longitude (°E/W)</label>
               <input
                 type="number"
                 step="any"
@@ -312,10 +283,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 required
                 value={longitude}
                 onChange={(e) => setLongitude(parseFloat(e.target.value))}
-                className={`w-full px-2.5 py-1.5 rounded text-xs focus:outline-none focus:border-[#C9A050] ${theme === 'light'
-                    ? 'bg-[#FFFFFF] border border-[#DDD5C7] text-[#1A1816]'
-                    : 'bg-[#1A1A1E] border border-[#2A2A2E] text-[#F0ECE1]'
-                  }`}
+                className="astro-input py-1 text-xs"
               />
             </div>
           </div>
@@ -326,16 +294,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 rounded-lg border text-xs font-medium cursor-pointer transition ${theme === 'light'
-                  ? 'border-[#DDD5C7] text-[#5C574F] hover:bg-[#EFE9DC] hover:text-[#1A1816]'
-                  : 'border-[#2A2A2E] text-[#9E9A90] hover:bg-[#1A1A1E] hover:text-[#F0ECE1]'
-                }`}
+              className="astro-btn astro-btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center space-x-2 px-5 py-2 rounded-lg bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 cursor-pointer transition"
+              className="astro-btn astro-btn-primary"
             >
               <Sparkles className="w-4 h-4" />
               <span>Save Profile & Update Chart</span>

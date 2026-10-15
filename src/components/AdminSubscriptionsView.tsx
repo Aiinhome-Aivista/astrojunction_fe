@@ -125,8 +125,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
 
           {currentPlan && (
         <div 
-          style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-          className={`p-6 rounded-2xl border-2 shadow-xl relative z-10 ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}
+          className={`p-6 rounded-2xl border-2 shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
         >
           <h3 className="text-lg font-bold mb-4">{isEditing ? 'Edit Plan' : 'New Plan'}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -137,8 +136,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
                 value={currentPlan.id || ''} 
                 onChange={e => setCurrentPlan({...currentPlan, id: e.target.value})} 
                 disabled={isEditing} 
-                style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
               />
             </div>
             <div>
@@ -147,8 +145,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
                 type="text" 
                 value={currentPlan.plan_type || ''} 
                 onChange={e => setCurrentPlan({...currentPlan, plan_type: e.target.value})} 
-                style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
               />
             </div>
             <div>
@@ -157,8 +154,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
                 type="text" 
                 value={currentPlan.plan_name || ''} 
                 onChange={e => setCurrentPlan({...currentPlan, plan_name: e.target.value})} 
-                style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+                className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
               />
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -168,8 +164,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
                   type="number" 
                   value={currentPlan.price_inr || ''} 
                   onChange={e => setCurrentPlan({...currentPlan, price_inr: parseFloat(e.target.value)})} 
-                  style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-                  className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+                  className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
                 />
               </div>
               <div>
@@ -178,8 +173,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
                   type="number" 
                   value={currentPlan.price_usd || ''} 
                   onChange={e => setCurrentPlan({...currentPlan, price_usd: parseFloat(e.target.value)})} 
-                  style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-                  className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+                  className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
                 />
               </div>
             </div>
@@ -191,8 +185,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
               type="text" 
               value={currentPlan.description || ''} 
               onChange={e => setCurrentPlan({...currentPlan, description: e.target.value})} 
-              style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-              className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+              className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
             />
           </div>
 
@@ -202,8 +195,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
               rows={4} 
               value={featuresInput} 
               onChange={e => setFeaturesInput(e.target.value)} 
-              style={{ backgroundColor: theme === 'dark' ? '#0D0D0F' : '#FFFFFF' }}
-              className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'}`} 
+              className={`w-full p-2.5 rounded-xl border-2 ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'}`} 
             />
           </div>
 
@@ -221,8 +213,7 @@ export const AdminSubscriptionsView: React.FC<AdminSubscriptionsViewProps> = ({ 
           {plans.map(plan => (
             <div 
               key={plan.id} 
-              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-              className={`p-6 rounded-2xl border-2 flex flex-col justify-between shadow-lg ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} ${plan.is_active ? 'border-t-4 border-t-[#C9A050]' : 'opacity-85'}`}
+              className={`p-6 rounded-2xl border-2 flex flex-col justify-between shadow-lg ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'} ${plan.is_active ? 'border-t-4 border-t-[#C9A050]' : 'opacity-85'}`}
             >
               <div>
                 <div className="flex justify-between items-start mb-2">

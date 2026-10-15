@@ -109,11 +109,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
       </div>
 
       <div 
-        className="relative w-full overflow-hidden pb-8"
-        style={{ 
-          maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)'
-        }}
+        className="relative w-full overflow-hidden pb-8 astro-marquee-mask"
       >
         <div className="flex w-max animate-marquee gap-6 px-4 hover:pause">
           {displayBlogs.map((blog, idx) => {
@@ -131,13 +127,10 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                   if (onSelectBlog) onSelectBlog(blog);
                   else if (onViewAll) onViewAll();
                 }}
-                style={{
-                  backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                }}
                 className={`shrink-0 w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
                   isDark 
-                    ? 'border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                    : 'border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
+                    ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
+                    : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
                 }`}
               >
                 <div className="relative h-[220px] w-full overflow-hidden bg-black/20">
@@ -157,10 +150,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                 </div>
                 
                 <div 
-                  style={{
-                    backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                  }}
-                  className="p-6 md:p-7 flex-1 flex flex-col"
+                  className={`p-6 md:p-7 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-white'}`}
                 >
                   <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
                     <span className={`text-[11px] font-extrabold uppercase tracking-[0.18em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
@@ -548,9 +538,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             className={`article-content prose max-w-none space-y-6 leading-relaxed text-base sm:text-lg font-sans transition-colors ${
               isDark ? 'prose-invert text-[#E5E1D8]' : 'text-gray-900'
             }`}
-            style={{
-              lineHeight: '1.85',
-            }}
             dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
           />
 
@@ -638,11 +625,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           }`}>
             <button
               onClick={() => setSelectedBlog(null)}
-              style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
               className={`w-full sm:w-auto px-7 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg border-2 group ${
                 isDark 
-                  ? 'border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
-                  : 'border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
+                  ? 'bg-[#141418] border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
+                  : 'bg-white border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
               }`}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#C9A050] group-hover:text-inherit" />
@@ -678,9 +664,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   <div
                     key={relBlog.id}
                     onClick={() => setSelectedBlog(relBlog)}
-                    style={{
-                      backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                    }}
                     className={`rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 border shadow-lg group ${
                       isDark 
                         ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/50' 
@@ -849,9 +832,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   <div 
                     key={blog.id}
                     onClick={() => setSelectedBlog(blog)}
-                    style={{
-                      backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                    }}
                     className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
                       isDark 
                         ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
@@ -876,9 +856,6 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     </div>
                     
                     <div 
-                      style={{
-                        backgroundColor: isDark ? '#141418' : '#FFFFFF',
-                      }}
                       className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-[#FFFFFF]'}`}
                     >
                       <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
@@ -1277,7 +1254,6 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
 
         {viewMode === 'list' && (
           <div 
-            style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
             className={`rounded-2xl border-2 overflow-hidden shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}
           >
             <div className={`p-3.5 border-b-2 flex items-center justify-between gap-4 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}>
@@ -1299,11 +1275,9 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
             </div>
 
             <div 
-              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
               className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-340px)] min-h-[220px] custom-scrollbar bg-white dark:bg-[#141418]"
             >
               <table 
-                style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                 className="w-full text-left text-xs whitespace-nowrap border-collapse bg-white dark:bg-[#141418]"
               >
                 <thead className={`sticky top-0 z-10 text-[11px] font-bold uppercase tracking-wider border-b-2 ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#9E9A90] border-[#2A2A2E]' : 'bg-[#FAF8F2] text-gray-700 border-[#DFC896]'}`}>
@@ -1320,7 +1294,6 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   </tr>
                 </thead>
                 <tbody 
-                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                   className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/60 bg-[#141418]' : 'divide-gray-100 bg-white'}`}
                 >
                   {loading && blogs.length === 0 ? (
@@ -1417,8 +1390,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         {viewMode === 'create' && (
           <form 
             onSubmit={handleSubmit} 
-            style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-            className={`p-6 rounded-2xl border-2 space-y-6 shadow-xl relative z-10 ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}
+            className={`p-6 rounded-2xl border-2 space-y-6 shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1 md:col-span-2">
@@ -1430,11 +1402,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   value={formData.title}
                   onChange={handleInputChange}
                   placeholder="e.g. Navigating Saturn Return: A Spiritual Guide"
-                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                   className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
                     theme === 'dark' 
-                      ? 'border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' 
-                      : 'border-gray-300 text-black placeholder-[#9E9A90]'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' 
+                      : 'bg-white border-gray-300 text-black placeholder-[#9E9A90]'
                   }`}
                 />
               </div>
@@ -1611,8 +1582,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         {viewMode === 'categories' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div 
-              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-              className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}
+              className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
             >
               <h2 className="text-sm font-bold uppercase tracking-wider mb-4 text-[#C9A050] flex items-center space-x-2">
                 <Folder className="w-4 h-4" />
@@ -1624,9 +1594,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   placeholder="New Category Name"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                   className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'
+                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
                   }`}
                 />
                 <button type="submit" className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#C9A050] text-[#0D0D0F] hover:bg-[#B89040]">
@@ -1646,8 +1615,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
             </div>
 
             <div 
-              style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
-              className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`}
+              className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
             >
               <h2 className="text-sm font-bold uppercase tracking-wider mb-4 text-[#C9A050] flex items-center space-x-2">
                 <Tag className="w-4 h-4" />
@@ -1657,9 +1625,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                 <select
                   value={selectedCategoryForSub}
                   onChange={(e) => setSelectedCategoryForSub(e.target.value)}
-                  style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                   className={`w-full px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'
+                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
                   }`}
                 >
                   <option value="">Select Parent Category</option>
@@ -1673,9 +1640,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                     placeholder="New Subcategory Name"
                     value={newSubcategoryName}
                     onChange={(e) => setNewSubcategoryName(e.target.value)}
-                    style={{ backgroundColor: theme === 'dark' ? '#141418' : '#FFFFFF' }}
                     className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                      theme === 'dark' ? 'border-[#2A2A2E] text-white' : 'border-gray-300 text-black'
+                      theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
                     }`}
                   />
                   <button type="submit" className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#C9A050] text-[#0D0D0F] hover:bg-[#B89040]">

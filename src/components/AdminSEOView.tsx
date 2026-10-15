@@ -180,7 +180,6 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
 
       {/* Page Selectors Bar */}
       <div 
-        style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
         className={`p-2.5 rounded-2xl border-2 ${bgCard} flex items-center gap-2 overflow-x-auto no-scrollbar md:flex-wrap relative z-10`}
       >
         {PAGES_LIST.map((page) => {
@@ -208,7 +207,6 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
         {/* Left Column: Form Editor (7 cols) */}
         <div 
-          style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
           className={`lg:col-span-7 rounded-2xl border-2 p-6 space-y-5 ${bgCard}`}
         >
           <div className="flex items-center justify-between border-b pb-3 border-inherit">
@@ -236,8 +234,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.title}
               onChange={(e) => handleFieldChange('title', e.target.value)}
               placeholder="Enter page title..."
-              style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'border-gray-300 text-black focus:border-[#C9A050]'
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-gray-300 text-black focus:border-[#C9A050]'
                 }`}
             />
           </div>
@@ -257,8 +254,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.description}
               onChange={(e) => handleFieldChange('description', e.target.value)}
               placeholder="Enter comprehensive meta description for search engines..."
-              style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all resize-y ${isDark ? 'border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'border-gray-300 text-black focus:border-[#C9A050]'
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all resize-y ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-gray-300 text-black focus:border-[#C9A050]'
                 }`}
             />
           </div>
@@ -274,8 +270,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={Array.isArray(currentPage.keywords) ? currentPage.keywords.join(', ') : (currentPage.keywords || '')}
               onChange={handleKeywordsChange}
               placeholder="vedic astrology, janam kundli, daily horoscope..."
-              style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'border-gray-300 text-black focus:border-[#C9A050]'
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-gray-300 text-black focus:border-[#C9A050]'
                 }`}
             />
             {Array.isArray(currentPage.keywords) && currentPage.keywords.length > 0 && (
@@ -304,8 +299,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
               value={currentPage.ogImage || ''}
               onChange={(e) => handleFieldChange('ogImage', e.target.value)}
               placeholder="/golden_zodiac_wheel.jpg or https://..."
-              style={{ backgroundColor: isDark ? '#1C1C22' : '#FFFFFF' }}
-              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'border-gray-300 text-black focus:border-[#C9A050]'
+              className={`w-full px-3.5 py-2.5 rounded-xl text-xs border outline-none transition-all ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]' : 'bg-white border-gray-300 text-black focus:border-[#C9A050]'
                 }`}
             />
           </div>
@@ -315,7 +309,6 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
         <div className="lg:col-span-5 space-y-6">
           {/* 1. Google SERP (Search Result) Preview */}
           <div 
-            style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
             className={`rounded-2xl border-2 p-5 space-y-3 ${bgCard}`}
           >
             <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#C9A050]">
@@ -324,10 +317,9 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
             </div>
 
             <div
-              style={{ backgroundColor: isDark ? '#18181D' : '#FFFFFF' }}
               className={`p-4 rounded-xl font-sans space-y-1 border transition-colors ${isDark
-                  ? 'border-[#2A2A2E] text-[#e8eaed]'
-                  : 'border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-[#18181D] border-[#2A2A2E] text-[#e8eaed]'
+                  : 'bg-white border-gray-200 text-gray-900 shadow-sm'
                 }`}
             >
               <div className="flex items-center space-x-2 text-[11px]">
@@ -352,7 +344,6 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
 
           {/* 2. WhatsApp / Social Media Share Preview Card */}
           <div 
-            style={{ backgroundColor: isDark ? '#141418' : '#FFFFFF' }}
             className={`rounded-2xl border-2 p-5 space-y-3 ${bgCard}`}
           >
             <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#C9A050]">
@@ -361,10 +352,9 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
             </div>
 
             <div
-              style={{ backgroundColor: isDark ? '#18181D' : '#FFFFFF' }}
               className={`rounded-xl overflow-hidden border transition-colors ${isDark
-                  ? 'border-[#2A2A2E] shadow-lg shadow-black/40'
-                  : 'border-gray-200 shadow-sm'
+                  ? 'bg-[#18181D] border-[#2A2A2E] shadow-lg shadow-black/40'
+                  : 'bg-white border-gray-200 shadow-sm'
                 }`}
             >
               <div className="aspect-[1.91/1] w-full bg-black/20 overflow-hidden relative">
@@ -378,8 +368,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
                 />
               </div>
               <div
-                style={{ backgroundColor: isDark ? '#141418' : '#F9F9F9' }}
-                className={`p-3 space-y-1 border-t transition-colors ${isDark ? 'border-[#2A2A2E]' : 'border-gray-200'
+                className={`p-3 space-y-1 border-t transition-colors ${isDark ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F9F9] border-gray-200'
                   }`}
               >
                 <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>

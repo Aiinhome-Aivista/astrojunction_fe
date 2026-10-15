@@ -298,8 +298,7 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
                       <img
                         src="/golden_zodiac_wheel.jpg"
                         alt="Zodiac Scanning"
-                        className="absolute inset-0 w-full h-full object-cover opacity-35 filter brightness-90 animate-spin"
-                        style={{ animationDuration: '40s' }}
+                        className="absolute inset-0 w-full h-full object-cover opacity-35 filter brightness-90 animate-[spin_40s_linear_infinite]"
                       />
                       <div className="absolute inset-0 bg-radial from-transparent to-black/90" />
                       
