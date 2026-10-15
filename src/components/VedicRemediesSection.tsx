@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, ShieldCheck, Flame, Heart, Sparkles, Copy, Check, Clock, Compass, Gem, ChevronRight } from 'lucide-react';
+import { Sun, ShieldCheck, Flame, Heart, Copy, Check, Clock, Compass, Gem, ChevronRight } from 'lucide-react';
 
 interface VedicRemediesSectionProps {
   theme: 'light' | 'dark';
@@ -150,7 +150,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-12">
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
-          <Sparkles className="w-4 h-4 text-[#C9A050]" />
+          <Compass className="w-4 h-4 text-[#C9A050]" />
           <span>Time-Tested Vedic Upayas & Remedies</span>
         </div>
 
@@ -161,7 +161,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
           <span className="text-[#C9A050]">Planetary Upayas</span>
         </h2>
 
-        <p className={`text-sm sm:text-base text-center mx-auto max-w-lg leading-relaxed ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+        <p className={`text-sm sm:text-base text-center mx-auto max-w-lg leading-relaxed ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black'}`}>
           Authentic scriptural prescriptions from the <em>Brihat Parashara Hora Shastra</em> and classical Jyotish canons to alleviate planetary doshas, awaken dormant houses, and invite cosmic harmony.
         </p>
       </div>
@@ -198,17 +198,17 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 {/* Card Header: Icon & Tag */}
                 <div className="flex items-center justify-between mb-4">
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner border transition-transform duration-300 group-hover:scale-110"
-                    style={{
-                      backgroundColor: theme === 'dark' ? '#1E1E24' : '#F5EFE1',
-                      borderColor: isSelected ? '#C9A050' : theme === 'dark' ? '#2A2A2E' : '#E5E1D8',
-                    }}
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner border transition-transform duration-300 group-hover:scale-110 ${
+                      theme === 'dark' ? 'bg-[#1E1E24]' : 'bg-[#F5EFE1]'
+                    } ${
+                      isSelected ? 'border-[#C9A050]' : theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+                    }`}
                   >
                     <Icon className="w-6 h-6" style={{ color: remedy.accentColor }} />
                   </div>
 
                   <span
-                    className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${
+                    className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${
                       isSelected
                         ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050]'
                         : theme === 'dark'
@@ -228,7 +228,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 </div>
 
                 {/* Purpose Snippet */}
-                <p className={`text-xs leading-relaxed line-clamp-3 mb-4 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                <p className={`text-xs leading-relaxed line-clamp-3 mb-4 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
                   {remedy.purpose}
                 </p>
               </div>
@@ -236,17 +236,17 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               {/* Card Footer: Graha & Action */}
               <div className="pt-3 border-t border-dashed border-[#C9A050]/20 flex items-center justify-between">
                 <div className="flex flex-col">
-                  <span className="text-[9px] uppercase tracking-wider text-[#C9A050] font-semibold">
+                  <span className="text-xs uppercase tracking-wider text-[#C9A050] font-semibold">
                     Primary Graha
                   </span>
-                  <span className={`text-[11px] font-medium ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
+                  <span className={`text-xs font-medium ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-black font-semibold'}`}>
                     {remedy.graha.split('(')[0]}
                   </span>
                 </div>
 
                 <span
                   className={`text-xs font-semibold flex items-center space-x-1 ${
-                    isSelected ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'
+                    isSelected ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-black'
                   }`}
                 >
                   <span>View Vidhi</span>
@@ -310,7 +310,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               }`}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] uppercase font-bold tracking-widest text-[#C9A050] flex items-center space-x-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Compass className="w-3.5 h-3.5" />
                     <span>Sacred Vedic Chanting (Mantra)</span>
                   </span>
 

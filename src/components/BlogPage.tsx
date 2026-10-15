@@ -7,7 +7,6 @@ import {
   X, 
   BookOpen, 
   Clock, 
-  Sparkles, 
   Share2, 
   Check, 
   ArrowRight, 
@@ -326,7 +325,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             }`}>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C9A050] to-[#E2BD68] flex items-center justify-center text-[#0D0D0F] font-serif font-bold shadow-md">
-                  <Sparkles className="w-5 h-5 text-[#0D0D0F]" />
+                  <BookOpen className="w-5 h-5 text-[#0D0D0F]" />
                 </div>
                 <div>
                   <div className="text-sm font-bold flex items-center space-x-1.5">
@@ -404,7 +403,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           }`}>
             <div className="flex items-start space-x-4">
               <div className="p-3 rounded-2xl bg-[#C9A050]/20 text-[#C9A050] shrink-0 mt-1">
-                <Sparkles className="w-6 h-6" />
+                <BookOpen className="w-6 h-6" />
               </div>
               <div>
                 <h4 className={`text-lg font-serif font-bold mb-1.5 ${isDark ? 'text-[#F0ECE1]' : 'text-amber-950'}`}>

@@ -493,7 +493,7 @@ export function AuthGate({
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className="astro-modal-card my-auto"
+          className={`astro-modal-card astro-modal-card-auth my-auto ${mode === 'login' ? 'max-w-[420px]' : 'max-w-[530px]'}`}
         >
           {/* Close button */}
           {onClose && (
@@ -508,7 +508,7 @@ export function AuthGate({
 
           {/* Header */}
           <div className="pb-1 flex flex-col items-center text-center shrink-0">
-            <AncientTraditionLogo size="sm" isLight={!isDark} className="mb-1" />
+            <AncientTraditionLogo size="sm" isLight={!isDark} className="mb-0.5" />
             <h2 className="astro-heading-md tracking-wide flex items-center">
               ASTRO<span className="text-[#C9A050]">JUNCTION</span>
             </h2>
@@ -517,14 +517,14 @@ export function AuthGate({
             </p>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-1.5">
             {/* Google Authentication Button */}
-            <div className="mb-3 flex flex-col items-center">
+            <div className="mb-2.5 flex flex-col items-center">
               <button
                 type="button"
                 onClick={handleGoogleButtonClick}
                 disabled={loading}
-                className="astro-btn-google"
+                className="astro-btn-google mb-3"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -547,16 +547,16 @@ export function AuthGate({
                 <span>{mode === 'login' ? 'Continue with Google' : 'Register with Google'}</span>
               </button>
 
-              <div className="relative w-full my-2.5 flex items-center justify-center">
-                <div className={`w-full border-t ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'}`} />
-                <span className={`absolute px-2.5 text-[9px] uppercase font-bold tracking-wider ${isDark ? 'bg-[#141418] text-[#9E9A90]' : 'bg-[#FFFFFF] text-gray-400'}`}>
+              <div className="relative w-full mt-1.5 mb-2.5 flex items-center justify-center">
+                <div className={`w-full border-t ${isDark ? 'border-[#2A2A2E]' : 'border-[#DFC896]/60'}`} />
+                <span className={`absolute px-3 text-[10px] uppercase font-bold tracking-wider ${isDark ? 'bg-[#141418] text-[#9E9A90]' : 'bg-[#FAF4E4] text-[#6E6452]'}`}>
                   or continue with email
                 </span>
               </div>
             </div>
 
             {/* Mode Switcher Tabs */}
-            <div className="astro-tab-group">
+            <div className="astro-tab-group !mb-2.5">
               <button
                 type="button"
                 onClick={() => { setMode('login'); setError(null); setSuccessMessage(null); refreshCaptcha(); }}
@@ -574,10 +574,11 @@ export function AuthGate({
             </div>
 
             {/* Auth Form */}
-            <form onSubmit={handleSubmit} className="space-y-2.5">
+            <form onSubmit={handleSubmit} className="space-y-2">
               {mode === 'register' ? (
-                <div className="space-y-2.5">
-                    {/* Full Name */}
+                <div className="space-y-2">
+                  {/* Row 1: Full Name & Phone Number */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                     <div>
                       <label className="astro-label">
                         Full Name <span className="text-rose-500">*</span>
@@ -595,7 +596,26 @@ export function AuthGate({
                       </div>
                     </div>
 
-                    {/* Email Address */}
+                    <div>
+                      <label className="astro-label flex items-center justify-between">
+                        <span>Phone Number</span>
+                        <span className="text-[10px] font-normal opacity-70">(Optional)</span>
+                      </label>
+                      <div className="astro-input-icon-wrap">
+                        <Phone className="astro-input-icon" />
+                        <input
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          className="astro-input"
+                          placeholder="e.g. +91 98765 43210"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 2: Email & Password */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                     <div>
                       <label className="astro-label">
                         Email Address <span className="text-rose-500">*</span>
@@ -614,28 +634,9 @@ export function AuthGate({
                       </div>
                     </div>
 
-                    {/* Phone Number (Optional) */}
-                    <div>
-                      <label className="astro-label flex items-center justify-between">
-                        <span>Phone Number</span>
-                        <span className="text-[9px] font-normal opacity-70">(Optional)</span>
-                      </label>
-                      <div className="astro-input-icon-wrap">
-                        <Phone className="astro-input-icon" />
-                        <input
-                          type="tel"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="astro-input"
-                          placeholder="e.g. +91 98765 43210"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Password */}
                     <div>
                       <label className="astro-label">
-                        Password <span className="text-rose-500">*</span>
+                        Create Password <span className="text-rose-500">*</span>
                       </label>
                       <div className="astro-input-icon-wrap">
                         <Lock className="astro-input-icon" />
@@ -646,7 +647,7 @@ export function AuthGate({
                           autoComplete="new-password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="astro-input pr-10"
+                          className="astro-input pr-9"
                           placeholder="Min. 8 characters"
                         />
                         <button
@@ -655,23 +656,61 @@ export function AuthGate({
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                         >
                           {showPassword ? (
-                            <EyeOff className="w-4 h-4" />
+                            <EyeOff className="w-3.5 h-3.5" />
                           ) : (
-                            <Eye className="w-4 h-4" />
+                            <Eye className="w-3.5 h-3.5" />
                           )}
                         </button>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Row 3: Captcha & Terms */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 pt-0.5 items-end">
+                    {/* Captcha Section */}
+                    <div>
+                      <label className="astro-label">
+                        Security Verification (Captcha)
+                      </label>
+                      <div className="flex items-center space-x-1.5">
+                        <div className="astro-captcha-code !px-2 !py-1 text-xs">
+                          <span className="line-through decoration-[#C9A050]/60 decoration-2">
+                            {captchaCode}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={refreshCaptcha}
+                            className="ml-1 p-0.5 rounded hover:bg-black/10 transition-colors cursor-pointer text-gray-400 hover:text-[#C9A050]"
+                            title="Generate new captcha"
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                          </button>
+                        </div>
+
+                        <div className="astro-input-icon-wrap flex-1">
+                          <ShieldCheck className="astro-input-icon !w-3.5 !h-3.5" />
+                          <input
+                            type="text"
+                            required
+                            maxLength={6}
+                            value={userCaptchaInput}
+                            onChange={(e) => setUserCaptchaInput(e.target.value)}
+                            className="astro-input !pl-7"
+                            placeholder="Enter code"
+                          />
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Terms & Conditions / Privacy Policy Checkbox */}
-                    <div className="pt-1">
+                    <div className="pb-1">
                       <label className="flex items-start space-x-2 cursor-pointer select-none">
                         <input
                           type="checkbox"
                           required
                           checked={agreeTerms}
                           onChange={(e) => setAgreeTerms(e.target.checked)}
-                          className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#C9A050] focus:ring-[#C9A050] cursor-pointer"
+                          className="mt-0.5 w-3.5 h-3.5 rounded border-gray-300 text-[#C9A050] focus:ring-[#C9A050] cursor-pointer shrink-0"
                         />
                         <span className={`text-[11px] leading-tight ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                           I agree to the{' '}
@@ -707,45 +746,11 @@ export function AuthGate({
                         </span>
                       </label>
                     </div>
-
-                    {/* Captcha Section (Compact) */}
-                    <div className="pt-1 max-w-[270px]">
-                      <label className="astro-label">
-                        Security Verification (Captcha)
-                      </label>
-                      <div className="flex items-center space-x-2">
-                        <div className="astro-captcha-code">
-                          <span className="line-through decoration-[#C9A050]/60 decoration-2">
-                            {captchaCode}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={refreshCaptcha}
-                            className="ml-1.5 p-0.5 rounded hover:bg-black/10 transition-colors cursor-pointer text-gray-400 hover:text-[#C9A050]"
-                            title="Generate new captcha"
-                          >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-
-                        <div className="astro-input-icon-wrap flex-1">
-                          <ShieldCheck className="astro-input-icon" />
-                          <input
-                            type="text"
-                            required
-                            maxLength={6}
-                            value={userCaptchaInput}
-                            onChange={(e) => setUserCaptchaInput(e.target.value)}
-                            className="astro-input"
-                            placeholder="Enter code"
-                          />
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                ) : (
+                </div>
+              ) : (
                 /* Login 1-Column View */
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {/* Email Address */}
                   <div>
                     <label className="astro-label">
@@ -794,7 +799,7 @@ export function AuthGate({
                   </div>
 
                   {/* Captcha Section (Compact) */}
-                  <div className="pt-1 max-w-[270px]">
+                  <div className="pt-0.5 max-w-[270px]">
                     <label className="astro-label">
                       Security Verification (Captcha)
                     </label>
@@ -846,7 +851,7 @@ export function AuthGate({
                 </div>
               )}
 
-              <div className="flex justify-center pt-2">
+              <div className="flex justify-center pt-1.5">
                 <button
                   type="submit"
                   disabled={loading}

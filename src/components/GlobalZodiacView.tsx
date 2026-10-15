@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Globe,
-  Sparkles,
   Flame,
   Mountain,
   Wind,
@@ -298,7 +297,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
 
         {/* Ayanamsha Note */}
         <div className="mt-3 pt-3 border-t border-[#2A2A2E]/60 flex items-center space-x-2 text-[10px] sm:text-xs text-[#C9A050]/90">
-          <Sparkles className="w-3 h-3 flex-shrink-0 text-[#C9A050]" />
+          <Compass className="w-3 h-3 flex-shrink-0 text-[#C9A050]" />
           <span>{t('zodiac.ayanamsa_note')}</span>
         </div>
       </div>
@@ -557,7 +556,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
           <div className={`text-sm leading-relaxed min-h-[60px] ${isDark ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
             {isFetchingForecast && !currentDynamicData?.forecast ? (
               <div className="animate-pulse flex space-x-2 items-center text-[#C9A050]">
-                <Sparkles className="w-4 h-4 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Consulting Daivajna for personalized transits...</span>
               </div>
             ) : (
@@ -635,7 +634,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               : 'bg-[#FAF7F2] border-[#E8E1D5] shadow-xs'
           }`}>
             <div className="flex items-center space-x-2 text-xs font-bold text-[#C9A050]">
-              <Sparkles className="w-4 h-4" />
+              <Compass className="w-4 h-4" />
               <span>Auspicious Resonances</span>
             </div>
             <div className={`flex justify-between ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>

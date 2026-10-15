@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Compass,
-  Sparkles,
   Layers,
   Hash,
   MessageSquareText,
@@ -242,7 +241,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         { id: 'daily', label: 'Daily', icon: Sun },
         { id: 'horoscope', label: 'Kundli', icon: Compass },
         { id: 'matchmaking', label: 'Match', icon: HeartHandshake },
-        { id: 'counsellor', label: 'Daivajna', icon: Sparkles },
+        { id: 'counsellor', label: 'Daivajna', icon: MessageSquareText },
       ];
 
   const isViewingAdmin = isAdmin || activeTab?.startsWith('admin_') || activeTab === 'admin';
@@ -730,7 +729,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         : 'text-[#C9A050] bg-[#C9A050]/10 hover:bg-[#C9A050]/20'
                     }`}
                   >
-                    <Sparkles className="w-4 h-4 text-[#C9A050]" />
+                    <MessageSquareText className="w-4 h-4 text-[#C9A050]" />
                     <span>Daivajna Consultation</span>
                   </button>
                 )}
@@ -830,7 +829,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-300"></span>
           </span>
 
-          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-current group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300" />
+          <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300" />
           <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider leading-none mt-1 select-none">
             Daivajna
           </span>
@@ -841,7 +840,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
               : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
           }`}>
-            Ask Daivajna ✨
+            Ask Daivajna
           </span>
         </button>
       )}

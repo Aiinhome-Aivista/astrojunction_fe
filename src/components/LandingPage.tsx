@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight } from 'lucide-react';
+import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight } from 'lucide-react';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
@@ -441,7 +441,6 @@ export function LandingPage({
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
-                <Sparkles className="w-3.5 h-3.5" />
                 <span>Remedies</span>
               </a>
               <a
@@ -487,8 +486,8 @@ export function LandingPage({
                     onClick={onGoToDashboard}
                     title="Dashboard"
                     className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm ${theme === 'dark'
-                        ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
-                        : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
                       }`}
                   >
                     <LayoutDashboard className="w-3.5 h-3.5 text-[#C9A050]" />
@@ -499,8 +498,8 @@ export function LandingPage({
                     <button
                       onClick={onGoToDashboard}
                       className={`group focus:outline-none flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
-                          ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
-                          : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
+                        ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
+                        : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
                         }`}
                     >
                       <div className="relative">
@@ -598,12 +597,12 @@ export function LandingPage({
                   <span>Authentic Vedic Oracle</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6 uppercase tracking-wider">
                   <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    Decode Your
+                    DECODE YOUR
                   </span>
                   <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    Destiny with
+                    DESTINY WITH
                   </span>
                   <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start">
                     {"ASTRO".split("").map((char, index) => (
@@ -631,7 +630,7 @@ export function LandingPage({
                   </span>
                 </h1>
 
-                <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed font-light ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
+                <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-black'}`}>
                   Harness the profound wisdom of ancient <strong className="font-semibold text-[#C9A050]">Vedic astrology</strong>. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.
                 </p>
 
@@ -641,7 +640,6 @@ export function LandingPage({
                     className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
                   >
                     <span>{authUser ? 'Go to Your Kundli Dashboard' : 'Unlock Your Future'}</span>
-                    <Sparkles className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -759,7 +757,7 @@ export function LandingPage({
                   <Lock className="w-6 h-6 text-[#C9A050]" />
                   <span>Unlock Premium Features</span>
                 </h2>
-                <p className={`text-sm text-center mx-auto max-w-lg ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                <p className={`text-sm text-center mx-auto max-w-lg ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
                   Log in to access your deeply personalized astrological and numerological journey.
                 </p>
               </div>
@@ -791,7 +789,7 @@ export function LandingPage({
                           <span className="text-[#F0ECE1] font-serif font-bold text-sm tracking-wide mb-1">
                             Play 15s Demo
                           </span>
-                          <span className="text-[10px] text-[#C9A050] font-mono tracking-widest uppercase">
+                          <span className="text-xs text-[#C9A050] font-mono tracking-widest uppercase">
                             Preview & Unlock
                           </span>
                         </div>
@@ -802,12 +800,12 @@ export function LandingPage({
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${theme === 'dark' ? 'bg-[#141418] border border-[#2A2A2E]' : 'bg-white border border-[#E5E1D8]'}`}>
                             <Icon className="w-6 h-6 text-[#C9A050]" />
                           </div>
-                          <span className={`text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#C9A050] border-[#2A2A2E]' : 'bg-white text-amber-700 border-[#E5E1D8]'}`}>
+                          <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#C9A050] border-[#2A2A2E]' : 'bg-white text-amber-700 border-[#E5E1D8]'}`}>
                             Premium
                           </span>
                         </div>
                         <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{feat.title}</h4>
-                        <p className={`text-sm leading-relaxed mt-auto ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>{feat.desc}</p>
+                        <p className={`text-sm leading-relaxed text-left ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{feat.desc}</p>
                       </div>
                     </div>
                   );
@@ -873,7 +871,6 @@ export function LandingPage({
             >
               <div className="bg-[#C9A050] p-3 text-[#0D0D0F] flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <Sparkles className="w-4 h-4" />
                   <span className="font-bold text-sm">AstroJunction</span>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -955,7 +952,7 @@ export function LandingPage({
 
                 {isAiThinking && (
                   <div className="flex items-center space-x-1.5 p-2 rounded-xl bg-black/5 dark:bg-white/5 text-[11px] text-[#C9A050] w-fit">
-                    <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                    <RotateCcw className="w-3.5 h-3.5 animate-spin" />
                     <span>Consulting celestial transits...</span>
                   </div>
                 )}

@@ -1,11 +1,12 @@
+@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Nunito", ui-serif, Georgia, serif;
+  --font-serif: "Stardom", "Nunito", ui-serif, Georgia, serif;
   --font-mono: "Nunito", ui-monospace, SFMono-Regular, monospace;
-  --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Stardom", "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Stardom", "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -15,16 +16,17 @@
     /* 1. MASTER TYPOGRAPHY CONTROLLER                                           */
     /* Changing --site-font-size-root will scale all typography across the app!  */
     /* ========================================================================= */
-    --site-font-size-root: 14px;
-    --site-font-size-2xs: 0.6875rem; /* ~11px */
-    --site-font-size-xs: 0.75rem;     /* ~12px */
-    --site-font-size-sm: 0.8125rem;   /* ~13px */
-    --site-font-size-base: 0.875rem;  /* ~14px (Site Default Text Size) */
-    --site-font-size-md: 0.9375rem;   /* ~15px */
-    --site-font-size-lg: 1rem;        /* ~16px */
-    --site-font-size-xl: 1.125rem;    /* ~18px */
-    --site-font-size-2xl: 1.375rem;   /* ~22px */
-    --site-font-size-3xl: 1.75rem;    /* ~28px */
+    --site-font-size-root: 16px;
+    --site-font-size-min: 12px;
+    --site-font-size-2xs: 0.75rem;    /* 12px (Absolute site-wide minimum) */
+    --site-font-size-xs: 0.75rem;     /* 12px */
+    --site-font-size-sm: 0.875rem;    /* ~14px */
+    --site-font-size-base: 1rem;       /* 16px (Site Default Regular Text Size) */
+    --site-font-size-md: 1.0625rem;   /* ~17px */
+    --site-font-size-lg: 1.125rem;    /* ~18px */
+    --site-font-size-xl: 1.25rem;     /* ~20px */
+    --site-font-size-2xl: 1.5rem;     /* ~24px */
+    --site-font-size-3xl: 1.875rem;   /* ~30px */
     --site-font-size-4xl: 2.25rem;    /* ~36px */
 
     /* Line Heights */
@@ -116,12 +118,13 @@
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Headings Default Hierarchy */
+  /* Headings Default Hierarchy - Universal Uppercase */
   h1 {
     font-size: var(--site-font-size-3xl);
     font-weight: 700;
     line-height: var(--site-line-height-tight);
     color: var(--text-primary);
+    text-transform: uppercase;
   }
 
   h2 {
@@ -129,6 +132,7 @@
     font-weight: 700;
     line-height: var(--site-line-height-tight);
     color: var(--text-primary);
+    text-transform: uppercase;
   }
 
   h3 {
@@ -136,6 +140,7 @@
     font-weight: 600;
     line-height: var(--site-line-height-tight);
     color: var(--text-primary);
+    text-transform: uppercase;
   }
 
   h4 {
@@ -143,13 +148,30 @@
     font-weight: 600;
     line-height: var(--site-line-height-tight);
     color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  h5 {
+    font-size: var(--site-font-size-md);
+    font-weight: 600;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  h6 {
+    font-size: var(--site-font-size-sm);
+    font-weight: 600;
+    line-height: var(--site-line-height-tight);
+    color: var(--text-primary);
+    text-transform: uppercase;
   }
 
   /* Paragraph Default */
   p {
     font-size: var(--site-font-size-base);
     line-height: var(--site-line-height-relaxed);
-    text-align: justify;
+    text-align: left;
   }
 
   /* Hide browser native password reveal and clear buttons (e.g. Edge) so only custom eye toggle shows */
@@ -163,27 +185,11 @@
 *,
 *::before,
 *::after {
-  font-family: 'Nunito' !important;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.font-serif,
-.font-display,
-.font-heading {
-  font-family: 'Nunito' !important;
-  letter-spacing: 0.01em;
+  font-family: 'Nunito', sans-serif;
 }
 
 body,
 p,
-span,
-div,
-a,
 label,
 input,
 select,
@@ -214,7 +220,39 @@ footer,
 main,
 .font-sans,
 .font-body {
-  font-family: 'Nunito' !important;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Master All Headings: Stardom & ALL CAPS */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 *,
+h2 *,
+h3 *,
+h4 *,
+h5 *,
+h6 *,
+.font-serif,
+.font-serif *,
+.font-display,
+.font-display *,
+.font-heading,
+.font-heading *,
+.astro-heading-xl,
+.astro-heading-xl *,
+.astro-heading-lg,
+.astro-heading-lg *,
+.astro-heading-md,
+.astro-heading-md *,
+.astro-heading-sm,
+.astro-heading-sm * {
+  font-family: 'Stardom', serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.035em;
 }
 
 .font-mono,
@@ -547,6 +585,7 @@ samp {
   font-weight: 700;
   line-height: var(--site-line-height-tight);
   color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 .astro-heading-lg {
@@ -554,6 +593,7 @@ samp {
   font-weight: 700;
   line-height: var(--site-line-height-tight);
   color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 .astro-heading-md {
@@ -561,6 +601,7 @@ samp {
   font-weight: 600;
   line-height: var(--site-line-height-tight);
   color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 .astro-heading-sm {
@@ -568,6 +609,7 @@ samp {
   font-weight: 600;
   line-height: var(--site-line-height-tight);
   color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 /* Master Form Controls */
@@ -699,13 +741,19 @@ samp {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-  max-height: 90vh;
+  max-height: 92vh;
   overflow-y: auto;
+  scrollbar-width: thin;
   width: 100%;
   max-width: 28rem;
   padding: 1.5rem;
   position: relative;
   transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.astro-modal-card-auth {
+  max-width: 33.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .astro-modal-card-lg {
@@ -1056,5 +1104,28 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
   filter: brightness(0) invert(1) !important;
   opacity: 0.85 !important;
   transform: scale(1.1);
+}
+
+/* Universal Removal of Sparkles Icon */
+svg.lucide-sparkles,
+.lucide-sparkles {
+  display: none !important;
+}
+
+/* Universal Floor: Ensure no text on the website is smaller than 12px */
+.text-\[6px\],
+.text-\[7px\],
+.text-\[7\.5px\],
+.text-\[8px\],
+.text-\[8\.5px\],
+.text-\[9px\],
+.text-\[9\.5px\],
+.text-\[10px\],
+.text-\[10\.5px\],
+.text-\[11px\],
+.text-2xs,
+small {
+  font-size: 12px !important;
+  line-height: 1.35 !important;
 }
 

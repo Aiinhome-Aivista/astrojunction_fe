@@ -616,12 +616,12 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
               {WEEKDAYS_MAP.map((w) => (
                 <div
                   key={w.en}
-                  className={`text-center py-1 rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-wider ${
-                    w.en === 'Sun' ? 'text-amber-500 font-extrabold' : isDark ? 'text-[#9E9A90]' : 'text-gray-500'
+                  className={`text-center py-1 rounded-lg font-bold text-xs uppercase tracking-wider ${
+                    w.en === 'Sun' ? 'text-amber-600 font-extrabold' : isDark ? 'text-[#9E9A90]' : 'text-black'
                   }`}
                 >
                   <span>{w.en}</span>
-                  <span className="block text-[8px] sm:text-[8.5px] opacity-80 font-normal">
+                  <span className="block text-xs opacity-80 font-normal">
                     {calendarLang === 'all'
                       ? `${w.bn} • ${w.hi}`
                       : calendarLang === 'hi'
@@ -762,7 +762,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           {calendarLang === 'bn' ? toBengaliNum(dayData.day) : calendarLang === 'hi' ? toHindiNum(dayData.day) : dayData.day}
                         </span>
 
-                        <span className="text-[8px] sm:text-[9px] font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate pl-1">
+                        <span className="text-xs font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate pl-1">
                           {topRegionalDate}
                         </span>
                       </div>
@@ -770,22 +770,22 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       {/* Bottom Row: Purnima/Amavasya/Ekadashi Badge OR Tithi */}
                       <div className="mt-1">
                         {isPurnima ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-[7.5px] sm:text-[8.5px] font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌕</span>
                             <span className="truncate">{purnimaLabel}</span>
                           </div>
                         ) : isAmavasya ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[7.5px] sm:text-[8.5px] font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌑</span>
                             <span className="truncate">{amavasyaLabel}</span>
                           </div>
                         ) : isEkadashi ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[7.5px] sm:text-[8.5px] font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌿</span>
                             <span className="truncate">{ekadashiLabel}</span>
                           </div>
                         ) : (
-                          <div className="flex items-center justify-between text-[7.5px] sm:text-[8.5px] text-gray-500 dark:text-gray-400 px-0.5">
+                          <div className={`flex items-center justify-between text-xs px-0.5 ${isDark ? 'text-gray-400' : 'text-black font-medium'}`}>
                             <span className="truncate">{tithiDisplay}</span>
                             {isShukla ? (
                               <Moon className="w-2 h-2 text-[#C9A050] shrink-0 ml-0.5" />

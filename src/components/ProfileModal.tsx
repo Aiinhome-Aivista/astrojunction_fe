@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, MapPin, Sparkles, User } from 'lucide-react';
+import { X, Calendar, Clock, MapPin, User } from 'lucide-react';
 import { UserProfile } from '../types';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
 import { VedicDatePicker } from './VedicDatePicker';
@@ -302,7 +302,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               type="submit"
               className="astro-btn astro-btn-primary"
             >
-              <Sparkles className="w-4 h-4" />
               <span>Save Profile & Update Chart</span>
             </button>
           </div>

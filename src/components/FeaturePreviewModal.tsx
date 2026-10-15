@@ -209,11 +209,10 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.25 }}
-          className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto flex flex-col ${
-            isDark
+          className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto flex flex-col ${isDark
               ? 'bg-[#121216] border-[#C9A050]/40 text-[#E5E1D8]'
               : 'bg-[#FCFAF7] border-[#C9A050]/40 text-[#1C1917]'
-          }`}
+            }`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Top Bar Header */}
@@ -237,11 +236,10 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
 
             <button
               onClick={onClose}
-              className={`p-2 rounded-full transition-colors cursor-pointer ${
-                isDark
+              className={`p-2 rounded-full transition-colors cursor-pointer ${isDark
                   ? 'hover:bg-white/10 text-gray-400 hover:text-white'
                   : 'hover:bg-black/10 text-gray-700 hover:text-black'
-              }`}
+                }`}
               title="Close Preview"
             >
               <X className="w-5 h-5" />
@@ -250,41 +248,38 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
 
           {/* Modal Body: 2 Columns on Desktop */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 p-4 sm:p-6 overflow-y-auto max-h-[calc(85vh-130px)]">
-            
+
             {/* Left Column (6 Cols): Multi-Scene 15s Continuous Video Demonstration */}
             <div className="lg:col-span-6 flex flex-col space-y-4">
-              
+
               {/* Scene Indicator Pills */}
               <div className="flex items-center justify-between gap-1 text-[10px] font-bold">
-                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${
-                  currentSceneIndex === 1
+                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${currentSceneIndex === 1
                     ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] shadow-xs'
                     : isDark ? 'bg-white/5 border-transparent text-gray-400' : 'bg-black/5 border-transparent text-gray-700'
-                }`}>
+                  }`}>
                   1. Ephemeris Scan
                 </div>
-                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${
-                  currentSceneIndex === 2
+                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${currentSceneIndex === 2
                     ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] shadow-xs'
                     : isDark ? 'bg-white/5 border-transparent text-gray-400' : 'bg-black/5 border-transparent text-gray-700'
-                }`}>
+                  }`}>
                   2. Live Computation
                 </div>
-                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${
-                  currentSceneIndex === 3
+                <div className={`flex-1 py-1 px-1.5 rounded-md text-center border transition-all ${currentSceneIndex === 3
                     ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] shadow-xs'
                     : isDark ? 'bg-white/5 border-transparent text-gray-400' : 'bg-black/5 border-transparent text-gray-700'
-                }`}>
+                  }`}>
                   3. Vedic Synthesis
                 </div>
               </div>
 
               {/* Video Player Container */}
               <div className="relative rounded-2xl overflow-hidden border border-[#C9A050]/40 bg-[#0A0A0C] aspect-[4/3] flex flex-col justify-between group shadow-xl">
-                
+
                 {/* DYNAMIC MULTI-SCENE VISUAL CANVAS */}
                 <div className="absolute inset-0 overflow-hidden">
-                  
+
                   {/* SCENE 1 (0-5s): Cosmic Ephemeris Scanning */}
                   {currentSceneIndex === 1 && (
                     <motion.div
@@ -301,7 +296,7 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
                         className="absolute inset-0 w-full h-full object-cover opacity-35 filter brightness-90 animate-[spin_40s_linear_infinite]"
                       />
                       <div className="absolute inset-0 bg-radial from-transparent to-black/90" />
-                      
+
                       {/* Scanning HUD Overlay */}
                       <div className="relative z-10 text-center space-y-2 max-w-[280px]">
                         <div className="w-12 h-12 mx-auto rounded-full border-2 border-[#C9A050] border-t-transparent animate-spin flex items-center justify-center">
@@ -545,9 +540,8 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
               </div>
 
               {/* Technical Specifications Grid (Crystal Clear Contrast) */}
-              <div className={`grid grid-cols-2 gap-2 p-3 rounded-xl border text-xs ${
-                isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4] shadow-xs'
-              }`}>
+              <div className={`grid grid-cols-2 gap-2 p-3 rounded-xl border text-xs ${isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4] shadow-xs'
+                }`}>
                 {feature.specs.map((spec, i) => (
                   <div key={i} className="flex flex-col">
                     <span className={`text-[10px] font-semibold uppercase tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-[#78716C]'}`}>{spec.label}</span>
@@ -579,11 +573,10 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
                     {feature.keyBenefits.map((benefit, idx) => (
                       <div
                         key={idx}
-                        className={`flex items-start space-x-2.5 p-2.5 rounded-xl border transition-all ${
-                          isDark
+                        className={`flex items-start space-x-2.5 p-2.5 rounded-xl border transition-all ${isDark
                             ? 'bg-[#181611]/80 border-[#C9A050]/25 hover:border-[#C9A050]/50'
                             : 'bg-white border-[#D4CFC4] hover:border-[#C9A050]/50 shadow-xs'
-                        }`}
+                          }`}
                       >
                         <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`} />
                         <span className={`text-xs font-semibold leading-snug ${isDark ? 'text-[#E5E1D8]' : 'text-gray-900'}`}>
@@ -596,11 +589,10 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
               </div>
 
               {/* Login Gate Action Card */}
-              <div className={`p-4 rounded-xl border mt-3 ${
-                isDark
+              <div className={`p-4 rounded-xl border mt-3 ${isDark
                   ? 'bg-gradient-to-br from-[#1C1A14] to-[#121216] border-[#C9A050]/35'
                   : 'bg-gradient-to-br from-[#FDFBF7] to-[#F5EFE0] border-[#C9A050]/40 shadow-sm'
-              }`}>
+                }`}>
                 <div className={`flex items-center space-x-2 mb-1.5 text-xs font-bold ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
                   <Lock className="w-3.5 h-3.5" />
                   <span>Access Requires Authentication</span>
@@ -626,11 +618,10 @@ export const FeaturePreviewModal: React.FC<FeaturePreviewModalProps> = ({
                       onClose();
                       onRegisterClick();
                     }}
-                    className={`w-full sm:w-auto py-2.5 px-4 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
-                      isDark
+                    className={`w-full sm:w-auto py-2.5 px-4 rounded-xl text-xs font-bold transition-all border cursor-pointer ${isDark
                         ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050] hover:text-[#C9A050]'
                         : 'bg-white border-[#D4CFC4] text-[#1C1917] hover:border-[#C9A050] hover:text-[#8C6B28]'
-                    }`}
+                      }`}
                   >
                     Create Free Account
                   </button>
