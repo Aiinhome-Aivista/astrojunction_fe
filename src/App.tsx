@@ -21,6 +21,7 @@ import { AdminSubscriptionsView } from './components/AdminSubscriptionsView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
 import { LegalInfoPage, LegalPageView } from './components/LegalInfoPage';
 import { AdminLoginView } from './components/AdminLoginView';
+import { Sparkles } from 'lucide-react';
 
 import { API_ENDPOINTS } from './config/api_config';
 import { api } from './services/api';
@@ -115,6 +116,22 @@ export function App() {
   const [showAuthGate, setShowAuthGate] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
+  // Listen for popstate to restore auth modal when returning from Terms/Privacy in the same tab
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        const returnTo = sessionStorage.getItem('return_to_auth');
+        if (returnTo) {
+          sessionStorage.removeItem('return_to_auth');
+          setAuthMode(returnTo as 'login' | 'register');
+          setShowAuthGate(true);
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // On load, if a token exists, verify it's still valid before showing the app.
   useEffect(() => {
     const token = getToken();
@@ -198,7 +215,7 @@ export function App() {
   const handleLogout = () => {
     logoutRequest();
     setAuthUser(null);
-    
+
     // Clear user-specific premium keys from local storage so they don't leak to other users
     try {
       Object.keys(localStorage).forEach(key => {
@@ -227,7 +244,7 @@ export function App() {
           setDynamicSeoMap(data);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     // Fetch Active Subscription Plans
     api.get<any>('/api/subscription-plans/active')
@@ -546,67 +563,61 @@ export function App() {
     );
   }
 
-  const handleAuthenticated = async (user: AuthUser, registrationDetails?: { gender?: string; birthDate?: string; birthPlace?: string; birthTime?: string }) => {
+  const handleAuthenticated = async (user: AuthUser, isNewRegistration?: boolean | any) => {
     setShowAuthGate(false);
-    if (registrationDetails) {
-      const selectedCityName = registrationDetails.birthPlace?.split(',')[0].trim() || '';
-      const cityMatch = PRESET_CITIES.find(c => c.name.split(',')[0].trim() === selectedCityName);
-      
-      const newProfile: UserProfile = {
-        ...DEFAULT_PROFILES[0],
-        id: `profile-${Date.now()}`,
-        fullName: user.fullName,
-        gender: (registrationDetails.gender as any) || 'male',
-        birthDate: registrationDetails.birthDate || '2000-06-15',
-        birthTime: registrationDetails.birthTime || '',
-        birthPlace: registrationDetails.birthPlace || user.address || 'Kolkata, West Bengal, India',
-        latitude: user.latitude ?? cityMatch?.lat ?? DEFAULT_PROFILES[0].latitude,
-        longitude: user.longitude ?? cityMatch?.lng ?? DEFAULT_PROFILES[0].longitude,
-        timezone: cityMatch?.tz ?? DEFAULT_PROFILES[0].timezone,
-        createdAt: new Date().toISOString(),
-      };
-      
-      try {
-        await profileApi.createProfile({
-          fullName: newProfile.fullName,
-          gender: newProfile.gender,
-          birthDate: newProfile.birthDate,
-          birthTime: newProfile.birthTime,
-          birthPlace: newProfile.birthPlace,
-          latitude: newProfile.latitude,
-          longitude: newProfile.longitude,
-          timezone: newProfile.timezone,
-          focusAreas: newProfile.focusAreas,
-          notes: newProfile.notes,
-          isPremium: newProfile.isPremium,
-          horoscopeSystem: newProfile.horoscopeSystem,
-        });
-      } catch (e) {
-        console.error('Failed to save profile during registration:', e);
-      }
-      
-      setProfiles([newProfile]);
-      setCurrentProfile(newProfile);
-    } else {
-      try {
-        const remoteProfiles = await profileApi.fetchProfiles();
-        if (remoteProfiles && remoteProfiles.length > 0) {
-          setProfiles(remoteProfiles);
-          setCurrentProfile(remoteProfiles[0]);
-        } else {
-          const userDefaultProfile: UserProfile = {
-            ...DEFAULT_PROFILES[0],
-            id: `profile-${user.id || Date.now()}`,
-            fullName: user.fullName || 'Seeker',
-          };
-          setProfiles([userDefaultProfile]);
-          setCurrentProfile(userDefaultProfile);
+    try {
+      const remoteProfiles = await profileApi.fetchProfiles();
+      if (!isNewRegistration && remoteProfiles && remoteProfiles.length > 0) {
+        setProfiles(remoteProfiles);
+        setCurrentProfile(remoteProfiles[0]);
+      } else {
+        const cleanProfile: UserProfile = {
+          id: `profile-${user.id || Date.now()}`,
+          fullName: user.fullName || 'Seeker',
+          gender: 'male',
+          birthDate: '',
+          birthTime: '',
+          birthPlace: '',
+          latitude: '' as any,
+          longitude: '' as any,
+          timezone: 5.5,
+          focusAreas: [],
+          notes: '',
+          createdAt: new Date().toISOString(),
+          isPremium: false,
+          horoscopeSystem: 'vedic',
+        };
+        setProfiles([cleanProfile]);
+        setCurrentProfile(cleanProfile);
+        if (user.role !== 'admin') {
+          setIsProfileModalOpen(true);
         }
-      } catch (err) {
-        console.warn('Could not load profiles from server:', err);
+      }
+    } catch (err) {
+      console.warn('Could not load profiles from server:', err);
+      const cleanProfile: UserProfile = {
+        id: `profile-${user.id || Date.now()}`,
+        fullName: user.fullName || 'Seeker',
+        gender: 'male',
+        birthDate: '',
+        birthTime: '',
+        birthPlace: '',
+        latitude: '' as any,
+        longitude: '' as any,
+        timezone: 5.5,
+        focusAreas: [],
+        notes: '',
+        createdAt: new Date().toISOString(),
+        isPremium: false,
+        horoscopeSystem: 'vedic',
+      };
+      setProfiles([cleanProfile]);
+      setCurrentProfile(cleanProfile);
+      if (user.role !== 'admin') {
+        setIsProfileModalOpen(true);
       }
     }
-    
+
     if (user.role === 'admin') {
       setActiveTab('admin_dashboard');
     } else {
@@ -616,11 +627,14 @@ export function App() {
       window.history.replaceState({}, '', '/');
     }
     setAuthUser(user);
+    if (isNewRegistration && user.role !== 'admin') {
+      setIsProfileModalOpen(true);
+    }
   };
 
   if (!authUser || activeTab === 'landing' || activeTab === 'home') {
     const landingSeo = dynamicSeoMap['landing'] || TAB_SEO_CONFIG['landing'] || DEFAULT_SEO;
-    
+
     if (window.location.pathname === '/admin') {
       return (
         <>
@@ -658,11 +672,10 @@ export function App() {
   return (
     <div
       dir={isRtl ? 'rtl' : 'ltr'}
-      className={`min-h-screen flex flex-col font-sans relative z-10 transition-colors duration-300 ${
-        theme === 'dark'
-          ? 'bg-transparent text-[#E5E1D8] selection:bg-[#C9A050] selection:text-[#0D0D0F]'
-          : 'light bg-[#F0ECE1] text-[#0D0D0F] selection:bg-[#D4AF37] selection:text-[#FFFFFF]'
-      }`}
+      className={`min-h-screen flex flex-col font-sans relative z-10 transition-colors duration-300 ${theme === 'dark'
+        ? 'bg-transparent text-[#E5E1D8] selection:bg-[#C9A050] selection:text-[#0D0D0F]'
+        : 'light bg-[#F0ECE1] text-[#0D0D0F] selection:bg-[#D4AF37] selection:text-[#FFFFFF]'
+        }`}
     >
       <SEO {...activeSeo} />
       {/* Animated Space Background - Only in Dark Mode */}
@@ -892,7 +905,7 @@ export function App() {
                     if (tier.id === 'matchmaking_regenerate_subscription') {
                       localStorage.setItem('jyotish_matchmaking_subscribed', 'true');
                     }
-                  } catch {}
+                  } catch { }
                 }}
               />
             )}
@@ -916,9 +929,17 @@ export function App() {
             {['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'].includes(activeTab) && (
               <LegalInfoPage
                 view={activeTab as LegalPageView}
-                onBack={() => setActiveTab(authUser?.role === 'admin' ? 'admin_dashboard' : 'daily')}
+                onBack={() => {
+                  setActiveTab(authUser?.role === 'admin' ? 'admin_dashboard' : 'daily');
+                  if (window.location.pathname !== '/') {
+                    window.history.pushState({}, '', '/');
+                  }
+                }}
                 onNavigateView={(v) => {
                   setActiveTab(v);
+                  if (window.location.pathname !== `/${v}`) {
+                    window.history.pushState({}, '', `/${v}`);
+                  }
                   window.scrollTo({ top: 0, behavior: 'instant' });
                 }}
                 theme={theme}
@@ -928,6 +949,7 @@ export function App() {
           </motion.div>
         </AnimatePresence>
       </main>
+
 
       {/* Profile Creation / Edit Modal (Only for regular users, hidden for Admin) */}
       {authUser?.role !== 'admin' && (
@@ -956,6 +978,9 @@ export function App() {
         }
         onNavigatePage={(page) => {
           setActiveTab(page);
+          if (window.location.pathname !== `/${page}`) {
+            window.history.pushState({}, '', `/${page}`);
+          }
           window.scrollTo({ top: 0, behavior: 'instant' });
         }}
         activePage={activeTab}

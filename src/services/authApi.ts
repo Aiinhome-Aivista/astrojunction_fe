@@ -6,6 +6,7 @@ export interface AuthUser {
   email: string;
   fullName: string;
   role: 'user' | 'admin';
+  phone?: string | null;
   address?: string | null;
   latitude?: number | null;
   longitude?: number | null;
@@ -22,7 +23,7 @@ export async function register(
   email: string,
   password: string,
   fullName: string,
-  address: string,
+  address?: string,
   extra?: {
     gender?: string;
     birthDate?: string;
@@ -31,14 +32,16 @@ export async function register(
     latitude?: number;
     longitude?: number;
     timezone?: number;
+    phone?: string;
   }
 ): Promise<AuthUser> {
   const data = await api.post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, {
     email,
     password,
     fullName,
-    address,
-    birthPlace: extra?.birthPlace || address,
+    phone: extra?.phone,
+    address: address || extra?.birthPlace || 'Kolkata, West Bengal, India',
+    birthPlace: extra?.birthPlace || address || 'Kolkata, West Bengal, India',
     gender: extra?.gender || 'male',
     birthDate: extra?.birthDate || '2000-01-01',
     birthTime: extra?.birthTime || '12:00',
@@ -86,4 +89,3 @@ export async function changePassword(currentPassword: string, newPassword: strin
     newPassword,
   });
 }
-
