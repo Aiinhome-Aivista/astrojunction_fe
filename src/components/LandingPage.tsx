@@ -571,11 +571,22 @@ export function LandingPage({
           <LegalInfoPage
             view={currentView as LegalPageView}
             onBack={() => {
-              setCurrentView('landing');
-              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+              if (window.history.state?.returnToAuth || (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host))) {
+                window.history.back();
+              } else {
+                setCurrentView('landing');
+                if (window.location.pathname !== '/') {
+                  window.history.pushState({}, '', '/');
+                }
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+              }
             }}
             onNavigateView={(v) => {
               setCurrentView(v);
+              if (window.location.pathname !== `/${v}`) {
+                window.history.pushState({}, '', `/${v}`);
+              }
               window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             }}
             theme={theme}
@@ -817,6 +828,9 @@ export function LandingPage({
           activePage={currentView}
           onNavigatePage={(page) => {
             setCurrentView(page);
+            if (window.location.pathname !== `/${page}`) {
+              window.history.pushState({}, '', `/${page}`);
+            }
             window.scrollTo({ top: 0, behavior: 'instant' });
           }}
           setActiveTab={(_tab) => {

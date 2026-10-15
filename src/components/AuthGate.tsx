@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, Mail, User, Loader2, Sparkles, X, ShieldCheck, RotateCcw, Calendar, MapPin, AlertCircle, Plus, UserCircle, CheckCircle2, Clock, Eye, EyeOff, ChevronDown } from 'lucide-react';
+import { Lock, Mail, User, Loader2, Sparkles, X, ShieldCheck, RotateCcw, Calendar, MapPin, AlertCircle, Plus, CheckCircle2, Clock, Eye, EyeOff, ChevronDown, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, register, loginWithGoogle, AuthUser } from '../services/authApi';
 import { ApiError } from '../services/api';
@@ -57,63 +58,6 @@ const MONTHS = [
   { value: '12', name: 'December (12)' },
 ];
 
-interface GoogleAccountItem {
-  id: string;
-  name: string;
-  email: string;
-  avatarBg: string;
-  initial: string;
-  status?: string;
-}
-
-const USER_GOOGLE_ACCOUNTS: GoogleAccountItem[] = [
-  {
-    id: '1',
-    name: 'Keya Biswas',
-    email: 'keyabis2001@gmail.com',
-    avatarBg: 'from-amber-500 to-rose-500',
-    initial: 'K',
-  },
-  {
-    id: '2',
-    name: 'Keya Biswas',
-    email: 'keyab489@gmail.com',
-    avatarBg: 'from-blue-500 to-cyan-500',
-    initial: 'K',
-  },
-  {
-    id: '3',
-    name: 'Irish Dasgupta',
-    email: 'dasguptairish@gmail.com',
-    avatarBg: 'from-emerald-600 to-teal-500',
-    initial: 'I',
-  },
-  {
-    id: '4',
-    name: 'Keya Biswas',
-    email: 'keyab095@gmail.com',
-    avatarBg: 'from-purple-600 to-indigo-500',
-    initial: 'K',
-    status: 'Signed out',
-  },
-  {
-    id: '5',
-    name: 'KEYA ROY',
-    email: 'kroy83861@gmail.com',
-    avatarBg: 'from-indigo-600 to-violet-500',
-    initial: 'K',
-    status: 'Signed out',
-  },
-  {
-    id: '6',
-    name: 'keya biswasas',
-    email: 'keyabiswasas@gmail.com',
-    avatarBg: 'from-pink-600 to-rose-500',
-    initial: 'K',
-    status: 'Signed out',
-  },
-];
-
 interface CustomSelectProps {
   value: string;
   onChange: (val: string) => void;
@@ -169,8 +113,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange, options, p
                 key={opt.value}
                 onClick={() => { onChange(opt.value); setIsOpen(false); }}
                 className={`px-3 py-2 text-[11px] font-bold cursor-pointer transition-colors ${value === opt.value
-                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
-                    : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
+                  ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
+                  : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
                   }`}
               >
                 {opt.label}
@@ -213,8 +157,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
     <div className="relative w-full" ref={ref}>
       <div
         className={`w-full flex items-center px-3 py-1.5 border rounded-xl text-xs font-medium cursor-pointer transition-colors ${isDark
-            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white hover:border-[#C9A050]'
-            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black hover:border-[#C9A050]'
+          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white hover:border-[#C9A050]'
+          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black hover:border-[#C9A050]'
           } ${(isOpen || isAmPmOpen) ? 'border-[#C9A050]' : ''}`}
       >
         <div className="flex-1 flex items-center" onClick={() => { setIsOpen(!isOpen); setIsAmPmOpen(false); }}>
@@ -284,8 +228,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ hour, minute, ampm,
                 key={a}
                 onClick={() => { onAmPmChange(a); setIsAmPmOpen(false); }}
                 className={`p-2.5 text-center text-xs font-bold cursor-pointer ${ampm === a
-                    ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
-                    : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
+                  ? (isDark ? 'bg-[#C9A050]/20 text-[#C9A050]' : 'bg-[#C9A050]/10 text-[#8C6B28]')
+                  : (isDark ? 'hover:bg-[#2A2A2E] text-white' : 'hover:bg-[#F9F7F1] text-black')
                   }`}
               >
                 {a}
@@ -310,6 +254,10 @@ export function AuthGate({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [regStep, setRegStep] = useState<'credentials' | 'birth_details'>('credentials');
+  const [registeredUser, setRegisteredUser] = useState<AuthUser | null>(null);
 
   // Registration Fields: Gender, Place, Date of Birth, Time of Birth
   const [gender, setGender] = useState<'male' | 'female' | 'others'>('male');
@@ -333,15 +281,6 @@ export function AuthGate({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Google Account Chooser State
-  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
-  const [showOtherAccountInput, setShowOtherAccountInput] = useState(false);
-  const [googleEmailInput, setGoogleEmailInput] = useState('');
-  const [googleNameInput, setGoogleNameInput] = useState('');
-  const [googleAuthError, setGoogleAuthError] = useState<string | null>(null);
-  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
-  const [googleSelectedAccount, setGoogleSelectedAccount] = useState<{ email: string; name: string } | null>(null);
-
   // Captcha state
   const [captchaCode, setCaptchaCode] = useState('');
   const [userCaptchaInput, setUserCaptchaInput] = useState('');
@@ -361,6 +300,7 @@ export function AuthGate({
     setMode(initialMode);
     setError(null);
     setSuccessMessage(null);
+    setAgreeTerms(false);
     refreshCaptcha();
   }, [initialMode, isOpen]);
 
@@ -374,67 +314,30 @@ export function AuthGate({
     }
   }, [isOpen]);
 
-  const handleGoogleSuccess = async (targetEmail: string, targetName: string, accountId?: string) => {
+  const handleGoogleSuccess = async (targetEmail: string, targetName: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(targetEmail.trim())) {
-      setGoogleAuthError('Please enter a valid email address (e.g. yourname@gmail.com)');
+      setError('Please enter a valid email address (e.g. yourname@gmail.com)');
       return;
     }
 
-    if (accountId) {
-      setSelectedAccountId(accountId);
-    }
     setError(null);
-    setGoogleAuthError(null);
-
-    // If registering, switch directly to the full registration details form
-    if (mode === 'register') {
-      setEmail(targetEmail.trim().toLowerCase());
-      setFullName(targetName.trim() || targetEmail.split('@')[0]);
-      setGoogleSelectedAccount({
-        email: targetEmail.trim().toLowerCase(),
-        name: targetName.trim() || targetEmail.split('@')[0],
-      });
-      setIsGoogleModalOpen(false);
-      setSelectedAccountId(null);
-      refreshCaptcha();
-      return;
-    }
-
-    // In login mode, try direct login first
     setLoading(true);
+
     try {
       const user = await loginWithGoogle(targetEmail.trim().toLowerCase(), targetName.trim() || 'Google User');
-      const formattedDob = `${birthYear}-${birthMonth}-${birthDay}`;
-      onAuthenticated(user, {
-        gender,
-        birthDate: formattedDob,
-        birthPlace,
-        birthTime: getFormattedBirthTime(),
-      });
-      setIsGoogleModalOpen(false);
+      onAuthenticated(user, (mode === 'register') as any);
       if (onClose) onClose();
-    } catch (err) {
-      // If user is not yet registered or login fails, transition to Register form with details
-      setMode('register');
-      setEmail(targetEmail.trim().toLowerCase());
-      setFullName(targetName.trim() || targetEmail.split('@')[0]);
-      setGoogleSelectedAccount({
-        email: targetEmail.trim().toLowerCase(),
-        name: targetName.trim() || targetEmail.split('@')[0],
-      });
-      setIsGoogleModalOpen(false);
-      setError('Please set a password and your birth details to complete registration.');
-      refreshCaptcha();
+    } catch (err: any) {
+      const msg = err instanceof ApiError ? err.message : (err?.message || 'Google sign-in failed.');
+      setError(msg);
     } finally {
       setLoading(false);
-      setSelectedAccountId(null);
     }
   };
 
   const handleGoogleButtonClick = () => {
     setError(null);
-    setGoogleAuthError(null);
 
     const googleClientId = (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID;
     const google = (window as any).google;
@@ -447,7 +350,7 @@ export function AuthGate({
           callback: async (tokenResponse: any) => {
             if (tokenResponse?.error) {
               if (tokenResponse.error !== 'popup_closed_by_user') {
-                setGoogleAuthError(tokenResponse.error_description || 'Google sign-in was not completed.');
+                setError(tokenResponse.error_description || 'Google sign-in was not completed.');
               }
               return;
             }
@@ -475,11 +378,13 @@ export function AuthGate({
         client.requestAccessToken();
         return;
       } catch (e) {
-        console.warn('Google Token Client init error, falling back to modal:', e);
+        console.warn('Google Token Client init error:', e);
+        setError('Google sign-in initialization failed. Please try again or use email.');
+        return;
       }
     }
 
-    setIsGoogleModalOpen(true);
+    setError('Google Sign-In is currently unavailable. Please register or log in using email and password.');
   };
 
   // Generate day options 01 - 31
@@ -525,6 +430,12 @@ export function AuthGate({
     setError(null);
     setSuccessMessage(null);
 
+    // Terms & Conditions validation for registration
+    if (mode === 'register' && !agreeTerms) {
+      setError('Please agree to the Terms & Conditions and Privacy Policy to proceed.');
+      return;
+    }
+
     // Captcha validation
     if (userCaptchaInput.trim().toUpperCase() !== captchaCode.toUpperCase()) {
       setError('Invalid Captcha code. Please enter the characters shown.');
@@ -535,28 +446,19 @@ export function AuthGate({
     setLoading(true);
     try {
       if (mode === 'register') {
-        const formattedDob = `${birthYear}-${birthMonth}-${birthDay}`;
-        // 1. Create account and primary profile in DB in one shot
-        await register(email, password, fullName, birthPlace, {
-          gender,
-          birthDate: formattedDob,
-          birthTime: getFormattedBirthTime(),
-          birthPlace: birthPlace.trim() || undefined,
+        // 1. Create account with Name, Email, Phone (optional), and Password
+        await register(email, password, fullName, undefined, {
+          phone: phoneNumber.trim() || undefined,
         });
 
-        // 2. Auto-login after registration — go directly to dashboard
+        // 2. Auto-login after registration
         const user = await login(email, password);
-        onAuthenticated(user, {
-          gender,
-          birthDate: formattedDob,
-          birthPlace,
-          birthTime: getFormattedBirthTime(),
-        });
+        onAuthenticated(user, true as any);
         if (onClose) onClose();
         return;
       }
 
-      // 2. Explicit login
+      // Explicit login
       const user = await login(email, password);
 
       if (user.role === 'admin') {
@@ -591,7 +493,7 @@ export function AuthGate({
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full ${mode === 'register' ? 'max-w-lg sm:max-w-2xl' : 'max-w-md'} rounded-2xl border shadow-2xl relative max-h-[90vh] overflow-y-auto overflow-x-hidden my-auto transition-all duration-300 ${isDark
+          className={`w-full max-w-md rounded-2xl border shadow-2xl relative max-h-[90vh] overflow-y-auto overflow-x-hidden my-auto transition-all duration-300 ${isDark
             ? 'bg-[#141418] border-[#C9A050]/40 text-[#E5E1D8]'
             : 'bg-[#FFFFFF] border-[#C9A050]/40 text-[#0D0D0F]'
             }`}
@@ -679,7 +581,7 @@ export function AuthGate({
               </button>
               <button
                 type="button"
-                onClick={() => { setMode('register'); setError(null); setSuccessMessage(null); refreshCaptcha(); }}
+                onClick={() => { setMode('register'); setError(null); setSuccessMessage(null); setAgreeTerms(false); refreshCaptcha(); }}
                 className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${mode === 'register'
                   ? 'bg-[#C9A050] text-[#0D0D0F] shadow-sm'
                   : isDark ? 'text-[#9E9A90] hover:text-white' : 'text-gray-600 hover:text-black'
@@ -691,240 +593,196 @@ export function AuthGate({
 
             {/* Auth Form */}
             <form onSubmit={handleSubmit} className="space-y-2.5">
-              {googleSelectedAccount && mode === 'register' && (
-                <div className={`p-2 px-3 rounded-xl border flex items-center justify-between transition-all ${isDark
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                  }`}>
-                  <div className="flex items-center space-x-2 min-w-0">
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-bold truncate">Google Account Linked: <span className="font-normal opacity-90">{googleSelectedAccount.email}</span></p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setGoogleSelectedAccount(null);
-                      setIsGoogleModalOpen(true);
-                    }}
-                    className="text-[10px] underline ml-2 shrink-0 opacity-80 hover:opacity-100 cursor-pointer"
-                  >
-                    Change
-                  </button>
-                </div>
-              )}
-
               {mode === 'register' ? (
-                /* Registration 2-Column Compact Grid */
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-2">
-                  {/* Full Name */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
-                        placeholder="e.g. Keya Biswas"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Gender Selection */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      Gender
-                    </label>
-                    <CustomSelect
-                      value={gender}
-                      onChange={(val) => setGender(val as any)}
-                      options={genderOptions}
-                      isDark={isDark}
-                    />
-                  </div>
-
-                  {/* Email Address */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="email"
-                        required
-                        autoComplete="off"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
-                        placeholder="you@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Date of Birth Dropdown (Day, Month, Year) */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 flex items-center space-x-1 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      <Calendar className="w-3 h-3" />
-                      <span>Date of Birth</span>
-                    </label>
-                    <div className="grid grid-cols-3 gap-1">
-                      <CustomSelect
-                        value={birthDay}
-                        onChange={setBirthDay}
-                        options={daysOptions}
-                        isDark={isDark}
-                      />
-                      <CustomSelect
-                        value={birthMonth}
-                        onChange={setBirthMonth}
-                        options={monthsOptions}
-                        isDark={isDark}
-                      />
-                      <CustomSelect
-                        value={birthYear}
-                        onChange={setBirthYear}
-                        options={yearsOptions}
-                        isDark={isDark}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      Password
-                    </label>
-                    <div className="relative flex items-center">
-                      <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        required
-                        minLength={8}
-                        autoComplete="new-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={`w-full pl-8 pr-10 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
-                        placeholder="Min. 8 characters"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        //title={showPassword ? 'Hide password' : 'Show password'}
-                        //aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
-                          }`}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="w-4 h-4" />
-                        ) : (
-                          <Eye className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Birth Place / Address Manual Input */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 flex items-center space-x-1 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      <MapPin className="w-3 h-3" />
-                      <span>Birth Place / Full Address</span>
-                    </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="text"
-                        required
-                        value={birthPlace}
-                        onChange={(e) => setBirthPlace(e.target.value)}
-                        placeholder="e.g. 123 Main St, New Delhi, India"
-                        className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
-                          ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
-                          : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
-                          }`}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Time of Birth (Optional) */}
-                  <div>
-                    <label className={`block text-[10px] font-bold mb-0.5 flex items-center justify-between ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      <span className="flex items-center space-x-1.5">
-                        <Clock className="w-3 h-3" />
-                        <span>Birth Time</span>
-                      </span>
-                      <span className="text-[9px] font-normal opacity-70">(Optional)</span>
-                    </label>
-                    <CustomTimePicker
-                      hour={birthHour}
-                      minute={birthMinute}
-                      ampm={birthAmPm}
-                      onHourChange={setBirthHour}
-                      onMinuteChange={setBirthMinute}
-                      onAmPmChange={setBirthAmPm}
-                      isDark={isDark}
-                    />
-                  </div>
-
-                  {/* Captcha Section (Full Width Span 2) */}
-                  <div className="sm:col-span-2 pt-0.5">
-                    <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
-                      Security Verification (Captcha)
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <div
-                        className={`flex items-center justify-between px-2.5 py-1 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${isDark
-                          ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
-                          : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
-                          }`}
-                      >
-                        <span className="line-through decoration-[#C9A050]/60 decoration-2">
-                          {captchaCode}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={refreshCaptcha}
-                          className="ml-1.5 p-0.5 rounded hover:bg-black/10 transition-colors cursor-pointer text-gray-400 hover:text-[#C9A050]"
-                          title="Generate new captcha"
-                        >
-                          <RotateCcw className="w-3 h-3" />
-                        </button>
-                      </div>
-
-                      <div className="relative flex-1">
-                        <ShieldCheck className="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" />
+                <div className="space-y-2.5">
+                    {/* Full Name */}
+                    <div>
+                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                        Full Name <span className="text-rose-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
                         <input
                           type="text"
                           required
-                          maxLength={6}
-                          value={userCaptchaInput}
-                          onChange={(e) => setUserCaptchaInput(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
                             ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
                             : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
                             }`}
-                          placeholder="Enter code"
+                          placeholder="e.g. Keya Biswas"
                         />
                       </div>
                     </div>
+
+                    {/* Email Address */}
+                    <div>
+                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                        Email Address <span className="text-rose-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                        <input
+                          type="email"
+                          required
+                          autoComplete="off"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                            }`}
+                          placeholder="you@example.com"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone Number (Optional) */}
+                    <div>
+                      <label className={`block text-[10px] font-bold mb-0.5 flex items-center justify-between ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                        <span>Phone Number</span>
+                        <span className="text-[9px] font-normal opacity-70">(Optional)</span>
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                        <input
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                            }`}
+                          placeholder="e.g. +91 98765 43210"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Password */}
+                    <div>
+                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                        Password <span className="text-rose-500">*</span>
+                      </label>
+                      <div className="relative flex items-center">
+                        <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          required
+                          minLength={8}
+                          autoComplete="new-password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className={`w-full pl-8 pr-10 py-2 border rounded-xl text-xs font-medium focus:outline-none focus:border-[#C9A050] ${isDark
+                            ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                            : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                            }`}
+                          placeholder="Min. 8 characters"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
+                            }`}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Terms & Conditions / Privacy Policy Checkbox */}
+                    <div className="pt-1">
+                      <label className="flex items-start space-x-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          required
+                          checked={agreeTerms}
+                          onChange={(e) => setAgreeTerms(e.target.checked)}
+                          className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#C9A050] focus:ring-[#C9A050] cursor-pointer"
+                        />
+                        <span className={`text-[11px] leading-tight ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
+                          I agree to the{' '}
+                          <a
+                            href="/terms-and-conditions"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              sessionStorage.setItem('return_to_auth', 'register');
+                              if (onClose) onClose();
+                              window.history.pushState({ returnToAuth: 'register' }, '', '/terms-and-conditions');
+                              window.dispatchEvent(new PopStateEvent('popstate'));
+                            }}
+                            className="font-semibold underline text-[#C9A050] hover:text-[#D4AF37] cursor-pointer"
+                          >
+                            Terms &amp; Conditions
+                          </a>
+                          {' '}and{' '}
+                          <a
+                            href="/privacy-policy"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              sessionStorage.setItem('return_to_auth', 'register');
+                              if (onClose) onClose();
+                              window.history.pushState({ returnToAuth: 'register' }, '', '/privacy-policy');
+                              window.dispatchEvent(new PopStateEvent('popstate'));
+                            }}
+                            className="font-semibold underline text-[#C9A050] hover:text-[#D4AF37] cursor-pointer"
+                          >
+                            Privacy Policy
+                          </a>.
+                        </span>
+                      </label>
+                    </div>
+
+                    {/* Captcha Section (Compact) */}
+                    <div className="pt-1 max-w-[270px]">
+                      <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
+                        Security Verification (Captcha)
+                      </label>
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner shrink-0 ${isDark
+                            ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
+                            : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
+                            }`}
+                        >
+                          <span className="line-through decoration-[#C9A050]/60 decoration-2">
+                            {captchaCode}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={refreshCaptcha}
+                            className="ml-1.5 p-0.5 rounded hover:bg-black/10 transition-colors cursor-pointer text-gray-400 hover:text-[#C9A050]"
+                            title="Generate new captcha"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        <div className="relative flex-1">
+                          <ShieldCheck className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                          <input
+                            type="text"
+                            required
+                            maxLength={6}
+                            value={userCaptchaInput}
+                            onChange={(e) => setUserCaptchaInput(e.target.value)}
+                            className={`w-full pl-8 pr-2 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
+                              ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
+                              : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
+                              }`}
+                            placeholder="Enter code"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ) : (
+                ) : (
                 /* Login 1-Column View */
                 <div className="space-y-2.5">
                   {/* Email Address */}
@@ -969,8 +827,6 @@ export function AuthGate({
                       <button
                         type="button"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        //title={showPassword ? 'Hide password' : 'Show password'}
-                        //aria-label={showPassword ? 'Hide password' : 'Show password'}
                         className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors cursor-pointer flex items-center justify-center ${isDark ? 'text-white hover:text-white/80' : 'text-black hover:text-black/80'
                           }`}
                       >
@@ -983,14 +839,14 @@ export function AuthGate({
                     </div>
                   </div>
 
-                  {/* Captcha Section */}
-                  <div>
+                  {/* Captcha Section (Compact) */}
+                  <div className="pt-1 max-w-[270px]">
                     <label className={`block text-[10px] font-bold mb-0.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6B28]'}`}>
                       Security Verification (Captcha)
                     </label>
                     <div className="flex items-center space-x-2">
                       <div
-                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner ${isDark
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl border select-none tracking-[0.25em] font-mono text-sm font-extrabold italic shadow-inner shrink-0 ${isDark
                           ? 'bg-[#0D0D0F] border-[#C9A050]/50 text-[#C9A050]'
                           : 'bg-[#F3EFE6] border-[#C9A050]/60 text-[#8C6B28]'
                           }`}
@@ -1016,7 +872,7 @@ export function AuthGate({
                           maxLength={6}
                           value={userCaptchaInput}
                           onChange={(e) => setUserCaptchaInput(e.target.value)}
-                          className={`w-full pl-8 pr-2.5 py-2 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
+                          className={`w-full pl-8 pr-2 py-1.5 border rounded-xl text-xs font-semibold tracking-wider focus:outline-none focus:border-[#C9A050] ${isDark
                             ? 'bg-[#1A1A1E] border-[#2A2A2E] text-white placeholder-gray-500'
                             : 'bg-[#F9F7F1] border-[#E5E1D8] text-black placeholder-gray-400'
                             }`}
@@ -1044,172 +900,25 @@ export function AuthGate({
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full mt-1.5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] hover:from-[#D4AF37] hover:to-[#A37B2F] text-white font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all shadow-md shadow-[#C9A050]/20 disabled:opacity-60 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
-              >
-                {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                <span>{mode === 'login' ? 'Login To Continue' : 'Create Free Account'}</span>
-              </button>
+              <div className="flex justify-center pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-auto min-w-[200px] max-w-xs py-2.5 px-6 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] hover:from-[#D4AF37] hover:to-[#A37B2F] text-white font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all shadow-md shadow-[#C9A050]/20 disabled:opacity-60 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>
+                    {mode === 'login'
+                      ? 'Login To Continue'
+                      : 'Create Free Account'}
+                  </span>
+                </button>
+              </div>
             </form>
           </div>
         </motion.div>
       </div>
 
-      {/* Google Account Selector Dialog (Exact Google Account Chooser UI) */}
-      {isGoogleModalOpen && (
-        <div
-          onClick={() => setIsGoogleModalOpen(false)}
-          className="fixed inset-0 z-[110] bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto overflow-x-hidden"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[440px] rounded-[24px] border shadow-2xl p-6 sm:p-7 relative overflow-hidden bg-[#1F1F1F] border-[#303030] text-[#E3E3E3]"
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setIsGoogleModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer p-1.5 rounded-full hover:bg-white/10 transition"
-              title="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Google G Logo */}
-            <div className="mb-4">
-              <svg className="w-7 h-7" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z" />
-                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z" />
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
-              </svg>
-            </div>
-
-            {/* Header */}
-            <h3 className="text-xl sm:text-2xl font-normal text-white mb-1">Choose an account</h3>
-            <p className="text-xs text-gray-400 mb-5">to continue to <strong className="text-white font-medium">AstroJunction Platform</strong></p>
-
-            {googleAuthError && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center space-x-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{googleAuthError}</span>
-              </div>
-            )}
-
-            {/* Account Chooser List */}
-            <div className="divide-y divide-[#333333] border-y border-[#333333] mb-4 max-h-[300px] overflow-y-auto scrollbar-thin">
-              {USER_GOOGLE_ACCOUNTS.map((account) => {
-                const isThisLoading = loading && selectedAccountId === account.id;
-
-                return (
-                  <div
-                    key={account.id}
-                    onClick={() => !loading && handleGoogleSuccess(account.email, account.name, account.id)}
-                    className="flex items-center justify-between py-3 px-2 -mx-2 rounded-lg hover:bg-[#2D2E30] transition-colors cursor-pointer group"
-                  >
-                    <div className="flex items-center space-x-3.5 min-w-0">
-                      {/* Avatar */}
-                      <div className={`w-9 h-9 rounded-full bg-gradient-to-tr ${account.avatarBg} text-white font-medium text-sm flex items-center justify-center shrink-0 shadow`}>
-                        {account.initial}
-                      </div>
-
-                      {/* Name & Email */}
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-white group-hover:text-white truncate">
-                          {account.name}
-                        </div>
-                        <div className="text-xs text-gray-400 truncate">
-                          {account.email}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Status or Spinner */}
-                    <div className="shrink-0 ml-3">
-                      {isThisLoading ? (
-                        <Loader2 className="w-4 h-4 text-[#C9A050] animate-spin" />
-                      ) : account.status ? (
-                        <span className="text-[11px] text-gray-500">{account.status}</span>
-                      ) : (
-                        <span className="text-[11px] text-emerald-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">Select</span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Use Another Account */}
-              {!showOtherAccountInput ? (
-                <div
-                  onClick={() => setShowOtherAccountInput(true)}
-                  className="flex items-center space-x-3.5 py-3 px-2 -mx-2 rounded-lg hover:bg-[#2D2E30] transition-colors cursor-pointer group"
-                >
-                  <div className="w-9 h-9 rounded-full border border-gray-500 flex items-center justify-center text-gray-400 group-hover:text-white shrink-0">
-                    <UserCircle className="w-5 h-5" />
-                  </div>
-                  <div className="text-sm text-gray-300 group-hover:text-white font-medium">
-                    Use another account
-                  </div>
-                </div>
-              ) : (
-                <div className="py-3 px-2">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      if (googleEmailInput.trim()) {
-                        handleGoogleSuccess(googleEmailInput.trim(), googleNameInput.trim() || 'Google User', 'custom');
-                      }
-                    }}
-                    className="space-y-2.5"
-                  >
-                    <input
-                      type="text"
-                      placeholder="Your Name"
-                      value={googleNameInput}
-                      onChange={(e) => setGoogleNameInput(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-[#2D2E30] border border-[#3C4043] text-white focus:outline-none focus:border-[#C9A050]"
-                    />
-                    <input
-                      type="email"
-                      required
-                      placeholder="name@gmail.com"
-                      value={googleEmailInput}
-                      onChange={(e) => setGoogleEmailInput(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl bg-[#2D2E30] border border-[#3C4043] text-white focus:outline-none focus:border-[#C9A050]"
-                    />
-                    <div className="flex space-x-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowOtherAccountInput(false)}
-                        className="py-1.5 px-3 text-xs rounded-lg border border-gray-600 text-gray-400 hover:text-white cursor-pointer"
-                      >
-                        Back
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={loading || !googleEmailInput.trim()}
-                        className="flex-1 py-1.5 bg-[#C9A050] text-[#0D0D0F] font-bold text-xs rounded-lg hover:bg-[#D4AF37] transition disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-1"
-                      >
-                        {loading && selectedAccountId === 'custom' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                        <span>Continue</span>
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-            </div>
-
-            {/* Footer Notice */}
-            <p className="text-[11px] text-gray-400 leading-relaxed">
-              To continue, Google will share your name, email address, language preference, and profile picture with AstroJunction.
-            </p>
-          </motion.div>
-        </div>
-      )}
     </AnimatePresence>
   );
 }

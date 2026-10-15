@@ -63,7 +63,15 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
         {/* Navigation Bar: Back Option Only */}
         <div className="mb-6">
           <button
-            onClick={onBack}
+            onClick={() => {
+              if (onBack) {
+                onBack();
+              } else if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                window.location.href = '/';
+              }
+            }}
             className={`inline-flex items-center space-x-2 text-sm font-medium transition cursor-pointer ${
               isLight ? 'text-[#8C6218] hover:text-[#5C4010]' : 'text-[#C9A050] hover:text-[#E2C375]'
             }`}
