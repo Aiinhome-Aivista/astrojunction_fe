@@ -34,6 +34,26 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
     fetchLogs();
   }, [activeSubTab]);
 
+  const formatLogTime = (dateInput: string) => {
+    if (!dateInput) return '-';
+    try {
+      const sanitized = dateInput.endsWith(' GMT') ? dateInput.replace(/ GMT$/, '') : dateInput;
+      const d = new Date(sanitized);
+      if (isNaN(d.getTime())) return dateInput;
+      return d.toLocaleString('en-IN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+    } catch {
+      return dateInput;
+    }
+  };
+
   const bgClass = theme === 'dark' ? 'bg-[#141418]' : 'bg-white';
   const borderClass = theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]';
   const textClass = theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]';
@@ -95,7 +115,7 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
                       <span className="text-[11px] text-gray-500 font-mono">ID: {log.user_id.substring(0, 8)}...</span>
                       <span className="text-[11px] text-gray-500">{log.tradition}</span>
                     </div>
-                    <span className="text-[10px] text-gray-500">{new Date(log.created_at).toLocaleString()}</span>
+                    <span className="text-[10px] text-gray-500">{formatLogTime(log.created_at)}</span>
                   </div>
                   <p className={`text-xs ${textClass} whitespace-pre-wrap font-mono`}>{log.content}</p>
                 </div>
@@ -128,7 +148,7 @@ export const AdminLogsView: React.FC<AdminLogsViewProps> = ({ theme }) => {
                       <td className={`p-3 text-[11px] ${textMutedClass} max-w-xl truncate`} title={log.message}>
                         {log.message.substring(0, 100)}...
                       </td>
-                      <td className={`p-3 text-[11px] ${textMutedClass}`}>{new Date(log.created_at).toLocaleString()}</td>
+                      <td className={`p-3 text-[11px] ${textMutedClass}`}>{formatLogTime(log.created_at)}</td>
                     </tr>
                   ))
                 )}

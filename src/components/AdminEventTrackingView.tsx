@@ -585,7 +585,7 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                 <th className="py-3.5 px-4">Session ID</th>
                 <th className="py-3.5 px-4">Actions in Session</th>
                 <th className="py-3.5 px-4">Session Status</th>
-                <th className="py-3.5 px-4 text-right">Inspect Journey</th>
+                <th className="py-3.5 px-4 text-center">Inspect Journey</th>
               </tr>
             </thead>
             <tbody className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/50' : 'divide-gray-100'}`}>
@@ -694,8 +694,8 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                               {sess.event_count || 1} {(sess.event_count || 1) === 1 ? 'Action' : 'Actions'}
                             </span>
                             {sess.error_count > 0 && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/15 text-rose-500 border border-rose-500/30">
-                                {sess.error_count} Err
+                              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30">
+                                {sess.error_count} {sess.error_count === 1 ? 'Error' : 'Errors'}
                               </span>
                             )}
                           </div>
@@ -723,19 +723,25 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                       </td>
 
                       {/* Inspection: Eye icon opens Session Journey Timeline */}
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => setSelectedTimelineSessionId(sess.id)}
-                          title="Inspect Complete Session Journey Timeline"
-                          aria-label="Inspect Journey"
-                          className={`p-2 rounded-xl transition inline-flex items-center justify-center cursor-pointer shadow-sm ${
-                            theme === 'dark'
-                              ? 'text-[#C9A050] bg-[#C9A050]/15 hover:bg-[#C9A050] hover:text-[#0D0D0F]'
-                              : 'text-[#8C6B28] bg-[#C9A050]/20 hover:bg-[#C9A050] hover:text-white'
-                          }`}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                      <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-center">
+                          <button
+                            onClick={() => setSelectedTimelineSessionId(sess.id)}
+                            title="View"
+                            aria-label="View"
+                            className={`group relative p-2 rounded-xl transition inline-flex items-center justify-center cursor-pointer shadow-sm ${
+                              theme === 'dark'
+                                ? 'text-[#C9A050] bg-[#C9A050]/15 hover:bg-[#C9A050] hover:text-[#0D0D0F]'
+                                : 'text-[#8C6B28] bg-[#C9A050]/20 hover:bg-[#C9A050] hover:text-white'
+                            }`}
+                          >
+                            <Eye className="w-4 h-4" />
+                            {/* Hover tooltip */}
+                            <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-black/90 text-white text-[10px] font-bold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition shadow-md z-30">
+                              View
+                            </span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -979,39 +985,39 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
               ) : (
                 <>
                   {/* Session Overview Stats */}
-                  <div className={`p-4 rounded-xl border text-xs grid grid-cols-2 md:grid-cols-4 gap-4 ${theme === 'dark' ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className={`p-4 rounded-xl border text-xs grid grid-cols-2 md:grid-cols-4 gap-4 ${theme === 'dark' ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-gray-50 border-gray-300'}`}>
                     <div>
-                      <span className="text-gray-400 block text-[10px] uppercase font-bold">User</span>
+                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">User</span>
                       {(() => {
                         const u = getTimelineUserDisplay(timelineData);
                         return (
                           <div>
-                            <span className="font-semibold text-indigo-400 block truncate max-w-[190px]">{u.name}</span>
-                            {u.subtext && <span className="text-[10px] text-gray-400 font-mono block truncate max-w-[190px]">{u.subtext}</span>}
+                            <span className="font-bold text-indigo-700 dark:text-indigo-400 block truncate max-w-[190px]">{u.name}</span>
+                            {u.subtext && <span className="text-[11px] text-black dark:text-gray-300 font-mono font-medium block truncate max-w-[190px]">{u.subtext}</span>}
                           </div>
                         );
                       })()}
                     </div>
                     <div>
-                      <span className="text-gray-400 block text-[10px] uppercase font-bold">Device</span>
-                      <div className="flex items-center gap-1 font-semibold">
+                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Device</span>
+                      <div className="flex items-center gap-1 font-bold text-black dark:text-gray-100">
                         {getDeviceIcon(timelineData.device_type)}
                         <span className="capitalize">{timelineData.device_type}</span>
                       </div>
                     </div>
                     <div>
-                      <span className="text-gray-400 block text-[10px] uppercase font-bold">Started At (IST)</span>
-                      <span className="font-mono">{formatISTDateTime(timelineData.started_at).full}</span>
+                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Started At (IST)</span>
+                      <span className="font-mono font-bold text-black dark:text-gray-100">{formatISTDateTime(timelineData.started_at).full}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block text-[10px] uppercase font-bold">Total Actions</span>
-                      <span className="font-bold text-amber-500">{timelineData.events?.length || 0} events</span>
+                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Total Actions</span>
+                      <span className="font-extrabold text-amber-600 dark:text-amber-400">{timelineData.events?.length || 0} events</span>
                     </div>
                   </div>
 
                   {/* Vertical Stepper / Timeline */}
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4">
+                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-black dark:text-gray-200 mb-4">
                       Chronological Activity Stream
                     </h4>
 
@@ -1035,7 +1041,7 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                                   </span>
                                   {getStatusBadge(evt.status)}
                                 </div>
-                                <div className="text-[11px] font-mono text-gray-400 flex items-center gap-2">
+                                <div className="text-[11px] font-mono text-black dark:text-gray-200 font-bold flex items-center gap-2">
                                   <span>{formatISTDateTime(evt.created_at).time}</span>
                                 </div>
                               </div>
@@ -1044,32 +1050,32 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                               <div className={`p-3.5 rounded-xl border font-mono text-xs overflow-x-auto shadow-sm transition-colors ${
                                 theme === 'dark'
                                   ? 'bg-[#0E0E12] border-[#2A2A2E] text-emerald-300'
-                                  : 'bg-[#F4F9F6] border-emerald-200/80 text-[#093C34]'
+                                  : 'bg-[#F4F9F6] border-emerald-300 text-black'
                               }`}>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-2 flex items-center justify-between border-b pb-1.5 ${
-                                  theme === 'dark' ? 'border-[#2A2A2E]' : 'border-emerald-200/60'
+                                <div className={`text-[10px] font-extrabold uppercase tracking-wider mb-2 flex items-center justify-between border-b pb-1.5 ${
+                                  theme === 'dark' ? 'border-[#2A2A2E]' : 'border-emerald-300'
                                 }`}>
-                                  <span className="text-[#C9A050] flex items-center gap-1.5 font-bold">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Result Summary
+                                  <span className="text-[#8C6B28] dark:text-[#C9A050] flex items-center gap-1.5 font-extrabold">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Result Summary
                                   </span>
-                                  <span className={`text-[10px] font-mono ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>JSON</span>
+                                  <span className={`text-[10px] font-mono font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-black'}`}>JSON</span>
                                 </div>
-                                <pre className={`whitespace-pre-wrap font-mono text-[11px] leading-relaxed font-semibold ${
-                                  theme === 'dark' ? 'text-emerald-300' : 'text-[#093C34]'
+                                <pre className={`whitespace-pre-wrap font-mono text-[11px] leading-relaxed font-bold ${
+                                  theme === 'dark' ? 'text-emerald-300' : 'text-black'
                                 }`}>
                                   {formatJson(evt.result_summary)}
                                 </pre>
                               </div>
 
-                              {/* Click to open full inspector */}
-                              <div className="mt-2 text-right">
+                              {/* Click to open full inspector (Commented out as requested) */}
+                              {/* <div className="mt-2 text-right">
                                 <button
                                   onClick={() => setInspectedEvent(evt)}
                                   className="text-[11px] font-bold text-[#C9A050] hover:underline"
                                 >
                                   Inspect Full Input &amp; Output &rarr;
                                 </button>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         ))}

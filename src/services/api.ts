@@ -158,24 +158,49 @@ async function rawRequest<T>(
   }
 }
 
+import { trackEvent } from './sessionTracker';
+
 async function downloadFile(
   path: string,
   fileName: string,
   options: RequestInit = {}
 ): Promise<void> {
-  const response = await executeFetch(path, options);
-  if (!response.ok) {
-    throw new ApiError('Failed to download file', 'DOWNLOAD_ERROR', response.status);
+  const start = Date.now();
+  try {
+    const response = await executeFetch(path, options);
+    if (!response.ok) {
+      throw new ApiError('Failed to download file', 'DOWNLOAD_ERROR', response.status);
+    }
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => window.URL.revokeObjectURL(blobUrl), 10000);
+
+    const ext = fileName.split('.').pop()?.toUpperCase() || 'FILE';
+    trackEvent({
+      eventName: `${ext}_DOWNLOAD`,
+      category: 'REPORT',
+      inputPayload: { fileName, path },
+      status: 'SUCCESS',
+      resultSummary: { fileName, fileType: ext, sizeBytes: blob.size },
+      executionTimeMs: Date.now() - start,
+    });
+  } catch (err: any) {
+    trackEvent({
+      eventName: 'FILE_DOWNLOAD',
+      category: 'REPORT',
+      inputPayload: { fileName, path },
+      status: 'FAILURE',
+      errorMessage: err?.message || 'Download failed',
+      executionTimeMs: Date.now() - start,
+    });
+    throw err;
   }
-  const blob = await response.blob();
-  const blobUrl = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = blobUrl;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(() => window.URL.revokeObjectURL(blobUrl), 10000);
 }
 
 export const api = {
