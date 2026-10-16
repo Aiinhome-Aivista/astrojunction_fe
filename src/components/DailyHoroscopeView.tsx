@@ -1138,7 +1138,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
                 {profile.horoscopeSystem === 'western' ? 'Western Tropical' : 'Vedic Sidereal'} Daily Transit • {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
               </span>
             </div>
-            <h1 className={`text-3xl sm:text-4xl font-bold tracking-tight ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
+            <h1 className="astro-page-header-title">
               {getGreeting()}, <span className="text-[#C9A050] italic">{profile.fullName}</span>
             </h1>
             <p className="text-sm text-[#9E9A90] mt-2 max-w-2xl leading-relaxed">
@@ -1268,12 +1268,12 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
             {isLoadingAi ? (
               <div className="py-12 flex flex-col items-center justify-center space-y-3 text-center">
                 <div className="w-9 h-9 border-2 border-[#C9A050] border-t-transparent rounded-full animate-spin" />
-                <p className="text-xs text-[#C9A050] font-serif font-semibold">Consulting Planetary Ephemeris & Vedic Model...</p>
+                <p className="text-xs text-[#C9A050] font-sans font-semibold">Consulting Planetary Ephemeris & Vedic Model...</p>
                 <p className="text-[11px] text-[#9E9A90] max-w-sm">Calculating Moon transit, Nakshatra lord aspect, and today’s Tithi vibration for your Ascendant.</p>
               </div>
             ) : aiInsights ? (
               <div className="space-y-4">
-                <div className={`prose prose-invert max-w-none text-xs sm:text-sm leading-relaxed space-y-3 whitespace-pre-line p-5 rounded-xl border font-serif ${theme === 'dark' ? 'border-[#2A2A2E] text-[#E5E1D8] bg-[#08080A]' : 'border-[#E5E1D8] text-[#2A2A2E] bg-[#F0ECE1]'}`}>
+                <div className={`prose prose-invert max-w-none text-xs sm:text-sm leading-relaxed space-y-3 whitespace-pre-line p-5 rounded-xl border font-sans ${theme === 'dark' ? 'border-[#2A2A2E] text-[#E5E1D8] bg-[#08080A]' : 'border-[#E5E1D8] text-[#2A2A2E] bg-[#F0ECE1]'}`}>
                   {aiInsights.summary}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1294,7 +1294,7 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
             ) : (
               <div className="space-y-4">
                 <div className={`p-4 rounded-xl border space-y-2 ${theme === 'dark' ? 'bg-[#1A1A1E]/80 border-[#2A2A2E]' : 'bg-[#F9F7F1]/80 border-[#E5E1D8]'}`}>
-                  <div className="text-sm font-serif font-semibold text-[#C9A050] flex items-center space-x-2">
+                  <div className="text-sm font-sans font-semibold text-[#C9A050] flex items-center space-x-2">
                     <Sun className="w-4 h-4 text-[#C9A050]" />
                     <span>Today’s Dominant Cosmic Rhythm: {panchang.tithi} in {panchang.nakshatra}</span>
                   </div>

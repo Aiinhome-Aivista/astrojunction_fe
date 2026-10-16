@@ -375,7 +375,7 @@ export function LandingPage({
   };
 
   return (
-    <div className={`min-h-screen relative font-sans flex flex-col ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#F0ECE1] text-[#0D0D0F]'}`}>
+    <div className={`min-h-screen relative font-sans flex flex-col astro-landing-page ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#F0ECE1] text-[#0D0D0F]'}`}>
       {theme === 'dark' && <StarfieldBackground />}
 
       {/* Navigation Bar */}
@@ -597,21 +597,21 @@ export function LandingPage({
                   <span>Authentic Vedic Oracle</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6 uppercase tracking-wider">
-                  <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className="astro-hero-title text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
+                  <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     DECODE YOUR
                   </span>
-                  <span className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     DESTINY WITH
                   </span>
-                  <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start">
+                  <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start font-extrabold">
                     {"ASTRO".split("").map((char, index) => (
                       <motion.span
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-                        className={`inline-block ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
+                        className={`inline-block font-extrabold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
                       >
                         {char}
                       </motion.span>
@@ -622,7 +622,7 @@ export function LandingPage({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
-                        className="inline-block text-[#C9A050]"
+                        className="inline-block text-[#C9A050] font-extrabold"
                       >
                         {char}
                       </motion.span>

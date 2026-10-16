@@ -721,8 +721,8 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
               <Hash className="w-4 h-4" />
               <span>Vedic & Chaldean Numerology Matrix</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#F0ECE1]">
-              Sacred Numbers & Lo Shu Magic Grid
+            <h1 className="astro-page-header-title">
+              Sacred Numbers &amp; Lo Shu Magic Grid
             </h1>
             <p className="text-xs text-[#9E9A90] mt-1 leading-relaxed">
               Decode the planetary vibrational codes governing your psyche (Mulank), karmic destiny (Bhagyank), and name resonance (Namank).

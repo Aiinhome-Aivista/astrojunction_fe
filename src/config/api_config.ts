@@ -22,6 +22,10 @@ export const API_ENDPOINTS = {
     LLM_CONFIG: '/api/admin/llm-config',
     LLM_TEST: '/api/admin/llm-config/test',
     SEO_CONFIG: '/api/admin/seo-config',
+    TELEMETRY_STATS: '/api/admin/telemetry/stats',
+    TELEMETRY_SESSIONS: '/api/admin/telemetry/sessions',
+    TELEMETRY_EVENTS: '/api/admin/telemetry/events',
+    SESSION_TIMELINE: (sessionId: string) => `/api/admin/telemetry/sessions/${sessionId}/timeline`,
   },
   BLOGS: {
     LIST: '/api/blogs',

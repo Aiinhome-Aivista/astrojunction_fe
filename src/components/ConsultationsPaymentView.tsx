@@ -601,11 +601,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <span>Certified Vedic Consultations & Premium Gateways</span>
             </div>
 
-            <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight ${isDark
-                ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F0DFB0] to-[#C9A050]'
-                : 'text-transparent bg-clip-text bg-gradient-to-r from-[#1A1A1E] via-[#5C451D] to-[#996F19]'
-              }`}>
-              Unlock Deeper Planetary Wisdom & 1-on-1 Guidance
+            <h1 className="astro-page-header-title">
+              Unlock Deeper Planetary Wisdom &amp; 1-on-1 Guidance
             </h1>
 
             <p className={`text-xs sm:text-sm leading-relaxed max-w-xl ${isDark ? 'text-[#A8A49C]' : 'text-[#666258]'

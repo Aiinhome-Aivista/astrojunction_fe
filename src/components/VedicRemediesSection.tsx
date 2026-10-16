@@ -189,8 +189,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               {/* Subtle Ambient Glow */}
               {isSelected && (
                 <div
-                  className="absolute -top-16 -right-16 w-32 h-32 rounded-full blur-2xl opacity-20 pointer-events-none"
-                  style={{ backgroundColor: remedy.accentColor }}
+                  className={`absolute -top-16 -right-16 w-32 h-32 rounded-full blur-2xl opacity-20 pointer-events-none astro-remedy-glow-${remedy.id}`}
                 />
               )}
 
@@ -204,7 +203,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                       isSelected ? 'border-[#C9A050]' : theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
                     }`}
                   >
-                    <Icon className="w-6 h-6" style={{ color: remedy.accentColor }} />
+                    <Icon className={`w-6 h-6 astro-remedy-icon-${remedy.id}`} />
                   </div>
 
                   <span

@@ -7,6 +7,7 @@ import {
   CreditCard,
   ShieldCheck,
   Network,
+  Activity,
   User,
   PlusCircle,
   Clock,
@@ -211,38 +212,39 @@ export const Navbar: React.FC<NavbarProps> = ({
   // User & Admin tabs (Panjika is excluded for logged-in users)
   const tabs = isAdmin
     ? [
-        { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
-        { id: 'admin_users', label: 'Users', icon: Users },
-        { id: 'admin_seo', label: 'SEO', icon: Globe },
-        { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
-        { id: 'admin_subscriptions', label: 'Subscriptions', icon: Package },
-        { id: 'admin_logs', label: 'Logs', icon: Terminal },
-        { id: 'blogs', label: 'Blogs', icon: FileText },
-        { id: 'admin', label: 'K-Graph', icon: Network },
-      ]
+      { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
+      { id: 'admin_users', label: 'Users', icon: Users },
+      { id: 'admin_events', label: 'Sessions', icon: Activity },
+      { id: 'admin_seo', label: 'SEO', icon: Globe },
+      { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
+      { id: 'admin_subscriptions', label: 'Subscriptions', icon: Package },
+      { id: 'admin_logs', label: 'Logs', icon: Terminal },
+      { id: 'blogs', label: 'Blogs', icon: FileText },
+      { id: 'admin', label: 'K-Graph', icon: Network },
+    ]
     : [
-        { id: 'daily', label: t('tab.daily'), icon: Sun },
-        { id: 'horoscope', label: t('tab.horoscope'), icon: Compass },
-        { id: 'matchmaking', label: t('tab.matchmaking'), icon: HeartHandshake },
-        { id: 'numerology', label: t('tab.numerology'), icon: Hash },
-        { id: 'consultations', label: t('tab.consultations'), icon: CreditCard },
-      ];
+      { id: 'daily', label: t('tab.daily'), icon: Sun },
+      { id: 'horoscope', label: t('tab.horoscope'), icon: Compass },
+      { id: 'matchmaking', label: t('tab.matchmaking'), icon: HeartHandshake },
+      { id: 'numerology', label: t('tab.numerology'), icon: Hash },
+      { id: 'consultations', label: t('tab.consultations'), icon: CreditCard },
+    ];
 
   // Mobile Bottom Bar Quick Tabs (Panjika excluded)
   const mobileQuickTabs = isAdmin
     ? [
-        { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
-        { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
-        { id: 'admin_users', label: 'Users', icon: Users },
-        { id: 'admin_subscriptions', label: 'Subscriptions', icon: Package },
-        { id: 'blogs', label: 'Blogs', icon: FileText },
-      ]
+      { id: 'admin_dashboard', label: 'Dashboard', icon: Network },
+      { id: 'admin_llm', label: 'AI Engine', icon: Cpu },
+      { id: 'admin_users', label: 'Users', icon: Users },
+      { id: 'admin_subscriptions', label: 'Subscriptions', icon: Package },
+      { id: 'blogs', label: 'Blogs', icon: FileText },
+    ]
     : [
-        { id: 'daily', label: 'Daily', icon: Sun },
-        { id: 'horoscope', label: 'Kundli', icon: Compass },
-        { id: 'matchmaking', label: 'Match', icon: HeartHandshake },
-        { id: 'counsellor', label: 'Daivajna', icon: MessageSquareText },
-      ];
+      { id: 'daily', label: 'Daily', icon: Sun },
+      { id: 'horoscope', label: 'Kundli', icon: Compass },
+      { id: 'matchmaking', label: 'Match', icon: HeartHandshake },
+      { id: 'counsellor', label: 'Daivajna', icon: MessageSquareText },
+    ];
 
   const isViewingAdmin = isAdmin || activeTab?.startsWith('admin_') || activeTab === 'admin';
   const userRashi = getUserRashiInfo(currentProfile, chartData);
@@ -251,9 +253,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* Top Primary Header Bar */}
       <header
-        className={`sticky top-0 z-40 backdrop-blur-xl transition-colors ${
-          theme === 'dark' ? 'bg-[#0D0D0F]/90 text-[#E5E1D8]' : 'bg-[#F6EFE0]/95 text-[#0D0D0F] border-b border-[#DFC896]/40'
-        }`}
+        className={`sticky top-0 z-40 backdrop-blur-xl transition-colors ${theme === 'dark' ? 'bg-[#0D0D0F]/90 text-[#E5E1D8]' : 'bg-[#F6EFE0]/95 text-[#0D0D0F] border-b border-[#DFC896]/40'
+          }`}
       >
         {/* Main Header Row */}
         <div className="w-full px-3 sm:px-5 lg:px-6 py-1.5 sm:py-2">
@@ -288,9 +289,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Center: Single Unified Navigation Tabs */}
             <nav
-              className={`${
-                isAdmin ? 'hidden lg:flex' : 'hidden md:flex'
-              } flex-1 items-center justify-start xl:justify-center space-x-1 xl:space-x-1.5 px-1 sm:px-2 overflow-x-auto scrollbar-none min-w-0 py-1`}
+              className={`${isAdmin ? 'hidden lg:flex' : 'hidden md:flex'
+                } flex-1 items-center justify-start xl:justify-center space-x-1 xl:space-x-1.5 px-1 sm:px-2 overflow-x-auto scrollbar-none min-w-0 py-1`}
               aria-label="Navigation Tabs"
             >
               {tabs.map((tab) => {
@@ -300,20 +300,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-1 xl:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${
-                      isActive
+                    className={`flex items-center space-x-1 xl:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${isActive
                         ? theme === 'dark'
                           ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
                           : 'bg-[#FAF2DA] text-[#8C6218] border border-[#C9A050] font-bold shadow-xs'
                         : theme === 'dark'
-                        ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
-                        : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
-                    }`}
+                          ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
+                          : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
+                      }`}
                   >
                     <Icon
-                      className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                        isActive ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8A847A]'
-                      }`}
+                      className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8A847A]'
+                        }`}
                     />
                     <span>{tab.label}</span>
                   </button>
@@ -328,13 +326,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   onClick={() => setActiveTab('landing')}
                   title={t('tab.home') || 'Home'}
-                  className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm shrink-0 ${
-                    activeTab === 'landing' || activeTab === 'home'
+                  className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm shrink-0 ${activeTab === 'landing' || activeTab === 'home'
                       ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
                       : theme === 'dark'
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
-                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
-                  }`}
+                        ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                        : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                    }`}
                   aria-label="Home"
                 >
                   <Home className="w-3.5 h-3.5 text-[#C9A050]" />
@@ -350,20 +347,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <button
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                    className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${
-                      theme === 'dark'
+                    className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
                         ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
                         : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
-                    }`}
+                      }`}
                     title={userEmail || 'Admin Profile'}
                     aria-label="Admin Profile"
                   >
                     {/* Glowing Round Avatar with First Letter */}
                     <div className="relative">
                       <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] shadow-sm flex items-center justify-center">
-                        <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${
-                          theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
-                        }`}>
+                        <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
+                          }`}>
                           {userEmail ? userEmail.charAt(0).toUpperCase() : 'A'}
                         </div>
                       </div>
@@ -372,9 +367,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   {isProfileMenuOpen && (
-                    <div className={`absolute top-full right-0 mt-2 w-56 border rounded-xl shadow-xl overflow-hidden z-50 ${
-                      theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
-                    }`}>
+                    <div className={`absolute top-full right-0 mt-2 w-56 border rounded-xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] shadow-[#0D0D0F]/50' : 'bg-[#FAF4E4] border-[#DFC896] shadow-xl'
+                      }`}>
                       <div className="p-3 border-b border-inherit">
                         <div className="text-[10px] uppercase font-bold text-[#C9A050] tracking-wider">
                           Administrator
@@ -388,11 +382,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {/* Theme Options */}
                         <button
                           onClick={() => toggleTheme()}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${
-                            theme === 'dark'
+                          className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${theme === 'dark'
                               ? 'text-[#E5E1D8] hover:bg-[#1C1C22]'
                               : 'text-[#2C2825] hover:bg-[#F3EADB]'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center space-x-2">
                             {theme === 'dark' ? (
@@ -402,11 +395,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                             )}
                             <span>Theme</span>
                           </div>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
-                            theme === 'dark'
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${theme === 'dark'
                               ? 'border-[#C9A050]/40 text-[#C9A050] bg-[#C9A050]/10'
                               : 'border-[#DFC896] text-[#8C6218] bg-[#FAF2DA]'
-                          }`}>
+                            }`}>
                             {theme === 'dark' ? 'Dark' : 'Light'}
                           </span>
                         </button>
@@ -417,11 +409,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setIsProfileMenuOpen(false);
                             setIsChangePasswordOpen(true);
                           }}
-                          className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${
-                            theme === 'dark'
+                          className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${theme === 'dark'
                               ? 'text-[#C9A050] hover:bg-[#1C1C22]'
                               : 'text-[#8C6218] hover:bg-[#F3EADB]'
-                          }`}
+                            }`}
                         >
                           <Key className="w-3.5 h-3.5 shrink-0" />
                           <span>Change Password</span>
@@ -451,20 +442,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <button
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
-                    className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${
-                      theme === 'dark'
+                    className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
                         ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
                         : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
-                    }`}
+                      }`}
                     title={currentProfile.fullName || 'User Profile'}
                     aria-label="User Profile"
                   >
                     {/* Glowing Round Avatar with First Letter */}
                     <div className="relative">
                       <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full p-[1.5px] bg-gradient-to-tr from-[#9B782B] via-[#E2C375] to-[#FFF3CE] shadow-sm flex items-center justify-center">
-                        <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${
-                          theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
-                        }`}>
+                        <div className={`w-full h-full rounded-full flex items-center justify-center font-bold text-sm select-none transition-transform group-hover:scale-95 ${theme === 'dark' ? 'bg-[#0F0E14] text-[#F0E6CD]' : 'bg-[#FFF9EA] text-[#8C6218]'
+                          }`}>
                           {currentProfile.fullName ? currentProfile.fullName.charAt(0).toUpperCase() : <User className="w-4 h-4 text-[#C9A050]" />}
                         </div>
                       </div>
@@ -473,18 +462,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   {isProfileMenuOpen && (
-                    <div className={`absolute top-full right-0 mt-2.5 w-64 sm:w-72 rounded-2xl shadow-2xl border overflow-hidden z-50 transition-all duration-200 ${
-                      theme === 'dark'
+                    <div className={`absolute top-full right-0 mt-2.5 w-64 sm:w-72 rounded-2xl shadow-2xl border overflow-hidden z-50 transition-all duration-200 ${theme === 'dark'
                         ? 'bg-[#131219]/95 backdrop-blur-xl border-[#C9A050]/40 shadow-[0_12px_40px_rgba(0,0,0,0.7)]'
                         : 'bg-[#FFFDF7]/98 backdrop-blur-xl border-[#DFC896] shadow-[0_12px_40px_rgba(180,140,50,0.22)]'
-                    }`}>
+                      }`}>
                       {/* Rashi Details Card */}
                       <div className="p-3">
-                        <div className={`p-3.5 rounded-xl border ${
-                          theme === 'dark'
+                        <div className={`p-3.5 rounded-xl border ${theme === 'dark'
                             ? 'bg-gradient-to-br from-[#1C1A27]/90 to-[#121118]/90 border-[#C9A050]/30'
                             : 'bg-gradient-to-br from-[#FAF3DF] to-[#F3E7C4] border-[#DEC590]'
-                        }`}>
+                          }`}>
                           <div className="flex items-center justify-between text-[11px] font-bold text-[#C9A050] mb-2 pb-1.5 border-b border-inherit/40">
                             <span className="flex items-center gap-1.5">
                               <Moon className="w-3.5 h-3.5 text-[#C9A050]" />
@@ -495,8 +482,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                           <div className="flex items-baseline justify-between mb-1.5">
                             <span className={`text-xs font-bold ${theme === 'dark' ? 'text-[#F3EAD3]' : 'text-[#2C2825]'}`}>
-                              {language === 'bn' 
-                                ? `রাশি ${userRashi.rashiNumber}: ${userRashi.bengali} (${userRashi.name})` 
+                              {language === 'bn'
+                                ? `রাশি ${userRashi.rashiNumber}: ${userRashi.bengali} (${userRashi.name})`
                                 : `Rashi ${userRashi.rashiNumber}: ${userRashi.name} (${userRashi.sanskrit.split(' ')[0]})`}
                             </span>
                           </div>
@@ -522,11 +509,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setIsProfileMenuOpen(false);
                             onOpenNewProfile();
                           }}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition cursor-pointer font-medium ${
-                            theme === 'dark'
+                          className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition cursor-pointer font-medium ${theme === 'dark'
                               ? 'text-[#C9A050] hover:bg-[#1E1C28]'
                               : 'text-[#8C6218] hover:bg-[#F3EADB]'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center space-x-2">
                             <Edit3 className="w-3.5 h-3.5 shrink-0" />
@@ -544,11 +530,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                               setIsProfileMenuOpen(false);
                               onLogout();
                             }}
-                            className={`w-full flex items-center space-x-2 px-3 py-2 text-xs rounded-xl transition cursor-pointer font-bold ${
-                              theme === 'dark'
+                            className={`w-full flex items-center space-x-2 px-3 py-2 text-xs rounded-xl transition cursor-pointer font-bold ${theme === 'dark'
                                 ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
                                 : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
-                            }`}
+                              }`}
                           >
                             <LogOut className="w-3.5 h-3.5 shrink-0" />
                             <span>{language === 'bn' ? 'লগআউট' : 'Logout'}</span>
@@ -563,13 +548,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Mobile / Tablet Drawer Menu Toggle */}
               <button
                 onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
-                className={`${
-                  isAdmin ? 'lg:hidden' : 'md:hidden'
-                } flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${
-                  theme === 'dark'
+                className={`${isAdmin ? 'lg:hidden' : 'md:hidden'
+                  } flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${theme === 'dark'
                     ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
                     : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:text-[#C9A050] hover:border-[#C9A050]'
-                }`}
+                  }`}
                 aria-label="Toggle navigation drawer"
               >
                 {isMobileDrawerOpen ? <X className="w-4 h-4 text-[#C9A050]" /> : <Menu className="w-4 h-4" />}
@@ -646,7 +629,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="flex items-center gap-1 text-[10px] text-[#C9A050] font-semibold mt-0.5">
                         <span>{userRashi.symbol}</span>
                         <span>
-                          {language === 'bn' 
+                          {language === 'bn'
                             ? `রাশি ${userRashi.rashiNumber} • ${userRashi.bengali}`
                             : `Rashi ${userRashi.rashiNumber} • ${userRashi.name}`}
                         </span>
@@ -681,11 +664,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setActiveTab(tab.id);
                         setIsMobileDrawerOpen(false);
                       }}
-                      className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left ${
-                        isActive
+                      className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left ${isActive
                           ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
                           : 'text-[#E5E1D8] hover:bg-[#1A1A1E] hover:text-[#F0ECE1]'
-                      }`}
+                        }`}
                     >
                       <Icon className={`w-4 h-4 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
                       <span>{tab.label}</span>
@@ -723,11 +705,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActiveTab('counsellor');
                       setIsMobileDrawerOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left mt-1.5 ${
-                      activeTab === 'counsellor'
+                    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left mt-1.5 ${activeTab === 'counsellor'
                         ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
                         : 'text-[#C9A050] bg-[#C9A050]/10 hover:bg-[#C9A050]/20'
-                    }`}
+                      }`}
                   >
                     <MessageSquareText className="w-4 h-4 text-[#C9A050]" />
                     <span>Daivajna Consultation</span>
@@ -768,11 +749,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setIsMobileDrawerOpen(false);
                     onLogout();
                   }}
-                  className={`w-full flex items-center space-x-2 text-xs py-1.5 px-2 rounded transition font-bold ${
-                    theme === 'dark'
+                  className={`w-full flex items-center space-x-2 text-xs py-1.5 px-2 rounded transition font-bold ${theme === 'dark'
                       ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
                       : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
-                  }`}
+                    }`}
                 >
                   <LogOut className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`} />
                   <span>Log Out of Account</span>
@@ -793,11 +773,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg transition-all text-[10px] font-medium min-w-[54px] cursor-pointer ${
-                  isActive
+                className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg transition-all text-[10px] font-medium min-w-[54px] cursor-pointer ${isActive
                     ? 'text-[#C9A050] font-bold scale-105'
                     : 'text-[#9E9A90] hover:text-[#E5E1D8]'
-                }`}
+                  }`}
               >
                 <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
                 <span className="truncate">{tab.label}</span>
@@ -812,15 +791,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={() => setActiveTab('counsellor')}
           title="Ask Daivajna Astrologer"
-          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex flex-col items-center justify-center p-0 shadow-2xl transition-all duration-300 cursor-pointer group hover:scale-110 hover:-translate-y-1 active:scale-95 ${
-            activeTab === 'counsellor'
+          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex flex-col items-center justify-center p-0 shadow-2xl transition-all duration-300 cursor-pointer group hover:scale-110 hover:-translate-y-1 active:scale-95 ${activeTab === 'counsellor'
               ? 'ring-4 ring-[#C9A050] ring-offset-2'
               : ''
-          } ${
-            theme === 'dark'
+            } ${theme === 'dark'
               ? 'bg-gradient-to-tr from-[#A07828] via-[#C9A050] to-[#DFB76C] text-[#0D0D0F] shadow-[0_8px_25px_rgba(201,160,80,0.45)] border-2 border-[#FFE8A3]/70'
               : 'bg-gradient-to-tr from-[#A87E2C] via-[#C9A050] to-[#E2BC73] text-[#FFFFFF] shadow-[0_8px_25px_rgba(201,160,80,0.4)] border-2 border-[#FFF0C2]/80'
-          }`}
+            }`}
           aria-label="Ask Daivajna"
         >
           {/* Animated Pulsing Beacon */}
@@ -835,11 +812,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
 
           {/* Hover Tooltip on Left */}
-          <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${
-            theme === 'dark'
+          <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${theme === 'dark'
               ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
               : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
-          }`}>
+            }`}>
             Ask Daivajna
           </span>
         </button>

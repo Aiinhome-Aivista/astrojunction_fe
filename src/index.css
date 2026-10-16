@@ -1,12 +1,20 @@
 @import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Stardom';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/stardom.woff2') format('woff2');
+}
+
 @theme {
   --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Stardom", "Nunito", ui-serif, Georgia, serif;
+  --font-serif: "Stardom", Georgia, serif;
   --font-mono: "Nunito", ui-monospace, SFMono-Regular, monospace;
-  --font-display: "Stardom", "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Stardom", "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Stardom", Georgia, serif;
+  --font-heading: "Stardom", Georgia, serif;
   --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -18,16 +26,26 @@
     /* ========================================================================= */
     --site-font-size-root: 16px;
     --site-font-size-min: 12px;
-    --site-font-size-2xs: 0.75rem;    /* 12px (Absolute site-wide minimum) */
-    --site-font-size-xs: 0.75rem;     /* 12px */
-    --site-font-size-sm: 0.875rem;    /* ~14px */
-    --site-font-size-base: 1rem;       /* 16px (Site Default Regular Text Size) */
-    --site-font-size-md: 1.0625rem;   /* ~17px */
-    --site-font-size-lg: 1.125rem;    /* ~18px */
-    --site-font-size-xl: 1.25rem;     /* ~20px */
-    --site-font-size-2xl: 1.5rem;     /* ~24px */
-    --site-font-size-3xl: 1.875rem;   /* ~30px */
-    --site-font-size-4xl: 2.25rem;    /* ~36px */
+    --site-font-size-2xs: 0.75rem;
+    /* 12px (Absolute site-wide minimum) */
+    --site-font-size-xs: 0.75rem;
+    /* 12px */
+    --site-font-size-sm: 0.875rem;
+    /* ~14px */
+    --site-font-size-base: 1rem;
+    /* 16px (Site Default Regular Text Size) */
+    --site-font-size-md: 1.0625rem;
+    /* ~17px */
+    --site-font-size-lg: 1.125rem;
+    /* ~18px */
+    --site-font-size-xl: 1.25rem;
+    /* ~20px */
+    --site-font-size-2xl: 1.5rem;
+    /* ~24px */
+    --site-font-size-3xl: 1.875rem;
+    /* ~30px */
+    --site-font-size-4xl: 2.25rem;
+    /* ~36px */
 
     /* Line Heights */
     --site-line-height-tight: 1.25;
@@ -223,7 +241,7 @@ main,
   font-family: 'Nunito', sans-serif;
 }
 
-/* Master All Headings: Stardom & ALL CAPS */
+/* Master All Headings: Stardom Bold & ALL CAPS across All Pages, User & Admin Profiles */
 h1,
 h2,
 h3,
@@ -236,8 +254,6 @@ h3 *,
 h4 *,
 h5 *,
 h6 *,
-.font-serif,
-.font-serif *,
 .font-display,
 .font-display *,
 .font-heading,
@@ -249,10 +265,79 @@ h6 *,
 .astro-heading-md,
 .astro-heading-md *,
 .astro-heading-sm,
-.astro-heading-sm * {
-  font-family: 'Stardom', serif !important;
+.astro-heading-sm *,
+.astro-hero-title,
+.astro-hero-title *,
+.astro-brand-title,
+.astro-brand-title *,
+.astro-admin-title,
+.astro-admin-title *,
+.astro-admin-heading,
+.astro-admin-heading *,
+.astro-admin-kpi-card h2,
+.astro-admin-kpi-card h3,
+.astro-admin-kpi-card h4,
+.astro-profile-card h2,
+.astro-profile-card h3,
+.astro-profile-card h4,
+.astro-card-title,
+.astro-card-title *,
+.astro-section-title,
+.astro-section-title *,
+.astro-modal-title,
+.astro-modal-title *,
+.astro-page-header-title,
+.astro-page-header-title *,
+[role="heading"],
+[role="heading"] * {
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 800 !important;
+  font-synthesis: weight !important;
+  -webkit-text-stroke: 0.015em currentColor;
   text-transform: uppercase !important;
-  letter-spacing: 0.035em;
+  letter-spacing: 0.025em;
+}
+
+/* Master Top Page Heading Class - Centralized in index.css */
+.astro-page-header-title {
+  font-family: 'Stardom', Georgia, serif !important;
+  font-size: 1.375rem !important; /* ~22px mobile */
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+  font-synthesis: weight !important;
+  -webkit-text-stroke: 0.015em currentColor !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
+  color: var(--text-primary) !important;
+}
+
+@media (min-width: 640px) {
+  .astro-page-header-title {
+    font-size: 1.625rem !important; /* ~26px tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .astro-page-header-title {
+    font-size: 1.875rem !important; /* ~30px desktop */
+  }
+}
+
+/* Master Body Text & Reading Content: Strictly Nunito & Normal Casing */
+p,
+.prose,
+.prose p,
+.prose div,
+.prose span,
+.prose em,
+.prose strong,
+.article-content p,
+.article-content li,
+.article-content blockquote {
+  font-family: 'Nunito', sans-serif !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 400;
 }
 
 .font-mono,
@@ -264,48 +349,48 @@ samp {
   font-variant-numeric: tabular-nums;
 }
 
-  /* Custom subtle scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
   }
 
-  ::-webkit-scrollbar-track {
-    background: var(--bg-canvas);
+  100% {
+    transform: translateX(-40%);
   }
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 3px;
-  }
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--gold-primary);
-  }
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
 
-  /* Marquee Animation */
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-
-    100% {
-      transform: translateX(-40%);
-    }
-  }
-
-  .animate-marquee {
-    animation: marquee 35s linear infinite;
-  }
-
-  .animate-marquee:hover {
-    animation-play-state: paused;
-  }
-
-  .astro-marquee-mask {
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  }
+.astro-marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
 
 /* Light Mode Overrides for Hardcoded Theme Classes */
 .light {
@@ -959,6 +1044,7 @@ samp {
   .pb-safe {
     padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
   }
+
   .pt-safe {
     padding-top: calc(env(safe-area-inset-top) + 0.5rem);
   }
@@ -972,6 +1058,7 @@ samp {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -982,20 +1069,25 @@ samp {
   width: 5px;
   height: 5px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.04);
   border-radius: 4px;
 }
+
 .dark .custom-scrollbar::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.04);
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #C9A050;
   border-radius: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #D4AF37;
 }
+
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #C9A050 transparent;
@@ -1003,7 +1095,11 @@ samp {
 
 /* Touch-friendly interactive targets */
 @media (max-width: 768px) {
-  button, select, input[type="checkbox"], input[type="radio"] {
+
+  button,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
     min-height: 38px;
   }
 }
@@ -1014,9 +1110,15 @@ samp {
     background: #ffffff !important;
     color: #000000 !important;
   }
-  header, nav, .no-print, button, #root > div > header {
+
+  header,
+  nav,
+  .no-print,
+  button,
+  #root>div>header {
     display: none !important;
   }
+
   #printable-certificate {
     display: block !important;
     visibility: visible !important;
@@ -1040,10 +1142,22 @@ samp {
   line-height: 1.35;
 }
 
-.article-content h1 { font-size: 1.875rem; }
-.article-content h2 { font-size: 1.45rem; color: #C9A050; }
-.article-content h3 { font-size: 1.25rem; }
-.article-content h4 { font-size: 1.1rem; }
+.article-content h1 {
+  font-size: 1.875rem;
+}
+
+.article-content h2 {
+  font-size: 1.45rem;
+  color: #C9A050;
+}
+
+.article-content h3 {
+  font-size: 1.25rem;
+}
+
+.article-content h4 {
+  font-size: 1.1rem;
+}
 
 .article-content p {
   margin-bottom: 1.35rem;
@@ -1128,4 +1242,203 @@ small {
   font-size: 12px !important;
   line-height: 1.35 !important;
 }
-
+
+/* Master Jodit Editor Global Theme */
+.jodit-toolbar__box,
+.jodit-toolbar,
+.jodit-workplace {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+.jodit-container:not(.jodit_inline) {
+  border-color: var(--border-color) !important;
+}
+
+.jodit-ui-button__icon svg,
+.jodit-toolbar-button__icon svg {
+  fill: var(--text-primary) !important;
+}
+
+.jodit-ui-button__icon_trigger svg {
+  fill: var(--text-muted) !important;
+}
+
+html body .jodit-toolbar-button[aria-pressed="true"],
+html body .jodit-ui-button[aria-pressed="true"],
+html body .jodit-toolbar-button_active,
+html body .jodit-ui-button_active,
+html body .jodit-ui-button_active:not([disabled]) {
+  background-color: var(--gold-bg) !important;
+  border: 1px solid var(--gold-primary) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+html body .jodit-toolbar-button[aria-pressed="true"] svg,
+html body .jodit-ui-button[aria-pressed="true"] svg,
+html body .jodit-toolbar-button_active svg,
+html body .jodit-ui-button_active svg,
+html body .jodit-ui-button_active:not([disabled]) svg {
+  fill: var(--gold-primary) !important;
+}
+
+/* ========================================================================= */
+/* MASTER USER & ADMIN PROFILE / DASHBOARD SYSTEM                             */
+/* ========================================================================= */
+
+/* Admin LLM Provider Badges */
+.astro-provider-badge-mistral_local {
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.astro-provider-badge-gemini {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.astro-provider-badge-openrouter {
+  background-color: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+}
+
+.astro-provider-badge-mistral_cloud {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.astro-provider-badge-openai {
+  background-color: rgba(139, 92, 246, 0.12);
+  color: #8b5cf6;
+}
+
+/* User & Admin Profile Card Styling */
+.astro-profile-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.astro-profile-card-elevated {
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+}
+
+.astro-profile-avatar-glow {
+  background: linear-gradient(135deg, #9B782B 0%, #E2C375 50%, #FFF3CE 100%);
+  padding: 1.5px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.astro-profile-avatar-inner {
+  background-color: var(--bg-canvas);
+  color: var(--gold-primary);
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  user-select: none;
+}
+
+/* Admin Dashboard KPI Cards */
+.astro-admin-kpi-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.astro-admin-kpi-card:hover {
+  border-color: var(--gold-border);
+}
+
+/* Admin Table System */
+.astro-admin-table-container {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  background-color: var(--bg-card);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.astro-admin-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.astro-admin-table thead tr {
+  background-color: var(--bg-inner);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.astro-admin-table th {
+  padding: 0.85rem 1rem;
+  font-size: var(--site-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.astro-admin-table td {
+  padding: 0.85rem 1rem;
+  font-size: var(--site-font-size-xs);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.astro-admin-table tr:hover td {
+  background-color: var(--bg-card-elevated);
+}
+
+/* Master Vedic Remedy Accent Badges */
+.astro-remedy-icon-surya-arghya {
+  color: #E65100;
+}
+
+.astro-remedy-glow-surya-arghya {
+  background-color: #E65100;
+}
+
+.astro-remedy-icon-maha-mrityunjaya {
+  color: #0284C7;
+}
+
+.astro-remedy-glow-maha-mrityunjaya {
+  background-color: #0284C7;
+}
+
+.astro-remedy-icon-mangal-shanti {
+  color: #DC2626;
+}
+
+.astro-remedy-glow-mangal-shanti {
+  background-color: #DC2626;
+}
+
+.astro-remedy-icon-shukra-suktam {
+  color: #D97706;
+}
+
+.astro-remedy-glow-shukra-suktam {
+  background-color: #D97706;
+}

@@ -142,8 +142,113 @@ export const adminApi = {
 
   deleteSubscriptionPlan: async (id: string): Promise<any> => {
     return api.delete(`/api/admin/subscription-plans/${id}`);
-  }
+  },
+
+  // Telemetry & Event Tracking
+  getTelemetryStats: async (params?: { timeout_minutes?: number }): Promise<TelemetryStats> => {
+    const q = params?.timeout_minutes ? `?timeout_minutes=${params.timeout_minutes}` : '';
+    return api.get<TelemetryStats>(`${API_ENDPOINTS.ADMIN.TELEMETRY_STATS}${q}`);
+  },
+
+  getTelemetrySessions: async (params?: { page?: number; page_size?: number; search?: string; status?: string; timeout_minutes?: number }): Promise<{
+    sessions: TelemetrySession[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }> => {
+    const q = new URLSearchParams();
+    if (params?.page) q.set('page', String(params.page));
+    if (params?.page_size) q.set('page_size', String(params.page_size));
+    if (params?.search) q.set('search', params.search);
+    if (params?.status) q.set('status', params.status);
+    if (params?.timeout_minutes) q.set('timeout_minutes', String(params.timeout_minutes));
+    const queryString = q.toString() ? `?${q.toString()}` : '';
+    return api.get<any>(`${API_ENDPOINTS.ADMIN.TELEMETRY_SESSIONS}${queryString}`);
+  },
+
+  getTelemetryEvents: async (params?: {
+    page?: number;
+    page_size?: number;
+    search?: string;
+    session_id?: string;
+    user_id?: string;
+    category?: string;
+    status?: string;
+  }): Promise<{
+    events: TelemetryEvent[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }> => {
+    const q = new URLSearchParams();
+    if (params?.page) q.set('page', String(params.page));
+    if (params?.page_size) q.set('page_size', String(params.page_size));
+    if (params?.search) q.set('search', params.search);
+    if (params?.session_id) q.set('session_id', params.session_id);
+    if (params?.user_id) q.set('user_id', params.user_id);
+    if (params?.category) q.set('category', params.category);
+    if (params?.status) q.set('status', params.status);
+    const queryString = q.toString() ? `?${q.toString()}` : '';
+    return api.get<any>(`${API_ENDPOINTS.ADMIN.TELEMETRY_EVENTS}${queryString}`);
+  },
+
+  getSessionTimeline: async (sessionId: string): Promise<SessionTimeline> => {
+    return api.get<SessionTimeline>(API_ENDPOINTS.ADMIN.SESSION_TIMELINE(sessionId));
+  },
 };
+
+export interface TelemetryStats {
+  active_sessions_now: number;
+  total_events_today: number;
+  success_rate: number;
+  failed_events_today: number;
+  avg_latency_ms: number;
+  total_all_time_events: number;
+  total_all_time_sessions: number;
+  category_breakdown: Array<{ event_category: string; count: number }>;
+}
+
+export interface TelemetrySession {
+  id: string;
+  user_id: string | null;
+  user_email: string | null;
+  user_name: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  device_type: string | null;
+  started_at: string;
+  last_activity_at: string;
+  is_active: number;
+  event_count: number;
+  error_count: number;
+  last_action?: string | null;
+  last_status?: string | null;
+}
+
+export interface TelemetryEvent {
+  id: string;
+  session_id: string;
+  user_id: string | null;
+  user_email: string | null;
+  user_name: string | null;
+  device_type?: string | null;
+  event_name: string;
+  event_category: string;
+  input_payload: string | null;
+  status: 'SUCCESS' | 'FAILURE' | 'PENDING' | 'CANCELLED';
+  result_summary: string | null;
+  execution_time_ms: number;
+  error_message: string | null;
+  ip_address: string | null;
+  created_at: string;
+}
+
+export interface SessionTimeline extends TelemetrySession {
+  events: TelemetryEvent[];
+}
+
 
 export interface LLMConfig {
   ACTIVE_LLM: 'mistral_local' | 'gemini' | 'mistral_cloud' | 'openai' | 'openrouter';

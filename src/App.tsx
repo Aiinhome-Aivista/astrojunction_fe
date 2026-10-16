@@ -18,6 +18,7 @@ import { AdminRevenueView } from './components/AdminRevenueView';
 import { AdminLLMConfigView } from './components/AdminLLMConfigView';
 import { AdminSEOView } from './components/AdminSEOView';
 import { AdminSubscriptionsView } from './components/AdminSubscriptionsView';
+import { AdminEventTrackingView } from './components/AdminEventTrackingView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
 import { LegalInfoPage, LegalPageView } from './components/LegalInfoPage';
 import { AdminLoginView } from './components/AdminLoginView';
@@ -66,6 +67,7 @@ import {
   AuthUser,
 } from './services/authApi';
 import * as profileApi from './services/profileApi';
+import { rotateSessionId } from './services/sessionTracker';
 
 const DEFAULT_PROFILES: UserProfile[] = [
   {
@@ -361,6 +363,9 @@ export function App() {
   );
 
   useEffect(() => {
+    if (authUser?.role === 'admin' || activeTab === 'admin_dashboard' || !authUser) {
+      return;
+    }
     let active = true;
 
     const loadRealChart = async () => {
@@ -394,7 +399,7 @@ export function App() {
     return () => {
       active = false;
     };
-  }, [currentProfile]);
+  }, [currentProfile, authUser]);
 
   const [panchang, setPanchang] = useState<PanchangInfo>(() =>
     calculateDailyPanchang(
@@ -404,6 +409,9 @@ export function App() {
   );
 
   useEffect(() => {
+    if (authUser?.role === 'admin' || activeTab === 'admin_dashboard' || !authUser) {
+      return;
+    }
     let active = true;
 
     const loadRealPanchang = async () => {
@@ -477,6 +485,7 @@ export function App() {
   }, [
     currentProfile.latitude,
     currentProfile.longitude,
+    authUser,
   ]);
 
   const numerology = useMemo(() => {
@@ -681,15 +690,7 @@ export function App() {
       {/* Animated Space Background - Only in Dark Mode */}
       {theme === 'dark' && <StarfieldBackground />}
 
-      {/* Universal Astrologer Background (Babaji image) for Admin Panel */}
-      {(authUser?.role === 'admin' || activeTab.startsWith('admin_')) && (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <div
-            className={`absolute inset-0 bg-no-repeat bg-cover bg-center bg-[url('/astrologer_bg.jpg')] transition-opacity duration-700 ${theme === 'dark' ? 'opacity-[0.10]' : 'opacity-[0.05]'}`}
-          ></div>
-          <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-transparent ${theme === 'dark' ? 'to-[#0D0D0F]/95' : 'to-[#F0ECE1]/95'}`}></div>
-        </div>
-      )}
+
 
       {/* Header & Navigation */}
       <Navbar
@@ -772,6 +773,10 @@ export function App() {
 
             {activeTab === 'admin_users' && (
               <AdminUsersView theme={theme} />
+            )}
+
+            {activeTab === 'admin_events' && (
+              <AdminEventTrackingView theme={theme} />
             )}
 
             {activeTab === 'admin_logs' && (

@@ -371,11 +371,7 @@ export const AdminLLMConfigView: React.FC<AdminLLMConfigViewProps> = ({ theme })
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div
-                      className="p-2 rounded-lg"
-                      style={{
-                        backgroundColor: `${provider.accentColor}18`,
-                        color: provider.accentColor,
-                      }}
+                      className={`p-2 rounded-lg astro-provider-badge-${provider.id}`}
                     >
                       <Icon className="w-4 h-4" />
                     </div>

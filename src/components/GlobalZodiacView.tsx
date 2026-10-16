@@ -260,9 +260,9 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               <Globe className="w-3.5 h-3.5 text-[#C9A050]" />
               <span>{t('zodiac.title')}</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#F0ECE1] tracking-tight">
+            <h1 className="astro-page-header-title">
               {t('zodiac.title')}
-            </h2>
+            </h1>
             <p className="text-xs sm:text-sm text-[#9E9A90] mt-1 max-w-3xl leading-relaxed">
               {t('zodiac.subtitle')}
             </p>

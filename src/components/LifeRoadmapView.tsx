@@ -851,9 +851,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
               <Milestone className="w-4 h-4" />
               <span>25-Year Astrological Life Blueprint</span>
             </div>
-            <h1 className={`text-2xl sm:text-3xl font-serif font-bold ${
-              theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
-            }`}>
+            <h1 className="astro-page-header-title">
               Vedic Destiny Roadmap
             </h1>
             <p className={`text-xs font-sans mt-1 leading-relaxed ${

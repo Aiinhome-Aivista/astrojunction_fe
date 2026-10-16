@@ -8,7 +8,7 @@ interface AdminDashboardViewProps {
   setActiveTab?: (tab: string) => void;
 }
 
-export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme }) => {
+export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme, setActiveTab }) => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +45,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
   return (
     <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-serif font-bold tracking-wide">
             Admin <span className="text-[#C9A050]">Overview</span>
@@ -66,7 +66,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Users */}
         <div className={cardClasses}>
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-[#C9A050]/10 rounded-full blur-2xl"></div>
+
           <div className="relative z-10 flex items-center justify-between">
             <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-[#C9A050]' : 'text-gray-900'}`}>
               Total Users
@@ -85,7 +85,6 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
 
         {/* New Users Today */}
         <div className={cardClasses}>
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-green-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-green-400' : 'text-gray-900'}`}>
               New Users Today
@@ -104,7 +103,6 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
 
         {/* Premium Subscribers */}
         <div className={cardClasses}>
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-purple-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-purple-400' : 'text-gray-900'}`}>
               Premium Subscribers
@@ -123,7 +121,6 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({ theme })
 
         {/* Total Blogs */}
         <div className={cardClasses}>
-          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl"></div>
           <div className="relative z-10 flex items-center justify-between">
             <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-blue-400' : 'text-gray-900'}`}>
               Total Blogs

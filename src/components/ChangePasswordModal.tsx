@@ -87,47 +87,38 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   const isDark = theme === 'dark';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div
-        className={`relative w-full max-w-md rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300 ${
-          isDark
-            ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]'
-            : 'bg-white border-[#DFC896]/60 text-[#0D0D0F]'
-        }`}
-      >
+    <div className="astro-modal-backdrop">
+      <div className="astro-modal-card max-w-md">
+        {/* Close Button */}
+        <button
+          onClick={handleClose}
+          className="astro-modal-close"
+          title="Close"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         {/* Modal Header */}
-        <div className={`flex items-center justify-between px-6 py-4 border-b ${
-          isDark ? 'border-[#2A2A2E] bg-[#1A1A20]' : 'border-[#F0E6D2] bg-[#FAF6EE]'
+        <div className={`flex items-center space-x-3 mb-5 pb-4 border-b ${
+          isDark ? 'border-[#2A2A2E]' : 'border-[#E2DBD0]'
         }`}>
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-[#C9A050]/15 text-[#C9A050]">
-              <Key className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-serif text-lg font-bold tracking-wide">
-                Change <span className="text-[#C9A050]">Password</span>
-              </h3>
-              {userEmail && (
-                <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-                  {userEmail}
-                </p>
-              )}
-            </div>
+          <div className="p-2 rounded-xl bg-[#C9A050]/15 text-[#C9A050]">
+            <Key className="w-5 h-5" />
           </div>
-          <button
-            onClick={handleClose}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              isDark
-                ? 'text-[#9E9A90] hover:bg-[#25252D] hover:text-white'
-                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
-            }`}
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div>
+            <h3 className="astro-heading-md font-serif">
+              Change <span className="text-[#C9A050]">Password</span>
+            </h3>
+            {userEmail && (
+              <p className="astro-text-xs astro-text-muted mt-0.5">
+                {userEmail}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <div className="flex items-start space-x-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-xs animate-shake">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -143,8 +134,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           )}
 
           {/* Current Password */}
-          <div className="space-y-1.5">
-            <label className={`block text-xs font-semibold ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
+          <div>
+            <label className="astro-label">
               Current Password
             </label>
             <div className="relative">
@@ -156,17 +147,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter your current password"
-                className={`w-full pl-9 pr-10 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                  isDark
-                    ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]'
-                    : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-                }`}
+                className="astro-input pl-9 pr-10"
                 disabled={loading || !!success}
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#C9A050] cursor-pointer"
               >
                 {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -174,8 +161,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           </div>
 
           {/* New Password */}
-          <div className="space-y-1.5">
-            <label className={`block text-xs font-semibold ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
+          <div>
+            <label className="astro-label">
               New Password
             </label>
             <div className="relative">
@@ -187,17 +174,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Minimum 6 characters"
-                className={`w-full pl-9 pr-10 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                  isDark
-                    ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]'
-                    : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-                }`}
+                className="astro-input pl-9 pr-10"
                 disabled={loading || !!success}
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#C9A050] cursor-pointer"
               >
                 {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -205,8 +188,8 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           </div>
 
           {/* Confirm New Password */}
-          <div className="space-y-1.5">
-            <label className={`block text-xs font-semibold ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
+          <div>
+            <label className="astro-label">
               Confirm New Password
             </label>
             <div className="relative">
@@ -218,17 +201,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter new password"
-                className={`w-full pl-9 pr-10 py-2.5 rounded-xl text-xs border outline-none transition-all ${
-                  isDark
-                    ? 'bg-[#1C1C22] border-[#2A2A2E] text-white focus:border-[#C9A050]'
-                    : 'bg-white border-[#DFC896] text-gray-900 focus:border-[#C9A050]'
-                }`}
+                className="astro-input pl-9 pr-10"
                 disabled={loading || !!success}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#C9A050] cursor-pointer"
               >
                 {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -240,11 +219,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <button
               type="button"
               onClick={handleClose}
-              className={`px-4 py-2 rounded-xl text-xs font-medium border transition-colors cursor-pointer ${
-                isDark
-                  ? 'border-[#2A2A2E] text-[#9E9A90] hover:bg-[#1C1C22]'
-                  : 'border-gray-200 text-gray-600 hover:bg-gray-100'
-              }`}
+              className="astro-btn astro-btn-secondary"
               disabled={loading}
             >
               Cancel
@@ -252,7 +227,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <button
               type="submit"
               disabled={loading || !!success}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C9A050] text-[#0D0D0F] hover:bg-[#D4AF37] transition-all shadow-md shadow-[#C9A050]/20 disabled:opacity-50 cursor-pointer"
+              className="astro-btn astro-btn-primary"
             >
               {loading ? 'Updating...' : 'Update Password'}
             </button>

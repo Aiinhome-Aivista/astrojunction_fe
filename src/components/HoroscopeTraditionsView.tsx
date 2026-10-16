@@ -1512,7 +1512,7 @@ export const HoroscopeTraditionsView: React.FC<
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#F0ECE1]">
+            <h1 className="astro-page-header-title">
               {profile.horoscopeSystem === 'western'
                 ? 'Western & Multi-Tradition Astrological Synthesis'
                 : 'Vedic Birth Chart & Multi-Tradition Synthesis'}

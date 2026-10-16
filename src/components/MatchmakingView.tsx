@@ -1529,7 +1529,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C9A050]" />
               <span>{t('matchmaking.title')}</span>
             </div>
-            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-serif font-bold leading-tight ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
+            <h1 className="astro-page-header-title">
               Kundli Milan &amp; Relationship Compatibility
             </h1>
             <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-2.5 max-w-2xl leading-relaxed`}>

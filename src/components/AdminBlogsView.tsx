@@ -235,39 +235,6 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
 
   return (
     <div className={`p-6 rounded-xl border shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#0D0D0F]'}`}>
-      <style>{`
-        /* --- Premium JyotishVeda Jodit Theme Override --- */
-        .jodit-toolbar__box, .jodit-toolbar, .jodit-workplace {
-          background-color: ${theme === 'dark' ? '#141418' : '#F9F7F1'} !important;
-          border-color: ${theme === 'dark' ? '#2A2A2E' : '#E5E1D8'} !important;
-        }
-        .jodit-container:not(.jodit_inline) {
-          border-color: ${theme === 'dark' ? '#2A2A2E' : '#E5E1D8'} !important;
-        }
-        .jodit-ui-button__icon svg, .jodit-toolbar-button__icon svg {
-          fill: ${theme === 'dark' ? '#E5E1D8' : '#0D0D0F'} !important;
-        }
-        .jodit-ui-button__icon_trigger svg {
-          fill: ${theme === 'dark' ? '#9E9A90' : '#6C6960'} !important;
-        }
-        html body .jodit-toolbar-button[aria-pressed="true"],
-        html body .jodit-ui-button[aria-pressed="true"], 
-        html body .jodit-toolbar-button_active,
-        html body .jodit-ui-button_active,
-        html body .jodit-ui-button_active:not([disabled]) {
-          background-color: ${theme === 'dark' ? '#C9A050' : 'rgba(201, 160, 80, 0.25)'} !important;
-          border: 1px solid #C9A050 !important;
-          border-radius: 6px !important;
-        }
-        html body .jodit-toolbar-button[aria-pressed="true"] svg,
-        html body .jodit-ui-button[aria-pressed="true"] svg, 
-        html body .jodit-toolbar-button_active svg,
-        html body .jodit-ui-button_active svg,
-        html body .jodit-ui-button_active:not([disabled]) svg {
-          fill: ${theme === 'dark' ? '#0D0D0F' : '#C9A050'} !important;
-        }
-      `}</style>
-      
       <div className="mb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2A2E]/40 pb-3">
         <div>
           <h2 className="text-xl font-bold font-serif text-[#C9A050]">Manage Blogs</h2>

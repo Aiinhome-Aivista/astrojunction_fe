@@ -78,14 +78,24 @@ function buildUrl(path: string): string {
   return `${cleanBase}${cleanPath}`;
 }
 
+import { getSessionId, getCachedPublicIp } from './sessionTracker';
+
 async function executeFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const token = getToken();
+  const sessionId = getSessionId();
+  const clientIp = getCachedPublicIp();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string> | undefined),
   };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+  }
+  if (sessionId) {
+    headers['x-session-id'] = sessionId;
+  }
+  if (clientIp) {
+    headers['x-client-ip'] = clientIp;
   }
 
   const url = buildUrl(path);
