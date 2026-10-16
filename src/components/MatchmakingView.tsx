@@ -36,6 +36,7 @@ import {
   ArrowRight,
   Crown,
   Lock,
+  Bookmark,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
@@ -138,19 +139,19 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
   const storageKey = `jyotish_matchmaking_state_${profileId}`;
   const historyKey = `jyotish_matchmaking_history_${profileId}`;
 
-  // Default templates for Partner 1 and Partner 2
+  // Dynamic templates for Partner 1 and Partner 2
   const getDefaultP1 = (): UserProfile => ({
-    id: 'p1',
-    fullName: '',
-    gender: 'male',
-    birthDate: '',
-    birthTime: '',
-    birthPlace: '',
-    latitude: 22.5726,
-    longitude: 88.3639,
-    timezone: 5.5,
-    horoscopeSystem: 'vedic',
-    focusAreas: ['relationships'],
+    id: currentProfile?.id || 'p1',
+    fullName: currentProfile?.fullName || '',
+    gender: currentProfile?.gender || 'male',
+    birthDate: currentProfile?.birthDate || '',
+    birthTime: currentProfile?.birthTime || '',
+    birthPlace: currentProfile?.birthPlace || '',
+    latitude: currentProfile?.latitude || 0,
+    longitude: currentProfile?.longitude || 0,
+    timezone: currentProfile?.timezone || 5.5,
+    horoscopeSystem: currentProfile?.horoscopeSystem || 'vedic',
+    focusAreas: currentProfile?.focusAreas || ['relationships'],
     createdAt: new Date().toISOString(),
   });
 
@@ -161,8 +162,8 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
     birthDate: '',
     birthTime: '',
     birthPlace: '',
-    latitude: 28.6139,
-    longitude: 77.2090,
+    latitude: 0,
+    longitude: 0,
     timezone: 5.5,
     horoscopeSystem: 'vedic',
     focusAreas: ['relationships'],
@@ -300,9 +301,63 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       setIsP1Saved(true);
       setIsP2Saved(true);
       setIsHistoryModalOpen(false);
-      triggerMilanCalculation(item.partner1, item.partner2);
+
+      if (item.result) {
+        setMatchResult(item.result);
+        setTimeout(() => {
+          const resultsEl = document.getElementById('kundli-milan-results');
+          if (resultsEl) {
+            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      } else {
+        triggerMilanCalculation(item.partner1, item.partner2);
+      }
     }
   };
+
+  // Sync server saved reports when history modal is opened
+  useEffect(() => {
+    if (isHistoryModalOpen && isAuthenticated) {
+      listMatchReports()
+        .then((serverReports) => {
+          if (Array.isArray(serverReports) && serverReports.length > 0) {
+            setSavedMatches((prev) => {
+              const prevIds = new Set(prev.map((m) => m.id));
+              const newItems = serverReports
+                .filter((sr: any) => !prevIds.has(sr.id))
+                .map((sr: any) => ({
+                  id: sr.id,
+                  partner1Name: sr.partner1Name || sr.partner1?.fullName || sr.partner1?.name || '',
+                  partner1BirthDate: sr.partner1BirthDate || sr.partner1?.birthDate || '',
+                  partner2Name: sr.partner2Name || sr.partner2?.fullName || sr.partner2?.name || '',
+                  partner2BirthDate: sr.partner2BirthDate || sr.partner2?.birthDate || '',
+                  totalScore: sr.totalScore,
+                  maxScore: sr.maxScore || 36,
+                  percentage: Math.round(((sr.totalScore || 0) / (sr.maxScore || 36)) * 100),
+                  verdictTitle: sr.partner1ManglikStatus || sr.manglikStatus || 'Saved Match',
+                  createdAt: sr.createdAt || new Date().toISOString(),
+                  partner1: sr.partner1 || {
+                    fullName: sr.partner1Name || '',
+                    birthDate: sr.partner1BirthDate || '',
+                    birthTime: '12:00',
+                    birthPlace: '',
+                  },
+                  partner2: sr.partner2 || {
+                    fullName: sr.partner2Name || '',
+                    birthDate: sr.partner2BirthDate || '',
+                    birthTime: '12:00',
+                    birthPlace: '',
+                  },
+                  result: sr.result || sr.report,
+                }));
+              return [...newItems, ...prev];
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isHistoryModalOpen, isAuthenticated]);
 
   // Delete a match record from history
   const handleDeleteFromHistory = (id: string, e: React.MouseEvent) => {
@@ -321,7 +376,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
     try {
       saveToHistoryList(matchResult, partner1, partner2);
       if (isAuthenticated) {
-        const saved = await saveMatchReport(matchResult);
+        const saved = await saveMatchReport(matchResult, partner1, partner2);
         if (saved && saved.id) {
           setSavedReportId(saved.id);
         }
@@ -992,21 +1047,21 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         method: 'POST',
         body: JSON.stringify({
           partner1: {
-            fullName: partner1.fullName || 'Partner 1',
+            fullName: partner1.fullName || '',
             birthDate: partner1.birthDate || '',
             birthTime: partner1.birthTime || '12:00',
-            birthPlace: partner1.birthPlace || 'Delhi, India',
-            latitude: partner1.latitude || 28.6139,
-            longitude: partner1.longitude || 77.2090,
+            birthPlace: partner1.birthPlace || '',
+            latitude: partner1.latitude,
+            longitude: partner1.longitude,
             timezone: p1Tz,
           },
           partner2: {
-            fullName: partner2.fullName || 'Partner 2',
+            fullName: partner2.fullName || '',
             birthDate: partner2.birthDate || '',
             birthTime: partner2.birthTime || '12:00',
-            birthPlace: partner2.birthPlace || 'Mumbai, India',
-            latitude: partner2.latitude || 19.0760,
-            longitude: partner2.longitude || 72.8777,
+            birthPlace: partner2.birthPlace || '',
+            latitude: partner2.latitude,
+            longitude: partner2.longitude,
             timezone: p2Tz,
           },
           matchResult,
@@ -1558,6 +1613,42 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 </span>
               )}
             </button>
+
+            {/* Save Match Button */}
+            {matchResult && (
+              <button
+                type="button"
+                onClick={handleSaveMatchReport}
+                disabled={saveState === 'saving'}
+                className={`flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border transition cursor-pointer ${
+                  saveState === 'saved'
+                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+                    : saveState === 'error'
+                    ? 'bg-rose-500/15 border-rose-500/40 text-rose-400'
+                    : theme === 'dark'
+                    ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#222228]'
+                    : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E] hover:border-[#C9A050] hover:bg-[#F0ECE1]'
+                }`}
+                title="Save this match report"
+              >
+                {saveState === 'saving' ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-[#C9A050]" />
+                ) : saveState === 'saved' ? (
+                  <Check className="w-4 h-4 text-emerald-400" />
+                ) : (
+                  <Bookmark className="w-4 h-4 text-[#C9A050]" />
+                )}
+                <span>
+                  {saveState === 'saved'
+                    ? 'Saved'
+                    : saveState === 'saving'
+                    ? 'Saving...'
+                    : saveState === 'error'
+                    ? 'Save Error'
+                    : 'Save Match'}
+                </span>
+              </button>
+            )}
 
             {/* Quick Action: Direct 1-Page PDF Download */}
             <button

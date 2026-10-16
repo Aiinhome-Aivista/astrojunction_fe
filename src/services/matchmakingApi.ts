@@ -20,19 +20,67 @@ export interface MatchReportFull extends MatchReportSummary {
 
 export async function saveMatchReport(
   result: AshtaKootaMilanResult,
+  p1?: any,
+  p2?: any,
 ): Promise<MatchReportFull> {
-  const p1Name = result.partner1?.fullName || 'Partner 1';
-  const p1Dob = result.partner1?.birthDate || '2000-01-01';
-  const p2Name = result.partner2?.fullName || 'Partner 2';
-  const p2Dob = result.partner2?.birthDate || '2000-01-01';
+  const p1Actual = p1 || result.partner1 || {};
+  const p2Actual = p2 || result.partner2 || {};
+
+  const p1Name = p1Actual.fullName || p1Actual.name || '';
+  const p1Dob = p1Actual.birthDate || p1Actual.dob || '';
+  const p1Time = p1Actual.birthTime || p1Actual.time || '';
+  const p1Place = p1Actual.birthPlace || p1Actual.place || '';
+  const p1Lat = typeof p1Actual.latitude === 'number' ? p1Actual.latitude : undefined;
+  const p1Lon = typeof p1Actual.longitude === 'number' ? p1Actual.longitude : undefined;
+  const p1Tz = p1Actual.timezone;
+
+  const p2Name = p2Actual.fullName || p2Actual.name || '';
+  const p2Dob = p2Actual.birthDate || p2Actual.dob || '';
+  const p2Time = p2Actual.birthTime || p2Actual.time || '';
+  const p2Place = p2Actual.birthPlace || p2Actual.place || '';
+  const p2Lat = typeof p2Actual.latitude === 'number' ? p2Actual.latitude : undefined;
+  const p2Lon = typeof p2Actual.longitude === 'number' ? p2Actual.longitude : undefined;
+  const p2Tz = p2Actual.timezone;
 
   return api.post<MatchReportFull>(API_ENDPOINTS.MATCHMAKING.REPORTS, {
     partner1Name: p1Name,
     partner1BirthDate: p1Dob,
+    partner1BirthTime: p1Time,
+    partner1BirthPlace: p1Place,
     partner2Name: p2Name,
     partner2BirthDate: p2Dob,
-    totalScore: result.totalPoints ?? 0,
-    maxScore: result.maxPoints ?? 36,
+    partner2BirthTime: p2Time,
+    partner2BirthPlace: p2Place,
+    partner1: {
+      name: p1Name,
+      fullName: p1Name,
+      dob: p1Dob,
+      birthDate: p1Dob,
+      time: p1Time,
+      birthTime: p1Time,
+      place: p1Place,
+      birthPlace: p1Place,
+      latitude: p1Lat,
+      longitude: p1Lon,
+      timezone: p1Tz,
+      gender: p1Actual.gender || 'male',
+    },
+    partner2: {
+      name: p2Name,
+      fullName: p2Name,
+      dob: p2Dob,
+      birthDate: p2Dob,
+      time: p2Time,
+      birthTime: p2Time,
+      place: p2Place,
+      birthPlace: p2Place,
+      latitude: p2Lat,
+      longitude: p2Lon,
+      timezone: p2Tz,
+      gender: p2Actual.gender || 'female',
+    },
+    totalScore: result.totalPoints ?? (result as any).totalScore ?? 0,
+    maxScore: result.maxPoints ?? (result as any).maxScore ?? 36,
     manglikStatus:
       result.manglik?.partner1?.isManglik || result.manglik?.partner2?.isManglik
         ? `${result.manglik?.partner1?.severity || 'Manglik'} / ${result.manglik?.partner2?.severity || 'Manglik'}`
@@ -56,24 +104,24 @@ export async function calculateMatchReportBackend(
   try {
     const payload = {
       partner1: {
-        name: p1.fullName || p1.name || 'Partner 1',
-        dob: p1.birthDate || p1.dob || '2000-01-01',
-        time: p1.birthTime || p1.time || '12:00',
-        place: p1.birthPlace || p1.place || 'Delhi, India',
-        latitude: p1.latitude,
-        longitude: p1.longitude,
-        timezone: p1.timezone || 5.5,
-        gender: p1.gender || 'male',
+        name: p1?.fullName || p1?.name || '',
+        dob: p1?.birthDate || p1?.dob || '',
+        time: p1?.birthTime || p1?.time || '',
+        place: p1?.birthPlace || p1?.place || '',
+        latitude: typeof p1?.latitude === 'number' ? p1.latitude : undefined,
+        longitude: typeof p1?.longitude === 'number' ? p1.longitude : undefined,
+        timezone: p1?.timezone,
+        gender: p1?.gender || 'male',
       },
       partner2: {
-        name: p2.fullName || p2.name || 'Partner 2',
-        dob: p2.birthDate || p2.dob || '2000-01-01',
-        time: p2.birthTime || p2.time || '12:00',
-        place: p2.birthPlace || p2.place || 'Mumbai, India',
-        latitude: p2.latitude,
-        longitude: p2.longitude,
-        timezone: p2.timezone || 5.5,
-        gender: p2.gender || 'female',
+        name: p2?.fullName || p2?.name || '',
+        dob: p2?.birthDate || p2?.dob || '',
+        time: p2?.birthTime || p2?.time || '',
+        place: p2?.birthPlace || p2?.place || '',
+        latitude: typeof p2?.latitude === 'number' ? p2.latitude : undefined,
+        longitude: typeof p2?.longitude === 'number' ? p2.longitude : undefined,
+        timezone: p2?.timezone,
+        gender: p2?.gender || 'female',
       },
     };
     
