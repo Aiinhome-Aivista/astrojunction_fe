@@ -606,7 +606,7 @@ export function AuthGate({
                         <input
                           type="tel"
                           value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          onChange={(e) => { const digits = e.target.value.replace(/\D/g, "").slice(0, 10); setPhoneNumber(digits); }} maxLength={10}
                           className="astro-input"
                           placeholder="e.g. +91 98765 43210"
                         />

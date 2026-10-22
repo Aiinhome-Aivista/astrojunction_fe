@@ -16,6 +16,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
+import { sessionTracker } from '../services/sessionTracker';
 
 // ---------------- Data Dictionaries & Translations ----------------
 
@@ -280,6 +281,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
 
   const fetchFullPanjika = async (dateStr: string) => {
     setModalLoading(true);
+    const start = Date.now();
     try {
       const res = await api.post<any>(API_ENDPOINTS.CALENDAR.FULL_PANJIKA, {
         date: dateStr,
@@ -287,8 +289,23 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
         lon: location.lon,
       });
       setFullPanjika(res);
-    } catch (error) {
+
+      sessionTracker.trackPanjikaDayView({
+        dateStr,
+        locationName: location.name,
+        result: res,
+        status: 'SUCCESS',
+        executionTimeMs: Date.now() - start,
+      });
+    } catch (error: any) {
       console.error('Error fetching full panjika:', error);
+      sessionTracker.trackPanjikaDayView({
+        dateStr,
+        locationName: location.name,
+        status: 'FAILURE',
+        errorMessage: error?.message || 'Failed to fetch day panjika',
+        executionTimeMs: Date.now() - start,
+      });
     } finally {
       setModalLoading(false);
     }
@@ -318,12 +335,33 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
       payload.year = hinYear;
     }
 
+    const start = Date.now();
     try {
       const res = await api.post<any>(API_ENDPOINTS.CALENDAR.CONVERT, payload);
       setConversionResult(res);
-    } catch (error) {
+
+      if (activeSubTab === 'converter') {
+        sessionTracker.trackPanjikaDateConversion({
+          convertFrom,
+          convertTo,
+          payload,
+          result: res,
+          status: 'SUCCESS',
+          executionTimeMs: Date.now() - start,
+        });
+      }
+    } catch (error: any) {
       console.error('Error converting date:', error);
       setConversionResult({ error: 'Date not found or invalid calculation.' });
+      if (activeSubTab === 'converter') {
+        sessionTracker.trackPanjikaDateConversion({
+          convertFrom,
+          convertTo,
+          status: 'FAILURE',
+          errorMessage: error?.message || 'Date conversion failed',
+          executionTimeMs: Date.now() - start,
+        });
+      }
     } finally {
       setConversionLoading(false);
     }

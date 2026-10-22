@@ -26,6 +26,15 @@ export const API_ENDPOINTS = {
     TELEMETRY_SESSIONS: '/api/admin/telemetry/sessions',
     TELEMETRY_EVENTS: '/api/admin/telemetry/events',
     SESSION_TIMELINE: (sessionId: string) => `/api/admin/telemetry/sessions/${sessionId}/timeline`,
+    SUBSCRIPTION_PLANS: '/api/admin/subscription-plans',
+    SUBSCRIPTION_PLAN_DETAIL: (id: string) => `/api/admin/subscription-plans/${id}`,
+  },
+  TELEMETRY: {
+    TRACK_EVENT: '/api/track/event',
+    STATS: '/api/admin/telemetry/stats',
+    SESSIONS: '/api/admin/telemetry/sessions',
+    EVENTS: '/api/admin/telemetry/events',
+    SESSION_TIMELINE: (sessionId: string) => `/api/admin/telemetry/sessions/${sessionId}/timeline`,
   },
   BLOGS: {
     LIST: '/api/blogs',

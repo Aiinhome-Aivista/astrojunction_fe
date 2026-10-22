@@ -12,6 +12,7 @@ import { BlogCarousel, BlogPage, BlogPost } from './Blogs';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
 import { VedicRemediesSection } from './VedicRemediesSection';
 import { landingChatApi } from '../services/landingChatApi';
+import { sessionTracker } from '../services/sessionTracker';
 import { LegalInfoPage, LegalPageView } from './LegalInfoPage';
 
 interface LandingPageProps {
@@ -84,6 +85,25 @@ export function LandingPage({
   const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
+
+  // Track Landing Page View once when visitor arrives on landing page
+  const hasTrackedLandingView = useRef(false);
+  useEffect(() => {
+    if (currentView === 'landing' && !hasTrackedLandingView.current) {
+      hasTrackedLandingView.current = true;
+      sessionTracker.trackLandingPageView();
+    }
+  }, [currentView]);
+
+  const handleLoginClick = () => {
+    sessionTracker.trackAuthGateOpen('login');
+    onLoginClick();
+  };
+
+  const handleRegisterClick = () => {
+    sessionTracker.trackAuthGateOpen('register');
+    onRegisterClick();
+  };
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -207,6 +227,7 @@ export function LandingPage({
     setMessages(updatedMessages);
     setMsgCount(prev => prev + 1);
     setIsAiThinking(true);
+    const chatStart = Date.now();
 
     try {
       const data = await landingChatApi.sendPublicMessage({
@@ -219,10 +240,24 @@ export function LandingPage({
         if (data.dob) setSavedDob(data.dob);
         setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
         if (data.msgCount !== undefined) setMsgCount(data.msgCount);
+
+        sessionTracker.trackGuestAIChat({
+          userMessage: userText,
+          aiReply: data.reply,
+          msgCount: (data.msgCount !== undefined ? data.msgCount : msgCount + 1),
+          status: 'SUCCESS',
+          executionTimeMs: Date.now() - chatStart,
+        });
       } else {
         throw new Error('API response invalid');
       }
-    } catch (err) {
+    } catch (err: any) {
+      sessionTracker.trackGuestAIChat({
+        userMessage: userText,
+        status: 'FAILURE',
+        errorMessage: err?.message || 'Chat API error',
+        executionTimeMs: Date.now() - chatStart,
+      });
       // Client-side Fallback
       setTimeout(() => {
         let reply = "";
@@ -354,6 +389,7 @@ export function LandingPage({
     setMessages(updatedMessages);
     setMsgCount(prev => prev + 1);
     setIsAiThinking(true);
+    const signChatStart = Date.now();
 
     try {
       landingChatApi.sendPublicMessage({
@@ -364,8 +400,22 @@ export function LandingPage({
         .then(data => {
           if (data.dob) setSavedDob(data.dob);
           setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+          sessionTracker.trackGuestAISign({
+            signName,
+            promptText,
+            aiReply: data.reply,
+            status: 'SUCCESS',
+            executionTimeMs: Date.now() - signChatStart,
+          });
         })
-        .catch(() => {
+        .catch((err: any) => {
+          sessionTracker.trackGuestAISign({
+            signName,
+            promptText,
+            status: 'FAILURE',
+            errorMessage: err?.message || 'Chat error',
+            executionTimeMs: Date.now() - signChatStart,
+          });
           setMessages(prev => [...prev, { role: 'assistant', content: "Ayushman Bhava! To reveal the precise planetary alignments for your query, please share your Date of Birth (DD-MM-YYYY) and Birth Time." }]);
         })
         .finally(() => setIsAiThinking(false));
@@ -517,7 +567,7 @@ export function LandingPage({
               ) : (
                 <>
                   <button
-                    onClick={onLoginClick}
+                    onClick={handleLoginClick}
                     className={`hidden sm:block px-5 py-2.5 rounded-full font-bold text-[13px] transition-all cursor-pointer border shadow-sm ${theme === 'dark'
                       ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
                       : 'bg-white border-gray-200 text-[#0D0D0F] hover:text-[#8C6B28] hover:border-[#C9A050]/50'
@@ -526,7 +576,7 @@ export function LandingPage({
                     Log In
                   </button>
                   <button
-                    onClick={onRegisterClick}
+                    onClick={handleRegisterClick}
                     className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-[13px] hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_15px_rgba(201,160,80,0.3)] hover:shadow-[0_0_20px_rgba(201,160,80,0.5)] hover:-translate-y-0.5"
                   >
                     Get Started
@@ -636,7 +686,7 @@ export function LandingPage({
 
                 <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
                   <button
-                    onClick={authUser ? onGoToDashboard : onRegisterClick}
+                    onClick={authUser ? onGoToDashboard : handleRegisterClick}
                     className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
                   >
                     <span>{authUser ? 'Go to Your Kundli Dashboard' : 'Unlock Your Future'}</span>
@@ -731,6 +781,11 @@ export function LandingPage({
               <BlogCarousel
                 theme={theme}
                 onSelectBlog={(blog) => {
+                  sessionTracker.trackBlogClick({
+                    id: blog.id,
+                    title: blog.title,
+                    category: blog.category,
+                  });
                   setSelectedBlogForPage(blog);
                   setCurrentView('blogs');
                   const slug = blog.slug || blog.id;
@@ -768,7 +823,13 @@ export function LandingPage({
                   return (
                     <div
                       key={feat.id}
-                      onClick={() => setSelectedFeatureForPreview(feat)}
+                      onClick={() => {
+                        sessionTracker.trackFeaturePreviewClick({
+                          id: feat.id,
+                          title: feat.title,
+                        });
+                        setSelectedFeatureForPreview(feat);
+                      }}
                       className={`relative overflow-hidden rounded-3xl p-6 md:p-8 text-left cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#C9A050]/20 group flex flex-col justify-between min-h-[220px] ${theme === 'dark'
                         ? 'bg-gradient-to-br from-[#1C1C22]/90 to-[#0D0D0F]/90 border border-[#2A2A2E]/80 hover:border-[#C9A050]/50'
                         : 'bg-gradient-to-br from-white/90 to-[#F9F7F1]/80 border border-[#E5E1D8]/80 hover:border-[#C9A050]/50 shadow-sm'

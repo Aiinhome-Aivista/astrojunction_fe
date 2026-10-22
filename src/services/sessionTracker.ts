@@ -4,6 +4,8 @@
  * Accurately detects and passes real client public IP addresses.
  */
 
+import { API_ENDPOINTS } from '../config/api_config';
+
 const SESSION_STORAGE_KEY = 'jyotish_session_id';
 const CLIENT_IP_STORAGE_KEY = 'jyotish_client_ip';
 
@@ -141,6 +143,21 @@ export function rotateSessionId(): string {
   return newSessionId;
 }
 
+export const TELEMETRY_EVENTS = {
+  LANDING_PAGE_VIEW: 'LANDING_PAGE_VIEW',
+  LANDING_AI_CHAT: 'LANDING_AI_CHAT',
+  LANDING_AI_CHAT_SIGN: 'LANDING_AI_CHAT_SIGN',
+  ZODIAC_FORECAST_CLICK: 'ZODIAC_FORECAST_CLICK',
+  ZODIAC_COMPATIBILITY_CHECK: 'ZODIAC_COMPATIBILITY_CHECK',
+  PANJIKA_DATE_CONVERSION: 'PANJIKA_DATE_CONVERSION',
+  PANJIKA_DAY_VIEW: 'PANJIKA_DAY_VIEW',
+  BLOG_POST_CLICK: 'BLOG_POST_CLICK',
+  FEATURE_PREVIEW_CLICK: 'FEATURE_PREVIEW_CLICK',
+  AUTH_GATE_OPEN: 'AUTH_GATE_OPEN',
+  USER_LOGIN: 'USER_LOGIN',
+  USER_REGISTRATION: 'USER_REGISTRATION',
+} as const;
+
 export interface TrackEventParams {
   eventName: string;
   category?: 'ASTROLOGY' | 'AI_CHAT' | 'NUMEROLOGY' | 'BILLING' | 'AUTH' | 'NAVIGATION' | 'REPORT' | 'CLIENT' | string;
@@ -169,7 +186,7 @@ export async function trackEvent({
   try {
     const sessionId = getSessionId();
     const clientIp = getCachedPublicIp();
-    const endpoint = '/api/track/event';
+    const endpoint = API_ENDPOINTS.TELEMETRY.TRACK_EVENT;
     let url = endpoint;
 
     if (typeof window !== 'undefined') {
@@ -214,3 +231,254 @@ export async function trackEvent({
     console.debug('[Telemetry trackEvent failed quietly]:', err);
   }
 }
+
+/**
+ * Centralized Session Tracker Service (UI single-point-of-entry)
+ * Every interaction telemetry call in the frontend routes through this object.
+ */
+export const sessionTracker = {
+  // 1. Landing page view
+  trackLandingPageView: (path: string = typeof window !== 'undefined' ? window.location.pathname : '/') => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.LANDING_PAGE_VIEW,
+      category: 'NAVIGATION',
+      inputPayload: {
+        page: 'Landing Page',
+        path,
+        referrer: typeof document !== 'undefined' ? (document.referrer || 'direct') : 'direct',
+      },
+      status: 'SUCCESS',
+      resultSummary: {
+        page: 'Landing Page',
+        status: 'viewed',
+      },
+    });
+  },
+
+  // 2. Guest AI Chat message
+  trackGuestAIChat: (params: {
+    userMessage: string;
+    aiReply?: string;
+    msgCount?: number;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.LANDING_AI_CHAT,
+      category: 'AI_CHAT',
+      inputPayload: {
+        clicked: 'Send Message in Guest AI Chat',
+        userMessage: params.userMessage,
+        msgCount: params.msgCount,
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.aiReply ? {
+        aiReply: params.aiReply,
+        msgCount: params.msgCount,
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 3. Guest AI Chat sign prompt
+  trackGuestAISign: (params: {
+    signName: string;
+    promptText: string;
+    aiReply?: string;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.LANDING_AI_CHAT_SIGN,
+      category: 'AI_CHAT',
+      inputPayload: {
+        clicked: `Ask AI for Sign (${params.signName})`,
+        signName: params.signName,
+        prompt: params.promptText,
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.aiReply ? {
+        aiReply: params.aiReply,
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 4. Zodiac forecast click
+  trackZodiacForecastClick: (params: {
+    signName: string;
+    timeframe: string;
+    language?: string;
+    forecast?: any;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.ZODIAC_FORECAST_CLICK,
+      category: 'ASTROLOGY',
+      inputPayload: {
+        clicked: `Zodiac Sign: ${params.signName}`,
+        sign: params.signName,
+        timeframe: params.timeframe,
+        language: params.language,
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.forecast ? {
+        sign: params.signName,
+        timeframe: params.timeframe,
+        forecast: params.forecast,
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 5. Zodiac compatibility check
+  trackCompatibilityCheck: (params: {
+    signA: string;
+    signB: string;
+    system?: string;
+    result?: any;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.ZODIAC_COMPATIBILITY_CHECK,
+      category: 'ASTROLOGY',
+      inputPayload: {
+        clicked: `Check Compatibility (${params.signA} & ${params.signB})`,
+        signA: params.signA,
+        signB: params.signB,
+        system: params.system,
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.result ? {
+        signA: params.signA,
+        signB: params.signB,
+        overallScore: params.result?.overallScore || params.result?.score || 0,
+        harmonyLevel: params.result?.harmonyLevel || 'Calculated',
+        summary: params.result?.summary || params.result?.verdict || 'Compatibility evaluated successfully',
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 6. Panjika date conversion
+  trackPanjikaDateConversion: (params: {
+    convertFrom: string;
+    convertTo: string;
+    payload?: any;
+    result?: any;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.PANJIKA_DATE_CONVERSION,
+      category: 'ASTROLOGY',
+      inputPayload: {
+        clicked: `Convert Date (${params.convertFrom} -> ${params.convertTo})`,
+        from_type: params.convertFrom,
+        to_type: params.convertTo,
+        ...(params.payload || {}),
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.result ? {
+        from_type: params.convertFrom,
+        to_type: params.convertTo,
+        result: params.result?.result || params.result,
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 7. Panjika day details
+  trackPanjikaDayView: (params: {
+    dateStr: string;
+    locationName?: string;
+    result?: any;
+    status?: 'SUCCESS' | 'FAILURE';
+    errorMessage?: string;
+    executionTimeMs?: number;
+  }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.PANJIKA_DAY_VIEW,
+      category: 'ASTROLOGY',
+      inputPayload: {
+        clicked: `Panjika Day: ${params.dateStr}`,
+        date: params.dateStr,
+        location: params.locationName,
+      },
+      status: params.status || 'SUCCESS',
+      resultSummary: params.result ? {
+        date: params.dateStr,
+        tithi: params.result?.tithi || params.result?.panjika?.tithi,
+        nakshatra: params.result?.nakshatra || params.result?.panjika?.nakshatra,
+        sunrise: params.result?.sunrise || params.result?.panjika?.sunrise,
+        sunset: params.result?.sunset || params.result?.panjika?.sunset,
+      } : undefined,
+      errorMessage: params.errorMessage,
+      executionTimeMs: params.executionTimeMs || 0,
+    });
+  },
+
+  // 8. Blog click
+  trackBlogClick: (blog: { id: string | number; title: string; category?: string }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.BLOG_POST_CLICK,
+      category: 'CONTENT',
+      inputPayload: {
+        clicked: `Blog: ${blog.title}`,
+        blogId: blog.id,
+        blogTitle: blog.title,
+        category: blog.category,
+      },
+      status: 'SUCCESS',
+      resultSummary: {
+        blogId: blog.id,
+        title: blog.title,
+        category: blog.category,
+        status: 'opened',
+      },
+    });
+  },
+
+  // 9. Feature preview click
+  trackFeaturePreviewClick: (feat: { id: string; title: string }) => {
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.FEATURE_PREVIEW_CLICK,
+      category: 'NAVIGATION',
+      inputPayload: {
+        clicked: `Feature Preview: ${feat.title}`,
+        featureId: feat.id,
+        title: feat.title,
+      },
+      status: 'SUCCESS',
+      resultSummary: {
+        featureId: feat.id,
+        title: feat.title,
+        status: 'previewed',
+      },
+    });
+  },
+
+  // 10. Auth gate open
+  trackAuthGateOpen: (mode: 'login' | 'register') => {
+    const label = mode === 'login' ? 'Log In Button' : 'Get Started Button';
+    return trackEvent({
+      eventName: TELEMETRY_EVENTS.AUTH_GATE_OPEN,
+      category: 'AUTH',
+      inputPayload: { clicked: label, mode },
+      status: 'SUCCESS',
+      resultSummary: { mode, status: 'modal_opened' },
+    });
+  },
+};

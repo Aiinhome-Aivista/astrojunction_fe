@@ -82,6 +82,18 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({ theme }) => {
     }
   };
 
+  const formatJoinedIST = (dateStr: string) => {
+    if (!dateStr) return '—';
+    try {
+      const date = new Date(dateStr);
+      const datePart = date.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric' });
+      const timePart = date.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      return { date: datePart, time: timePart };
+    } catch {
+      return { date: dateStr, time: '' };
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
@@ -243,7 +255,16 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({ theme }) => {
                     {user.email}
                   </td>
                   <td className={`px-4 py-3.5 text-xs font-medium ${textMutedClass}`}>
-                    {new Date(user.created_at).toLocaleDateString()}
+                    {(() => {
+                      const f = formatJoinedIST(user.created_at);
+                      if (typeof f === 'string') return f;
+                      return (
+                        <div className="leading-tight">
+                          <div className="font-semibold">{f.date}</div>
+                          <div className={`text-[11px] mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>{f.time} IST</div>
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">

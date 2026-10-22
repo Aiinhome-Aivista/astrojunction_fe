@@ -28,6 +28,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
+  Globe,
+  BookOpen,
 } from 'lucide-react';
 import {
   adminApi,
@@ -93,13 +95,36 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
     }
   };
 
+  const SESSIONS_PER_PAGE = 20;
+
+  // Helper to generate numbered pagination pages (1, 2, 3...)
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    if (sessionsTotalPages <= 7) {
+      for (let i = 1; i <= sessionsTotalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (sessionsPage > 3) pages.push('...');
+      const start = Math.max(2, sessionsPage - 1);
+      const end = Math.min(sessionsTotalPages - 1, sessionsPage + 1);
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      if (sessionsPage < sessionsTotalPages - 2) pages.push('...');
+      pages.push(sessionsTotalPages);
+    }
+    return pages;
+  };
+
   // Fetch User Sessions Stream
   const loadSessions = async (page = sessionsPage, timeout = timeoutMinutes) => {
     setLoadingSessions(true);
     try {
       const res = await adminApi.getTelemetrySessions({
         page,
-        page_size: 20,
+        page_size: SESSIONS_PER_PAGE,
         search: searchQuery,
         status: selectedStatus,
         timeout_minutes: timeout,
@@ -178,6 +203,8 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
     if (cat.includes('BILL') || cat.includes('PAY')) return <CreditCard className="w-3.5 h-3.5 text-emerald-500" />;
     if (cat.includes('AUTH')) return <Shield className="w-3.5 h-3.5 text-indigo-500" />;
     if (cat.includes('REPORT')) return <FileText className="w-3.5 h-3.5 text-rose-500" />;
+    if (cat.includes('NAV') || cat.includes('PAGE')) return <Globe className="w-3.5 h-3.5 text-cyan-500" />;
+    if (cat.includes('CONTENT') || cat.includes('BLOG')) return <BookOpen className="w-3.5 h-3.5 text-emerald-400" />;
     return <Sparkles className="w-3.5 h-3.5 text-yellow-500" />;
   };
 
@@ -752,34 +779,80 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
         </div>
 
         {/* Pagination */}
-        <div className={`p-4 border-t ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-gray-200'} flex items-center justify-between text-xs`}>
-          <span className="text-gray-400">
-            Showing page {sessionsPage} of {sessionsTotalPages} ({sessionsTotal} total sessions)
-          </span>
+        <div className={`p-4 border-t ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-gray-200'} flex flex-col sm:flex-row items-center justify-between gap-3 text-xs`}>
           <div className="flex items-center gap-2">
-            <button
-              disabled={sessionsPage <= 1}
-              onClick={() => loadSessions(sessionsPage - 1)}
-              className={`p-1.5 rounded-lg border disabled:opacity-30 transition cursor-pointer ${
-                theme === 'dark'
-                  ? 'border-[#2A2A2E] text-gray-300 hover:border-[#C9A050] hover:text-[#C9A050]'
-                  : 'border-gray-300 text-gray-700 hover:border-[#C9A050] hover:text-[#8C6B28] hover:bg-amber-50'
-              }`}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              disabled={sessionsPage >= sessionsTotalPages}
-              onClick={() => loadSessions(sessionsPage + 1)}
-              className={`p-1.5 rounded-lg border disabled:opacity-30 transition cursor-pointer ${
-                theme === 'dark'
-                  ? 'border-[#2A2A2E] text-gray-300 hover:border-[#C9A050] hover:text-[#C9A050]'
-                  : 'border-gray-300 text-gray-700 hover:border-[#C9A050] hover:text-[#8C6B28] hover:bg-amber-50'
-              }`}
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+              {sessionsTotalPages > 1 ? (
+                <>
+                  Showing <strong>{(sessionsPage - 1) * SESSIONS_PER_PAGE + 1}</strong> - <strong>{Math.min(sessionsPage * SESSIONS_PER_PAGE, sessionsTotal)}</strong> of <strong>{sessionsTotal}</strong> sessions
+                </>
+              ) : (
+                <>
+                  Showing all <strong>{sessionsTotal}</strong> {sessionsTotal === 1 ? 'session' : 'sessions'} (20 per page)
+                </>
+              )}
+            </span>
           </div>
+
+          {sessionsTotalPages > 1 && (
+            <div className="flex items-center space-x-1">
+              {/* Prev Button */}
+              <button
+                disabled={sessionsPage <= 1}
+                onClick={() => loadSessions(sessionsPage - 1)}
+                className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg border text-xs font-medium flex items-center space-x-1 transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
+                  theme === 'dark'
+                    ? 'bg-[#1A1A1E] border-[#2A2A2E] text-gray-300 hover:border-[#C9A050] hover:text-[#C9A050]'
+                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#C9A050] hover:text-[#8C6B28] hover:bg-amber-50'
+                }`}
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Prev</span>
+              </button>
+
+              {/* Numbered Page Buttons */}
+              {getPageNumbers().map((p, idx) => {
+                if (p === '...') {
+                  return (
+                    <span key={`dots-${idx}`} className="px-2 py-1 text-xs text-gray-500">
+                      ...
+                    </span>
+                  );
+                }
+                const pageNum = p as number;
+                const isActive = pageNum === sessionsPage;
+                return (
+                  <button
+                    key={`page-${pageNum}`}
+                    onClick={() => loadSessions(pageNum)}
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[#C9A050] to-[#A37B2F] text-[#0D0D0F] shadow-sm font-extrabold'
+                        : theme === 'dark'
+                        ? 'bg-[#1A1A1E] border border-[#2A2A2E] text-gray-400 hover:text-white hover:border-[#C9A050]/50'
+                        : 'bg-white border border-gray-300 text-gray-600 hover:text-black hover:border-[#C9A050]'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              {/* Next Button */}
+              <button
+                disabled={sessionsPage >= sessionsTotalPages}
+                onClick={() => loadSessions(sessionsPage + 1)}
+                className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg border text-xs font-medium flex items-center space-x-1 transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
+                  theme === 'dark'
+                    ? 'bg-[#1A1A1E] border-[#2A2A2E] text-gray-300 hover:border-[#C9A050] hover:text-[#C9A050]'
+                    : 'bg-white border-gray-300 text-gray-700 hover:border-[#C9A050] hover:text-[#8C6B28] hover:bg-amber-50'
+                }`}
+              >
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -956,8 +1029,8 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                   <h3 className="text-lg font-bold font-mono text-indigo-400">
                     User Session Journey &amp; Timeline
                   </h3>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Session ID: <span className={`font-mono ${theme === 'dark' ? 'text-white' : 'text-gray-900 font-bold'}`}>{selectedTimelineSessionId}</span>
+                  <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-gray-300' : 'text-black font-medium'}`}>
+                    Session ID: <span className={`font-mono font-bold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{selectedTimelineSessionId}</span>
                   </p>
                 </div>
               </div>
@@ -976,53 +1049,53 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
             {/* Timeline Body */}
             <div className="p-6 overflow-y-auto space-y-6 custom-scrollbar">
               {loadingTimeline ? (
-                <div className="p-12 text-center text-gray-400">
+                <div className={`p-12 text-center ${theme === 'dark' ? 'text-gray-300' : 'text-black font-medium'}`}>
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-indigo-400 mb-2" />
                   Loading chronological user journey...
                 </div>
               ) : !timelineData ? (
-                <div className="p-12 text-center text-gray-400">Session details not found.</div>
+                <div className={`p-12 text-center ${theme === 'dark' ? 'text-gray-300' : 'text-black font-medium'}`}>Session details not found.</div>
               ) : (
                 <>
                   {/* Session Overview Stats */}
                   <div className={`p-4 rounded-xl border text-xs grid grid-cols-2 md:grid-cols-4 gap-4 ${theme === 'dark' ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-gray-50 border-gray-300'}`}>
                     <div>
-                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">User</span>
+                      <span className={`block text-[10px] uppercase font-extrabold tracking-wider ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>User</span>
                       {(() => {
                         const u = getTimelineUserDisplay(timelineData);
                         return (
                           <div>
-                            <span className="font-bold text-indigo-700 dark:text-indigo-400 block truncate max-w-[190px]">{u.name}</span>
-                            {u.subtext && <span className="text-[11px] text-black dark:text-gray-300 font-mono font-medium block truncate max-w-[190px]">{u.subtext}</span>}
+                            <span className={`font-bold block truncate max-w-[190px] ${theme === 'dark' ? 'text-indigo-400' : 'text-indigo-700'}`}>{u.name}</span>
+                            {u.subtext && <span className={`text-[11px] font-mono font-medium block truncate max-w-[190px] ${theme === 'dark' ? 'text-gray-300' : 'text-black'}`}>{u.subtext}</span>}
                           </div>
                         );
                       })()}
                     </div>
                     <div>
-                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Device</span>
-                      <div className="flex items-center gap-1 font-bold text-black dark:text-gray-100">
+                      <span className={`block text-[10px] uppercase font-extrabold tracking-wider ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>Device</span>
+                      <div className={`flex items-center gap-1 font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-black'}`}>
                         {getDeviceIcon(timelineData.device_type)}
                         <span className="capitalize">{timelineData.device_type}</span>
                       </div>
                     </div>
                     <div>
-                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Started At (IST)</span>
-                      <span className="font-mono font-bold text-black dark:text-gray-100">{formatISTDateTime(timelineData.started_at).full}</span>
+                      <span className={`block text-[10px] uppercase font-extrabold tracking-wider ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>Started At (IST)</span>
+                      <span className={`font-mono font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-black'}`}>{formatISTDateTime(timelineData.started_at).full}</span>
                     </div>
                     <div>
-                      <span className="text-black dark:text-gray-200 block text-[10px] uppercase font-extrabold tracking-wider">Total Actions</span>
-                      <span className="font-extrabold text-amber-600 dark:text-amber-400">{timelineData.events?.length || 0} events</span>
+                      <span className={`block text-[10px] uppercase font-extrabold tracking-wider ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>Total Actions</span>
+                      <span className={`font-extrabold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{timelineData.events?.length || 0} events</span>
                     </div>
                   </div>
 
                   {/* Vertical Stepper / Timeline */}
                   <div>
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-black dark:text-gray-200 mb-4">
+                    <h4 className={`text-xs font-extrabold uppercase tracking-wider mb-4 ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>
                       Chronological Activity Stream
                     </h4>
 
                     {timelineData.events?.length === 0 ? (
-                      <div className="p-8 text-center text-xs text-gray-400">
+                      <div className={`p-8 text-center text-xs ${theme === 'dark' ? 'text-gray-300' : 'text-black font-medium'}`}>
                         No events logged during this session yet.
                       </div>
                     ) : (
@@ -1041,10 +1114,33 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                                   </span>
                                   {getStatusBadge(evt.status)}
                                 </div>
-                                <div className="text-[11px] font-mono text-black dark:text-gray-200 font-bold flex items-center gap-2">
+                                <div className={`text-[11px] font-mono font-bold flex items-center gap-2 ${theme === 'dark' ? 'text-gray-200' : 'text-black'}`}>
                                   <span>{formatISTDateTime(evt.created_at).time}</span>
                                 </div>
                               </div>
+
+                              {/* Initiated Action / Clicked Payload snippet */}
+                              {evt.input_payload && (
+                                <div className={`p-3.5 rounded-xl border font-mono text-xs overflow-x-auto shadow-sm mb-3 transition-colors ${
+                                  theme === 'dark'
+                                    ? 'bg-[#0E0E12] border-[#2A2A2E] text-amber-300'
+                                    : 'bg-[#FDFBF7] border-amber-200/80 text-black'
+                                }`}>
+                                  <div className={`text-[10px] font-extrabold uppercase tracking-wider mb-2 flex items-center justify-between border-b pb-1.5 ${
+                                    theme === 'dark' ? 'border-[#2A2A2E]' : 'border-amber-200'
+                                  }`}>
+                                    <span className="text-[#C9A050] flex items-center gap-1.5 font-extrabold">
+                                      <Terminal className="w-3.5 h-3.5 text-[#C9A050]" /> Initiated Action / Clicked Payload
+                                    </span>
+                                    <span className={`text-[10px] font-mono font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-black'}`}>JSON</span>
+                                  </div>
+                                  <pre className={`whitespace-pre-wrap font-mono text-[11px] leading-relaxed font-bold ${
+                                    theme === 'dark' ? 'text-amber-300' : 'text-black'
+                                  }`}>
+                                    {formatJson(evt.input_payload)}
+                                  </pre>
+                                </div>
+                              )}
 
                               {/* Summary / Result snippet */}
                               <div className={`p-3.5 rounded-xl border font-mono text-xs overflow-x-auto shadow-sm transition-colors ${
@@ -1056,7 +1152,7 @@ export const AdminEventTrackingView: React.FC<AdminEventTrackingViewProps> = ({ 
                                   theme === 'dark' ? 'border-[#2A2A2E]' : 'border-emerald-300'
                                 }`}>
                                   <span className="text-[#8C6B28] dark:text-[#C9A050] flex items-center gap-1.5 font-extrabold">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Result Summary
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Result Summary / API Response
                                   </span>
                                   <span className={`text-[10px] font-mono font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-black'}`}>JSON</span>
                                 </div>

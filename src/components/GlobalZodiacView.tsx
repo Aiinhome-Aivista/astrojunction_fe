@@ -24,6 +24,7 @@ import { ZodiacSign, calculateZodiacCompatibility, ZodiacCompatibilityResult } f
 import { useZodiacData } from '../hooks/useZodiacData';
 import { API_ENDPOINTS } from '../config/api_config';
 import { api } from '../services/api';
+import { sessionTracker } from '../services/sessionTracker';
 import { getTranslation } from '../services/translations';
 import { UserProfile } from '../types';
 
@@ -123,6 +124,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
       if (dynamicZodiacData[cacheKey]) return; // Already fetched
 
       setIsFetchingForecast(true);
+      const start = Date.now();
       try {
         const res = await api.post<any>(API_ENDPOINTS.ZODIAC.GLOBAL_FORECAST, {
           sign: activeSign.name,
@@ -132,16 +134,37 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
         const forecastObj = (res && typeof res === 'object' && 'data' in res && res.data) ? res.data : res;
         if (forecastObj) {
           setDynamicZodiacData(prev => ({ ...prev, [cacheKey]: forecastObj }));
+          // Only track if user has explicitly interacted/selected a sign or timeframe
+          if (hasSelectedSign) {
+            sessionTracker.trackZodiacForecastClick({
+              signName: activeSign.name,
+              timeframe,
+              language,
+              forecast: forecastObj?.forecast || (typeof forecastObj === 'string' ? forecastObj : 'Forecast generated'),
+              status: 'SUCCESS',
+              executionTimeMs: Date.now() - start,
+            });
+          }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch dynamic forecast:", error);
+        if (hasSelectedSign) {
+          sessionTracker.trackZodiacForecastClick({
+            signName: activeSign.name,
+            timeframe,
+            language,
+            status: 'FAILURE',
+            errorMessage: error?.message || 'Failed to fetch forecast',
+            executionTimeMs: Date.now() - start,
+          });
+        }
       } finally {
         setIsFetchingForecast(false);
       }
     };
 
     fetchForecast();
-  }, [activeSign?.id, activeSign?.name, timeframe, language]);
+  }, [activeSign?.id, activeSign?.name, timeframe, language, hasSelectedSign]);
 
   if (loading) {
     return (
@@ -372,6 +395,21 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               onClick={() => {
                 setIsScreenLoading(true);
                 setSelectedSignId(sign.id);
+                setHasSelectedSign(true);
+
+                // If cached, track click immediately
+                const cacheKey = `${sign.id}-${timeframe}-${language}`;
+                const cached = dynamicZodiacData[cacheKey];
+                if (cached) {
+                  sessionTracker.trackZodiacForecastClick({
+                    signName: sign.name,
+                    timeframe,
+                    language,
+                    forecast: cached?.forecast || (typeof cached === 'string' ? cached : 'Forecast retrieved'),
+                    status: 'SUCCESS',
+                  });
+                }
+
                 setTimeout(() => {
                   setIsScreenLoading(false);
                   setHasSelectedSign(true);

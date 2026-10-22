@@ -128,26 +128,26 @@ export const adminApi = {
 
   // Subscription Plans
   getSubscriptionPlans: async (): Promise<SubscriptionPlan[]> => {
-    const res = await api.get<any>('/api/admin/subscription-plans');
+    const res = await api.get<any>(API_ENDPOINTS.ADMIN.SUBSCRIPTION_PLANS);
     return res?.data || res;
   },
   
   createSubscriptionPlan: async (plan: Partial<SubscriptionPlan>): Promise<any> => {
-    return api.post('/api/admin/subscription-plans', plan);
+    return api.post(API_ENDPOINTS.ADMIN.SUBSCRIPTION_PLANS, plan);
   },
 
   updateSubscriptionPlan: async (id: string, plan: Partial<SubscriptionPlan>): Promise<any> => {
-    return api.put(`/api/admin/subscription-plans/${id}`, plan);
+    return api.put(API_ENDPOINTS.ADMIN.SUBSCRIPTION_PLAN_DETAIL(id), plan);
   },
 
   deleteSubscriptionPlan: async (id: string): Promise<any> => {
-    return api.delete(`/api/admin/subscription-plans/${id}`);
+    return api.delete(API_ENDPOINTS.ADMIN.SUBSCRIPTION_PLAN_DETAIL(id));
   },
 
   // Telemetry & Event Tracking
   getTelemetryStats: async (params?: { timeout_minutes?: number }): Promise<TelemetryStats> => {
     const q = params?.timeout_minutes ? `?timeout_minutes=${params.timeout_minutes}` : '';
-    return api.get<TelemetryStats>(`${API_ENDPOINTS.ADMIN.TELEMETRY_STATS}${q}`);
+    return api.get<TelemetryStats>(`${API_ENDPOINTS.TELEMETRY.STATS}${q}`);
   },
 
   getTelemetrySessions: async (params?: { page?: number; page_size?: number; search?: string; status?: string; timeout_minutes?: number }): Promise<{
@@ -164,7 +164,7 @@ export const adminApi = {
     if (params?.status) q.set('status', params.status);
     if (params?.timeout_minutes) q.set('timeout_minutes', String(params.timeout_minutes));
     const queryString = q.toString() ? `?${q.toString()}` : '';
-    return api.get<any>(`${API_ENDPOINTS.ADMIN.TELEMETRY_SESSIONS}${queryString}`);
+    return api.get<any>(`${API_ENDPOINTS.TELEMETRY.SESSIONS}${queryString}`);
   },
 
   getTelemetryEvents: async (params?: {
@@ -191,11 +191,11 @@ export const adminApi = {
     if (params?.category) q.set('category', params.category);
     if (params?.status) q.set('status', params.status);
     const queryString = q.toString() ? `?${q.toString()}` : '';
-    return api.get<any>(`${API_ENDPOINTS.ADMIN.TELEMETRY_EVENTS}${queryString}`);
+    return api.get<any>(`${API_ENDPOINTS.TELEMETRY.EVENTS}${queryString}`);
   },
 
   getSessionTimeline: async (sessionId: string): Promise<SessionTimeline> => {
-    return api.get<SessionTimeline>(API_ENDPOINTS.ADMIN.SESSION_TIMELINE(sessionId));
+    return api.get<SessionTimeline>(API_ENDPOINTS.TELEMETRY.SESSION_TIMELINE(sessionId));
   },
 };
 

@@ -5,6 +5,7 @@ import { ZodiacCompatibilityResult } from '../services/zodiacData';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { api } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
+import { sessionTracker } from '../services/sessionTracker';
 
 const CustomZodiacSelect = ({ value, onChange, theme, label, zodiacs }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,6 +108,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
     setIsCompatLoading(true);
     setHasAnalyzed(false);
     
+    const start = Date.now();
     try {
       const response = await api.post<any>(API_ENDPOINTS.ZODIAC.COMPATIBILITY, {
         signA: compatSignA,
@@ -124,8 +126,25 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
         signB: signBObj
       });
       setHasAnalyzed(true);
-    } catch (error) {
+
+      sessionTracker.trackCompatibilityCheck({
+        signA: compatSignA,
+        signB: compatSignB,
+        system: zodiacSystem,
+        result: response,
+        status: 'SUCCESS',
+        executionTimeMs: Date.now() - start,
+      });
+    } catch (error: any) {
       console.error("Compatibility analysis failed", error);
+      sessionTracker.trackCompatibilityCheck({
+        signA: compatSignA,
+        signB: compatSignB,
+        system: zodiacSystem,
+        status: 'FAILURE',
+        errorMessage: error?.message || 'Compatibility check failed',
+        executionTimeMs: Date.now() - start,
+      });
     } finally {
       setIsCompatLoading(false);
     }
