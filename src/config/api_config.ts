@@ -58,6 +58,11 @@ export const API_ENDPOINTS = {
     GLOBAL_FORECAST: '/zodiac/global-forecast',
     COMPATIBILITY: '/zodiac/compatibility',
     ALL: '/api/zodiac/all',
+    DAILY_UPDATE_SUBSCRIBE: '/api/zodiac/daily-update-subscribe',
+    DAILY_CATEGORY_INSIGHT: '/api/zodiac/daily-category-insight',
+    MULTI_SYSTEM_HOROSCOPE: '/api/horoscope',
+    HOROSCOPE_VITALITY: '/api/horoscope/vitality',
+    HOROSCOPE_YEARS: '/api/horoscope/years',
   },
   BIRTH_CHART: {
     GENERATE: '/birth-chart/generate',

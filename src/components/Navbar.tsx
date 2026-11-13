@@ -138,6 +138,7 @@ interface NavbarProps {
   isAdmin?: boolean;
   userEmail?: string;
   chartData?: any;
+  onResetLanding?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -158,6 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isAdmin = false,
   userEmail,
   chartData,
+  onResetLanding,
 }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -262,7 +264,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Logo & Brand */}
             <div
               className="flex items-center space-x-2 sm:space-x-3 cursor-pointer select-none shrink-0"
-              onClick={() => setActiveTab(isAdmin ? 'admin_dashboard' : 'landing')}
+              onClick={() => {
+                setActiveTab(isAdmin ? 'admin_dashboard' : 'landing');
+                if (onResetLanding) onResetLanding();
+              }}
               title={isAdmin ? 'Dashboard' : (t('tab.home') || 'Home')}
             >
               <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
@@ -569,7 +574,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               {/* Drawer Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#2A2A2E]">
-                <div className="flex items-center space-x-2.5">
+                <div
+                  className="flex items-center space-x-2.5 cursor-pointer select-none"
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
+                    setActiveTab(isAdmin ? 'admin_dashboard' : 'landing');
+                    if (onResetLanding) onResetLanding();
+                  }}
+                >
                   <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
                   <div>
                     <h3 className="font-bold text-sm text-[#F0ECE1]">

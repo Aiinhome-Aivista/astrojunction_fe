@@ -233,6 +233,17 @@ export function App() {
   };
 
   const [activeTab, setActiveTab] = useState<string>('daily');
+  const [landingResetKey, setLandingResetKey] = useState(0);
+
+  const handleResetLanding = () => {
+    setLandingResetKey(prev => prev + 1);
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname !== '/' || window.location.search) {
+        window.history.pushState({}, '', '/');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
   const [selectedConsultationTierId, setSelectedConsultationTierId] = useState<string | null>(null);
   const [dynamicSeoMap, setDynamicSeoMap] = useState<Record<string, any>>({});
   const [activePlans, setActivePlans] = useState<any[]>([]);
@@ -657,6 +668,7 @@ export function App() {
       <>
         <SEO {...landingSeo} />
         <LandingPage
+          key={landingResetKey}
           onLoginClick={() => { setAuthMode('login'); setShowAuthGate(true); }}
           onRegisterClick={() => { setAuthMode('register'); setShowAuthGate(true); }}
           onOpenDisclaimer={() => setIsDisclaimerModalOpen(true)}
@@ -722,6 +734,7 @@ export function App() {
         isAdmin={authUser?.role === 'admin'}
         userEmail={authUser?.email}
         chartData={chartData}
+        onResetLanding={handleResetLanding}
       />
 
       {/* Main Container */}

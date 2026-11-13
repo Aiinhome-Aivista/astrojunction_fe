@@ -104,7 +104,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'zodiac.timeframe.today': "Today's Forecast",
     'zodiac.timeframe.week': 'Weekly Outlook',
     'zodiac.timeframe.month': 'Monthly Ingress',
-    'zodiac.timeframe.year': '2026/2027 Ephemeris',
+    'zodiac.timeframe.year': 'Yearly Outlook',
     'zodiac.filter.all': 'All 12 Signs',
     'zodiac.filter.fire': 'Fire 🔥',
     'zodiac.filter.earth': 'Earth 🌍',

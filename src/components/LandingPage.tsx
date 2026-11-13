@@ -23,6 +23,7 @@ interface LandingPageProps {
   toggleTheme: () => void;
   authUser?: any;
   onGoToDashboard?: () => void;
+  onResetToInitial?: () => void;
 }
 
 export function LandingPage({
@@ -33,7 +34,9 @@ export function LandingPage({
   toggleTheme,
   authUser,
   onGoToDashboard,
+  onResetToInitial,
 }: LandingPageProps) {
+  const [zodiacResetKey, setZodiacResetKey] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>(() => {
     try {
@@ -181,6 +184,32 @@ export function LandingPage({
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleResetToInitial = () => {
+    isClickScrolling.current = true;
+    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
+    clickScrollTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 1000);
+
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname !== '/' || window.location.search) {
+        window.history.pushState({}, '', '/');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    setCurrentView('landing');
+    setSelectedBlogForPage(null);
+    setSelectedFeatureForPreview(null);
+    setIsChatOpen(false);
+    setActiveSection('hero-section');
+    setZodiacResetKey(prev => prev + 1);
+
+    if (onResetToInitial) {
+      onResetToInitial();
     }
   };
 
@@ -434,7 +463,7 @@ export function LandingPage({
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <div
-              onClick={() => scrollToSection('hero-section')}
+              onClick={handleResetToInitial}
               className="flex items-center space-x-3 cursor-pointer group select-none"
             >
               <AncientTraditionLogo size="md" isLight={theme === 'light'} />
@@ -741,6 +770,7 @@ export function LandingPage({
               {/* Full Global Zodiac Section */}
               <div id="zodiac-section" className="scroll-mt-24 w-full text-left">
                 <GlobalZodiacView
+                  key={`zodiac-${zodiacResetKey}`}
                   theme={theme}
                   onAskAIForSign={handleAskAIForSign}
                 />
@@ -750,7 +780,7 @@ export function LandingPage({
               <div id="panjika-section" className="scroll-mt-24 w-full text-left flex flex-col gap-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-center">
                   <div className="w-full">
-                    <PanjikaCalendarView theme={theme} />
+                    <PanjikaCalendarView key={`panjika-${zodiacResetKey}`} theme={theme} />
                   </div>
                   <div className="w-full hidden lg:flex items-center justify-center p-4">
                     <div className="relative w-full max-w-[340px] xl:max-w-[380px] aspect-square rounded-full overflow-hidden shadow-[0_0_50px_rgba(201,160,80,0.2)] border-2 border-[#C9A050]/20 group">
@@ -765,7 +795,7 @@ export function LandingPage({
                   </div>
                 </div>
 
-                <ZodiacCompatibilityMatrix theme={theme} />
+                <ZodiacCompatibilityMatrix key={`compat-${zodiacResetKey}`} theme={theme} />
               </div>
             </div>
 
