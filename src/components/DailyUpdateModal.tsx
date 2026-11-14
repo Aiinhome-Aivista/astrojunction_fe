@@ -124,10 +124,10 @@ export const DailyUpdateModal: React.FC<DailyUpdateModalProps> = ({
 
       if (response && response.status === 'success') {
         setSuccessMessage(
-          response.message || `Successfully subscribed! You will receive daily cosmic updates for ${activeSignName}.`
+          response.message || t('zodiac.daily_update_success', { sign: activeSignName, defaultValue: `Successfully subscribed to daily updates for ${activeSignName}!` })
         );
       } else {
-        setSuccessMessage(`Successfully subscribed to daily updates for ${activeSignName}!`);
+        setSuccessMessage(t('zodiac.daily_update_success', { sign: activeSignName, defaultValue: `Successfully subscribed to daily updates for ${activeSignName}!` }));
       }
     } catch (err: any) {
       console.error('Subscription error:', err);
@@ -186,11 +186,7 @@ export const DailyUpdateModal: React.FC<DailyUpdateModalProps> = ({
             <p className={`text-xs mt-0.5 leading-relaxed ${
               isDark ? 'text-[#9E9A90]' : 'text-gray-600'
             }`}>
-              Receive daily transits, vitality flow, and category-wise guidance for{' '}
-              <span className="font-semibold text-[#C9A050]">
-                {activeSignSymbol} {activeSignName}
-              </span>{' '}
-              directly in your inbox every morning.
+              {t('zodiac.daily_update_desc', { sign: `${activeSignSymbol} ${activeSignName}`, defaultValue: `Daily transits and category insights for ${activeSignSymbol} ${activeSignName} delivered to your inbox every morning.` })}
             </p>
           </div>
         </div>

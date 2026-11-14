@@ -1,5 +1,5 @@
 @import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@500;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;600;700;800;900&family=Noto+Serif+Tamil:wght@500;600;700;800;900&family=Rozha+One&display=swap');
 @import "tailwindcss";
 
 @font-face {
@@ -23,24 +23,24 @@
 /* Indic Script Font Stacks & Typography Safety (hi, bn, ta)                 */
 /* ========================================================================= */
 html[lang="hi"] {
-  --font-serif: "Noto Sans Devanagari", "Stardom", Georgia, serif;
+  --font-serif: "Rozha One", "Noto Serif Devanagari", "Kokila", "Aparajita", Georgia, serif;
   --font-sans: "Noto Sans Devanagari", "Nunito", sans-serif;
-  --font-heading: "Noto Sans Devanagari", "Stardom", serif;
-  --font-display: "Noto Sans Devanagari", "Stardom", serif;
+  --font-heading: "Rozha One", "Noto Serif Devanagari", "Kokila", serif;
+  --font-display: "Rozha One", "Noto Serif Devanagari", serif;
 }
 
 html[lang="bn"] {
-  --font-serif: "Noto Sans Bengali", "Stardom", Georgia, serif;
+  --font-serif: "Noto Serif Bengali", "Kalpurush", "Vrinda", Georgia, serif;
   --font-sans: "Noto Sans Bengali", "Nunito", sans-serif;
-  --font-heading: "Noto Sans Bengali", "Stardom", serif;
-  --font-display: "Noto Sans Bengali", "Stardom", serif;
+  --font-heading: "Noto Serif Bengali", "Kalpurush", serif;
+  --font-display: "Noto Serif Bengali", "Kalpurush", serif;
 }
 
 html[lang="ta"] {
-  --font-serif: "Noto Sans Tamil", "Stardom", Georgia, serif;
+  --font-serif: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif;
   --font-sans: "Noto Sans Tamil", "Nunito", sans-serif;
-  --font-heading: "Noto Sans Tamil", "Stardom", serif;
-  --font-display: "Noto Sans Tamil", "Stardom", serif;
+  --font-heading: "Noto Serif Tamil", "Vijaya", serif;
+  --font-display: "Noto Serif Tamil", "Vijaya", serif;
 }
 
 html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .font-serif, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title,
@@ -48,19 +48,19 @@ html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, 
 html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .font-serif, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
   letter-spacing: normal !important;
   text-transform: none !important;
-  line-height: 1.45 !important;
-  -webkit-text-stroke: 0 transparent !important;
-  font-synthesis: none !important;
+  line-height: 1.4 !important;
+  -webkit-text-stroke: 0.015em currentColor !important;
+  font-synthesis: weight !important;
 }
 
 html[lang="hi"] .font-serif, html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title {
-  font-family: "Noto Sans Devanagari", "Stardom", Georgia, serif !important;
+  font-family: "Rozha One", "Noto Serif Devanagari", "Kokila", "Aparajita", Georgia, serif !important;
 }
 html[lang="bn"] .font-serif, html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title {
-  font-family: "Noto Sans Bengali", "Stardom", Georgia, serif !important;
+  font-family: "Noto Serif Bengali", "Kalpurush", "Vrinda", Georgia, serif !important;
 }
 html[lang="ta"] .font-serif, html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
-  font-family: "Noto Sans Tamil", "Stardom", Georgia, serif !important;
+  font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
 }
 
 @layer base {
@@ -1567,21 +1567,28 @@ html:not([lang="en"]) .astro-page-header-title * {
 }
 
 /* 4. Indic Scripts Specific Tuning (Bengali, Hindi, Tamil) */
-/* Indic glyphs feature solid top matras and complex conjuncts that need lighter weight to breathe */
+/* Indic glyphs headline styling with distinct serif/editorial typography matching traditional print aesthetics */
 html[lang="bn"] .astro-hero-title,
-html[lang="bn"] .astro-hero-title *,
-html[lang="bn"] .astro-page-header-title,
-html[lang="bn"] .astro-page-header-title *,
 html[lang="hi"] .astro-hero-title,
-html[lang="hi"] .astro-hero-title *,
-html[lang="hi"] .astro-page-header-title,
-html[lang="hi"] .astro-page-header-title *,
+html[lang="ta"] .astro-hero-title {
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  font-synthesis: weight !important;
+}
+
+html[lang="hi"] .astro-hero-title,
+html[lang="hi"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand *) {
+  font-family: "Rozha One", "Noto Serif Devanagari", "Kokila", "Aparajita", Georgia, serif !important;
+}
+
+html[lang="bn"] .astro-hero-title,
+html[lang="bn"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand *) {
+  font-family: "Noto Serif Bengali", "Kalpurush", "Vrinda", Georgia, serif !important;
+}
+
 html[lang="ta"] .astro-hero-title,
-html[lang="ta"] .astro-hero-title *,
-html[lang="ta"] .astro-page-header-title,
-html[lang="ta"] .astro-page-header-title * {
-  font-weight: 600 !important;
-  line-height: 1.4 !important;
+html[lang="ta"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand *) {
+  font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
 }
 
 html[lang="bn"] h1, html[lang="bn"] h1 *,
@@ -1660,6 +1667,58 @@ html[lang="fr"] .font-bold {
 
 html[lang="fr"] .font-semibold {
   font-weight: 500 !important;
+}
+
+/* Master Brand Accent: ASTROJUNCTION brand word in Hero & Navigation across ALL languages */
+.astro-hero-brand,
+.astro-hero-brand *,
+.astrojunction-brand,
+.astrojunction-brand * {
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 800 !important;
+  font-synthesis: weight !important;
+  -webkit-text-stroke: 0.025em currentColor !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+.astro-hero-title .astro-hero-brand {
+  font-size: clamp(2rem, 4.5vw, 3.75rem) !important;
+  line-height: 1.15 !important;
+}
+
+.astro-hero-brand .brand-astro {
+  color: #000000 !important;
+  -webkit-text-stroke: 0.025em #000000 !important;
+}
+
+html.dark .astro-hero-brand .brand-astro {
+  color: #F3EFE6 !important;
+  -webkit-text-stroke: 0.02em #F3EFE6 !important;
+}
+
+.astro-hero-brand .brand-junction,
+.astrojunction-brand .brand-junction {
+  color: #7E5412 !important;
+  -webkit-text-stroke: 0.025em #7E5412 !important;
+}
+
+html.dark .astro-hero-brand .brand-junction,
+html.dark .astrojunction-brand .brand-junction {
+  color: #D4AF37 !important;
+  -webkit-text-stroke: 0.02em #D4AF37 !important;
+}
+
+/* Indic Scripts Optical Size & Balance for Hero Heading (Avoids premature line breaking & gaps) */
+html[lang="hi"] .astro-hero-title,
+html[lang="bn"] .astro-hero-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.75rem) !important;
+  line-height: 1.32 !important;
+}
+
+html[lang="ta"] .astro-hero-title {
+  font-size: clamp(1.5rem, 3.2vw, 2.35rem) !important;
+  line-height: 1.32 !important;
 }
 
 /* ========================================================================= */

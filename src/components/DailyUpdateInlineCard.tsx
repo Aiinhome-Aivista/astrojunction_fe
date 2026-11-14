@@ -64,10 +64,10 @@ export const DailyUpdateInlineCard: React.FC<DailyUpdateInlineCardProps> = ({
 
       if (response && response.status === 'success') {
         setSuccessMessage(
-          response.message || `Successfully subscribed! Today's cosmic update for ${activeSignName} has been sent to your inbox.`
+          response.message || t('zodiac.daily_update_success', { sign: activeSignName, defaultValue: `Successfully subscribed to daily updates for ${activeSignName}!` })
         );
       } else {
-        setSuccessMessage(`Successfully subscribed to daily updates for ${activeSignName}!`);
+        setSuccessMessage(t('zodiac.daily_update_success', { sign: activeSignName, defaultValue: `Successfully subscribed to daily updates for ${activeSignName}!` }));
       }
     } catch (err: any) {
       console.error('Subscription error:', err);

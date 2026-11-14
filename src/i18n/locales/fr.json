@@ -15,6 +15,7 @@
   },
   "hero": {
     "badge": "Oracle Védique Authentique",
+    "title": "DÉCODEZ VOTRE<br/>DESTIN AVEC<br/><brand/>",
     "title_decode": "DÉCODEZ VOTRE",
     "title_destiny": "DESTIN AVEC",
     "description": "Exploitez la profonde sagesse de l'astrologie védique ancienne. Recevez des perspectives cosmiques hautement personnalisées et des analyses de numérologie calquées sur votre thème astral unique.",
@@ -46,6 +47,9 @@
     "newsletter_placeholder": "Entrez votre adresse email...",
     "get_daily_updates": "Recevoir les Mises à Jour",
     "get_daily_update_btn": "Recevoir les Mises à Jour",
+    "daily_update_desc": "Transits quotidiens et perspectives par catégorie pour {{sign}} livrés dans votre boîte de réception chaque matin.",
+    "daily_update_success": "Abonnement réussi aux mises à jour quotidiennes pour {{sign}} !",
+    "updated_for": "Mis à jour pour le {{date}}",
     "subscribing": "Abonnement en cours...",
     "filters": {
       "all": "Les 12 Signes",
@@ -128,7 +132,7 @@
     "romance_title": "Amitié Planétaire & Amour",
     "romance_desc": "Mesure l'affinité naturelle et le respect entre les seigneurs planétaires des deux signes.",
     "remedial_desc": "Offre des conseils de communication et des remèdes védiques pour harmoniser les différences naturelles.",
-    "select_signs_hint": "✦ Sélectionnez votre signe principal et celui de votre partenaire ci-dessus, puis cliquez sur \"Analyze\" pour voir le rapport."
+    "select_signs_hint": "✦ Sélectionnez votre signe principal et celui de votre partenaire ci-dessus, puis cliquez sur \"Analyser la Compatibilité\" pour voir le rapport."
   },
   "remedies": {
     "badge": "Remèdes et Upayas Védiques Éprouvés",
@@ -289,5 +293,12 @@
   "common": {
     "language": "Langue",
     "change_language": "Changer de langue"
-  }
+  },
+  "_review": [
+    "hero.title",
+    "zodiac.daily_update_desc",
+    "zodiac.daily_update_success",
+    "zodiac.updated_for",
+    "compat.select_signs_hint"
+  ]
 }

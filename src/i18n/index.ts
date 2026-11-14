@@ -26,6 +26,17 @@ export const LANGUAGE_OPTIONS: readonly LanguageOption[] = [
 
 function getInitialLanguage(): SupportedLanguage {
   try {
+    if (typeof window !== 'undefined') {
+      const urlLang = new URLSearchParams(window.location.search).get('lang')?.toLowerCase();
+      if (urlLang && (SUPPORTED_LANGUAGES as readonly string[]).includes(urlLang)) {
+        return urlLang as SupportedLanguage;
+      }
+    }
+  } catch {
+    // window unavailable
+  }
+
+  try {
     const saved = localStorage.getItem('astrojunction_lang');
     if (saved && (SUPPORTED_LANGUAGES as readonly string[]).includes(saved)) {
       return saved as SupportedLanguage;

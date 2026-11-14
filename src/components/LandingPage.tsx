@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check, ChevronDown } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
@@ -96,7 +96,7 @@ function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center space-x-1 sm:space-x-1.5 p-1.5 sm:px-3 sm:py-2.5 rounded-full transition-all border cursor-pointer shrink-0 ${
+        className={`flex items-center space-x-1 sm:space-x-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full transition-all border cursor-pointer shrink-0 ${
           theme === 'dark'
             ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
             : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
@@ -106,9 +106,14 @@ function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
         aria-haspopup="listbox"
       >
         <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C9A050] shrink-0" />
-        <span className="hidden sm:inline font-mono text-xs font-bold uppercase tracking-wider">
+        <span className="font-mono text-xs font-bold uppercase tracking-wider">
           {activeLangObj.short}
         </span>
+        <ChevronDown
+          className={`w-3 h-3 transition-transform duration-200 shrink-0 ${
+            isOpen ? 'rotate-180' : ''
+          } ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}
+        />
       </button>
 
       {isOpen && (
@@ -816,37 +821,39 @@ export function LandingPage({
                   <span>{t('hero.badge', 'Authentic Vedic Oracle')}</span>
                 </div>
 
-                <h1 className="astro-hero-title text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
-                  <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {t('hero.title_decode')}
-                  </span>
-                  <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {t('hero.title_destiny')}
-                  </span>
-                  <span className="inline-flex mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap">
-                    {"ASTRO".split("").map((char, index) => (
-                      <motion.span
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-                        className={`inline-block font-extrabold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
-                      >
-                        {char}
-                      </motion.span>
-                    ))}
-                    {"JUNCTION".split("").map((char, index) => (
-                      <motion.span
-                        key={`v-${index}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
-                        className="inline-block text-[#C9A050] font-extrabold"
-                      >
-                        {char}
-                      </motion.span>
-                    ))}
-                  </span>
+                <h1 className={`astro-hero-title text-2xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  <Trans
+                    i18nKey="hero.title"
+                    components={{
+                      brand: (
+                        <span className="astro-hero-brand inline-flex mt-1 sm:mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap">
+                          {"ASTRO".split("").map((char, index) => (
+                            <motion.span
+                              key={index}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
+                              className={`brand-astro inline-block font-extrabold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                          {"JUNCTION".split("").map((char, index) => (
+                            <motion.span
+                              key={`v-${index}`}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
+                              className={`brand-junction inline-block font-extrabold ${theme === 'dark' ? 'text-[#C9A050]' : 'text-[#9E7728]'}`}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                        </span>
+                      ),
+                      br: <br className="block my-0.5 sm:my-1" />,
+                    }}
+                  />
                 </h1>
 
                 <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-black'}`}>

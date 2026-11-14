@@ -15,8 +15,7 @@
   },
   "hero": {
     "badge": "Authentic Vedic Oracle",
-    "title_decode": "DECODE YOUR",
-    "title_destiny": "DESTINY WITH",
+    "title": "DECODE YOUR<br/>DESTINY WITH<br/><brand/>",
     "description": "Harness the profound wisdom of ancient Vedic astrology. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.",
     "cta_unlock": "Unlock Your Future",
     "cta_dashboard": "Go to Your Kundli Dashboard"
@@ -46,6 +45,9 @@
     "newsletter_placeholder": "Enter your email address...",
     "get_daily_updates": "Get Daily Updates",
     "get_daily_update_btn": "Get Daily Update",
+    "daily_update_desc": "Daily transits and category insights for {{sign}} delivered to your inbox every morning.",
+    "daily_update_success": "Successfully subscribed to daily updates for {{sign}}!",
+    "updated_for": "Updated for {{date}}",
     "subscribing": "Subscribing...",
     "filters": {
       "all": "All 12 Signs",

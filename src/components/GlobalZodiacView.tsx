@@ -823,11 +823,11 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   {getElementBadge(sign.element)}
                 </div>
 
-                <h3 className={`font-bold text-sm flex items-baseline space-x-1.5 ${
+                <h3 className={`astro-zodiac-card-title flex items-baseline space-x-1.5 ${
                   isDark ? 'text-[#F0ECE1]' : 'text-gray-900'
                 }`}>
-                  <span>{sign.name}</span>
-                  <span className={`text-[11px] font-normal ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                  <span className="astro-zodiac-card-name">{sign.name}</span>
+                  <span className={`astro-zodiac-card-rashi ${isDark ? 'text-[#C9A050]' : 'text-[#8D6723]'}`}>
                     ({sign.sanskritScript})
                   </span>
                 </h3>
@@ -872,7 +872,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-                <h2 className={`text-lg sm:text-xl font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
+                <h2 className={`text-lg sm:text-xl font-bold astro-zodiac-detail-title ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
                   {activeSign.name} • {activeSign.sanskritName} ({activeSign.sanskritScript})
                 </h2>
                 {getElementBadge(activeSign.element)}

@@ -321,6 +321,14 @@ export function App() {
 
   // Theme Management (Dark / Light)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const urlTheme = new URLSearchParams(window.location.search).get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
+      }
+    } catch {
+      // ignore
+    }
     const savedTheme = localStorage.getItem('jyotish_theme');
     return savedTheme === 'dark' ? 'dark' : 'light';
   });
