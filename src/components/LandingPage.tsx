@@ -464,14 +464,15 @@ export function LandingPage({
             {/* Logo */}
             <div
               onClick={handleResetToInitial}
-              className="flex items-center space-x-3 cursor-pointer group select-none"
+              className="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer group select-none min-w-0"
             >
-              <AncientTraditionLogo size="md" isLight={theme === 'light'} />
-              <div>
-                <span className="text-xl font-serif font-bold tracking-wider flex items-center">
+              <AncientTraditionLogo size="sm" className="sm:hidden" isLight={theme === 'light'} />
+              <AncientTraditionLogo size="md" className="hidden sm:inline-flex" isLight={theme === 'light'} />
+              <div className="min-w-0">
+                <span className="text-sm sm:text-lg md:text-xl font-serif font-bold tracking-tight sm:tracking-wider flex items-center whitespace-nowrap">
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                 </span>
-                <p className={`text-[9px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                <p className={`hidden xs:block text-[8px] sm:text-[9px] font-bold tracking-widest uppercase mt-0.5 truncate ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   Authentic Vedic Wisdom
                 </p>
               </div>
@@ -547,16 +548,16 @@ export function LandingPage({
             </div>
 
             {/* Right Controls */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
               <button
                 onClick={toggleTheme}
-                className={`p-2.5 rounded-full transition-all border ${theme === 'dark'
+                className={`p-1.5 sm:p-2.5 rounded-full transition-all border shrink-0 ${theme === 'dark'
                   ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
                   : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
                   }`}
                 title="Toggle Theme"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
 
               {authUser ? (
@@ -606,7 +607,7 @@ export function LandingPage({
                   </button>
                   <button
                     onClick={handleRegisterClick}
-                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-[13px] hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_15px_rgba(201,160,80,0.3)] hover:shadow-[0_0_20px_rgba(201,160,80,0.5)] hover:-translate-y-0.5"
+                    className="px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs sm:text-sm hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-sm hover:shadow-md shrink-0 whitespace-nowrap"
                   >
                     Get Started
                   </button>
@@ -666,24 +667,24 @@ export function LandingPage({
             theme={theme}
           />
         ) : (
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <div id="hero-section" className="scroll-mt-24 min-h-[calc(100vh-5rem)] py-8 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
               {/* Left Column: Greetings */}
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
-                <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
-                  <Compass className="w-4 h-4" />
+                <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
+                  <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                   <span>Authentic Vedic Oracle</span>
                 </div>
 
-                <h1 className="astro-hero-title text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
+                <h1 className="astro-hero-title text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
                   <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     DECODE YOUR
                   </span>
                   <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     DESTINY WITH
                   </span>
-                  <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start font-extrabold">
+                  <span className="inline-flex mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap">
                     {"ASTRO".split("").map((char, index) => (
                       <motion.span
                         key={index}
