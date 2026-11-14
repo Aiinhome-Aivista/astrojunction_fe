@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Calendar as CalendarIcon,
   RefreshCw,
@@ -205,6 +206,7 @@ interface PanjikaCalendarViewProps {
 }
 
 export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme = 'dark' }) => {
+  const { t } = useTranslation();
   // Navigation & Sub-views
   const [activeSubTab, setActiveSubTab] = useState<'calendar' | 'converter'>('calendar');
   const [calendarLang, setCalendarLang] = useState<'all' | 'bn' | 'hi' | 'en'>('all');
@@ -492,7 +494,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
               </div>
               <div>
                 <h2 className="text-base sm:text-lg font-serif font-bold tracking-tight">
-                  Panjika & <span className="text-[#C9A050]">Calendar</span>
+                  {t('panjika.title_main')} <span className="text-[#C9A050]">{t('panjika.title_calendar')}</span>
                 </h2>
               </div>
             </div>
@@ -511,7 +513,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                 }`}
               >
                 <CalendarIcon className="w-4 h-4" />
-                <span>Calendar</span>
+                <span>{t('panjika.tab_calendar')}</span>
               </button>
 
               {/* Card 2: 6-Way Date Converter Button */}
@@ -526,7 +528,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                 }`}
               >
                 <ArrowRightLeft className="w-4 h-4" />
-                <span>6-Way Date Converter</span>
+                <span>{t('panjika.tab_converter')}</span>
               </button>
             </div>
           </div>
@@ -1436,7 +1438,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                         }`}>
                           <span className="text-[10px] text-amber-500 uppercase font-bold block mb-1">
-                            🌅 {calendarLang === 'bn' ? 'সূর্যোদয়' : (calendarLang === 'hi' ? 'सूर्योदय' : 'Sunrise')}
+                            🌅 {t('panjika.details.sunrise')}
                           </span>
                           <span className="font-mono text-sm font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{localizeString(fullPanjika.sunrise, calendarLang)}</span>
                         </div>
@@ -1444,7 +1446,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                         }`}>
                           <span className="text-[10px] text-orange-400 uppercase font-bold block mb-1">
-                            🌇 {calendarLang === 'bn' ? 'সূর্যাস্ত' : (calendarLang === 'hi' ? 'सूर्यास्त' : 'Sunset')}
+                            🌇 {t('panjika.details.sunset')}
                           </span>
                           <span className="font-mono text-sm font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{localizeString(fullPanjika.sunset, calendarLang)}</span>
                         </div>
@@ -1452,7 +1454,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                         }`}>
                           <span className="text-[10px] text-indigo-400 uppercase font-bold block mb-1">
-                            🌙 {calendarLang === 'bn' ? 'চন্দ্রোদয়' : (calendarLang === 'hi' ? 'चंद्रोदय' : 'Moonrise')}
+                            🌙 {t('panjika.details.moonrise')}
                           </span>
                           <span className="font-mono text-sm font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{localizeString(fullPanjika.moonrise, calendarLang)}</span>
                         </div>
@@ -1460,7 +1462,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                         }`}>
                           <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">
-                            🌘 {calendarLang === 'bn' ? 'চন্দ্রাস্ত' : (calendarLang === 'hi' ? 'चंद्रास्त' : 'Moonset')}
+                            🌘 {t('panjika.details.moonset')}
                           </span>
                           <span className="font-mono text-sm font-bold text-[#F0ECE1] dark:text-[#F0ECE1]">{localizeString(fullPanjika.moonset, calendarLang)}</span>
                         </div>
@@ -1473,9 +1475,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                         <h5 className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-2 flex items-center space-x-1.5">
                           <Star className="w-3.5 h-3.5" />
                           <span>
-                            {calendarLang === 'bn' 
-                              ? 'ব্রত ও পর্ব' 
-                              : (calendarLang === 'hi' ? 'व्रत और पर्व' : 'Auspicious Festivals & Observances')}
+                            {t('panjika.details.festivals')}
                           </span>
                         </h5>
                         <ul className="list-disc list-inside space-y-1 text-xs font-semibold text-[#F0ECE1] dark:text-[#F0ECE1]">

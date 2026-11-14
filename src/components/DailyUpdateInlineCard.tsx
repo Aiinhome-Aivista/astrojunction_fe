@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Mail,
   CheckCircle2,
@@ -27,6 +28,7 @@ export const DailyUpdateInlineCard: React.FC<DailyUpdateInlineCardProps> = ({
   activeSignSymbol = '♈',
   theme = 'dark',
 }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -98,7 +100,7 @@ export const DailyUpdateInlineCard: React.FC<DailyUpdateInlineCardProps> = ({
               <Mail className="w-4 h-4" />
             </div>
             <h3 className={`text-sm sm:text-base font-bold font-serif tracking-wide ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-              YOUR ASTRO NEWS LETTER
+              {t('zodiac.newsletter_title', 'YOUR ASTRO NEWS LETTER')}
             </h3>
           </div>
 
@@ -109,7 +111,7 @@ export const DailyUpdateInlineCard: React.FC<DailyUpdateInlineCardProps> = ({
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address..."
+                placeholder={t('zodiac.newsletter_placeholder')}
                 disabled={isSubmitting}
                 className={`w-full sm:w-56 px-3 py-2 text-xs rounded-lg border transition-all outline-hidden ${
                   isDark
@@ -126,12 +128,12 @@ export const DailyUpdateInlineCard: React.FC<DailyUpdateInlineCardProps> = ({
                 {isSubmitting ? (
                   <>
                     <div className="w-3 h-3 border-2 border-[#0D0D0F] border-t-transparent rounded-full animate-spin" />
-                    <span>Subscribing...</span>
+                    <span>{t('zodiac.subscribing')}</span>
                   </>
                 ) : (
                   <>
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Get Daily Update</span>
+                    <span>{t('zodiac.get_daily_update_btn')}</span>
                   </>
                 )}
               </button>

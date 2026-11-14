@@ -1,0 +1,293 @@
+{
+  "header": {
+    "nav": {
+      "home": "Accueil",
+      "zodiac": "Zodiaque Global",
+      "panjika": "Panchang",
+      "remedies": "Remèdes",
+      "blogs": "Blogs",
+      "premium": "Premium"
+    },
+    "login": "Connexion",
+    "get_started": "Commencer",
+    "dashboard": "Tableau de Bord",
+    "authentic_wisdom": "Sagesse Védique Authentique"
+  },
+  "hero": {
+    "badge": "Oracle Védique Authentique",
+    "title_decode": "DÉCODEZ VOTRE",
+    "title_destiny": "DESTIN AVEC",
+    "description": "Exploitez la profonde sagesse de l'astrologie védique ancienne. Recevez des perspectives cosmiques hautement personnalisées et des analyses de numérologie calquées sur votre thème astral unique.",
+    "cta_unlock": "Déverrouillez Votre Avenir",
+    "cta_dashboard": "Accéder à Votre Thème Astral"
+  },
+  "zodiac": {
+    "title": "Zodiaque Global et Horoscope de la Diaspora",
+    "subtitle": "Harmonisation des signes tropicaux occidentaux, des rashis védiques et des archétypes mondiaux",
+    "horizon_title": "Horizon {{sign}}",
+    "card_consulting": "CONSULTATION DE DAIVAJNA",
+    "consulting_desc": "Alignement des transits célestes et calcul des perspectives pour {{sign}}...",
+    "aligning_stars": "Alignement des étoiles et consultation du cosmos...",
+    "vitality": "Vitalité",
+    "modality": "Modalité",
+    "ruled_by": "Gouverné par",
+    "dates": "Dates",
+    "western_tropical": "Tropical Occidental",
+    "vedic_sidereal": "Sidéral Védique",
+    "system_tropical": "Tropical Occidental",
+    "system_sidereal": "Sidéral Védique",
+    "ayanamsha_note": "Décalage d'Ayanamsha : ~24° de différence en raison de la précession axiale de la Terre entre les systèmes occidental et védique.",
+    "showing_latest": "Affichage de la dernière lecture disponible",
+    "daily_transit": "Transit Quotidien",
+    "weekly_transit": "Transit Hebdomadaire",
+    "monthly_transit": "Transit Mensuel",
+    "yearly_transit": "Transit Annuel",
+    "newsletter_title": "VOTRE NEWSLETTER ASTRO",
+    "newsletter_placeholder": "Entrez votre adresse email...",
+    "get_daily_updates": "Recevoir les Mises à Jour",
+    "get_daily_update_btn": "Recevoir les Mises à Jour",
+    "subscribing": "Abonnement en cours...",
+    "filters": {
+      "all": "Les 12 Signes",
+      "fire": "Feu",
+      "earth": "Terre",
+      "air": "Air",
+      "water": "Eau"
+    },
+    "timeframes": {
+      "today": "Prévisions du Jour",
+      "week": "Perspectives Hebdo",
+      "month": "Ingrès Mensuel",
+      "year": "Perspectives Annuelles"
+    },
+    "meters": {
+      "love": "Harmonie Amoureuse",
+      "career": "Carrière & Ambition",
+      "wealth": "Richesse & Fortune",
+      "vitality": "Vitalité & Énergie"
+    },
+    "categories": {
+      "all": "Pouls Cosmique",
+      "health": "Santé",
+      "wealth": "Richesse",
+      "relationship": "Relations",
+      "love_life": "Vie Amoureuse",
+      "education": "Éducation",
+      "professional": "Profession",
+      "travel": "Voyage",
+      "love_line": "Vie Amoureuse"
+    },
+    "affirmation_label": "Affirmation Céleste :",
+    "chakra_label": "Chakra Résonant :",
+    "tip_day": "Conseil du Jour :",
+    "tip_week": "Conseil de la Semaine :",
+    "tip_month": "Conseil du Mois :",
+    "tip_year": "Conseil de l'Année :",
+    "translating": "Traduction en cours...",
+    "showing_english": "Version anglaise affichée"
+  },
+  "panjika": {
+    "title_main": "Panchang &",
+    "title_calendar": "Calendrier",
+    "tab_calendar": "Calendrier Védique",
+    "tab_converter": "Convertisseur de Tithi & Date",
+    "select_location": "Sélectionner le Lieu",
+    "today": "Aujourd'hui",
+    "details": {
+      "sunrise": "Lever du Soleil",
+      "sunset": "Coucher du Soleil",
+      "moonrise": "Lever de la Lune",
+      "moonset": "Coucher de la Lune",
+      "tithi": "Tithi",
+      "nakshatra": "Nakshatra",
+      "festivals": "Fêtes & Observances Auspicieuses"
+    },
+    "converter": {
+      "from": "De",
+      "to": "À",
+      "convert": "Convertir la Date",
+      "converting": "Conversion en cours..."
+    }
+  },
+  "compat": {
+    "title": "Matrice de Compatibilité du Zodiaque Global",
+    "subtitle": "Évaluez la synergie amoureuse, l'harmonie relationnelle et la vitalité à long terme entre les signes.",
+    "primary_sign": "Signe Principal",
+    "partner_sign": "Signe du Partenaire",
+    "how_it_works_title": "Comment fonctionne cette section :",
+    "how_it_works_desc": "Cette matrice de synastrie calcule la dynamique relationnelle et la compatibilité énergétique entre deux signes du zodiaque.",
+    "btn_analyze": "Analyser la Compatibilité",
+    "btn_analyzing": "Analyse de la synastrie...",
+    "overall_score": "Compatibilité Globale",
+    "element_synergy": "Harmonie Élémentaire",
+    "romance": "Synergie Romantique",
+    "intellectual": "Affinité Intellectuelle",
+    "growth": "Potentiel d'Évolution",
+    "remedial": "Conseils et Remèdes",
+    "element_synergy_desc": "Analyse l'interaction des quatre éléments (Feu, Terre, Air, Eau) pour bâtir passion, confiance et stabilité.",
+    "romance_title": "Amitié Planétaire & Amour",
+    "romance_desc": "Mesure l'affinité naturelle et le respect entre les seigneurs planétaires des deux signes.",
+    "remedial_desc": "Offre des conseils de communication et des remèdes védiques pour harmoniser les différences naturelles.",
+    "select_signs_hint": "✦ Sélectionnez votre signe principal et celui de votre partenaire ci-dessus, puis cliquez sur \"Analyze\" pour voir le rapport."
+  },
+  "remedies": {
+    "badge": "Remèdes et Upayas Védiques Éprouvés",
+    "title_main": "Remèdes Védiques Sacrés &",
+    "title_upayas": "Upayas Planétaires",
+    "subtitle": "Prescriptions scripturaires authentiques du Brihat Parashara Hora Shastra et des canons védiques classiques pour atténuer les doshas et inviter l'harmonie cosmique.",
+    "copy_mantra": "Copier le Mantra Védique",
+    "copied": "Copié !",
+    "best_time": "Meilleur Moment",
+    "gemstone": "Pierre Précieuse",
+    "direction": "Direction",
+    "offerings": "Offrandes",
+    "view_ritual": "Explorer le Rituel Détaillé",
+    "primary_graha": "Planète Principale",
+    "view_vidhi": "Voir le Rituel",
+    "sacred_chanting": "Chant Védique Sacré (Mantra)",
+    "prescribed_count": "Répétitions Conseillées",
+    "step_by_step_vidhi": "Rituel Védique Étape par Étape (Vidhi)",
+    "day_prefix": "Jour",
+    "items": {
+      "surya-arghya": {
+        "tag": "Vitalité & Carrière",
+        "title": "Surya Arghya & Gayatri Shanti",
+        "purpose": "Dissipe les obstacles professionnels, renforce le charisme de leadership et restaure l'énergie vitale.",
+        "graha": "Soleil (Surya Deva)",
+        "deity": "Seigneur Surya Narayana",
+        "day": "Dimanche (Ravivar)",
+        "direction": "Est (Purva)",
+        "gemstone": "Rubis (Manikya) & Cuivre Pur",
+        "best_time": "Lever du Soleil (premières 45 minutes)",
+        "mantra_count": "11 ou 108 Récitations à l'aube",
+        "vidhi": [
+          "Réveillez-vous pendant Brahma Muhurta ou dans l'heure suivant le lever du soleil.",
+          "Remplissez un récipient en cuivre pur (Lota) d'eau propre et fraîche.",
+          "Ajoutez une pincée de bois de santal rouge, de kumkum et une fleur rouge.",
+          "Levez le récipient au-dessus de votre front et offrez l'eau lentement face au soleil en récitant le mantra."
+        ],
+        "offerings": [
+          "Eau pure en pot de cuivre",
+          "Fleurs rouges",
+          "Santal rouge",
+          "Offrande de sucre de canne (Jaggery)"
+        ],
+        "mantra_text": "Om Hram Hreem Hroum Sah Suryaya Namaha"
+      },
+      "maha-mrityunjaya": {
+        "tag": "Longévité & Guérison",
+        "title": "Bouclier de Japa Maha Mrityunjaya",
+        "purpose": "Apaise les afflictions planétaires sévères, dissipe l'anxiété et favorise un rétablissement profond.",
+        "graha": "Lune & Saturne (Chandra-Shani)",
+        "deity": "Seigneur Shiva (Mahadeva)",
+        "day": "Lundi & Pradosham",
+        "direction": "Nord-Est (Ishanya)",
+        "gemstone": "Rudraksha 5 faces & Argent Pur",
+        "best_time": "Brahma Muhurta (4h30 – 6h00) ou Coucher du soleil",
+        "mantra_count": "108 Récitations avec mala en Rudraksha",
+        "vidhi": [
+          "Asseyez-vous confortablement face au Nord ou à l'Est dans un espace calme.",
+          "Allumez une lampe au ghee pur et un encens parfumé devant le Seigneur Shiva.",
+          "Récitez le Mahamantra en tenant le mala de Rudraksha avec une respiration méditative.",
+          "Offrez du lait cru, de l'eau pure et des feuilles de Bilva au Shiva Lingam le lundi."
+        ],
+        "offerings": [
+          "Feuilles de Bilva",
+          "Lait cru de vache",
+          "Lampe au Ghee pur",
+          "Santal blanc"
+        ],
+        "mantra_text": "Om Tryambakam Yajamahe Sugandhim Pushti-Vardhanam | Urvarukamiva Bandhanan Mrityor Mukshiya Mamritat"
+      },
+      "mangal-shanti": {
+        "tag": "Paix Manglik & Harmonie",
+        "title": "Hanuman Chalisa & Kuja Nivaran",
+        "purpose": "Apaise le dosha Manglik, réduit les frictions conjugales et transforme la colère en noble courage.",
+        "graha": "Mars (Mangala / Kuja)",
+        "deity": "Sri Hanuman & Kartikeya",
+        "day": "Mardi (Mangalwar)",
+        "direction": "Sud (Dakshin)",
+        "gemstone": "Corail Rouge & Bracelet en Cuivre",
+        "best_time": "Coucher du soleil le mardi",
+        "mantra_count": "21 Récitations ou 1 lecture du Hanuman Chalisa",
+        "vidhi": [
+          "Prenez un bain purificateur le mardi soir et portez des vêtements rouges ou safran.",
+          "Allumez une lampe à l'huile de sésame ou de jasmin devant Sri Hanuman.",
+          "Lisez le Hanuman Chalisa avec ferveur en priant pour la paix familiale.",
+          "Offrez des lentilles corail, des pièces de cuivre ou du jaggery aux personnes dans le besoin."
+        ],
+        "offerings": [
+          "Lampe à l'huile de sésame/jasmin",
+          "Lentilles corail",
+          "Sindoor & Boondi",
+          "Jaggery"
+        ],
+        "mantra_text": "Om Kram Kreem Kroum Sah Bhaumaya Namaha"
+      },
+      "shukra-suktam": {
+        "tag": "Amour, Beauté & Abondance",
+        "title": "Shri Suktam & Upaya de Vénus",
+        "purpose": "Favorise la tendresse amoureuse, dissout les blocages financiers et attire l'énergie de Lakshmi.",
+        "graha": "Vénus (Shukra Dev)",
+        "deity": "Maha Lakshmi & Shukracharya",
+        "day": "Vendredi (Shukrawar)",
+        "direction": "Sud-Est (Agneya)",
+        "gemstone": "Zircon Blanc / Diamant & Mala en Sphatik",
+        "best_time": "Vendredi matin (Heure de Vénus)",
+        "mantra_count": "16 ou 108 Récitations avec mala en Sphatik",
+        "vidhi": [
+          "Portez des vêtements blancs ou pastel le vendredi matin.",
+          "Allumez une flamme de camphre pur au Nord-Est pour purifier les énergies.",
+          "Récitez le Beej Mantra de Vénus ou le Sri Suktam avec dévotion.",
+          "Offrez des douceurs blanches (Kheer) ou donnez du riz et du tissu blanc aux nécessiteux."
+        ],
+        "offerings": [
+          "Fleurs blanches parfumées",
+          "Kheer au lait",
+          "Camphre pur",
+          "Sucre candi"
+        ],
+        "mantra_text": "Om Shum Shukraya Namaha"
+      }
+    }
+  },
+  "insights": {
+    "badge": "Articles Cosmiques & Sagesse Védique",
+    "title_main": "Cosmique &",
+    "title_insights": "Perspectives",
+    "subtitle": "Articles approfondis sur l'astrologie védique authentique, les yogas planétaires et la sagesse spirituelle.",
+    "min_read": "min de lecture",
+    "view_all": "Voir Tous les Articles"
+  },
+  "premium": {
+    "title": "Débloquez les Fonctionnalités Premium",
+    "subtitle": "Connectez-vous pour accéder à votre voyage astrologique et numérologique hautement personnalisé.",
+    "demo_play": "Lire la Démo de 15s",
+    "preview_unlock": "Aperçu & Déverrouiller",
+    "cards": {
+      "birth_chart": "Thème Astral Approfondi",
+      "birth_chart_desc": "Maisons planétaires détaillées, analyse de l'ascendant et cartographie temporelle des dashas.",
+      "numerology": "Numérologie Personnalisée",
+      "numerology_desc": "Découvrez votre Mulank racine, nombre de destin Bhagyank et grille de Lo Shu.",
+      "roadmap": "Feuille de Route de Vie",
+      "roadmap_desc": "Prévisions planétaires sur 25 ans et jalons d'évolution de carrière.",
+      "daivajna_pro": "Astrologue Daivajna Pro",
+      "daivajna_pro_desc": "Bénéficiez de conseils védiques et d'une assistance astrologique personnalisée alimentée par l'IA."
+    }
+  },
+  "footer": {
+    "connect": "Rejoignez-nous",
+    "links": {
+      "about_us": "À Propos de Nous",
+      "faq": "FAQ",
+      "privacy_policy": "Politique de Confidentialité",
+      "cookie_policy": "Politique de Cookies",
+      "terms_and_conditions": "Conditions Générales"
+    },
+    "all_rights_reserved": "Tous Droits Réservés"
+  },
+  "common": {
+    "language": "Langue",
+    "change_language": "Changer de langue"
+  }
+}

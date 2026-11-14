@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight } from 'lucide-react';
+import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
@@ -14,6 +15,143 @@ import { VedicRemediesSection } from './VedicRemediesSection';
 import { landingChatApi } from '../services/landingChatApi';
 import { sessionTracker } from '../services/sessionTracker';
 import { LegalInfoPage, LegalPageView } from './LegalInfoPage';
+
+const LANGUAGE_LIST = [
+  { code: 'en', label: 'English', short: 'EN' },
+  { code: 'hi', label: 'हिन्दी', short: 'HI' },
+  { code: 'bn', label: 'বাংলা', short: 'BN' },
+  { code: 'ta', label: 'தமிழ்', short: 'TA' },
+  { code: 'fr', label: 'Français', short: 'FR' },
+];
+
+function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
+  const { i18n } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const currentLang = (i18n.language?.split('-')[0]?.toLowerCase() || 'en');
+  const activeLangObj = LANGUAGE_LIST.find((l) => l.code === currentLang) || LANGUAGE_LIST[0];
+
+  const handleSelect = (code: string) => {
+    i18n.changeLanguage(code);
+    try {
+      localStorage.setItem('astrojunction_lang', code);
+    } catch {
+      // storage unavailable
+    }
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = code;
+    }
+    setIsOpen(false);
+    buttonRef.current?.focus();
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setIsOpen(true);
+        const idx = LANGUAGE_LIST.findIndex((l) => l.code === activeLangObj.code);
+        setHighlightedIndex(idx >= 0 ? idx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsOpen(false);
+      buttonRef.current?.focus();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev + 1) % LANGUAGE_LIST.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev - 1 + LANGUAGE_LIST.length) % LANGUAGE_LIST.length);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (highlightedIndex >= 0 && highlightedIndex < LANGUAGE_LIST.length) {
+        handleSelect(LANGUAGE_LIST[highlightedIndex].code);
+      }
+    } else if (e.key === 'Tab') {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div className="relative inline-block text-left" ref={dropdownRef} onKeyDown={handleKeyDown}>
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className={`flex items-center space-x-1.5 p-2.5 sm:px-3 sm:py-2.5 rounded-full transition-all border cursor-pointer ${
+          theme === 'dark'
+            ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
+            : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
+        }`}
+        aria-label="Change language"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+      >
+        <Globe className="w-4 h-4 text-[#C9A050]" />
+        <span className="hidden sm:inline font-mono text-xs font-bold uppercase tracking-wider">
+          {activeLangObj.short}
+        </span>
+      </button>
+
+      {isOpen && (
+        <div
+          role="listbox"
+          aria-label="Language"
+          className={`absolute right-0 mt-2 w-40 sm:w-44 rounded-2xl border shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${
+            theme === 'dark'
+              ? 'bg-[#141418]/95 border-[#2A2A2E] text-[#E5E1D8]'
+              : 'bg-white/95 border-gray-200 text-gray-800 shadow-xl'
+          }`}
+          style={{ maxHeight: 'calc(100vh - 100px)' }}
+        >
+          {LANGUAGE_LIST.map((lang, idx) => {
+            const isSelected = lang.code === activeLangObj.code;
+            const isHighlighted = idx === highlightedIndex;
+            return (
+              <button
+                key={lang.code}
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => handleSelect(lang.code)}
+                onMouseEnter={() => setHighlightedIndex(idx)}
+                className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-medium transition cursor-pointer text-left ${
+                  isHighlighted || isSelected
+                    ? theme === 'dark'
+                      ? 'bg-[#2A2A2E]/70 text-[#C9A050]'
+                      : 'bg-amber-50 text-[#8C6B28]'
+                    : theme === 'dark'
+                    ? 'text-[#E5E1D8] hover:bg-white/5'
+                    : 'text-gray-700 hover:bg-black/5'
+                }`}
+              >
+                <span className="font-medium text-sm">{lang.label}</span>
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#C9A050] shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface LandingPageProps {
   onLoginClick: () => void;
@@ -36,6 +174,7 @@ export function LandingPage({
   onGoToDashboard,
   onResetToInitial,
 }: LandingPageProps) {
+  const { t } = useTranslation();
   const [zodiacResetKey, setZodiacResetKey] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>(() => {
@@ -472,7 +611,7 @@ export function LandingPage({
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                 </span>
                 <p className={`text-[9px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-                  Authentic Vedic Wisdom
+                  {t('header.authentic_wisdom')}
                 </p>
               </div>
             </div>
@@ -488,7 +627,7 @@ export function LandingPage({
                   }`}
               >
                 <Home className="w-3.5 h-3.5" />
-                <span>Home</span>
+                <span>{t('header.nav.home')}</span>
               </a>
               <a
                 href="#zodiac-section"
@@ -499,7 +638,7 @@ export function LandingPage({
                   }`}
               >
                 <Globe className="w-3.5 h-3.5" />
-                <span>Global Zodiac</span>
+                <span>{t('header.nav.zodiac')}</span>
               </a>
               <a
                 href="#panjika-section"
@@ -510,7 +649,7 @@ export function LandingPage({
                   }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
-                <span>Panjika</span>
+                <span>{t('header.nav.panjika')}</span>
               </a>
               <a
                 href="#remedies-section"
@@ -520,7 +659,7 @@ export function LandingPage({
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
-                <span>Remedies</span>
+                <span>{t('header.nav.remedies')}</span>
               </a>
               <a
                 href="/blogs"
@@ -531,7 +670,7 @@ export function LandingPage({
                   }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>Blogs</span>
+                <span>{t('header.nav.blogs')}</span>
               </a>
               <a
                 href="#premium-section"
@@ -542,12 +681,13 @@ export function LandingPage({
                   }`}
               >
                 <Lock className="w-3.5 h-3.5" />
-                <span>Premium</span>
+                <span>{t('header.nav.premium')}</span>
               </a>
             </div>
 
             {/* Right Controls */}
             <div className="flex items-center space-x-3">
+              <HeaderLanguageSwitcher theme={theme} />
               <button
                 onClick={toggleTheme}
                 className={`p-2.5 rounded-full transition-all border ${theme === 'dark'
@@ -570,7 +710,7 @@ export function LandingPage({
                       }`}
                   >
                     <LayoutDashboard className="w-3.5 h-3.5 text-[#C9A050]" />
-                    <span className="hidden sm:inline font-semibold">Dashboard</span>
+                    <span className="hidden sm:inline font-semibold">{t('header.dashboard')}</span>
                   </button>
 
                   <div className="relative flex items-center">
@@ -602,13 +742,13 @@ export function LandingPage({
                       : 'bg-white border-gray-200 text-[#0D0D0F] hover:text-[#8C6B28] hover:border-[#C9A050]/50'
                       }`}
                   >
-                    Log In
+                    {t('header.login')}
                   </button>
                   <button
                     onClick={handleRegisterClick}
                     className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-[13px] hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_15px_rgba(201,160,80,0.3)] hover:shadow-[0_0_20px_rgba(201,160,80,0.5)] hover:-translate-y-0.5"
                   >
-                    Get Started
+                    {t('header.get_started')}
                   </button>
                 </>
               )}
@@ -673,15 +813,15 @@ export function LandingPage({
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
                 <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
                   <Compass className="w-4 h-4" />
-                  <span>Authentic Vedic Oracle</span>
+                  <span>{t('hero.badge', 'Authentic Vedic Oracle')}</span>
                 </div>
 
                 <h1 className="astro-hero-title text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
                   <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    DECODE YOUR
+                    {t('hero.title_decode')}
                   </span>
                   <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    DESTINY WITH
+                    {t('hero.title_destiny')}
                   </span>
                   <span className="inline-flex mt-2 items-center flex-wrap justify-center lg:justify-start font-extrabold">
                     {"ASTRO".split("").map((char, index) => (
@@ -710,7 +850,7 @@ export function LandingPage({
                 </h1>
 
                 <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-black'}`}>
-                  Harness the profound wisdom of ancient <strong className="font-semibold text-[#C9A050]">Vedic astrology</strong>. Receive highly personalized cosmic insights and numerology readings mapped directly to your unique stellar blueprint.
+                  {t('hero.description')}
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
@@ -718,7 +858,7 @@ export function LandingPage({
                     onClick={authUser ? onGoToDashboard : handleRegisterClick}
                     className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
                   >
-                    <span>{authUser ? 'Go to Your Kundli Dashboard' : 'Unlock Your Future'}</span>
+                    <span>{authUser ? t('hero.cta_dashboard') : t('hero.cta_unlock')}</span>
                   </button>
                 </div>
               </div>
@@ -840,16 +980,30 @@ export function LandingPage({
               <div className="text-center mb-10">
                 <h2 className="text-2xl md:text-3xl font-serif font-bold mb-3 flex items-center justify-center space-x-2">
                   <Lock className="w-6 h-6 text-[#C9A050]" />
-                  <span>Unlock Premium Features</span>
+                  <span>{t('premium.title')}</span>
                 </h2>
                 <p className={`text-sm text-center mx-auto max-w-lg ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
-                  Log in to access your deeply personalized astrological and numerological journey.
+                  {t('premium.subtitle')}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {PREMIUM_FEATURES_CATALOG.map((feat) => {
                   const Icon = feat.icon;
+                  const getFeatTitle = (id: string, fallback: string) => {
+                    if (id === 'birth-chart') return t('premium.cards.birth_chart');
+                    if (id === 'numerology') return t('premium.cards.numerology');
+                    if (id === 'roadmap') return t('premium.cards.roadmap');
+                    if (id === 'ai-astrologer') return t('premium.cards.daivajna_pro');
+                    return fallback;
+                  };
+                  const getFeatDesc = (id: string, fallback: string) => {
+                    if (id === 'birth-chart') return t('premium.cards.birth_chart_desc');
+                    if (id === 'numerology') return t('premium.cards.numerology_desc');
+                    if (id === 'roadmap') return t('premium.cards.roadmap_desc');
+                    if (id === 'ai-astrologer') return t('premium.cards.daivajna_pro_desc');
+                    return fallback;
+                  };
                   return (
                     <div
                       key={feat.id}
@@ -878,10 +1032,10 @@ export function LandingPage({
                             <Play className="w-6 h-6 fill-current ml-1 relative z-10" />
                           </div>
                           <span className="text-[#F0ECE1] font-serif font-bold text-sm tracking-wide mb-1">
-                            Play 15s Demo
+                            {t('premium.demo_play')}
                           </span>
                           <span className="text-xs text-[#C9A050] font-mono tracking-widest uppercase">
-                            Preview & Unlock
+                            {t('premium.preview_unlock')}
                           </span>
                         </div>
                       </div>
@@ -895,8 +1049,8 @@ export function LandingPage({
                             Premium
                           </span>
                         </div>
-                        <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{feat.title}</h4>
-                        <p className={`text-sm leading-relaxed text-left ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{feat.desc}</p>
+                        <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{getFeatTitle(feat.id, feat.title)}</h4>
+                        <p className={`text-sm leading-relaxed text-left ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{getFeatDesc(feat.id, feat.desc)}</p>
                       </div>
                     </div>
                   );

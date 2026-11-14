@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AncientTraditionLogo } from './AncientTraditionLogo';
 import { getTranslation } from '../services/translations';
 import { HoroscopeTradition } from '../types';
@@ -33,7 +34,16 @@ export const Footer: React.FC<FooterProps> = ({
   language = 'en',
   activePage,
 }) => {
-  const t = (key: string) => getTranslation(key, language);
+  const { t: i18nT } = useTranslation();
+  const t = (key: string): string => {
+    try {
+      const res = i18nT(key);
+      if (typeof res === 'string' && res !== key) return res;
+    } catch {
+      // fallback
+    }
+    return getTranslation(key, language);
+  };
 
   const [activeModal, setActiveModal] = useState<'about' | 'privacy' | 'terms' | 'contact' | null>(null);
 
@@ -64,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({
             {/* Left: Connect With Us */}
             <div className="flex items-center space-x-3">
               <span className={`text-[10px] font-bold uppercase tracking-wider whitespace-nowrap ${isLight ? 'text-[#3E382E]' : 'text-[#D0CBC0]'}`}>
-                Connect with us
+                {t('footer.connect')}
               </span>
               <div className="flex items-center space-x-5">
                 {/* Facebook */}
@@ -81,7 +91,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="flex items-center justify-center opacity-50 cursor-not-allowed pointer-events-none grayscale">
                   <svg className="w-7 h-7 fill-[#0A66C2]" viewBox="0 0 24 24">
                     <rect x="3" y="3" width="18" height="18" rx="2" fill="white" />
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c.92 0 1.67-.75 1.67-1.67 0-.93-.75-1.68-1.67-1.68-.92 0-1.67.75-1.67 1.68 0 .92.75 1.67 1.67 1.67m1.39 9.74v-8.37H5.07v8.37h2.78z" />
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c.92 0 1.67-.75 1.67-1.67 0-.93-.75-1.68-1.67-1.68-.92 0-1.67.75-1.67 1.67m1.39 9.74v-8.37H5.07v8.37h2.78z" />
                   </svg>
                 </a>
               </div>
@@ -94,35 +104,35 @@ export const Footer: React.FC<FooterProps> = ({
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                About Us
+                {t('footer.links.about_us')}
               </a>
               <a href="/faq" onClick={(e) => { e.preventDefault(); handlePageClick('faq'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'faq'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                FAQ
+                {t('footer.links.faq')}
               </a>
               <a href="/privacy-policy" onClick={(e) => { e.preventDefault(); handlePageClick('privacy-policy'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'privacy-policy'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                Privacy Policy
+                {t('footer.links.privacy_policy')}
               </a>
               <a href="/cookie-policy" onClick={(e) => { e.preventDefault(); handlePageClick('cookie-policy'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'cookie-policy'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                Cookie Policy
+                {t('footer.links.cookie_policy')}
               </a>
               <a href="/terms-and-conditions" onClick={(e) => { e.preventDefault(); handlePageClick('terms-and-conditions'); }}
                 className={`transition-all duration-200 cursor-pointer ${activePage === 'terms-and-conditions'
                     ? (isLight ? 'text-[#94691E] font-bold underline underline-offset-4 decoration-[#94691E]/50' : 'text-[#C9A050] font-bold underline underline-offset-4 decoration-[#C9A050]/50')
                     : (isLight ? 'text-[#5C5446] hover:text-[#94691E]' : 'text-[#9E9A90] hover:text-[#C9A050]')
                   }`}>
-                Terms &amp; Conditions
+                {t('footer.links.terms_and_conditions')}
               </a>
             </div>
           </div>
@@ -134,7 +144,7 @@ export const Footer: React.FC<FooterProps> = ({
               <AncientTraditionLogo size="sm" isLight={isLight} />
               <p>
                 Copyright © {new Date().getFullYear()}{' '}
-                <span className={`font-semibold ${isLight ? 'text-[#1A1816]' : 'text-white'}`}>AstroJunction</span> | All Rights Reserved
+                <span className={`font-semibold ${isLight ? 'text-[#1A1816]' : 'text-white'}`}>AstroJunction</span> | {t('footer.all_rights_reserved')}
               </p>
             </div>
           </div>

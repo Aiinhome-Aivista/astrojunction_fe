@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   Mail,
@@ -48,6 +49,7 @@ export const DailyUpdateModal: React.FC<DailyUpdateModalProps> = ({
   activeSignSymbol = '♈',
   theme = 'dark',
 }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     'health',
@@ -178,7 +180,7 @@ export const DailyUpdateModal: React.FC<DailyUpdateModalProps> = ({
               <h3 className={`text-lg sm:text-xl font-serif font-bold tracking-tight ${
                 isDark ? 'text-[#F0ECE1]' : 'text-[#1A1816]'
               }`}>
-                Get Daily Cosmic Updates
+                {t('zodiac.get_daily_updates', 'Get Daily Updates')}
               </h3>
             </div>
             <p className={`text-xs mt-0.5 leading-relaxed ${
@@ -369,12 +371,12 @@ export const DailyUpdateModal: React.FC<DailyUpdateModalProps> = ({
                 {isSubmitting ? (
                   <>
                     <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                    <span>Subscribing...</span>
+                    <span>{t('zodiac.subscribing')}</span>
                   </>
                 ) : (
                   <>
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Get Daily Update</span>
+                    <span>{t('zodiac.get_daily_update_btn')}</span>
                   </>
                 )}
               </button>

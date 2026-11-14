@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { blogApi, getBlogImageUrl } from '../services/blogApi';
 
 export interface BlogPost {
@@ -24,6 +25,7 @@ interface BlogCarouselProps {
 }
 
 export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog, onViewAll }) => {
+  const { t } = useTranslation();
   const isDark = theme === 'dark';
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -73,11 +75,11 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
       <div className="text-center mb-10 px-4">
         <div className="flex items-center justify-center space-x-3 mb-2">
           <h2 className={`text-4xl md:text-5xl font-serif ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-            Cosmic &amp; <span className="italic font-light text-[#C9A050]">Insights</span>
+            {t('insights.title_main')} <span className="italic font-light text-[#C9A050]">{t('insights.title_insights')}</span>
           </h2>
         </div>
         <p className={`text-sm md:text-base text-center mx-auto max-w-lg ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
-          Deep dives into authentic Vedic astrology, planetary yogas, and spiritual wisdom.
+          {t('insights.subtitle')}
         </p>
       </div>
 

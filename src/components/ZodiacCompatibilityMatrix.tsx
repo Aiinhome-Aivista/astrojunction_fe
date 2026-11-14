@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Heart, ChevronDown } from 'lucide-react';
 import { getTranslation } from '../services/translations';
 import { ZodiacCompatibilityResult } from '../services/zodiacData';
@@ -89,7 +90,16 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
   theme = 'dark',
   zodiacSystem = 'tropical'
 }) => {
-  const t = (key: string) => getTranslation(key, language);
+  const { t: i18nT } = useTranslation();
+  const t = (key: string): string => {
+    try {
+      const res = i18nT(key);
+      if (typeof res === 'string' && res !== key) return res;
+    } catch {
+      // fallback
+    }
+    return getTranslation(key, language);
+  };
   const isDark = theme === 'dark';
 
   const [compatSignA, setCompatSignA] = useState('aries');
@@ -169,10 +179,10 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
           <div>
             <h3 className={`text-base font-bold flex items-center space-x-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
               <Heart className="w-4 h-4 text-[#C9A050]" />
-              <span>{t('zodiac.compat_title')}</span>
+              <span>{t('compat.title')}</span>
             </h3>
             <p className={`text-xs sm:text-sm mt-1 leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-black'}`}>
-              Evaluate romantic synergy, communication harmony, and long-term vitality across signs. Combines four-element dynamics (Fire, Earth, Air, Water) with classical planetary lordships.
+              {t('compat.subtitle')}
             </p>
           </div>
 
@@ -185,7 +195,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
                   setHasAnalyzed(false);
                 }}
                 theme={theme}
-                label={t('zodiac.sign_a')}
+                label={t('compat.primary_sign')}
                 zodiacs={zodiacs}
               />
             </div>
@@ -198,7 +208,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
                   setHasAnalyzed(false);
                 }}
                 theme={theme}
-                label={t('zodiac.sign_b')}
+                label={t('compat.partner_sign')}
                 zodiacs={zodiacs}
               />
             </div>
@@ -209,7 +219,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
                 onClick={handleAnalyze}
                 className={`w-full h-[42px] px-5 rounded-xl font-bold text-sm transition shadow-sm flex items-center justify-center cursor-pointer ${isDark ? 'bg-[#C9A050] text-[#141418] hover:bg-[#D4AF60]' : 'bg-[#C9A050] text-white hover:bg-[#B88E40]'}`}
               >
-                <span>Analyze</span>
+                <span>{t('compat.btn_analyze')}</span>
               </button>
             </div>
           </div>
@@ -222,7 +232,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
             isDark ? 'bg-[#1C1C22]/60 border-[#2A2A2E] text-[#D0CBC0]' : 'bg-[#FAF8F2] border-[#E8E1D5] text-black'
           }`}>
             <p className="mb-2 font-medium">
-              <strong className="text-[#C9A050] font-semibold">How This Section Works:</strong> This dual-sign synastry matrix computes relationship dynamics and energetic compatibility between any two zodiac signs.
+              <strong className="text-[#C9A050] font-semibold">{t('compat.how_it_works_title')}</strong> {t('compat.how_it_works_desc')}
             </p>
             <p className="text-xs leading-relaxed opacity-90">
               It evaluates cross-sign affinity by measuring core celestial dimensions:
@@ -235,10 +245,10 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
             }`}>
               <div className="flex items-center space-x-2 text-xs font-bold text-[#C9A050] mb-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C9A050]"></span>
-                <span>Elemental Synergy</span>
+                <span>{t('compat.element_synergy')}</span>
               </div>
               <p className={`text-[11px] sm:text-xs leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
-                Analyzes how the elemental natures (Fire, Earth, Air, Water) interact to build natural passion, trust, and emotional stability.
+                {t('compat.element_synergy_desc')}
               </p>
             </div>
 
@@ -247,10 +257,10 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
             }`}>
               <div className="flex items-center space-x-2 text-xs font-bold text-[#C9A050] mb-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C9A050]"></span>
-                <span>Planetary Friendship</span>
+                <span>{t('compat.romance_title', t('compat.romance'))}</span>
               </div>
               <p className={`text-[11px] sm:text-xs leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
-                Measures natural affinity, respect, or friction between ruling planetary lords (e.g., Mars, Venus, Mercury) of both signs.
+                {t('compat.romance_desc')}
               </p>
             </div>
 
@@ -259,10 +269,10 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
             }`}>
               <div className="flex items-center space-x-2 text-xs font-bold text-[#C9A050] mb-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C9A050]"></span>
-                <span>Remedial Wisdom</span>
+                <span>{t('compat.remedial')}</span>
               </div>
               <p className={`text-[11px] sm:text-xs leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
-                Provides actionable communication guidance and Vedic remedies to balance natural differences and cultivate lasting harmony.
+                {t('compat.remedial_desc')}
               </p>
             </div>
           </div>
@@ -270,7 +280,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
           <div className={`p-2.5 rounded-lg border text-center text-xs font-semibold ${
             isDark ? 'bg-[#C9A050]/10 border-[#C9A050]/30 text-[#C9A050]' : 'bg-amber-50 border-amber-200 text-amber-900'
           }`}>
-            ✦ Select your Primary Sign and Partner Sign above, then click &ldquo;Analyze&rdquo; to generate your detailed cosmic harmony breakdown.
+            {t('compat.select_signs_hint')}
           </div>
         </div>
       )}
@@ -280,7 +290,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
         <div className={`flex flex-col items-center justify-center p-8 sm:p-12 rounded-xl border text-center animate-pulse w-full ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-[#FAF8F2] border-[#E5E1D8]'}`}>
           <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-t-2 border-b-2 border-[#C9A050] mb-4"></div>
           <p className="text-xs sm:text-sm font-semibold tracking-wider text-[#C9A050] animate-pulse font-serif">
-            {language === 'bn' ? 'গ্রহের সংযোগ এবং নক্ষত্রের সামঞ্জস্য গণনা করা হচ্ছে...' : 'Calculating Cosmic Harmony & Planetary Alignments...'}
+            {t('compat.btn_analyzing')}
           </p>
         </div>
       )}
@@ -291,7 +301,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
         <div className={`flex flex-col items-center justify-center p-4 sm:p-6 rounded-xl border text-center h-full ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'}`}>
           <div className="w-20 h-20 rounded-full border-4 border-[#C9A050] flex flex-col items-center justify-center shadow-lg shadow-[#C9A050]/20 mb-3">
             <span className={`text-xl font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{compatResult.overallScore}%</span>
-            <span className={`text-xs uppercase tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>Harmony</span>
+            <span className={`text-xs uppercase tracking-wider ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>{t('compat.overall_score')}</span>
           </div>
           <div className="text-xs font-bold text-[#C9A050]">
             {compatResult.signA.name} + {compatResult.signB.name}
@@ -304,17 +314,17 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
         {/* Analysis details */}
         <div className={`flex flex-col justify-center space-y-2 sm:space-y-3 text-xs ${isDark ? 'text-[#E5E1D8]' : 'text-gray-700'}`}>
           <div className={`p-3 rounded-lg border ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]/80' : 'bg-[#FFFFFF] border-[#E5E1D8]'}`}>
-            <span className="font-semibold text-[#C9A050] block mb-0.5">{t('zodiac.element_synergy')}:</span>
+            <span className="font-semibold text-[#C9A050] block mb-0.5">{t('compat.element_synergy')}:</span>
             <span className={`${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{compatResult.elementSynergy}</span>
           </div>
 
           <div className={`p-3 rounded-lg border ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]/80' : 'bg-[#FFFFFF] border-[#E5E1D8]'}`}>
-            <span className="font-semibold text-[#C9A050] block mb-0.5">Romantic & Soul Synergy:</span>
+            <span className="font-semibold text-[#C9A050] block mb-0.5">{t('compat.romance')}:</span>
             <span className={`${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{compatResult.romanceAnalysis}</span>
           </div>
 
           <div className={`p-3 rounded-lg border ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]/80' : 'bg-[#FFFFFF] border-[#E5E1D8]'}`}>
-            <span className="font-semibold text-[#C9A050] block mb-0.5">Evolution & Remedial Guidance:</span>
+            <span className="font-semibold text-[#C9A050] block mb-0.5">{t('compat.remedial')}:</span>
             <span className={`${isDark ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{compatResult.remedialAdvice}</span>
           </div>
         </div>

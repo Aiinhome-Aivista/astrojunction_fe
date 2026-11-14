@@ -1,4 +1,5 @@
 @import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @font-face {
@@ -16,6 +17,50 @@
   --font-display: "Stardom", Georgia, serif;
   --font-heading: "Stardom", Georgia, serif;
   --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ========================================================================= */
+/* Indic Script Font Stacks & Typography Safety (hi, bn, ta)                 */
+/* ========================================================================= */
+html[lang="hi"] {
+  --font-serif: "Noto Sans Devanagari", "Stardom", Georgia, serif;
+  --font-sans: "Noto Sans Devanagari", "Nunito", sans-serif;
+  --font-heading: "Noto Sans Devanagari", "Stardom", serif;
+  --font-display: "Noto Sans Devanagari", "Stardom", serif;
+}
+
+html[lang="bn"] {
+  --font-serif: "Noto Sans Bengali", "Stardom", Georgia, serif;
+  --font-sans: "Noto Sans Bengali", "Nunito", sans-serif;
+  --font-heading: "Noto Sans Bengali", "Stardom", serif;
+  --font-display: "Noto Sans Bengali", "Stardom", serif;
+}
+
+html[lang="ta"] {
+  --font-serif: "Noto Sans Tamil", "Stardom", Georgia, serif;
+  --font-sans: "Noto Sans Tamil", "Nunito", sans-serif;
+  --font-heading: "Noto Sans Tamil", "Stardom", serif;
+  --font-display: "Noto Sans Tamil", "Stardom", serif;
+}
+
+html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .font-serif, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title,
+html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, html[lang="bn"] .font-serif, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title,
+html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .font-serif, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  line-height: 1.45 !important;
+  -webkit-text-stroke: 0 transparent !important;
+  font-synthesis: none !important;
+}
+
+html[lang="hi"] .font-serif, html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title {
+  font-family: "Noto Sans Devanagari", "Stardom", Georgia, serif !important;
+}
+html[lang="bn"] .font-serif, html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title {
+  font-family: "Noto Sans Bengali", "Stardom", Georgia, serif !important;
+}
+html[lang="ta"] .font-serif, html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
+  font-family: "Noto Sans Tamil", "Stardom", Georgia, serif !important;
 }
 
 @layer base {
@@ -1441,4 +1486,194 @@ html body .jodit-ui-button_active:not([disabled]) svg {
 
 .astro-remedy-glow-shukra-suktam {
   background-color: #D97706;
+}
+
+/* ========================================================================= */
+/* Non-English Optical Weight & Elegance Calibration (bn, hi, ta, fr)        */
+/* Softens excessive boldness so Indic & Latin scripts look crisp & elegant */
+/* ========================================================================= */
+
+/* 1. Global Reset for Non-English Headings & Elements: No Fake Bold or Stroke */
+html:not([lang="en"]) {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html:not([lang="en"]) h1,
+html:not([lang="en"]) h2,
+html:not([lang="en"]) h3,
+html:not([lang="en"]) h4,
+html:not([lang="en"]) h5,
+html:not([lang="en"]) h6,
+html:not([lang="en"]) h1 *,
+html:not([lang="en"]) h2 *,
+html:not([lang="en"]) h3 *,
+html:not([lang="en"]) h4 *,
+html:not([lang="en"]) h5 *,
+html:not([lang="en"]) h6 *,
+html:not([lang="en"]) .font-display,
+html:not([lang="en"]) .font-display *,
+html:not([lang="en"]) .font-heading,
+html:not([lang="en"]) .font-heading *,
+html:not([lang="en"]) .font-serif,
+html:not([lang="en"]) .font-serif *,
+html:not([lang="en"]) .astro-hero-title,
+html:not([lang="en"]) .astro-hero-title *,
+html:not([lang="en"]) .astro-page-header-title,
+html:not([lang="en"]) .astro-page-header-title *,
+html:not([lang="en"]) .astro-section-title,
+html:not([lang="en"]) .astro-section-title *,
+html:not([lang="en"]) .astro-card-title,
+html:not([lang="en"]) .astro-card-title *,
+html:not([lang="en"]) .astro-modal-title,
+html:not([lang="en"]) .astro-modal-title *,
+html:not([lang="en"]) [role="heading"],
+html:not([lang="en"]) [role="heading"] * {
+  -webkit-text-stroke: 0 transparent !important;
+  font-synthesis: none !important;
+  letter-spacing: normal !important;
+}
+
+/* 2. Scale down heavy Tailwind font-weight utility classes for Non-English */
+html:not([lang="en"]) .font-black {
+  font-weight: 700 !important;
+}
+
+html:not([lang="en"]) .font-extrabold {
+  font-weight: 600 !important;
+}
+
+html:not([lang="en"]) .font-bold {
+  font-weight: 600 !important;
+}
+
+html:not([lang="en"]) .font-semibold {
+  font-weight: 500 !important;
+}
+
+html:not([lang="en"]) b,
+html:not([lang="en"]) strong {
+  font-weight: 600 !important;
+}
+
+/* 3. Hero and Top Page Heading optical softness */
+html:not([lang="en"]) .astro-hero-title,
+html:not([lang="en"]) .astro-hero-title *,
+html:not([lang="en"]) .astro-page-header-title,
+html:not([lang="en"]) .astro-page-header-title * {
+  font-weight: 650 !important;
+  line-height: 1.35 !important;
+}
+
+/* 4. Indic Scripts Specific Tuning (Bengali, Hindi, Tamil) */
+/* Indic glyphs feature solid top matras and complex conjuncts that need lighter weight to breathe */
+html[lang="bn"] .astro-hero-title,
+html[lang="bn"] .astro-hero-title *,
+html[lang="bn"] .astro-page-header-title,
+html[lang="bn"] .astro-page-header-title *,
+html[lang="hi"] .astro-hero-title,
+html[lang="hi"] .astro-hero-title *,
+html[lang="hi"] .astro-page-header-title,
+html[lang="hi"] .astro-page-header-title *,
+html[lang="ta"] .astro-hero-title,
+html[lang="ta"] .astro-hero-title *,
+html[lang="ta"] .astro-page-header-title,
+html[lang="ta"] .astro-page-header-title * {
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+
+html[lang="bn"] h1, html[lang="bn"] h1 *,
+html[lang="hi"] h1, html[lang="hi"] h1 *,
+html[lang="ta"] h1, html[lang="ta"] h1 * {
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+
+html[lang="bn"] h2, html[lang="bn"] h2 *,
+html[lang="hi"] h2, html[lang="hi"] h2 *,
+html[lang="ta"] h2, html[lang="ta"] h2 * {
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="bn"] h3, html[lang="bn"] h3 *,
+html[lang="hi"] h3, html[lang="hi"] h3 *,
+html[lang="ta"] h3, html[lang="ta"] h3 * {
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="bn"] h4, html[lang="bn"] h4 *,
+html[lang="bn"] h5, html[lang="bn"] h5 *,
+html[lang="bn"] h6, html[lang="bn"] h6 *,
+html[lang="hi"] h4, html[lang="hi"] h4 *,
+html[lang="hi"] h5, html[lang="hi"] h5 *,
+html[lang="hi"] h6, html[lang="hi"] h6 *,
+html[lang="ta"] h4, html[lang="ta"] h4 *,
+html[lang="ta"] h5, html[lang="ta"] h5 *,
+html[lang="ta"] h6, html[lang="ta"] h6 * {
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+/* Category pills, badges, buttons, and status labels in Indic scripts */
+html[lang="bn"] .font-bold,
+html[lang="hi"] .font-bold,
+html[lang="ta"] .font-bold {
+  font-weight: 550 !important;
+}
+
+html[lang="bn"] .font-semibold,
+html[lang="hi"] .font-semibold,
+html[lang="ta"] .font-semibold {
+  font-weight: 500 !important;
+}
+
+/* 5. French Refinements - Balanced presence for accented European glyphs */
+html[lang="fr"] .astro-hero-title,
+html[lang="fr"] .astro-hero-title *,
+html[lang="fr"] .astro-page-header-title,
+html[lang="fr"] .astro-page-header-title * {
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+
+html[lang="fr"] h1, html[lang="fr"] h1 *,
+html[lang="fr"] h2, html[lang="fr"] h2 * {
+  font-weight: 650 !important;
+}
+
+html[lang="fr"] h3, html[lang="fr"] h3 *,
+html[lang="fr"] h4, html[lang="fr"] h4 * {
+  font-weight: 600 !important;
+}
+
+html[lang="fr"] .font-extrabold {
+  font-weight: 700 !important;
+}
+
+html[lang="fr"] .font-bold {
+  font-weight: 600 !important;
+}
+
+html[lang="fr"] .font-semibold {
+  font-weight: 500 !important;
+}
+
+/* ========================================================================= */
+/* Landing Page Horoscope Dynamic Content Typography (hi, bn, ta)            */
+/* Ensures plain text paragraphs use normal weight, line-height 1.7, no      */
+/* uppercase, no letter spacing, and safe wrapping for yearly long text.      */
+/* ========================================================================= */
+html[lang="hi"] .horoscope-dynamic-paragraph,
+html[lang="bn"] .horoscope-dynamic-paragraph,
+html[lang="ta"] .horoscope-dynamic-paragraph {
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }

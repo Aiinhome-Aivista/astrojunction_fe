@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Globe,
   Flame,
@@ -29,7 +30,9 @@ import {
   Users,
   Plane,
   Mail,
+  Loader2,
 } from 'lucide-react';
+import { useLandingDynamic } from '../hooks/useLandingDynamic';
 import { DailyUpdateModal } from './DailyUpdateModal';
 import { DailyUpdateInlineCard } from './DailyUpdateInlineCard';
 import { ZodiacSign, calculateZodiacCompatibility, ZodiacCompatibilityResult } from '../services/zodiacData';
@@ -167,6 +170,16 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   onAskAIForSign,
   theme = 'dark',
 }) => {
+  const { t: i18nT } = useTranslation();
+  const t = (key: string, options?: any): string => {
+    try {
+      const res = i18nT(key, options);
+      if (typeof res === 'string' && res !== key) return res;
+    } catch {
+      // fallback
+    }
+    return getTranslation(key, language);
+  };
   const isDark = theme === 'dark';
   const { zodiacs, loading, error } = useZodiacData();
 
@@ -252,6 +265,14 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   }, [zodiacSystem, timeframe, selectedYear]);
 
   const activeSign = (zodiacs && selectedSignId) ? (zodiacs.find((s) => s.id === selectedSignId) || null) : null;
+
+  const landingDynamic = useLandingDynamic({
+    sign: activeSign?.id,
+    system: zodiacSystem,
+    period: timeframe,
+    year: selectedYear,
+    enabled: Boolean(activeSign && hasSelectedSign),
+  });
 
   React.useEffect(() => {
     const fetchForecast = async () => {
@@ -462,15 +483,68 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
 
   const compatResult: ZodiacCompatibilityResult = calculateZodiacCompatibility(compatSignA, compatSignB, zodiacSystem, zodiacs);
 
-  const t = (key: string) => getTranslation(key, language);
-
   const activeCacheKey = activeSign ? `${activeSign.id}-${timeframe}-${language}-${zodiacSystem}${timeframe === 'year' ? `-${selectedYear}` : ''}` : '';
   const rawDynamicData = activeCacheKey ? (dynamicZodiacData[activeCacheKey] || dynamicZodiacData[`${activeSign?.id}-${timeframe}-${language}`]) : null;
-  const currentDynamicData = (rawDynamicData && typeof rawDynamicData === 'object' && 'data' in rawDynamicData && rawDynamicData.data)
+  const legacyData = (rawDynamicData && typeof rawDynamicData === 'object' && 'data' in rawDynamicData && rawDynamicData.data)
     ? rawDynamicData.data
     : rawDynamicData;
 
-  const isCardLoading = isFetchingForecast && (!currentDynamicData || !currentDynamicData.categoryInsights || Object.keys(currentDynamicData.categoryInsights).length === 0);
+  const landingCategoryInsights = React.useMemo(() => {
+    if (!landingDynamic.items || landingDynamic.items.length === 0) return null;
+    const cats: Record<string, any> = {};
+    let forecast = '';
+    let vitality: number | undefined = undefined;
+    landingDynamic.items.forEach((it) => {
+      if (it && it.category) {
+        cats[it.category] = {
+          score: it.score,
+          text: it.text,
+          insight: it.text,
+          lucky_time: it.lucky_time,
+          remedy: it.remedy,
+          affirmation: it.affirmation,
+          tip_for_the_day: it.tip_for_the_day,
+        };
+        if (it.category === 'cosmic_pulse') {
+          forecast = it.text;
+          vitality = it.score;
+        }
+      }
+    });
+    return {
+      categoryInsights: cats,
+      forecast,
+      vitalityToday: vitality,
+      periodStart: landingDynamic.periodStart,
+      periodEnd: landingDynamic.periodEnd,
+      ingresses: landingDynamic.ingresses,
+      isStale: landingDynamic.stale,
+    };
+  }, [landingDynamic.items, landingDynamic.periodStart, landingDynamic.periodEnd, landingDynamic.ingresses, landingDynamic.stale]);
+
+  const currentDynamicData = React.useMemo(() => {
+    if (landingCategoryInsights) {
+      return {
+        ...(typeof legacyData === 'object' ? legacyData : {}),
+        ...landingCategoryInsights,
+        categoryInsights: {
+          ...(legacyData?.categoryInsights || {}),
+          ...landingCategoryInsights.categoryInsights,
+        },
+        forecast: landingCategoryInsights.forecast || legacyData?.forecast || '',
+        vitalityToday: landingCategoryInsights.vitalityToday ?? legacyData?.vitalityToday ?? activeSign?.vitalityToday,
+        isStale: landingCategoryInsights.isStale,
+        periodStart: landingCategoryInsights.periodStart || legacyData?.periodStart,
+        periodEnd: landingCategoryInsights.periodEnd || legacyData?.periodEnd,
+        ingresses: (landingCategoryInsights.ingresses && landingCategoryInsights.ingresses.length > 0) ? landingCategoryInsights.ingresses : (legacyData?.ingresses || []),
+        affirmation: landingCategoryInsights.categoryInsights?.['cosmic_pulse']?.affirmation || legacyData?.affirmation,
+        tip_for_the_day: landingCategoryInsights.categoryInsights?.['cosmic_pulse']?.tip_for_the_day || legacyData?.tip_for_the_day,
+      };
+    }
+    return legacyData;
+  }, [landingCategoryInsights, legacyData, activeSign]);
+
+  const isCardLoading = (landingDynamic.loading || isFetchingForecast) && (!currentDynamicData || !currentDynamicData.categoryInsights || Object.keys(currentDynamicData.categoryInsights).length === 0);
 
   const getForecastText = (sign?: ZodiacSign | null) => {
     if (!sign) return '';
@@ -549,7 +623,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             <div className="absolute text-xl font-serif text-[#C9A050] animate-pulse">✨</div>
           </div>
           <p className="mt-4 text-sm font-semibold tracking-wider text-[#C9A050] animate-pulse font-serif">
-            {language === 'bn' ? 'নক্ষত্র ও কোষ্ঠী বিশ্লেষণ করা হচ্ছে...' : 'Aligning Stars & Consulting Cosmos...'}
+            {t('zodiac.aligning_stars')}
           </p>
         </div>
       )}
@@ -581,7 +655,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               }`}
             >
               <Compass className="w-3.5 h-3.5" />
-              <span>{t('zodiac.system.tropical')}</span>
+              <span>{t('zodiac.system_tropical')}</span>
             </button>
             <button
               onClick={() => setZodiacSystem('sidereal')}
@@ -592,7 +666,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>{t('zodiac.system.sidereal')}</span>
+              <span>{t('zodiac.system_sidereal')}</span>
             </button>
           </div>
         </div>
@@ -600,7 +674,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
         {/* Ayanamsha Note */}
         <div className="mt-3 pt-3 border-t border-[#2A2A2E]/60 flex items-center space-x-2 text-[10px] sm:text-xs text-[#C9A050]/90">
           <Compass className="w-3 h-3 flex-shrink-0 text-[#C9A050]" />
-          <span>{t('zodiac.ayanamsa_note')}</span>
+          <span>{t('zodiac.ayanamsha_note')}</span>
         </div>
       </div>
 
@@ -626,7 +700,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               {el === 'Earth' && <Mountain className={`w-3 h-3 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />}
               {el === 'Air' && <Wind className={`w-3 h-3 ${isDark ? 'text-sky-400' : 'text-sky-600'}`} />}
               {el === 'Water' && <Droplets className={`w-3 h-3 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />}
-              <span>{el === 'All' ? t('zodiac.filter.all') : el}</span>
+              <span>{el === 'All' ? t('zodiac.filters.all') : t(`zodiac.filters.${el.toLowerCase()}`)}</span>
             </button>
           ))}
         </div>
@@ -660,7 +734,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                       : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                {tf === 'year' ? (t('zodiac.timeframe.year') || 'Yearly Outlook') : t(`zodiac.timeframe.${tf}`)}
+                {t(`zodiac.timeframes.${tf}`)}
               </button>
             ))}
           </div>
@@ -772,7 +846,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                 <span className={`font-semibold ${
                   isDark ? 'text-emerald-400' : 'text-[#8D6723]'
                 }`}>
-                  {vitalityMap[sign.id] ?? (zodiacSystem === 'sidereal' ? Math.max(0, sign.vitalityToday - 3) : sign.vitalityToday)}% Vitality
+                  {vitalityMap[sign.id] ?? (zodiacSystem === 'sidereal' ? Math.max(0, sign.vitalityToday - 3) : sign.vitalityToday)}% {t('zodiac.vitality')}
                 </span>
               </div>
             </button>
@@ -805,18 +879,18 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
                   isDark ? 'bg-[#2A2A2E] text-[#E5E1D8]' : 'bg-gray-100 text-gray-700'
                 }`}>
-                  {activeSign.modality} Modality
+                  {activeSign.modality} {t('zodiac.modality')}
                 </span>
                 <span className="px-2 py-0.5 rounded-full text-[11px] bg-[#C9A050]/15 text-[#C9A050] font-medium border border-[#C9A050]/30">
                   {activeSign.polarity}
                 </span>
               </div>
               <p className={`text-xs font-medium ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
-                {activeSign.glyph} • {activeSign.motto} • Ruled by{' '}
+                {activeSign.glyph} • {activeSign.motto} • {t('zodiac.ruled_by')}{' '}
                 <span className="text-[#C9A050] font-semibold">{activeSign.ruler} ({activeSign.sanskritRuler})</span>
               </p>
               <div className="text-[11px] text-[#C9A050] mt-0.5">
-                Dates: <span className="font-semibold">{zodiacSystem === 'tropical' ? `${activeSign.tropicalDates} (Western Tropical)` : `${activeSign.siderealDates} (Vedic Sidereal)`}</span>
+                {t('zodiac.dates')}: <span className="font-semibold">{zodiacSystem === 'tropical' ? `${activeSign.tropicalDates} (${t('zodiac.western_tropical')})` : `${activeSign.siderealDates} (${t('zodiac.vedic_sidereal')})`}</span>
               </div>
             </div>
           </div>
@@ -827,25 +901,25 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
           {[
             {
               key: 'love',
-              label: t('zodiac.love_rating'),
+              label: t('zodiac.meters.love'),
               value: Math.min(100, Math.max(0, (currentDynamicData?.loveRating || activeSign.loveRating) + (zodiacSystem === 'sidereal' ? 2 : 0))),
               Icon: Heart,
             },
             {
               key: 'career',
-              label: t('zodiac.career_rating'),
+              label: t('zodiac.meters.career'),
               value: Math.min(100, Math.max(0, (currentDynamicData?.careerRating || activeSign.careerRating) + (zodiacSystem === 'sidereal' ? -1 : 0))),
               Icon: Briefcase,
             },
             {
               key: 'wealth',
-              label: t('zodiac.wealth_rating'),
+              label: t('zodiac.meters.wealth'),
               value: Math.min(100, Math.max(0, (currentDynamicData?.wealthRating || activeSign.wealthRating) + (zodiacSystem === 'sidereal' ? 3 : 0))),
               Icon: Coins,
             },
             {
               key: 'vitality',
-              label: t('zodiac.vitality_meter'),
+              label: t('zodiac.meters.vitality'),
               value: Math.min(100, Math.max(0, (currentDynamicData?.vitalityToday || activeSign.vitalityToday) + (zodiacSystem === 'sidereal' ? -3 : 0))),
               Icon: Zap,
             }
@@ -904,10 +978,10 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             </div>
             <div className="space-y-1.5 max-w-sm">
               <h4 className={`text-sm sm:text-base font-bold font-serif tracking-wider ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                CONSULTING DAIVAJNA
+                {t('zodiac.card_consulting')}
               </h4>
               <p className="text-xs text-[#C9A050] animate-pulse">
-                Aligning celestial transits & calculating personalized insights for {activeSign.name}...
+                {t('zodiac.consulting_desc', { sign: activeSign.name })}
               </p>
             </div>
             {/* Shimmering placeholder bars */}
@@ -929,7 +1003,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               <h3 className="text-sm font-bold text-[#C9A050] flex items-center space-x-2">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  {activeSign.name} Horizon: {timeframe === 'today' ? "Today's Cosmic Pulse" : timeframe === 'week' ? 'Weekly Outlook' : timeframe === 'month' ? 'Monthly Transits' : 'Yearly Outlook'}
+                  {t('zodiac.horizon_title', { sign: activeSign.name, defaultValue: `${activeSign.name} Horizon` })}: {t(`zodiac.timeframes.${timeframe}`)}
                 </span>
               </h3>
               <div className="flex items-center space-x-2">
@@ -939,17 +1013,17 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                       ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
                       : 'bg-amber-50 text-amber-700 border border-amber-200'
                   }`}>
-                    Showing latest available reading
+                    {t('zodiac.showing_latest')}
                   </span>
                 )}
                 <span className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   {timeframe === 'today'
-                    ? `Daily Transit • ${currentDynamicData?.periodStart || currentDynamicData?.forecastDate || currentDynamicData?.period_start || new Date().toISOString().split('T')[0]}`
+                    ? `${t('zodiac.daily_transit')} • ${currentDynamicData?.periodStart || currentDynamicData?.forecastDate || currentDynamicData?.period_start || new Date().toISOString().split('T')[0]}`
                     : timeframe === 'week'
-                    ? `Weekly Transit • ${formatWeekRange(currentDynamicData?.periodStart || currentDynamicData?.period_start, currentDynamicData?.periodEnd || currentDynamicData?.period_end)}`
+                    ? `${t('zodiac.weekly_transit')} • ${formatWeekRange(currentDynamicData?.periodStart || currentDynamicData?.period_start, currentDynamicData?.periodEnd || currentDynamicData?.period_end)}`
                     : timeframe === 'month'
-                    ? `Monthly Transit • ${formatMonthLabel(currentDynamicData?.periodStart || currentDynamicData?.period_start || new Date().toISOString().split('T')[0])}`
-                    : `Yearly Outlook • ${selectedYear}`}
+                    ? `${t('zodiac.monthly_transit')} • ${formatMonthLabel(currentDynamicData?.periodStart || currentDynamicData?.period_start || new Date().toISOString().split('T')[0])}`
+                    : `${t('zodiac.timeframes.year')} • ${selectedYear}`}
                 </span>
               </div>
             </div>
@@ -982,7 +1056,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                         }`}
                       >
                         <CatIcon className={`w-3.5 h-3.5 shrink-0 ${isCatActive ? 'text-[#0D0D0F]' : isDark ? 'text-[#C9A050]' : 'text-[#8D6723]'}`} />
-                        <span>{cat.name}</span>
+                        <span>{t(`zodiac.categories.${cat.id}`, cat.name)}</span>
                         {details && details.tier && (
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isCatActive ? 'bg-[#0D0D0F]' : (details.tier.dotClass || 'bg-emerald-500')}`} />
                         )}
@@ -991,8 +1065,19 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   })}
                 </div>
 
-                {/* Score & Tier Badge on the far right (Travel er right e, ekdom right e) */}
-                <div className="shrink-0 ml-auto pl-1">
+                {/* Score & Tier Badge + Translation Status on the far right */}
+                <div className="shrink-0 ml-auto pl-1 flex items-center space-x-2">
+                  {landingDynamic.translating && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 animate-pulse font-medium flex items-center space-x-1 whitespace-nowrap">
+                      <Loader2 className="w-2.5 h-2.5 animate-spin shrink-0" />
+                      <span>{t('zodiac.translating', 'Translating...')}</span>
+                    </span>
+                  )}
+                  {!landingDynamic.translating && !landingDynamic.translated && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-500/10 text-gray-500 dark:text-gray-400 border border-gray-500/20 font-medium whitespace-nowrap">
+                      <span>{t('zodiac.showing_english', 'Showing English version')}</span>
+                    </span>
+                  )}
                   {selectedCategory === 'all' ? (
                     (() => {
                       const safeVit = typeof currentDynamicData?.vitalityToday === 'number'
@@ -1004,7 +1089,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                       return (
                         <span className={`text-xs font-bold px-2.5 py-1 rounded-full border flex items-center space-x-1.5 shadow-xs whitespace-nowrap ${tier.badgeClass}`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${tier.dotClass}`} />
-                          <span>{safeVit}% • {timeframe === 'year' ? 'Yearly Vitality' : timeframe === 'month' ? 'Monthly Vitality' : timeframe === 'week' ? 'Weekly Vitality' : 'Cosmic Vitality'}</span>
+                          <span>{safeVit}% • {t(`zodiac.timeframes.${timeframe}`)} {t('zodiac.vitality')}</span>
                         </span>
                       );
                     })()
@@ -1031,7 +1116,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             {/* Content Body: Each category tab shows ONE paragraph of text */}
             {timeframe !== 'today' && timeframe !== 'week' && timeframe !== 'month' && timeframe !== 'year' ? (
               <div className={`text-sm leading-relaxed ${isDark ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
-                <p className="whitespace-normal leading-relaxed">{stripMarkdownDefensively(getForecastText(activeSign))}</p>
+                <p className="horoscope-dynamic-paragraph whitespace-normal leading-relaxed">{stripMarkdownDefensively(getForecastText(activeSign))}</p>
               </div>
             ) : selectedCategory === 'all' ? (
               /* Cosmic Pulse Tab */
@@ -1043,17 +1128,23 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                       currentDynamicData?.categoryInsights?.['cosmic_pulse']?.insight ||
                       getForecastText(activeSign)
                     ).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map((para, idx) => (
-                      <p key={idx} className="whitespace-normal leading-relaxed">{para}</p>
+                      <p key={idx} className="horoscope-dynamic-paragraph whitespace-normal leading-relaxed">{para}</p>
                     ))}
                   </div>
                   {(() => {
                     const tip = currentDynamicData?.categoryInsights?.['cosmic_pulse']?.tip_for_the_day || currentDynamicData?.tip_for_the_day;
                     if (!tip || (typeof tip !== 'string' && typeof tip !== 'number')) return null;
-                    const tipLabel = timeframe === 'year' ? 'Tip for the Year:' : timeframe === 'month' ? 'Tip for the Month:' : timeframe === 'week' ? 'Tip for the Week:' : 'Tip for the Day:';
+                    const tipLabel = timeframe === 'year'
+                      ? t('zodiac.tip_year')
+                      : timeframe === 'month'
+                      ? t('zodiac.tip_month')
+                      : timeframe === 'week'
+                      ? t('zodiac.tip_week')
+                      : t('zodiac.tip_day');
                     return (
                       <div className="pt-2">
                         <strong className="block font-bold mb-0.5">{tipLabel}</strong>
-                        <p className="whitespace-normal leading-relaxed">{stripMarkdownDefensively(tip)}</p>
+                        <p className="horoscope-dynamic-paragraph whitespace-normal leading-relaxed">{stripMarkdownDefensively(tip)}</p>
                       </div>
                     );
                   })()}
@@ -1073,7 +1164,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   <div className="space-y-2 animate-in fade-in duration-200 pt-1.5">
                     <div className={`text-sm leading-relaxed space-y-2.5 ${isDark ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
                       {stripMarkdownDefensively(details?.insight).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map((para, idx) => (
-                        <p key={idx} className="whitespace-normal leading-relaxed">{para}</p>
+                        <p key={idx} className="horoscope-dynamic-paragraph whitespace-normal leading-relaxed">{para}</p>
                       ))}
                     </div>
                   </div>
@@ -1086,7 +1177,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               isDark ? 'border-[#2A2A2E]/40 text-[#9E9A90]' : 'border-[#E8E1D5] text-gray-600'
             }`}>
               <div className="flex items-center space-x-2">
-                <span className="text-[#C9A050] font-semibold">Celestial Affirmation:</span>
+                <span className="text-[#C9A050] font-semibold">{t('zodiac.affirmation_label')}</span>
                 <span className={`italic ${isDark ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
                   &ldquo;{typeof currentDynamicData?.affirmation === 'string' && currentDynamicData.affirmation
                     ? currentDynamicData.affirmation
@@ -1094,7 +1185,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                 </span>
               </div>
               <div>
-                <span className="text-[#C9A050] font-semibold">Resonant Chakra:</span>{' '}
+                <span className="text-[#C9A050] font-semibold">{t('zodiac.chakra_label')}</span>{' '}
                 {typeof currentDynamicData?.resonantChakra === 'string' && currentDynamicData.resonantChakra
                   ? currentDynamicData.resonantChakra
                   : (currentDynamicData?.resonantChakra?.name || activeSign.resonantChakra)}

@@ -8,24 +8,56 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  retryCount: number;
 }
+
+/** Errors caused by Google Translate / browser extensions mutating the DOM */
+const isTranslateDomError = (msg: string): boolean => {
+  const lower = msg.toLowerCase();
+  return (
+    lower.includes('removeChild') ||
+    lower.includes('insertBefore') ||
+    lower.includes('rendered more hooks') ||
+    lower.includes('rendered fewer hooks') ||
+    lower.includes('hooks') && lower.includes('render') ||
+    lower.includes('the node to be removed is not a child') ||
+    lower.includes('failed to execute') && lower.includes('child')
+  );
+};
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
+    retryCount: 0,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error caught by ErrorBoundary:', error, errorInfo);
+
+    // Auto-recover from Google Translate / browser-extension DOM mutations
+    // (up to 3 times before showing the error screen)
+    if (isTranslateDomError(error.message) && this.state.retryCount < 3) {
+      console.warn('[ErrorBoundary] DOM mutation error detected – auto-recovering...');
+      setTimeout(() => {
+        this.setState(prev => ({
+          hasError: false,
+          error: null,
+          retryCount: prev.retryCount + 1,
+        }));
+      }, 50);
+    }
   }
 
   private handleReload = () => {
-    localStorage.removeItem('jyotish_profiles');
+    try {
+      localStorage.removeItem('jyotish_profiles');
+    } catch {}
+    this.setState({ hasError: false, error: null, retryCount: 0 });
     window.location.reload();
   };
 
@@ -41,6 +73,11 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-xs text-gray-500 dark:text-[#9E9A90] leading-relaxed">
               A temporary calculation anomaly occurred. Please click below to refresh and load your astrological dashboard cleanly.
             </p>
+            {this.state.error && (
+              <p className="text-[11px] text-rose-400 font-mono bg-rose-500/10 border border-rose-500/20 p-2 rounded-lg break-all text-left">
+                {this.state.error.message || String(this.state.error)}
+              </p>
+            )}
             <button
               onClick={this.handleReload}
               className="px-5 py-2.5 rounded-xl bg-[#C9A050] text-[#0D0D0F] font-bold text-xs hover:bg-[#D4AF37] transition flex items-center justify-center gap-2 mx-auto cursor-pointer shadow-md"

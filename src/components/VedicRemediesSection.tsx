@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Sun, ShieldCheck, Flame, Heart, Copy, Check, Clock, Compass, Gem, ChevronRight } from 'lucide-react';
 
 interface VedicRemediesSectionProps {
@@ -132,10 +133,37 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
   onAskAI,
   onExploreMore
 }) => {
+  const { t } = useTranslation();
   const [selectedRemedyId, setSelectedRemedyId] = useState<string | null>(null);
   const [copiedMantraId, setCopiedMantraId] = useState<string | null>(null);
 
-  const activeRemedy = HARDCODED_REMEDIES.find(r => r.id === selectedRemedyId) || null;
+  const getRemedyItem = (r: RemedyItem): RemedyItem => {
+    const itemKey = `remedies.items.${r.id}`;
+    const translatedVidhi = t(`${itemKey}.vidhi`, { returnObjects: true });
+    const vidhiList = Array.isArray(translatedVidhi) && translatedVidhi.length > 0 ? (translatedVidhi as string[]) : r.vidhi;
+
+    const translatedOfferings = t(`${itemKey}.offerings`, { returnObjects: true });
+    const offeringsList = Array.isArray(translatedOfferings) && translatedOfferings.length > 0 ? (translatedOfferings as string[]) : r.offerings;
+
+    return {
+      ...r,
+      title: t(`${itemKey}.title`, r.title),
+      tag: t(`${itemKey}.tag`, r.tag),
+      purpose: t(`${itemKey}.purpose`, r.purpose),
+      graha: t(`${itemKey}.graha`, r.graha),
+      deity: t(`${itemKey}.deity`, r.deity),
+      day: t(`${itemKey}.day`, r.day),
+      direction: t(`${itemKey}.direction`, r.direction),
+      gemstone: t(`${itemKey}.gemstone`, r.gemstone),
+      bestTime: t(`${itemKey}.best_time`, r.bestTime),
+      mantraCount: t(`${itemKey}.mantra_count`, r.mantraCount),
+      vidhi: vidhiList,
+      offerings: offeringsList,
+    };
+  };
+
+  const localizedRemedies = HARDCODED_REMEDIES.map(getRemedyItem);
+  const activeRemedy = localizedRemedies.find(r => r.id === selectedRemedyId) || null;
 
   const handleCopyMantra = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -151,24 +179,24 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
       <div className="text-center max-w-3xl mx-auto mb-12">
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
           <Compass className="w-4 h-4 text-[#C9A050]" />
-          <span>Time-Tested Vedic Upayas & Remedies</span>
+          <span>{t('remedies.badge', 'Time-Tested Vedic Upayas & Remedies')}</span>
         </div>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">
           <span className={theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}>
-            Sacred Vedic Remedies &
-          </span>{' '}
-          <span className="text-[#C9A050]">Planetary Upayas</span>
+            {t('remedies.title_main')}{' '}
+          </span>
+          <span className="text-[#C9A050]">{t('remedies.title_upayas')}</span>
         </h2>
 
         <p className={`text-sm sm:text-base text-center mx-auto max-w-lg leading-relaxed ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black'}`}>
-          Authentic scriptural prescriptions from the <em>Brihat Parashara Hora Shastra</em> and classical Jyotish canons to alleviate planetary doshas, awaken dormant houses, and invite cosmic harmony.
+          {t('remedies.subtitle')}
         </p>
       </div>
 
       {/* 4 Hardcoded Remedies Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-        {HARDCODED_REMEDIES.map((remedy) => {
+        {localizedRemedies.map((remedy) => {
           const Icon = remedy.icon;
           const isSelected = remedy.id === selectedRemedyId;
 
@@ -215,20 +243,20 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                         : 'bg-white text-amber-800 border-[#E5E1D8]'
                     }`}
                   >
-                    {remedy.tag}
+                    {t(`remedies.items.${remedy.id}.tag`, remedy.tag)}
                   </span>
                 </div>
 
                 {/* English Title */}
                 <div className="mb-3">
                   <h4 className={`text-lg font-serif font-bold leading-snug ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {remedy.title}
+                    {t(`remedies.items.${remedy.id}.title`, remedy.title)}
                   </h4>
                 </div>
 
                 {/* Purpose Snippet */}
                 <p className={`text-xs leading-relaxed line-clamp-3 mb-4 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>
-                  {remedy.purpose}
+                  {t(`remedies.items.${remedy.id}.purpose`, remedy.purpose)}
                 </p>
               </div>
 
@@ -236,10 +264,10 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               <div className="pt-3 border-t border-dashed border-[#C9A050]/20 flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-xs uppercase tracking-wider text-[#C9A050] font-semibold">
-                    Primary Graha
+                    {t('remedies.primary_graha', 'Primary Graha')}
                   </span>
                   <span className={`text-xs font-medium ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-black font-semibold'}`}>
-                    {remedy.graha.split('(')[0]}
+                    {t(`remedies.items.${remedy.id}.graha`, remedy.graha).split('(')[0]}
                   </span>
                 </div>
 
@@ -248,7 +276,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                     isSelected ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-black'
                   }`}
                 >
-                  <span>View Vidhi</span>
+                  <span>{t('remedies.view_vidhi', 'View Vidhi')}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -279,25 +307,25 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span className="px-3 py-1 rounded-full bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/30 text-xs font-bold uppercase tracking-wider">
-                    {activeRemedy.graha}
+                    {t(`remedies.items.${activeRemedy.id}.graha`, activeRemedy.graha)}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                     theme === 'dark' ? 'bg-[#1C1C22] text-[#9E9A90] border-[#2A2A2E]' : 'bg-gray-100 text-gray-700 border-gray-200'
                   }`}>
-                    {activeRemedy.deity}
+                    {t(`remedies.items.${activeRemedy.id}.deity`, activeRemedy.deity)}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                     theme === 'dark' ? 'bg-[#1C1C22] text-[#9E9A90] border-[#2A2A2E]' : 'bg-gray-100 text-gray-700 border-gray-200'
                   }`}>
-                    Day: {activeRemedy.day}
+                    {t('remedies.day_prefix', 'Day')}: {t(`remedies.items.${activeRemedy.id}.day`, activeRemedy.day)}
                   </span>
                 </div>
 
                 <h4 className={`text-2xl sm:text-3xl font-serif font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {activeRemedy.title}
+                  {t(`remedies.items.${activeRemedy.id}.title`, activeRemedy.title)}
                 </h4>
                 <p className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
-                  {activeRemedy.purpose}
+                  {t(`remedies.items.${activeRemedy.id}.purpose`, activeRemedy.purpose)}
                 </p>
               </div>
 
@@ -310,35 +338,35 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] uppercase font-bold tracking-widest text-[#C9A050] flex items-center space-x-1.5">
                     <Compass className="w-3.5 h-3.5" />
-                    <span>Sacred Vedic Chanting (Mantra)</span>
+                    <span>{t('remedies.sacred_chanting', 'Sacred Vedic Chanting (Mantra)')}</span>
                   </span>
 
                   <button
-                    onClick={() => handleCopyMantra(activeRemedy.id, activeRemedy.mantraEnglish)}
+                    onClick={() => handleCopyMantra(activeRemedy.id, t(`remedies.items.${activeRemedy.id}.mantra_text`, activeRemedy.mantraEnglish))}
                     className="flex items-center space-x-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-[#C9A050]/15 hover:bg-[#C9A050]/25 text-[#C9A050] transition cursor-pointer"
-                    title="Copy Mantra"
+                    title={t('remedies.copy_mantra')}
                   >
                     {copiedMantraId === activeRemedy.id ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied!</span>
+                        <span className="text-emerald-400">{t('remedies.copied')}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3.5 h-3.5" />
-                        <span>Copy Mantra</span>
+                        <span>{t('remedies.copy_mantra')}</span>
                       </>
                     )}
                   </button>
                 </div>
 
                 <p className="text-base sm:text-lg font-serif font-semibold text-[#C9A050] tracking-wide whitespace-pre-line mb-3">
-                  "{activeRemedy.mantraEnglish}"
+                  &ldquo;{t(`remedies.items.${activeRemedy.id}.mantra_text`, activeRemedy.mantraEnglish)}&rdquo;
                 </p>
 
                 <div className="flex items-center space-x-2 text-[11px] font-semibold text-[#C9A050]">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>Prescribed Count: {activeRemedy.mantraCount}</span>
+                  <span>{t('remedies.prescribed_count', 'Prescribed Count')}: {t(`remedies.items.${activeRemedy.id}.mantra_count`, activeRemedy.mantraCount)}</span>
                 </div>
               </div>
 
@@ -349,13 +377,13 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 }`}>
                   <Clock className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">Best Muhurat</span>
+                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">{t('remedies.best_time')}</span>
                     <span
                       className={`text-[11px] font-medium leading-snug break-words ${
                         theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'
                       }`}
                     >
-                      {activeRemedy.bestTime}
+                      {t(`remedies.items.${activeRemedy.id}.best_time`, activeRemedy.bestTime)}
                     </span>
                   </div>
                 </div>
@@ -365,13 +393,13 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 }`}>
                   <Compass className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">Facing Direction</span>
+                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">{t('remedies.direction')}</span>
                     <span
                       className={`text-[11px] font-medium leading-snug break-words ${
                         theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'
                       }`}
                     >
-                      {activeRemedy.direction}
+                      {t(`remedies.items.${activeRemedy.id}.direction`, activeRemedy.direction)}
                     </span>
                   </div>
                 </div>
@@ -381,13 +409,13 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 }`}>
                   <Gem className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">Astro Karaka</span>
+                    <span className="text-[9px] uppercase tracking-wider text-[#9E9A90] font-semibold mb-0.5">{t('remedies.gemstone')}</span>
                     <span
                       className={`text-[11px] font-medium leading-snug break-words ${
                         theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'
                       }`}
                     >
-                      {activeRemedy.gemstone}
+                      {t(`remedies.items.${activeRemedy.id}.gemstone`, activeRemedy.gemstone)}
                     </span>
                   </div>
                 </div>
@@ -401,20 +429,24 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               }`}>
                 <h5 className="text-sm font-serif font-bold uppercase tracking-wider text-[#C9A050] mb-4 flex items-center space-x-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#C9A050]" />
-                  <span>Step-by-Step Vedic Ritual (Vidhi)</span>
+                  <span>{t('remedies.step_by_step_vidhi', 'Step-by-Step Vedic Ritual (Vidhi)')}</span>
                 </h5>
 
                 <div className="space-y-3">
-                  {activeRemedy.vidhi.map((step, idx) => (
-                    <div key={idx} className="flex items-start space-x-3">
-                      <span className="w-5 h-5 rounded-full bg-[#C9A050]/20 text-[#C9A050] text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#C9A050]/40">
-                        {idx + 1}
-                      </span>
-                      <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
-                        {step}
-                      </p>
-                    </div>
-                  ))}
+                  {(() => {
+                    const localizedVidhi = t(`remedies.items.${activeRemedy.id}.vidhi`, { returnObjects: true }) as string[];
+                    const vidhiList = Array.isArray(localizedVidhi) && localizedVidhi.length > 0 ? localizedVidhi : activeRemedy.vidhi;
+                    return vidhiList.map((step, idx) => (
+                      <div key={idx} className="flex items-start space-x-3">
+                        <span className="w-5 h-5 rounded-full bg-[#C9A050]/20 text-[#C9A050] text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#C9A050]/40">
+                          {idx + 1}
+                        </span>
+                        <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-gray-700'}`}>
+                          {step}
+                        </p>
+                      </div>
+                    ));
+                  })()}
                 </div>
               </div>
 
@@ -423,22 +455,26 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                 theme === 'dark' ? 'bg-[#141419] border-[#2A2A2E]' : 'bg-white border-gray-200 shadow-sm'
               }`}>
                 <h5 className="text-[11px] font-serif font-bold uppercase tracking-wider text-[#C9A050] mb-3">
-                  Sacred Offerings & Daan
+                  {t('remedies.offerings')}
                 </h5>
                 <div className="flex flex-wrap gap-2">
-                  {activeRemedy.offerings.map((item, i) => (
-                    <span
-                      key={i}
-                      className={`text-xs px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
-                        theme === 'dark'
-                          ? 'bg-[#1C1C22] text-[#E5E1D8] border-[#2A2A2E]'
-                          : 'bg-[#F9F7F1] text-gray-800 border-[#E5E1D8]'
-                      }`}
-                    >
-                      <span className="w-1 h-1 rounded-full bg-[#C9A050]" />
-                      <span>{item}</span>
-                    </span>
-                  ))}
+                  {(() => {
+                    const localizedOfferings = t(`remedies.items.${activeRemedy.id}.offerings`, { returnObjects: true }) as string[];
+                    const offeringsList = Array.isArray(localizedOfferings) && localizedOfferings.length > 0 ? localizedOfferings : activeRemedy.offerings;
+                    return offeringsList.map((item, i) => (
+                      <span
+                        key={i}
+                        className={`text-xs px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
+                          theme === 'dark'
+                            ? 'bg-[#1C1C22] text-[#E5E1D8] border-[#2A2A2E]'
+                            : 'bg-[#F9F7F1] text-gray-800 border-[#E5E1D8]'
+                        }`}
+                      >
+                        <span className="w-1 h-1 rounded-full bg-[#C9A050]" />
+                        <span>{item}</span>
+                      </span>
+                    ));
+                  })()}
                 </div>
               </div>
             </div>
