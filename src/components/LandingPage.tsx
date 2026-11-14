@@ -464,15 +464,14 @@ export function LandingPage({
             {/* Logo */}
             <div
               onClick={handleResetToInitial}
-              className="flex items-center space-x-1.5 sm:space-x-3 cursor-pointer group select-none min-w-0"
+              className="flex items-center space-x-3 cursor-pointer group select-none"
             >
-              <AncientTraditionLogo size="sm" className="sm:hidden shrink-0" isLight={theme === 'light'} />
-              <AncientTraditionLogo size="md" className="hidden sm:inline-flex shrink-0" isLight={theme === 'light'} />
-              <div className="min-w-0">
-                <span className="text-sm sm:text-lg md:text-xl font-serif font-bold tracking-tight sm:tracking-wider flex items-center whitespace-nowrap">
+              <AncientTraditionLogo size="md" isLight={theme === 'light'} />
+              <div>
+                <span className="text-lg sm:text-xl font-serif font-bold tracking-wider flex items-center">
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                 </span>
-                <p className={`block text-[8px] sm:text-[9px] font-bold tracking-widest uppercase mt-0.5 truncate ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8C6B28]'}`}>
+                <p className={`text-[9px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   Authentic Vedic Wisdom
                 </p>
               </div>
