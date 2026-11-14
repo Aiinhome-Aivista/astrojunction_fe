@@ -605,13 +605,13 @@ export function LandingPage({
               onClick={handleResetToInitial}
               className="flex items-center space-x-2 sm:space-x-3 cursor-pointer group select-none min-w-0"
             >
-              <AncientTraditionLogo size="sm" className="sm:hidden" isLight={theme === 'light'} />
-              <AncientTraditionLogo size="md" className="hidden sm:inline-flex" isLight={theme === 'light'} />
+              <AncientTraditionLogo size="sm" className="sm:hidden shrink-0" isLight={theme === 'light'} />
+              <AncientTraditionLogo size="md" className="hidden sm:inline-flex shrink-0" isLight={theme === 'light'} />
               <div className="min-w-0">
                 <span className="text-sm sm:text-lg md:text-xl font-serif font-bold tracking-tight sm:tracking-wider flex items-center whitespace-nowrap">
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                 </span>
-                <p className={`hidden xs:block text-[9px] font-bold tracking-widest uppercase mt-0.5 truncate ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                <p className={`block text-[8px] sm:text-[9px] font-bold tracking-widest uppercase mt-0.5 truncate ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8C6B28]'}`}>
                   {t('header.authentic_wisdom')}
                 </p>
               </div>
