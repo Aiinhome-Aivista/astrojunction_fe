@@ -462,27 +462,6 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
     fetchCategoryInsight();
   }, [selectedCategory, activeSign?.id, activeSign?.name, timeframe, language, zodiacSystem]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-12 text-[#C9A050]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C9A050] mr-3"></div>
-        <span>Aligning Stars...</span>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return <div className="text-red-500 p-4">Error loading zodiacs: {error}</div>;
-  }
-  
-  if (!zodiacs || !zodiacs.length) return null;
-
-  const filteredSigns = zodiacs.filter(
-    (s) => selectedElement === 'All' || s.element === selectedElement
-  );
-
-  const compatResult: ZodiacCompatibilityResult = calculateZodiacCompatibility(compatSignA, compatSignB, zodiacSystem, zodiacs);
-
   const activeCacheKey = activeSign ? `${activeSign.id}-${timeframe}-${language}-${zodiacSystem}${timeframe === 'year' ? `-${selectedYear}` : ''}` : '';
   const rawDynamicData = activeCacheKey ? (dynamicZodiacData[activeCacheKey] || dynamicZodiacData[`${activeSign?.id}-${timeframe}-${language}`]) : null;
   const legacyData = (rawDynamicData && typeof rawDynamicData === 'object' && 'data' in rawDynamicData && rawDynamicData.data)
@@ -545,6 +524,27 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   }, [landingCategoryInsights, legacyData, activeSign]);
 
   const isCardLoading = (landingDynamic.loading || isFetchingForecast) && (!currentDynamicData || !currentDynamicData.categoryInsights || Object.keys(currentDynamicData.categoryInsights).length === 0);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-12 text-[#C9A050]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C9A050] mr-3"></div>
+        <span>Aligning Stars...</span>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return <div className="text-red-500 p-4">Error loading zodiacs: {error}</div>;
+  }
+  
+  if (!zodiacs || !zodiacs.length) return null;
+
+  const filteredSigns = zodiacs.filter(
+    (s) => selectedElement === 'All' || s.element === selectedElement
+  );
+
+  const compatResult: ZodiacCompatibilityResult = calculateZodiacCompatibility(compatSignA, compatSignB, zodiacSystem, zodiacs);
 
   const getForecastText = (sign?: ZodiacSign | null) => {
     if (!sign) return '';
@@ -1006,32 +1006,12 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   {t('zodiac.horizon_title', { sign: activeSign.name, defaultValue: `${activeSign.name} Horizon` })}: {t(`zodiac.timeframes.${timeframe}`)}
                 </span>
               </h3>
-              <div className="flex items-center space-x-2">
-                {currentDynamicData?.isStale && (
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                    isDark
-                      ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                      : 'bg-amber-50 text-amber-700 border border-amber-200'
-                  }`}>
-                    {t('zodiac.showing_latest')}
-                  </span>
-                )}
-                <span className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-                  {timeframe === 'today'
-                    ? `${t('zodiac.daily_transit')} • ${currentDynamicData?.periodStart || currentDynamicData?.forecastDate || currentDynamicData?.period_start || new Date().toISOString().split('T')[0]}`
-                    : timeframe === 'week'
-                    ? `${t('zodiac.weekly_transit')} • ${formatWeekRange(currentDynamicData?.periodStart || currentDynamicData?.period_start, currentDynamicData?.periodEnd || currentDynamicData?.period_end)}`
-                    : timeframe === 'month'
-                    ? `${t('zodiac.monthly_transit')} • ${formatMonthLabel(currentDynamicData?.periodStart || currentDynamicData?.period_start || new Date().toISOString().split('T')[0])}`
-                    : `${t('zodiac.timeframes.year')} • ${selectedYear}`}
-                </span>
-              </div>
             </div>
 
-            {/* Category Pill Tabs & Percentage Badge Row */}
+            {/* Category Pill Tabs & Percentage Badge Row - Fully Responsive on Mobile & Desktop */}
             {(timeframe === 'today' || timeframe === 'week' || timeframe === 'month' || timeframe === 'year') && (
-              <div className="flex items-center justify-between gap-2 pt-1 pb-3">
-                <div className="flex items-center gap-1.5 overflow-x-auto min-w-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-0.5">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 pt-1 pb-2.5">
+                <div className="w-full md:w-auto flex flex-wrap items-center gap-1.5 sm:gap-2 py-1 px-0.5">
                   {ZODIAC_CATEGORIES.map((cat) => {
                     const isCatActive = selectedCategory === cat.id;
                     const CatIcon = cat.icon;
@@ -1047,7 +1027,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                         key={cat.id}
                         type="button"
                         onClick={() => setSelectedCategory(cat.id)}
-                        className={`group px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 ${
+                        className={`group px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 sm:space-x-1.5 shrink-0 ${
                           isCatActive
                             ? 'bg-[#C9A050] text-[#0D0D0F] font-bold shadow-xs'
                             : isDark
@@ -1065,8 +1045,8 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   })}
                 </div>
 
-                {/* Score & Tier Badge + Translation Status on the far right */}
-                <div className="shrink-0 ml-auto pl-1 flex items-center space-x-2">
+                {/* Score & Tier Badge + Translation Status */}
+                <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-2 shrink-0 md:ml-auto pt-1 md:pt-0">
                   {landingDynamic.translating && (
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 animate-pulse font-medium flex items-center space-x-1 whitespace-nowrap">
                       <Loader2 className="w-2.5 h-2.5 animate-spin shrink-0" />
