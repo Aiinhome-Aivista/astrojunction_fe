@@ -677,7 +677,7 @@ export function LandingPage({
                   <span>Authentic Vedic Oracle</span>
                 </div>
 
-                <h1 className="astro-hero-title text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider">
+                <h1 className="astro-hero-title text-xl sm:text-4xl lg:text-5xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wide sm:tracking-wider">
                   <span className={`block font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                     DECODE YOUR
                   </span>
