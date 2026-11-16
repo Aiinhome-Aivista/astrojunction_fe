@@ -132,7 +132,8 @@
     "romance_title": "Amitié Planétaire & Amour",
     "romance_desc": "Mesure l'affinité naturelle et le respect entre les seigneurs planétaires des deux signes.",
     "remedial_desc": "Offre des conseils de communication et des remèdes védiques pour harmoniser les différences naturelles.",
-    "select_signs_hint": "✦ Sélectionnez votre signe principal et celui de votre partenaire ci-dessus, puis cliquez sur \"Analyser la Compatibilité\" pour voir le rapport."
+    "select_signs_hint": "✦ Sélectionnez votre signe principal et celui de votre partenaire ci-dessus, puis cliquez sur \"Analyser la Compatibilité\" pour voir le rapport.",
+    "dimensions_intro": "Il évalue l'affinité entre les signes en mesurant les dimensions célestes fondamentales :"
   },
   "remedies": {
     "badge": "Remèdes et Upayas Védiques Éprouvés",
@@ -289,6 +290,32 @@
       "terms_and_conditions": "Conditions Générales"
     },
     "all_rights_reserved": "Tous Droits Réservés"
+  },
+  "blogs": {
+    "featured": "En vedette",
+    "read_article": "Lire l'article →",
+    "back": "Retour",
+    "back_to_home": "Retour à l'accueil",
+    "share": "Partager",
+    "copied": "Copié",
+    "min_read": "{{count}} min de lecture",
+    "author_title": "Maîtres d'AstroJunction",
+    "verified": "Vérifié",
+    "authentic_archive": "Archives Védiques Authentiques",
+    "wisdom_badge": "Sagesse de Parashari & Jaimini",
+    "principle_title": "Principe Astrologique Védique",
+    "principle_quote": "« Yatha pinde tatha brahmande, yatha brahmande tatha pinde. » — Ce qui est en bas est comme ce qui est en haut, ce qui est dans le microcosme est dans le macrocosme. Chaque position planétaire révèle le plan karmique pour l'évolution spirituelle et matérielle.",
+    "prev_article": "Article précédent",
+    "next_article": "Article suivant",
+    "explore_charts": "Explorer l'oracle et les thèmes",
+    "all_title_main": "Tous les",
+    "all_title_blogs": "Blogs",
+    "all_title_end": "& Perspectives",
+    "all_subtitle": "Découvrez l'astrologie védique authentique, les yogas planétaires, la compatibilité astrale et la sagesse spirituelle de nos maîtres.",
+    "search_placeholder": "Rechercher des articles, des sujets...",
+    "cat_all": "Tous",
+    "loading": "Chargement des articles...",
+    "no_articles": "Aucun article correspondant à vos critères n'a été trouvé."
   },
   "common": {
     "language": "Langue",

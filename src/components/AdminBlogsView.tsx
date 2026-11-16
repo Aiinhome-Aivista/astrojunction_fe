@@ -2,6 +2,7 @@ import React, { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import { Plus, List, FileText, Folder, FolderOpen, Tag, ChevronDown, Image as ImageIcon, Search, Edit, Trash2, BookOpen, CheckCircle, Clock, LayoutGrid } from 'lucide-react';
 import { blogApi, BlogPost, Category, Subcategory } from '../services/blogApi';
+import { stripHtmlTags } from './Blogs';
 
 interface AdminBlogsViewProps {
   theme?: 'dark' | 'light';
@@ -373,7 +374,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                         {blog.pinned === 1 && <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-[#C9A050]/20 text-[#C9A050] mt-0.5 inline-block font-bold">Pinned</span>}
                       </td>
                       <td className={`px-4 py-3.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
-                        <div className="max-w-[200px] truncate text-[11px]" title={blog.preview}>{blog.preview}</div>
+                        <div className="max-w-[200px] truncate text-[11px]" title={stripHtmlTags(blog.preview)}>{stripHtmlTags(blog.preview)}</div>
                       </td>
                       <td className="px-4 py-3.5">
                         {blog.image_url ? (

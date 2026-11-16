@@ -1591,9 +1591,9 @@ html[lang="ta"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand
   font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
 }
 
-html[lang="bn"] h1, html[lang="bn"] h1 *,
-html[lang="hi"] h1, html[lang="hi"] h1 *,
-html[lang="ta"] h1, html[lang="ta"] h1 * {
+html[lang="bn"] h1:not(.astro-hero-title), html[lang="bn"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *),
+html[lang="hi"] h1:not(.astro-hero-title), html[lang="hi"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *),
+html[lang="ta"] h1:not(.astro-hero-title), html[lang="ta"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *) {
   font-weight: 600 !important;
   line-height: 1.4 !important;
 }
@@ -1670,6 +1670,10 @@ html[lang="fr"] .font-semibold {
 }
 
 /* Master Brand Accent: ASTROJUNCTION brand word in Hero & Navigation across ALL languages */
+html .astro-hero-brand,
+html .astro-hero-brand *,
+html[lang] .astro-hero-brand,
+html[lang] .astro-hero-brand *,
 .astro-hero-brand,
 .astro-hero-brand *,
 .astrojunction-brand,
@@ -1677,36 +1681,46 @@ html[lang="fr"] .font-semibold {
   font-family: 'Stardom', Georgia, serif !important;
   font-weight: 800 !important;
   font-synthesis: weight !important;
-  -webkit-text-stroke: 0.025em currentColor !important;
   letter-spacing: 0.03em !important;
   text-transform: uppercase !important;
 }
 
-.astro-hero-title .astro-hero-brand {
-  font-size: clamp(2rem, 4.5vw, 3.75rem) !important;
+/* Ensure ASTROJUNCTION brand size in Hero is large and prominent in all languages */
+html .astro-hero-title .astro-hero-brand,
+html[lang] .astro-hero-title .astro-hero-brand {
+  font-size: clamp(2.1rem, 4.8vw, 3.85rem) !important;
   line-height: 1.15 !important;
+  display: inline-flex !important;
 }
 
-.astro-hero-brand .brand-astro {
-  color: #000000 !important;
-  -webkit-text-stroke: 0.025em #000000 !important;
+/* ASTRO letter styling in Light Mode */
+html:not(.dark) .astro-hero-brand .brand-astro,
+html.light .astro-hero-brand .brand-astro,
+html[lang]:not(.dark) .astro-hero-brand .brand-astro {
+  color: #0D0D0F !important;
+  -webkit-text-stroke: 0.03em #0D0D0F !important;
 }
 
-html.dark .astro-hero-brand .brand-astro {
+/* ASTRO letter styling in Dark Mode */
+html.dark .astro-hero-brand .brand-astro,
+html.dark[lang] .astro-hero-brand .brand-astro {
   color: #F3EFE6 !important;
-  -webkit-text-stroke: 0.02em #F3EFE6 !important;
+  -webkit-text-stroke: 0.025em #F3EFE6 !important;
 }
 
-.astro-hero-brand .brand-junction,
-.astrojunction-brand .brand-junction {
-  color: #7E5412 !important;
-  -webkit-text-stroke: 0.025em #7E5412 !important;
+/* JUNCTION letter styling in Light Mode */
+html:not(.dark) .astro-hero-brand .brand-junction,
+html.light .astro-hero-brand .brand-junction,
+html[lang]:not(.dark) .astro-hero-brand .brand-junction {
+  color: #8C6218 !important;
+  -webkit-text-stroke: 0.025em #8C6218 !important;
 }
 
+/* JUNCTION letter styling in Dark Mode */
 html.dark .astro-hero-brand .brand-junction,
-html.dark .astrojunction-brand .brand-junction {
-  color: #D4AF37 !important;
-  -webkit-text-stroke: 0.02em #D4AF37 !important;
+html.dark[lang] .astro-hero-brand .brand-junction {
+  color: #C9A050 !important;
+  -webkit-text-stroke: 0.025em #C9A050 !important;
 }
 
 /* Indic Scripts Optical Size & Balance for Hero Heading (Avoids premature line breaking & gaps) */

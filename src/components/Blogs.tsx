@@ -25,7 +25,8 @@ import {
   Check,
   Compass,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Sparkles
 } from 'lucide-react';
 import { blogApi, BlogPost, Category, Subcategory, getBlogImageUrl } from '../services/blogApi';
 import { SEO } from './SEO';
@@ -43,35 +44,569 @@ export interface BlogCarouselProps {
   onViewAll?: () => void;
 }
 
+export const CATEGORY_TRANSLATIONS: Record<string, Record<string, string>> = {
+  hi: {
+    'VEDIC ASTROLOGY': 'वैदिक ज्योतिष',
+    'Vedic Astrology': 'वैदिक ज्योतिष',
+    'ASTROLOGY': 'ज्योतिष',
+    'Astrology': 'ज्योतिष',
+    'NUMEROLOGY': 'अंकशास्त्र',
+    'Numerology': 'अंकशास्त्र',
+    'MATCHMAKING': 'कुंडली मिलान',
+    'Matchmaking': 'कुंडली मिलान',
+    'KUNDLI': 'कुंडली',
+    'Kundli': 'कुंडली',
+    'RAJ YOGA': 'राज योग',
+    'Raj Yoga': 'राज योग',
+    'Planetary Yogas': 'ग्रह योग',
+    'Saturn Return': 'शनि साढ़े साती',
+    'All': 'सभी',
+  },
+  bn: {
+    'VEDIC ASTROLOGY': 'বৈদিক জ্যোতিষ',
+    'Vedic Astrology': 'বৈদিক জ্যোতিষ',
+    'ASTROLOGY': 'জ্যোতিষ',
+    'Astrology': 'জ্যোতিষ',
+    'NUMEROLOGY': 'সংখ্যাতত্ত্ব',
+    'Numerology': 'সংখ্যাতত্ত্ব',
+    'MATCHMAKING': 'কুণ্ডলী মিলন',
+    'Matchmaking': 'কুণ্ডলী মিলন',
+    'KUNDLI': 'কুণ্ডলী',
+    'Kundli': 'কুণ্ডলী',
+    'RAJ YOGA': 'রাজ যোগ',
+    'Raj Yoga': 'রাজ যোগ',
+    'Planetary Yogas': 'গ্রহ যোগ',
+    'Saturn Return': 'শনির সাড়ে সাতি',
+    'All': 'সকল',
+  },
+  ta: {
+    'VEDIC ASTROLOGY': 'வேத ஜோதிடம்',
+    'Vedic Astrology': 'வேத ஜோதிடம்',
+    'ASTROLOGY': 'ஜோதிடம்',
+    'Astrology': 'ஜோதிடம்',
+    'NUMEROLOGY': 'எண்கணிதம்',
+    'Numerology': 'எண்கணிதம்',
+    'MATCHMAKING': 'திருமண பொருத்தம்',
+    'Matchmaking': 'திருமண பொருத்தம்',
+    'KUNDLI': 'ஜாதகம்',
+    'Kundli': 'ஜாதகம்',
+    'RAJ YOGA': 'ராஜ யோகம்',
+    'Raj Yoga': 'ராஜ யோகம்',
+    'Planetary Yogas': 'கிரக யோகங்கள்',
+    'Saturn Return': 'ஏழரை சனி',
+    'All': 'அனைத்து',
+  },
+  fr: {
+    'VEDIC ASTROLOGY': 'Astrologie Védique',
+    'Vedic Astrology': 'Astrologie Védique',
+    'ASTROLOGY': 'Astrologie',
+    'Astrology': 'Astrologie',
+    'NUMEROLOGY': 'Numérologie',
+    'Numerology': 'Numérologie',
+    'MATCHMAKING': 'Compatibilité Amoureuse',
+    'Matchmaking': 'Compatibilité Amoureuse',
+    'KUNDLI': 'Thème Astral',
+    'Kundli': 'Thème Astral',
+    'RAJ YOGA': 'Raj Yoga',
+    'Raj Yoga': 'Raj Yoga',
+    'Planetary Yogas': 'Yogas Planétaires',
+    'Saturn Return': 'Retour de Saturne',
+    'All': 'Tous',
+  },
+};
+
+export function getLocalizedCategory(cat?: string, lang: string = 'en'): string {
+  if (!cat) return '';
+  const normLang = (lang || 'en').split('-')[0].toLowerCase();
+  const dict = CATEGORY_TRANSLATIONS[normLang];
+  if (!dict) return cat;
+  if (dict[cat]) return dict[cat];
+  const lower = cat.toLowerCase();
+  for (const [k, v] of Object.entries(dict)) {
+    if (k.toLowerCase() === lower) return v;
+  }
+  return cat;
+}
+
+export function getDateLocale(lang: string = 'en'): string {
+  const norm = (lang || 'en').split('-')[0].toLowerCase();
+  switch (norm) {
+    case 'hi': return 'hi-IN';
+    case 'bn': return 'bn-BD';
+    case 'ta': return 'ta-IN';
+    case 'fr': return 'fr-FR';
+    default: return 'en-US';
+  }
+}
+
+export function stripHtmlTags(str?: string): string {
+  if (!str) return '';
+  return str
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]*>?/gm, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&mdash;/gi, '—')
+    .replace(/&ndash;/gi, '–')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
   {
     id: 1,
-    title: 'The Power of Raj Yogas: Unlocking Wealth and Prosperity in Vedic Astrology',
-    slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
-    category: 'VEDIC ASTROLOGY',
-    sub_category: 'Planetary Yogas',
+    title: 'The Power of Raj Yogas: How Kendra and Trikona Conjunctions Unlock High Status',
+    slug: 'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
+    category: 'Astrology',
+    sub_category: 'Raj Yoga',
     author: 'AstroJunction Masters',
     date: '2026-03-20',
     read_time: '5 min read',
     views: 1250,
     status: 'Published',
     tags: ['Raj Yoga', 'Kundli', 'Wealth', 'Jyotish'],
+    image_url: '/blog_3.jpg',
+    pinned: 1,
+    preview: 'What is a Raj Yoga in Vedic Astrology? In classical Jyotish Shastra, a Raj Yoga is a celestial combination of supreme auspiciousness that bestows high status, wealth, and spiritual growth.',
+    content: ''
+  },
+  {
+    id: 2,
+    title: 'Navigating Saturn Return (Shani Sade Sati): Ancient Vedic Wisdom for Karma & Transformation',
+    slug: 'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+    category: 'Astrology',
+    sub_category: 'Saturn Return',
+    author: 'AstroJunction Masters',
+    date: '2026-03-15',
+    read_time: '6 min read',
+    views: 1420,
+    status: 'Published',
+    tags: ['Saturn Return', 'Sade Sati', 'Shani', 'Remedies'],
+    image_url: '/blog_2.jpg',
+    pinned: 1,
+    preview: 'Understanding the Divine Power of Saturn in Vedic Astrology: In Vedic Astrology (Jyotish Shastra), Saturn (Shani Dev) is revered not as a malefic punisher, but as the cosmic taskmaster and dispenser of justice.',
+    content: ''
+  },
+  {
+    id: 3,
+    title: 'The Power of Raj Yogas: Unlocking Wealth and Prosperity in Vedic Astrology',
+    slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+    category: 'Vedic Astrology',
+    sub_category: 'Planetary Yogas',
+    author: 'AstroJunction Masters',
+    date: '2026-03-10',
+    read_time: '5 min read',
+    views: 1890,
+    status: 'Published',
+    tags: ['Raj Yoga', 'Wealth', 'Vedic Astrology', 'Kundli'],
     image_url: '/blog_1.jpg',
     pinned: 1,
-    preview: 'Understanding Raj Yogas in Your Birth Chart: In classical Vedic Astrology, a Raj Yoga represents a celestial alignment of supreme auspiciousness...',
+    preview: 'Understanding Raj Yogas in Your Birth Chart: In classical Vedic Astrology, a Raj Yoga represents a celestial alignment of supreme auspiciousness that brings financial prosperity and leadership.',
+    content: ''
+  },
+  {
+    id: 4,
+    title: 'Vedic Numerology & Life Path Numbers: Decoding Soul Contracts Through Sacred Vibration',
+    slug: 'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+    category: 'Numerology',
+    sub_category: 'Anka Vidya',
+    author: 'AstroJunction Masters',
+    date: '2026-03-05',
+    read_time: '4 min read',
+    views: 1100,
+    status: 'Published',
+    tags: ['Numerology', 'Soul Contracts', 'Life Path', 'Anka Vidya'],
+    image_url: '/blog_4.jpg',
+    pinned: 0,
+    preview: 'The Sacred Vibration of Numbers in Vedic Numerology: According to ancient Vedic Anka Vidya, numbers are living frequencies reflecting planetary rulerships and personal destiny blueprints.',
+    content: ''
+  },
+  {
+    id: 5,
+    title: 'Vedic Kundli Milan & 36 Guna Ashta Koota Compatibility Guide',
+    slug: 'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide',
+    category: 'Matchmaking',
+    sub_category: 'Ashta Koota',
+    author: 'AstroJunction Masters',
+    date: '2026-03-01',
+    read_time: '7 min read',
+    views: 2300,
+    status: 'Published',
+    tags: ['Matchmaking', 'Kundli Milan', 'Ashta Koota', 'Guna Milan'],
+    image_url: '/zodiac_compatibility_art.jpg',
+    pinned: 0,
+    preview: 'Decoding 36 Gunas in Vedic Ashta Koota Matchmaking: Complete breakdown of Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot, and Nadi for marriage compatibility and life-long harmony.',
     content: ''
   }
 ];
 
+const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
+  bn: [
+    {
+      id: 1,
+      title: 'রাজ যোগের শক্তি: কেন্দ্র ও ত্রিকোণ সংযোগের মাধ্যমে উচ্চ মর্যাদার দ্বার উন্মোচন',
+      slug: 'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
+      category: 'জ্যোতিষ',
+      sub_category: 'রাজ যোগ',
+      author: 'অ্যাস্ট্রোজংশন মাস্টার্স',
+      date: '2026-03-20',
+      read_time: '৫ মিনিট পাঠ',
+      views: 1250,
+      status: 'Published',
+      tags: ['রাজ যোগ', 'কুণ্ডলী', 'ধনসম্পদ', 'জ্যোতিষ'],
+      image_url: '/blog_3.jpg',
+      pinned: 1,
+      preview: 'বৈদিক জ্যোতিষে রাজ যোগ কী? শাস্ত্রীয় জ্যোতিষশাস্ত্রে, রাজ যোগ হলো একটি অত্যন্ত শুভ মহাজাগতিক সংযোগ যা ব্যক্তির জীবনে উচ্চ পদমর্যাদা, সম্মান এবং আধ্যাত্মিক সমৃদ্ধি নিয়ে আসে।',
+      content: ''
+    },
+    {
+      id: 2,
+      title: 'শনি সাড়ে সাতি ও শনি আবর্তন: কর্ম ও রূপান্তরের প্রাচীন বৈদিক প্রজ্ঞা',
+      slug: 'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      category: 'জ্যোতিষ',
+      sub_category: 'শনির সাড়ে সাতি',
+      author: 'অ্যাস্ট্রোজংশন মাস্টার্স',
+      date: '2026-03-15',
+      read_time: '৬ মিনিট পাঠ',
+      views: 1420,
+      status: 'Published',
+      tags: ['শনির সাড়ে সাতি', 'শনি', 'উপায়', 'জ্যোতিষ'],
+      image_url: '/blog_2.jpg',
+      pinned: 1,
+      preview: 'বৈদিক জ্যোতিষে শনি দেবতার ঐশ্বরিক শক্তি: জ্যোতিষ শাস্ত্রে শনি দেবকে কোনো ক্ষতিকারক শাস্তিপ্রদানকারী হিসেবে নয়, বরং কর্মের বিচারক ও আত্মিক শোধক হিসেবে সম্মান জানানো হয়।',
+      content: ''
+    },
+    {
+      id: 3,
+      title: 'রাজ যোগের শক্তি: বৈদিক জ্যোতিষে সম্পদ ও সমৃদ্ধির দ্বার উন্মোচন',
+      slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      category: 'বৈদিক জ্যোতিষ',
+      sub_category: 'গ্রহ যোগ',
+      author: 'অ্যাস্ট্রোজংশন মাস্টার্স',
+      date: '2026-03-10',
+      read_time: '৫ মিনিট পাঠ',
+      views: 1890,
+      status: 'Published',
+      tags: ['রাজ যোগ', 'বৈদিক জ্যোতিষ', 'কুণ্ডলী', 'সমৃদ্ধি'],
+      image_url: '/blog_1.jpg',
+      pinned: 1,
+      preview: 'আপনার জন্মকুণ্ডলীতে রাজ যোগের তাৎপর্য: শাস্ত্রীয় বৈদিক জ্যোতিষে, রাজ যোগ একটি অত্যন্ত শুভ মহাজাগতিক সংযোগের প্রতীক যা আর্থিক সমৃদ্ধি ও নেতৃত্ব প্রতিষ্ঠা করে।',
+      content: ''
+    },
+    {
+      id: 4,
+      title: 'বৈদিক সংখ্যাতত্ত্ব ও জীবনপথের সংখ্যা: আত্মার পবিত্র সংকেত উন্মোচন',
+      slug: 'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+      category: 'সংখ্যাতত্ত্ব',
+      sub_category: 'অঙ্ক বিদ্যা',
+      author: 'অ্যাস্ট্রোজংশন মাস্টার্স',
+      date: '2026-03-05',
+      read_time: '৪ মিনিট পাঠ',
+      views: 1100,
+      status: 'Published',
+      tags: ['সংখ্যাতত্ত্ব', 'অঙ্ক বিদ্যা', 'ভাগ্য সংখ্যা'],
+      image_url: '/blog_4.jpg',
+      pinned: 0,
+      preview: 'সংখ্যার জীবন্ত স্পন্দন: বৈদিক অঙ্ক বিদ্যা অনুসারে সংখ্যা নিছক হিসাব নয়, বরং প্রতিটি সংখ্যা গ্রহের তেজ ও আত্মার ভাগ্যলিপির প্রতিনিধিত্ব করে।',
+      content: ''
+    },
+    {
+      id: 5,
+      title: 'বৈদিক কুণ্ডলী মিলন ও ৩৬ গুণ অষ্টকূট সামঞ্জস্য নির্দেশিকা',
+      slug: 'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide',
+      category: 'কুণ্ডলী মিলন',
+      sub_category: 'অষ্টকূট',
+      author: 'অ্যাস্ট্রোজংশন মাস্টার্স',
+      date: '2026-03-01',
+      read_time: '৭ মিনিট পাঠ',
+      views: 2300,
+      status: 'Published',
+      tags: ['কুণ্ডলী মিলন', 'গুণ মিলন', 'অষ্টকূট', 'বিবাহ সামঞ্জস্য'],
+      image_url: '/zodiac_compatibility_art.jpg',
+      pinned: 0,
+      preview: '৩৬ গুণের পূর্ণ বৈদিক বিশ্লেষণ: বর্ণ, বশ্য, তারা, যোনি, গ্রহ মৈত্রী, গণ, ভাকুট ও নদী—দাম্পত্য জীবনের চিরন্তন সুখ ও সামঞ্জস্যের গোপন রহস্য।',
+      content: ''
+    }
+  ],
+  hi: [
+    {
+      id: 1,
+      title: 'राज योग की शक्ति: केंद्र और त्रिकोण के संयोजन से उच्च पद और प्रतिष्ठा',
+      slug: 'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
+      category: 'ज्योतिष',
+      sub_category: 'राज योग',
+      author: 'एस्ट्रोजंक्शन मास्टर्स',
+      date: '2026-03-20',
+      read_time: '5 मिनट पठन',
+      views: 1250,
+      status: 'Published',
+      tags: ['राज योग', 'कुंडली', 'धन', 'ज्योतिष'],
+      image_url: '/blog_3.jpg',
+      pinned: 1,
+      preview: 'वैदिक ज्योतिष में राज योग क्या है? शास्त्रीय ज्योतिष शास्त्र में, राज योग एक अत्यंत शुभ संयोजन है जो व्यक्ति को समाज में उच्च सम्मान और समृद्धि प्रदान करता है।',
+      content: ''
+    },
+    {
+      id: 2,
+      title: 'शनि साढ़े साती एवं शनि गोचर: कर्म और परिवर्तन का प्राचीन वैदिक ज्ञान',
+      slug: 'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      category: 'ज्योतिष',
+      sub_category: 'शनि साढ़े साती',
+      author: 'एस्ट्रोजंक्शन मास्टर्स',
+      date: '2026-03-15',
+      read_time: '6 मिनट पठन',
+      views: 1420,
+      status: 'Published',
+      tags: ['शनि साढ़े साती', 'शनि', 'उपाय', 'ज्योतिष'],
+      image_url: '/blog_2.jpg',
+      pinned: 1,
+      preview: 'वैदिक ज्योतिष में शनि देव का प्रभाव: शनि देव दंडनायक नहीं बल्कि निष्पक्ष न्यायधीश हैं जो जातक को अनुशासन और आत्मिक शक्ति प्रदान करते हैं।',
+      content: ''
+    },
+    {
+      id: 3,
+      title: 'राज योग की शक्ति: वैदिक ज्योतिष में धन और समृद्धि का रहस्य',
+      slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      category: 'वैदिक ज्योतिष',
+      sub_category: 'ग्रह योग',
+      author: 'एस्ट्रोजंक्शन मास्टर्स',
+      date: '2026-03-10',
+      read_time: '5 मिनट पठन',
+      views: 1890,
+      status: 'Published',
+      tags: ['राज योग', 'कुंडली', 'धन', 'ज्योतिष'],
+      image_url: '/blog_1.jpg',
+      pinned: 1,
+      preview: 'अपनी जन्म कुंडली में राज योग को समझें: शास्त्रीय वैदिक ज्योतिष में, राज योग एक अत्यंत शुभ आकाशीय संरेखण का प्रतिनिधित्व करता है जो समृद्धि लाता है।',
+      content: ''
+    },
+    {
+      id: 4,
+      title: 'वैदिक अंकशास्त्र और मूलांक: दिव्य स्पंदन और आत्मा की नियति',
+      slug: 'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+      category: 'अंकशास्त्र',
+      sub_category: 'अंक विद्या',
+      author: 'एस्ट्रोजंक्शन मास्टर्स',
+      date: '2026-03-05',
+      read_time: '4 मिनट पठन',
+      views: 1100,
+      status: 'Published',
+      tags: ['अंकशास्त्र', 'मूलांक', 'भाग्य अंक'],
+      image_url: '/blog_4.jpg',
+      pinned: 0,
+      preview: 'संख्याओं का दिव्य प्रभाव: वैदिक अंक शास्त्र के अनुसार प्रत्येक संख्या किसी विशिष्ट ग्रह ऊर्जा का प्रतीक है जो हमारे जीवन पथ को निर्धारित करती है।',
+      content: ''
+    },
+    {
+      id: 5,
+      title: 'वैदिक कुंडली मिलान और 36 गुण अष्टकूट मार्गदर्शिका',
+      slug: 'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide',
+      category: 'कुंडली मिलान',
+      sub_category: 'अष्टकूट',
+      author: 'एस्ट्रोजंक्शन मास्टर्स',
+      date: '2026-03-01',
+      read_time: '7 मिनट पठन',
+      views: 2300,
+      status: 'Published',
+      tags: ['कुंडली मिलान', 'गुण मिलान', 'अष्टकूट', 'विवाह'],
+      image_url: '/zodiac_compatibility_art.jpg',
+      pinned: 0,
+      preview: '36 गुणों का संपूर्ण वैदिक विश्लेषण: वर्ण, वश्य, तारा, योनि, ग्रह मैत्री, गण, भकूट और नाड़ी—सफल और सुखद वैवाहिक जीवन का रहस्य।',
+      content: ''
+    }
+  ],
+  ta: [
+    {
+      id: 1,
+      title: 'ராஜ யோகத்தின் சக்தி: கேந்திர மற்றும் திரிகோண இணைப்புகள் மூலம் உயர் அந்தஸ்து',
+      slug: 'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
+      category: 'ஜோதிடம்',
+      sub_category: 'ராஜ யோகம்',
+      author: 'ஆஸ்ட்ரோஜங்க்ஷன் மாஸ்டர்ஸ்',
+      date: '2026-03-20',
+      read_time: '5 நிமிட வாசிப்பு',
+      views: 1250,
+      status: 'Published',
+      tags: ['ராஜ யோகம்', 'ஜாதகம்', 'செல்வம்', 'ஜோதிடம்'],
+      image_url: '/blog_3.jpg',
+      pinned: 1,
+      preview: 'வேத ஜோதிடத்தில் ராஜ யோகம் என்றால் என்ன? பாரம்பரிய ஜோதிட சாஸ்திரத்தில், ராஜ யோகம் என்பது மிக உயர்ந்த மங்களகரமான அமைப்பாகும்.',
+      content: ''
+    },
+    {
+      id: 2,
+      title: 'ஏழரை சனி மற்றும் சனி பெயர்ச்சி: கர்ம வினை மற்றும் மாற்றத்தின் வேத ஞானம்',
+      slug: 'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      category: 'ஜோதிடம்',
+      sub_category: 'ஏழரை சனி',
+      author: 'ஆஸ்ட்ரோஜங்க்ஷன் மாஸ்டர்ஸ்',
+      date: '2026-03-15',
+      read_time: '6 நிமிட வாசிப்பு',
+      views: 1420,
+      status: 'Published',
+      tags: ['ஏழரை சனி', 'சனி', 'பரிகாரங்கள்', 'ஜோதிடம்'],
+      image_url: '/blog_2.jpg',
+      pinned: 1,
+      preview: 'வேத ஜோதிடத்தில் சனி பகவானின் அருள்: சனி பகவான் தண்டனை வழங்குபவர் அல்ல, அவர் கர்ம வினைகளை சீராக்கும் நீதிபதி.',
+      content: ''
+    },
+    {
+      id: 3,
+      title: 'ராஜ யோகத்தின் சக்தி: வேத ஜோதிடத்தில் செல்வம் மற்றும் செழிப்பைத் திறக்கும் ரகசியம்',
+      slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      category: 'வேத ஜோதிடம்',
+      sub_category: 'கிரக யோகங்கள்',
+      author: 'ஆஸ்ட்ரோஜங்க்ஷன் மாஸ்டர்ஸ்',
+      date: '2026-03-10',
+      read_time: '5 நிமிட வாசிப்பு',
+      views: 1890,
+      status: 'Published',
+      tags: ['ராஜ யோகம்', 'ஜாதகம்', 'செல்வம்', 'ஜோதிடம்'],
+      image_url: '/blog_1.jpg',
+      pinned: 1,
+      preview: 'உங்கள் ஜாதகத்தில் ராஜ யோகங்களைப் புரிந்துகொள்ளுதல்: பாரம்பரிய வேத ஜோதிடத்தில், ராஜ யோகம் என்பது மங்களகரமான அமைப்பாகும்.',
+      content: ''
+    },
+    {
+      id: 4,
+      title: 'வேத எண்கணிதம் மற்றும் வாழ்க்கை எண்: ஆன்ம ஒப்பந்தங்களை அறிதல்',
+      slug: 'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+      category: 'எண்கணிதம்',
+      sub_category: 'எண் கணித சாஸ்திரம்',
+      author: 'ஆஸ்ட்ரோஜங்க்ஷன் மாஸ்டர்ஸ்',
+      date: '2026-03-05',
+      read_time: '4 நிமிட வாசிப்பு',
+      views: 1100,
+      status: 'Published',
+      tags: ['எண்கணிதம்', 'எண் ஜோதிடம்'],
+      image_url: '/blog_4.jpg',
+      pinned: 0,
+      preview: 'எண்களின் புனித அதிர்வு: வேத எண்கணிதத்தின்படி எண்கள் வெறும் கணிதம் அல்ல, அவை கிரக அதிர்வுகளின் குறியீடுகள்.',
+      content: ''
+    },
+    {
+      id: 5,
+      title: 'வேத ஜாதகப் பொருத்தம் மற்றும் 36 குண அஷ்டகூட வழிகாட்டி',
+      slug: 'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide',
+      category: 'திருமண பொருத்தம்',
+      sub_category: 'அஷ்டகூடம்',
+      author: 'ஆஸ்ட்ரோஜங்க்ஷன் மாஸ்டர்ஸ்',
+      date: '2026-03-01',
+      read_time: '7 நிமிட வாசிப்பு',
+      views: 2300,
+      status: 'Published',
+      tags: ['திருமண பொருத்தம்', 'குண பொருத்தம்', 'அஷ்டகூடம்'],
+      image_url: '/zodiac_compatibility_art.jpg',
+      pinned: 0,
+      preview: '36 குணங்களின் முழுமையான விளக்கம்: வர்ணம், வசியம், தாரா, யோனி, கிரக மைத்ரி, கணம், பகுட மற்றும் நாடி பொருத்தம்.',
+      content: ''
+    }
+  ],
+  fr: [
+    {
+      id: 1,
+      title: 'Le Pouvoir des Raj Yogas : Comment les Conjonctions Kendra et Trikona Révèlent le Succès',
+      slug: 'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
+      category: 'Astrologie',
+      sub_category: 'Raj Yoga',
+      author: "Maîtres d'AstroJunction",
+      date: '2026-03-20',
+      read_time: '5 min de lecture',
+      views: 1250,
+      status: 'Published',
+      tags: ['Raj Yoga', 'Kundli', 'Richesse', 'Jyotish'],
+      image_url: '/blog_3.jpg',
+      pinned: 1,
+      preview: "Qu'est-ce qu'un Raj Yoga en Astrologie Védique ? En Jyotish classique, un Raj Yoga est un alignement céleste d'une bénédiction suprême conférant statut et élévation.",
+      content: ''
+    },
+    {
+      id: 2,
+      title: 'Le Retour de Saturne (Shani Sade Sati) : Sagesse Védique pour le Karma et la Transformation',
+      slug: 'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      category: 'Astrologie',
+      sub_category: 'Retour de Saturne',
+      author: "Maîtres d'AstroJunction",
+      date: '2026-03-15',
+      read_time: '6 min de lecture',
+      views: 1420,
+      status: 'Published',
+      tags: ['Saturne', 'Sade Sati', 'Karma', 'Remèdes'],
+      image_url: '/blog_2.jpg',
+      pinned: 1,
+      preview: "Comprendre la puissance de Saturne : En astrologie védique, Shani Dev est le maître cosmique de la justice et de l'évolution de l'âme.",
+      content: ''
+    },
+    {
+      id: 3,
+      title: 'Le Pouvoir des Raj Yogas : Révéler la Richesse et la Prospérité en Astrologie Védique',
+      slug: 'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      category: 'Astrologie Védique',
+      sub_category: 'Yogas Planétaires',
+      author: "Maîtres d'AstroJunction",
+      date: '2026-03-10',
+      read_time: '5 min de lecture',
+      views: 1890,
+      status: 'Published',
+      tags: ['Raj Yoga', 'Richesse', 'Prospérité'],
+      image_url: '/blog_1.jpg',
+      pinned: 1,
+      preview: "Comprendre les Raj Yogas dans votre thème natal : Dans l'astrologie védique classique, un Raj Yoga apporte abondance et accomplissement spirituel.",
+      content: ''
+    },
+    {
+      id: 4,
+      title: 'Numérologie Védique & Chemin de Vie : Décoder les Vibrations Sacrées',
+      slug: 'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+      category: 'Numérologie',
+      sub_category: 'Anka Vidya',
+      author: "Maîtres d'AstroJunction",
+      date: '2026-03-05',
+      read_time: '4 min de lecture',
+      views: 1100,
+      status: 'Published',
+      tags: ['Numérologie', 'Chemin de Vie', 'Vibrations'],
+      image_url: '/blog_4.jpg',
+      pinned: 0,
+      preview: "La vibration sacrée des nombres : Selon l'ancienne Anka Vidya, les nombres sont des fréquences vivantes qui révèlent notre destinée.",
+      content: ''
+    },
+    {
+      id: 5,
+      title: 'Compatibilité Amoureuse Védique (Kundli Milan) & Guide des 36 Gunas Ashta Koota',
+      slug: 'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide',
+      category: 'Compatibilité Amoureuse',
+      sub_category: 'Ashta Koota',
+      author: "Maîtres d'AstroJunction",
+      date: '2026-03-01',
+      read_time: '7 min de lecture',
+      views: 2300,
+      status: 'Published',
+      tags: ['Compatibilité', 'Kundli Milan', '36 Gunas'],
+      image_url: '/zodiac_compatibility_art.jpg',
+      pinned: 0,
+      preview: "L'analyse complète des 36 Gunas védiques : Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot et Nadi pour l'harmonie durable.",
+      content: ''
+    }
+  ],
+  en: DEFAULT_INITIAL_BLOGS
+};
+
 export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog, onViewAll }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.language?.split('-')[0]?.toLowerCase() || 'en');
   const isDark = theme === 'dark';
-  const [blogs, setBlogs] = useState<BlogPost[]>(DEFAULT_INITIAL_BLOGS);
+  const [blogs, setBlogs] = useState<BlogPost[]>(LOCALIZED_INITIAL_BLOGS[currentLang] || DEFAULT_INITIAL_BLOGS);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const data = await blogApi.getBlogs();
+        const data = await blogApi.getBlogs(undefined, currentLang);
         if (Array.isArray(data) && data.length > 0) {
           const published = data.filter((b: any) => b.status === 'Published');
           setBlogs(published.length > 0 ? (published as BlogPost[]) : (data as BlogPost[]));
@@ -82,7 +617,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
     };
 
     fetchBlogs();
-  }, []);
+  }, [currentLang]);
 
   const displayBlogs = useMemo(() => {
     if (blogs.length === 0) return [];
@@ -114,12 +649,13 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
       >
         <div className="flex w-max animate-marquee gap-6 px-4 hover:pause">
           {displayBlogs.map((blog, idx) => {
+            const localizedCat = getLocalizedCategory(blog.category, currentLang) || 'VEDIC ASTROLOGY';
             const tagString = Array.isArray(blog.tags) && blog.tags.length > 0
-              ? blog.tags.slice(0, 2).join(' • ')
-              : blog.sub_category || 'VEDIC JYOTISH';
+              ? blog.tags.slice(0, 2).map(tag => getLocalizedCategory(tag, currentLang) || tag).join(' • ')
+              : (getLocalizedCategory(blog.sub_category, currentLang) || blog.sub_category || 'VEDIC JYOTISH');
 
-            const cleanExcerpt = blog.preview || 
-              (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 110) + '...' : '');
+            const rawExcerpt = stripHtmlTags(blog.preview) || stripHtmlTags(blog.content);
+            const cleanExcerpt = rawExcerpt.length > 120 ? rawExcerpt.substring(0, 120) + '...' : rawExcerpt;
 
             return (
               <div 
@@ -145,7 +681,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                   />
                   {blog.pinned === 1 && (
                     <span className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-[#C9A050] text-[#0D0D0F] text-[10px] font-bold uppercase tracking-wider shadow-lg">
-                      Featured
+                      {t('blogs.featured', 'Featured')}
                     </span>
                   )}
                 </div>
@@ -155,7 +691,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                 >
                   <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
                     <span className={`text-[11px] font-extrabold uppercase tracking-[0.18em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
-                      {blog.category || 'VEDIC ASTROLOGY'}
+                      {localizedCat}
                     </span>
                     <span className={`text-[10px] ${isDark ? 'text-[#50505A]' : 'text-[#A0988A]'}`}>•</span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider truncate max-w-[170px] ${isDark ? 'text-[#9E9A90]' : 'text-[#5A544A]'}`}>
@@ -181,11 +717,11 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     <span className={`font-black uppercase tracking-wider ${
                       isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
                     }`}>
-                      Read Article →
+                      {t('blogs.read_article', 'Read Article →')}
                     </span>
                     {blog.created_at && (
                       <span className={`text-[11px] font-semibold ${isDark ? 'text-gray-400' : 'text-[#7A7366]'}`}>
-                        {new Date(blog.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {new Date(blog.created_at).toLocaleDateString(getDateLocale(currentLang), { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
                     )}
                   </div>
@@ -210,13 +746,16 @@ export interface BlogPageProps {
 }
 
 export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.language?.split('-')[0]?.toLowerCase() || 'en');
   const isDark = theme === 'dark';
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>(LOCALIZED_INITIAL_BLOGS[currentLang] || DEFAULT_INITIAL_BLOGS);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(initialBlog);
   const [copied, setCopied] = useState(false);
+  const [translatingDetail, setTranslatingDetail] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -225,8 +764,20 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   useEffect(() => {
     if (initialBlog) {
       setSelectedBlog(initialBlog);
+      if (currentLang !== 'en') {
+        const slug = initialBlog.slug || initialBlog.id;
+        setTranslatingDetail(true);
+        blogApi.getBlogBySlug(String(slug), currentLang)
+          .then(detailed => {
+            if (detailed && detailed.title) setSelectedBlog(detailed);
+          })
+          .catch(() => {})
+          .finally(() => {
+            setTranslatingDetail(false);
+          });
+      }
     }
-  }, [initialBlog]);
+  }, [initialBlog, currentLang]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -267,8 +818,8 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const data = await blogApi.getBlogs();
-        if (Array.isArray(data)) {
+        const data = await blogApi.getBlogs(undefined, currentLang);
+        if (Array.isArray(data) && data.length > 0) {
           const published = data.filter((b: BlogPost) => b.status === 'Published');
           const finalBlogs = published.length > 0 ? published : data;
           setBlogs(finalBlogs);
@@ -286,7 +837,27 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           if (slugParam && !initialBlog) {
             const found = finalBlogs.find((b: any) => b.slug === slugParam || String(b.id) === slugParam);
             if (found) {
+              if (currentLang !== 'en') {
+                try {
+                  const detailed = await blogApi.getBlogBySlug(slugParam, currentLang);
+                  if (detailed && detailed.title) {
+                    setSelectedBlog(detailed);
+                    return;
+                  }
+                } catch {}
+              }
               setSelectedBlog(found);
+            }
+          } else if (selectedBlog && !initialBlog) {
+            const currentSlug = selectedBlog.slug || selectedBlog.id;
+            try {
+              setTranslatingDetail(true);
+              const detailed = await blogApi.getBlogBySlug(String(currentSlug), currentLang);
+              if (detailed && detailed.title) {
+                setSelectedBlog(detailed);
+              }
+            } catch {} finally {
+              setTranslatingDetail(false);
             }
           }
         }
@@ -298,7 +869,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
     };
 
     fetchBlogs();
-  }, [initialBlog]);
+  }, [initialBlog, currentLang]);
 
   const handleShare = () => {
     if (selectedBlog) {
@@ -327,23 +898,32 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
     blogs.forEach((b) => {
       if (b.category && b.category.trim()) cats.add(b.category.trim());
     });
+    // Ensure all standard categories exist so pills are always available
+    const standardCategories = ['Astrology', 'Vedic Astrology', 'Numerology', 'Matchmaking'];
+    standardCategories.forEach(c => cats.add(c));
     return ['All', ...Array.from(cats)];
   }, [blogs]);
 
   const filteredBlogs = useMemo(() => {
     return blogs.filter((blog) => {
-      const matchCat = selectedCategory === 'All' || blog.category === selectedCategory;
+      const matchCat = selectedCategory === 'All' || 
+        blog.category === selectedCategory ||
+        (blog.category && selectedCategory && blog.category.toLowerCase() === selectedCategory.toLowerCase()) ||
+        getLocalizedCategory(blog.category, currentLang) === selectedCategory ||
+        getLocalizedCategory(blog.category, currentLang) === getLocalizedCategory(selectedCategory, currentLang) ||
+        (blog.sub_category && blog.sub_category.toLowerCase() === selectedCategory.toLowerCase());
+
       const q = searchQuery.toLowerCase().trim();
       if (!q) return matchCat;
 
       const titleMatch = blog.title.toLowerCase().includes(q);
-      const excerptMatch = (blog.preview || '').toLowerCase().includes(q);
+      const excerptMatch = stripHtmlTags(blog.preview || blog.content).toLowerCase().includes(q);
       const catMatch = (blog.category || '').toLowerCase().includes(q);
       const tagsMatch = Array.isArray(blog.tags) && blog.tags.some(t => t.toLowerCase().includes(q));
 
       return matchCat && (titleMatch || excerptMatch || catMatch || tagsMatch);
     });
-  }, [blogs, selectedCategory, searchQuery]);
+  }, [blogs, selectedCategory, searchQuery, currentLang]);
 
   const totalPages = Math.ceil(filteredBlogs.length / BLOGS_PER_PAGE);
 
@@ -375,7 +955,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   }, [selectedBlog]);
 
   if (selectedBlog) {
-    const blogDescription = selectedBlog.preview || (selectedBlog.content ? selectedBlog.content.replace(/<[^>]*>?/gm, '').slice(0, 160) : selectedBlog.title);
+    const blogDescription = stripHtmlTags(selectedBlog.preview) || (selectedBlog.content ? stripHtmlTags(selectedBlog.content).slice(0, 160) : selectedBlog.title);
     return (
       <div className={`min-h-[calc(100vh-5rem)] w-full pb-24 transition-colors ${
         isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
@@ -419,7 +999,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               }`}
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5 text-black" />
-              <span className="text-black font-black">Back</span>
+              <span className="text-black font-black">{t('blogs.back', 'Back')}</span>
             </button>
 
             {/* Compact Share Button */}
@@ -436,12 +1016,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               {copied ? (
                 <>
                   <Check className="w-3.5 h-3.5" />
-                  <span>Copied</span>
+                  <span>{t('blogs.copied', 'Copied')}</span>
                 </>
               ) : (
                 <>
                   <Share2 className="w-3.5 h-3.5" />
-                  <span>Share</span>
+                  <span>{t('blogs.share', 'Share')}</span>
                 </>
               )}
             </button>
@@ -450,13 +1030,13 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           <div className="mb-6">
             <div className="flex items-center space-x-3 mb-4 flex-wrap gap-y-2">
               <span className="px-3.5 py-1.5 rounded-full bg-[#C9A050] text-[#0D0D0F] text-xs font-bold uppercase tracking-widest shadow-md shadow-[#C9A050]/20">
-                {selectedBlog.category || 'Vedic Astrology'}
+                {getLocalizedCategory(selectedBlog.category, currentLang) || 'Vedic Astrology'}
               </span>
               {selectedBlog.sub_category && (
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                   isDark ? 'bg-[#18181C] text-[#C9A050] border-[#C9A050]/30' : 'bg-amber-50 text-amber-900 border-amber-200'
                 }`}>
-                  {selectedBlog.sub_category}
+                  {getLocalizedCategory(selectedBlog.sub_category, currentLang)}
                 </span>
               )}
               <div className={`flex items-center space-x-1 text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
@@ -480,17 +1060,17 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 </div>
                 <div>
                   <div className="text-sm font-bold flex items-center space-x-1.5">
-                    <span className={isDark ? 'text-[#F0ECE1]' : 'text-gray-900'}>AstroJunction Masters</span>
+                    <span className={isDark ? 'text-[#F0ECE1]' : 'text-gray-900'}>{t('blogs.author_title', 'AstroJunction Masters')}</span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#C9A050]/20 text-[#C9A050] font-semibold">
-                      Verified
+                      {t('blogs.verified', 'Verified')}
                     </span>
                   </div>
                   <div className={`text-xs flex items-center space-x-2 ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                     <Calendar className="w-3 h-3" />
                     <span>
                       {selectedBlog.created_at
-                        ? new Date(selectedBlog.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                        : 'Authentic Vedic Archive'}
+                        ? new Date(selectedBlog.created_at).toLocaleDateString(getDateLocale(currentLang), { month: 'long', day: 'numeric', year: 'numeric' })
+                        : t('blogs.authentic_archive', 'Authentic Vedic Archive')}
                     </span>
                   </div>
                 </div>
@@ -498,7 +1078,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
               <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#C9A050]/10 border border-[#C9A050]/30 text-[#C9A050] text-xs font-semibold">
                 <Compass className="w-3.5 h-3.5" />
-                <span>Parashari & Jaimini Wisdom</span>
+                <span>{t('blogs.wisdom_badge', 'Parashari & Jaimini Wisdom')}</span>
               </div>
             </div>
           </div>
@@ -535,6 +1115,19 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             </div>
           )}
 
+          {translatingDetail && (
+            <div className="mb-6 px-4 py-3 rounded-2xl bg-[#C9A050]/15 border border-[#C9A050]/40 flex items-center space-x-3 text-xs font-semibold text-[#C9A050] animate-pulse">
+              <Sparkles className="w-4 h-4 animate-spin text-[#C9A050] shrink-0" />
+              <span>
+                {currentLang === 'bn' ? '✨ সম্পূর্ণ বৈদিক বিশ্লেষণ ও প্রজ্ঞার অনুবাদ লোড হচ্ছে...' :
+                 currentLang === 'hi' ? '✨ संपूर्ण वैदिक अंतर्दृष्टि और अनुवाद लोड हो रहा है...' :
+                 currentLang === 'ta' ? '✨ முழுமையான வேத பகுப்பாய்வு மற்றும் மொழிபெயர்ப்பு ஏற்றப்படுகிறது...' :
+                 currentLang === 'fr' ? '✨ Chargement de la traduction complète de la sagesse védique...' :
+                 '✨ Loading authentic Vedic insights...'}
+              </span>
+            </div>
+          )}
+
           <div 
             className={`article-content prose max-w-none space-y-6 leading-relaxed text-base sm:text-lg font-sans transition-colors ${
               isDark ? 'prose-invert text-[#E5E1D8]' : 'text-gray-900'
@@ -553,10 +1146,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               </div>
               <div>
                 <h4 className={`text-lg font-serif font-bold mb-1.5 ${isDark ? 'text-[#F0ECE1]' : 'text-amber-950'}`}>
-                  Vedic Astrological Principle
+                  {t('blogs.principle_title', 'Vedic Astrological Principle')}
                 </h4>
                 <p className={`text-sm sm:text-base italic leading-relaxed ${isDark ? 'text-[#9E9A90]' : 'text-gray-700'}`}>
-                  "Yatha pinde tatha brahmande, yatha brahmande tatha pinde." — As is the individual, so is the universe; as is the microcosm, so is the macrocosm. Every planetary placement unfolds karmic blueprints for spiritual and worldly growth.
+                  {t('blogs.principle_quote', '"Yatha pinde tatha brahmande, yatha brahmande tatha pinde." — As is the individual, so is the universe; as is the microcosm, so is the macrocosm. Every planetary placement unfolds karmic blueprints for spiritual and worldly growth.')}
                 </p>
               </div>
             </div>
@@ -581,7 +1174,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 >
                   <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                    <span>Previous Article</span>
+                    <span>{t('blogs.prev_article', 'Previous Article')}</span>
                   </div>
                   <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
                     isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
@@ -606,7 +1199,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   }`}
                 >
                   <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
-                    <span>Next Article</span>
+                    <span>{t('blogs.next_article', 'Next Article')}</span>
                     <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </div>
                   <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
@@ -633,7 +1226,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               }`}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#C9A050] group-hover:text-inherit" />
-              <span className="font-bold tracking-wider">Back</span>
+              <span className="font-bold tracking-wider">{t('blogs.back', 'Back')}</span>
             </button>
 
             <button
@@ -643,7 +1236,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               }}
               className="w-full sm:w-auto px-8 py-3 rounded-full font-black text-xs uppercase tracking-wider transition-all shadow-xl cursor-pointer flex items-center justify-center space-x-2 bg-gradient-to-r from-[#D4AF37] via-[#C9A050] to-[#B89040] hover:from-[#E5C158] hover:to-[#C9A050] text-[#0D0D0F] border-2 border-[#E5C158] hover:scale-105 active:scale-95 group shadow-[#C9A050]/20"
             >
-              <span className="text-[#0D0D0F] font-black tracking-wider">Explore Oracle &amp; Charts</span>
+              <span className="text-[#0D0D0F] font-black tracking-wider">{t('blogs.explore_charts', 'Explore Oracle & Charts')}</span>
               <ArrowRight className="w-4 h-4 text-[#0D0D0F] transition-transform group-hover:translate-x-1" />
             </button>
           </div>
@@ -729,7 +1322,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             }`}
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="text-xs sm:text-sm font-semibold">Back to Home</span>
+            <span className="text-xs sm:text-sm font-semibold">{t('blogs.back_to_home', 'Back to Home')}</span>
           </button>
 
           <div className="relative w-full sm:w-72">
@@ -738,7 +1331,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search articles, topics..."
+              placeholder={t('blogs.search_placeholder', 'Search articles, topics...')}
               className={`w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-full border outline-none transition-all ${
                 isDark 
                   ? 'bg-[#18181C] border-[#2A2A2E] text-white focus:border-[#C9A050]' 
@@ -760,10 +1353,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
           <h1 className={`text-3xl sm:text-4xl md:text-5xl font-serif font-bold mb-3 ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-            All <span className="italic font-light text-[#C9A050]">Blogs</span> & Insights
+            {t('blogs.all_title_main', 'All')} <span className="italic font-light text-[#C9A050]">{t('blogs.all_title_blogs', 'Blogs')}</span> {t('blogs.all_title_end', '& Insights')}
           </h1>
           <p className={`text-xs sm:text-sm max-w-3xl mx-auto mb-5 ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
-            Explore authentic Vedic astrology, planetary yogas, kundli matching, and spiritual wisdom directly from our masters.
+            {t('blogs.all_subtitle', 'Explore authentic Vedic astrology, planetary yogas, kundli matching, and spiritual wisdom directly from our masters.')}
           </p>
 
           {categories.length > 1 && (
@@ -780,7 +1373,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         : 'bg-white text-gray-700 hover:text-black border-gray-200 shadow-sm'
                   }`}
                 >
-                  {cat}
+                  {cat === 'All' ? t('blogs.cat_all', 'All') : (getLocalizedCategory(cat, currentLang) || cat)}
                 </button>
               ))}
             </div>
@@ -790,7 +1383,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         {loading && (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#C9A050] mb-3"></div>
-            <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>Loading articles...</p>
+            <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>{t('blogs.loading', 'Loading articles...')}</p>
           </div>
         )}
 
@@ -804,7 +1397,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             </h3>
             <p className={`text-xs mb-5 ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
               {searchQuery 
-                ? `No articles found matching "${searchQuery}". Try a different search term.` 
+                ? t('blogs.no_articles', `No articles found matching "${searchQuery}". Try a different search term.`) 
                 : 'Blogs created and published from the Admin Panel will appear here.'}
             </p>
             {searchQuery && (
@@ -822,17 +1415,32 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {paginatedBlogs.map((blog) => {
+                const localizedCat = getLocalizedCategory(blog.category, currentLang) || 'VEDIC ASTROLOGY';
                 const tagString = Array.isArray(blog.tags) && blog.tags.length > 0
-                  ? blog.tags.slice(0, 2).join(' • ')
-                  : blog.sub_category || 'VEDIC JYOTISH';
+                  ? blog.tags.slice(0, 2).map(tag => getLocalizedCategory(tag, currentLang) || tag).join(' • ')
+                  : (getLocalizedCategory(blog.sub_category, currentLang) || blog.sub_category || 'VEDIC JYOTISH');
 
-                const cleanExcerpt = blog.preview || 
-                  (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 130) + '...' : '');
+                const rawExcerpt = stripHtmlTags(blog.preview) || stripHtmlTags(blog.content);
+                const cleanExcerpt = rawExcerpt.length > 130 ? rawExcerpt.substring(0, 130) + '...' : rawExcerpt;
 
                 return (
                   <div 
                     key={blog.id}
-                    onClick={() => setSelectedBlog(blog)}
+                    onClick={() => {
+                      setSelectedBlog(blog);
+                      if (currentLang !== 'en') {
+                        const slug = blog.slug || blog.id;
+                        setTranslatingDetail(true);
+                        blogApi.getBlogBySlug(String(slug), currentLang)
+                          .then(detailed => {
+                            if (detailed && detailed.title) setSelectedBlog(detailed);
+                          })
+                          .catch(() => {})
+                          .finally(() => {
+                            setTranslatingDetail(false);
+                          });
+                      }
+                    }}
                     className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
                       isDark 
                         ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
@@ -851,7 +1459,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                       
                       {blog.pinned === 1 && (
                         <span className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] text-[10px] font-bold uppercase tracking-wider shadow-md">
-                          Featured
+                          {t('blogs.featured', 'Featured')}
                         </span>
                       )}
                     </div>
@@ -861,7 +1469,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     >
                       <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
                         <span className={`text-[11px] font-extrabold uppercase tracking-[0.15em] ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}>
-                          {blog.category || 'VEDIC ASTROLOGY'}
+                          {localizedCat}
                         </span>
                         <span className={`text-[10px] ${isDark ? 'text-[#50505A]' : 'text-[#A0988A]'}`}>•</span>
                         <span className={`text-[11px] font-bold uppercase tracking-wider truncate max-w-[170px] ${isDark ? 'text-[#9E9A90]' : 'text-[#5A544A]'}`}>
@@ -887,12 +1495,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         <span className={`text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 ${
                           isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
                         }`}>
-                          <span>Read Article</span>
+                          <span>{t('blogs.read_article', 'Read Article →')}</span>
                           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                         </span>
                         {blog.created_at && (
                           <span className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
-                            {new Date(blog.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            {new Date(blog.created_at).toLocaleDateString(getDateLocale(currentLang), { month: 'short', day: 'numeric', year: 'numeric' })}
                           </span>
                         )}
                       </div>
@@ -1314,7 +1922,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                         {blog.pinned === 1 && <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-[#C9A050]/20 text-[#C9A050] mt-0.5 inline-block font-bold">Pinned</span>}
                       </td>
                       <td className={`px-4 py-3.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#6C6960]'}`}>
-                        <div className="max-w-[200px] truncate text-[11px]" title={blog.preview}>{blog.preview}</div>
+                        <div className="max-w-[200px] truncate text-[11px]" title={stripHtmlTags(blog.preview)}>{stripHtmlTags(blog.preview)}</div>
                       </td>
                       <td className="px-4 py-3.5">
                         {blog.image_url ? (

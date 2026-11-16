@@ -51,17 +51,23 @@ export const getBlogImageUrl = (url?: string): string => {
 };
 
 export const blogApi = {
-  getBlogs: async (status?: string): Promise<BlogPost[]> => {
-    const url = status ? `${API_ENDPOINTS.BLOGS.LIST}?status=${status}` : API_ENDPOINTS.BLOGS.LIST;
+  getBlogs: async (status?: string, lang?: string): Promise<BlogPost[]> => {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (lang && lang !== 'en') params.append('lang', lang);
+    const qs = params.toString();
+    const url = qs ? `${API_ENDPOINTS.BLOGS.LIST}?${qs}` : API_ENDPOINTS.BLOGS.LIST;
     return api.get<BlogPost[]>(url);
   },
 
-  getBlog: async (id: string | number): Promise<BlogPost> => {
-    return api.get<BlogPost>(API_ENDPOINTS.BLOGS.DETAIL(id));
+  getBlog: async (id: string | number, lang?: string): Promise<BlogPost> => {
+    const url = lang && lang !== 'en' ? `${API_ENDPOINTS.BLOGS.DETAIL(id)}?lang=${lang}` : API_ENDPOINTS.BLOGS.DETAIL(id);
+    return api.get<BlogPost>(url);
   },
 
-  getBlogBySlug: async (slug: string): Promise<BlogPost> => {
-    return api.get<BlogPost>(`/api/blogs/slug/${slug}`);
+  getBlogBySlug: async (slug: string, lang?: string): Promise<BlogPost> => {
+    const url = lang && lang !== 'en' ? `/api/blogs/slug/${slug}?lang=${lang}` : `/api/blogs/slug/${slug}`;
+    return api.get<BlogPost>(url);
   },
 
   createBlog: async (payload: any): Promise<any> => {

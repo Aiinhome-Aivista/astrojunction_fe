@@ -130,7 +130,8 @@
     "romance_title": "Planetary Friendship",
     "romance_desc": "Measures natural affinity, respect, or friction between ruling planetary lords (e.g., Mars, Venus, Mercury) of both signs.",
     "remedial_desc": "Provides actionable communication guidance and Vedic remedies to balance natural differences and cultivate lasting harmony.",
-    "select_signs_hint": "✦ Select your Primary Sign and Partner Sign above, then click \"Analyze\" to generate your detailed cosmic harmony breakdown."
+    "select_signs_hint": "✦ Select your Primary Sign and Partner Sign above, then click \"Analyze\" to generate your detailed cosmic harmony breakdown.",
+    "dimensions_intro": "It evaluates cross-sign affinity by measuring core celestial dimensions:"
   },
   "remedies": {
     "badge": "Time-Tested Vedic Upayas & Remedies",
@@ -287,6 +288,32 @@
       "terms_and_conditions": "Terms & Conditions"
     },
     "all_rights_reserved": "All Rights Reserved"
+  },
+  "blogs": {
+    "featured": "Featured",
+    "read_article": "Read Article →",
+    "back": "Back",
+    "back_to_home": "Back to Home",
+    "share": "Share",
+    "copied": "Copied",
+    "min_read": "{{count}} min read",
+    "author_title": "AstroJunction Masters",
+    "verified": "Verified",
+    "authentic_archive": "Authentic Vedic Archive",
+    "wisdom_badge": "Parashari & Jaimini Wisdom",
+    "principle_title": "Vedic Astrological Principle",
+    "principle_quote": "\"Yatha pinde tatha brahmande, yatha brahmande tatha pinde.\" — As is the individual, so is the universe; as is the microcosm, so is the macrocosm. Every planetary placement unfolds karmic blueprints for spiritual and worldly growth.",
+    "prev_article": "Previous Article",
+    "next_article": "Next Article",
+    "explore_charts": "Explore Oracle & Charts",
+    "all_title_main": "All",
+    "all_title_blogs": "Blogs",
+    "all_title_end": "& Insights",
+    "all_subtitle": "Explore authentic Vedic astrology, planetary yogas, kundli matching, and spiritual wisdom directly from our masters.",
+    "search_placeholder": "Search articles, topics...",
+    "cat_all": "All",
+    "loading": "Loading articles...",
+    "no_articles": "No articles found matching your criteria."
   },
   "common": {
     "language": "Language",

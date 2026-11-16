@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check, ChevronDown } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
-import { useZodiacData } from '../hooks/useZodiacData';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
 import PanjikaCalendarView from './PanjikaCalendarView';
@@ -179,7 +178,8 @@ export function LandingPage({
   onGoToDashboard,
   onResetToInitial,
 }: LandingPageProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = (i18n.language?.split('-')[0]?.toLowerCase() || 'en');
   const [zodiacResetKey, setZodiacResetKey] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>(() => {
@@ -826,14 +826,22 @@ export function LandingPage({
                     i18nKey="hero.title"
                     components={{
                       brand: (
-                        <span className="astro-hero-brand inline-flex mt-1 sm:mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap">
+                        <span 
+                          className="astro-hero-brand inline-flex mt-1 sm:mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap"
+                          style={{ fontFamily: "'Stardom', Georgia, serif" }}
+                        >
                           {"ASTRO".split("").map((char, index) => (
                             <motion.span
                               key={index}
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-                              className={`brand-astro inline-block font-extrabold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}
+                              className={`brand-astro inline-block font-extrabold ${theme === 'dark' ? 'text-[#F3EFE6]' : 'text-[#0D0D0F]'}`}
+                              style={{
+                                fontFamily: "'Stardom', Georgia, serif",
+                                fontWeight: 800,
+                                WebkitTextStroke: theme === 'dark' ? '0.025em #F3EFE6' : '0.03em #0D0D0F'
+                              }}
                             >
                               {char}
                             </motion.span>
@@ -844,7 +852,12 @@ export function LandingPage({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: (index + 5) * 0.08, ease: "easeOut" }}
-                              className={`brand-junction inline-block font-extrabold ${theme === 'dark' ? 'text-[#C9A050]' : 'text-[#9E7728]'}`}
+                              className={`brand-junction inline-block font-extrabold ${theme === 'dark' ? 'text-[#C9A050]' : 'text-[#8C6218]'}`}
+                              style={{
+                                fontFamily: "'Stardom', Georgia, serif",
+                                fontWeight: 800,
+                                WebkitTextStroke: theme === 'dark' ? '0.025em #C9A050' : '0.025em #8C6218'
+                              }}
                             >
                               {char}
                             </motion.span>
@@ -917,7 +930,8 @@ export function LandingPage({
               {/* Full Global Zodiac Section */}
               <div id="zodiac-section" className="scroll-mt-24 w-full text-left">
                 <GlobalZodiacView
-                  key={`zodiac-${zodiacResetKey}`}
+                  key={`zodiac-${zodiacResetKey}-${currentLanguage}`}
+                  language={currentLanguage}
                   theme={theme}
                   onAskAIForSign={handleAskAIForSign}
                 />
@@ -942,7 +956,7 @@ export function LandingPage({
                   </div>
                 </div>
 
-                <ZodiacCompatibilityMatrix key={`compat-${zodiacResetKey}`} theme={theme} />
+                <ZodiacCompatibilityMatrix key={`compat-${zodiacResetKey}-${currentLanguage}`} language={currentLanguage} theme={theme} />
               </div>
             </div>
 

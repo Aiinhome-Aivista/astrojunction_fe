@@ -186,3 +186,5 @@ export function useZodiacData() {
 
   return { zodiacs, loading, error };
 }
+
+export default useZodiacData;

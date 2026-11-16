@@ -35,7 +35,7 @@ import {
 import { useLandingDynamic } from '../hooks/useLandingDynamic';
 import { DailyUpdateModal } from './DailyUpdateModal';
 import { DailyUpdateInlineCard } from './DailyUpdateInlineCard';
-import { ZodiacSign, calculateZodiacCompatibility, ZodiacCompatibilityResult } from '../services/zodiacData';
+import { ZodiacSign, calculateZodiacCompatibility, ZodiacCompatibilityResult, getLocalizedRashiName, getLocalizedRulerName } from '../services/zodiacData';
 import { useZodiacData } from '../hooks/useZodiacData';
 import { API_ENDPOINTS } from '../config/api_config';
 import { api } from '../services/api';
@@ -170,7 +170,8 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   onAskAIForSign,
   theme = 'dark',
 }) => {
-  const { t: i18nT } = useTranslation();
+  const { t: i18nT, i18n } = useTranslation();
+  const currentLang = (i18n?.language?.split('-')[0]?.toLowerCase() || language || 'en');
   const t = (key: string, options?: any): string => {
     try {
       const res = i18nT(key, options);
@@ -178,7 +179,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
     } catch {
       // fallback
     }
-    return getTranslation(key, language);
+    return getTranslation(key, currentLang);
   };
   const isDark = theme === 'dark';
   const { zodiacs, loading, error } = useZodiacData();
@@ -412,7 +413,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   React.useEffect(() => {
     const fetchCategoryInsight = async () => {
       if (!activeSign || !hasSelectedSign || selectedCategory === 'all' || timeframe !== 'today') return;
-      const cacheKey = `${activeSign.id}-${timeframe}-${language}-${zodiacSystem}${timeframe === 'year' ? `-${selectedYear}` : ''}`;
+      const cacheKey = `${activeSign.id}-${timeframe}-${language}-${zodiacSystem}`;
       const currentInsights = dynamicZodiacData[cacheKey]?.categoryInsights;
 
       if (!currentInsights || !currentInsights[selectedCategory] || typeof currentInsights[selectedCategory] !== 'object') {
@@ -828,7 +829,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                 }`}>
                   <span className="astro-zodiac-card-name">{sign.name}</span>
                   <span className={`astro-zodiac-card-rashi ${isDark ? 'text-[#C9A050]' : 'text-[#8D6723]'}`}>
-                    ({sign.sanskritScript})
+                    ({getLocalizedRashiName(sign.id, currentLang, sign.sanskritScript)})
                   </span>
                 </h3>
 
@@ -873,7 +874,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             <div>
               <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
                 <h2 className={`text-lg sm:text-xl font-bold astro-zodiac-detail-title ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                  {activeSign.name} • {activeSign.sanskritName} ({activeSign.sanskritScript})
+                  {activeSign.name} • {activeSign.sanskritName} ({getLocalizedRashiName(activeSign.id, currentLang, activeSign.sanskritScript)})
                 </h2>
                 {getElementBadge(activeSign.element)}
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
@@ -887,7 +888,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               </div>
               <p className={`text-xs font-medium ${isDark ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
                 {activeSign.glyph} • {activeSign.motto} • {t('zodiac.ruled_by')}{' '}
-                <span className="text-[#C9A050] font-semibold">{activeSign.ruler} ({activeSign.sanskritRuler})</span>
+                <span className="text-[#C9A050] font-semibold">{activeSign.ruler} ({getLocalizedRulerName(activeSign.ruler, currentLang, activeSign.sanskritRuler)})</span>
               </p>
               <div className="text-[11px] text-[#C9A050] mt-0.5">
                 {t('zodiac.dates')}: <span className="font-semibold">{zodiacSystem === 'tropical' ? `${activeSign.tropicalDates} (${t('zodiac.western_tropical')})` : `${activeSign.siderealDates} (${t('zodiac.vedic_sidereal')})`}</span>

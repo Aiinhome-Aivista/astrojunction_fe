@@ -18,6 +18,7 @@ import {
 import { BlogPost } from './BlogCarousel';
 import { blogApi } from '../services/blogApi';
 import { SEO } from './SEO';
+import { stripHtmlTags } from './Blogs';
 
 interface BlogPageProps {
   theme: 'light' | 'dark';
@@ -154,7 +155,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
       if (!q) return matchCat;
 
       const titleMatch = blog.title.toLowerCase().includes(q);
-      const excerptMatch = (blog.preview || '').toLowerCase().includes(q);
+      const excerptMatch = stripHtmlTags(blog.preview || blog.content).toLowerCase().includes(q);
       const catMatch = (blog.category || '').toLowerCase().includes(q);
       const tagsMatch = Array.isArray(blog.tags) && blog.tags.some(t => t.toLowerCase().includes(q));
 
@@ -197,7 +198,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   // VIEW 1: DEDICATED FULL-PAGE ARTICLE READER
   // ==========================================
   if (selectedBlog) {
-    const blogDescription = selectedBlog.preview || (selectedBlog.content ? selectedBlog.content.replace(/<[^>]*>?/gm, '').slice(0, 160) : selectedBlog.title);
+    const blogDescription = stripHtmlTags(selectedBlog.preview) || (selectedBlog.content ? stripHtmlTags(selectedBlog.content).slice(0, 160) : selectedBlog.title);
     return (
       <div className={`min-h-[calc(100vh-5rem)] w-full pb-24 transition-colors ${
         isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
@@ -691,8 +692,8 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   ? blog.tags.slice(0, 2).join(' • ')
                   : blog.sub_category || 'VEDIC JYOTISH';
 
-                const cleanExcerpt = blog.preview || 
-                  (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 130) + '...' : '');
+                const rawExcerpt = stripHtmlTags(blog.preview) || stripHtmlTags(blog.content);
+                const cleanExcerpt = rawExcerpt.length > 130 ? rawExcerpt.substring(0, 130) + '...' : rawExcerpt;
 
                 return (
                   <div 

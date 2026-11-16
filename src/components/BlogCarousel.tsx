@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { blogApi, getBlogImageUrl } from '../services/blogApi';
+import { stripHtmlTags } from './Blogs';
 
 export interface BlogPost {
   id: number;
@@ -92,8 +93,8 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
               ? blog.tags.slice(0, 2).join(' • ')
               : blog.sub_category || 'VEDIC JYOTISH';
 
-            const cleanExcerpt = blog.preview || 
-              (blog.content ? blog.content.replace(/<[^>]*>?/gm, '').substring(0, 110) + '...' : '');
+            const rawExcerpt = stripHtmlTags(blog.preview) || stripHtmlTags(blog.content);
+            const cleanExcerpt = rawExcerpt.length > 120 ? rawExcerpt.substring(0, 120) + '...' : rawExcerpt;
 
             return (
               <div 
