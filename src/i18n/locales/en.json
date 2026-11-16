@@ -1,4 +1,8 @@
 {
+  "brand": {
+    "tagline": "Ancient Celestial Wisdom, Sacred Mathematics & Life Counselling",
+    "subtitle": "Enterprise Vedic Intelligence"
+  },
   "header": {
     "nav": {
       "home": "Home",
@@ -318,5 +322,1680 @@
   "common": {
     "language": "Language",
     "change_language": "Change language"
+  },
+  "userPanel": {
+    "tabs": {
+      "daily": "Daily Insights",
+      "horoscope": "Birth Chart",
+      "matchmaking": "Kundli Milan",
+      "numerology": "Numerology",
+      "consultations": "Consultations",
+      "home": "Home"
+    },
+    "quickTabs": {
+      "daily": "Daily",
+      "kundli": "Kundli",
+      "match": "Match",
+      "daivajna": "Daivajna"
+    },
+    "menu": {
+      "seeker": "Seeker",
+      "chandraRashi": "Chandra Rashi (Moon Sign)",
+      "rashiLord": "Rashi Lord",
+      "moonNakshatra": "Moon Nakshatra",
+      "ascendant": "Ascendant (Lagna)",
+      "switchProfile": "Switch Profile",
+      "editAddProfile": "Edit / Add Profile",
+      "downloadDossier": "Download Full Life Dossier",
+      "generating": "Generating...",
+      "ethicalDisclaimer": "Ethical Disclaimer",
+      "changePassword": "Change Password",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "administrator": "Administrator",
+      "logout": "Logout",
+      "logOutOfAccount": "Log Out of Account"
+    },
+    "drawer": {
+      "navigationControls": "Navigation & Controls",
+      "daivajnaConsultation": "Daivajna Consultation",
+      "astrologicalDisclaimer": "Astrological Disclaimer",
+      "selectLanguage": "Language"
+    },
+    "fab": {
+      "title": "Ask Daivajna Astrologer",
+      "ariaLabel": "Ask Daivajna",
+      "label": "Daivajna"
+    }
+  },
+  "vedic": {
+    "signs": {
+      "aries": "Aries (Mesha)",
+      "taurus": "Taurus (Vrishabha)",
+      "gemini": "Gemini (Mithuna)",
+      "cancer": "Cancer (Karka)",
+      "leo": "Leo (Simha)",
+      "virgo": "Virgo (Kanya)",
+      "libra": "Libra (Tula)",
+      "scorpio": "Scorpio (Vrishchika)",
+      "sagittarius": "Sagittarius (Dhanu)",
+      "capricorn": "Capricorn (Makara)",
+      "aquarius": "Aquarius (Kumbha)",
+      "pisces": "Pisces (Meena)"
+    },
+    "planets": {
+      "sun": "Sun (Surya)",
+      "moon": "Moon (Chandra)",
+      "mars": "Mars (Mangal)",
+      "mercury": "Mercury (Budha)",
+      "jupiter": "Jupiter (Guru)",
+      "venus": "Venus (Shukra)",
+      "saturn": "Saturn (Shani)",
+      "rahu": "Rahu (North Node)",
+      "ketu": "Ketu (South Node)"
+    },
+    "western_planets": {
+      "uranus": "Uranus",
+      "neptune": "Neptune",
+      "pluto": "Pluto"
+    },
+    "aspects": {
+      "conjunction": "Conjunction (0°)",
+      "opposition": "Opposition (180°)",
+      "trine": "Trine (120°)",
+      "square": "Square (90°)",
+      "sextile": "Sextile (60°)",
+      "semisextile": "Semi-Sextile (30°)",
+      "quincunx": "Quincunx (150°)"
+    },
+    "nakshatras": {
+      "ashwini": "Ashwini",
+      "bharani": "Bharani",
+      "krittika": "Krittika",
+      "rohini": "Rohini",
+      "mrigashira": "Mrigashira",
+      "ardra": "Ardra",
+      "punarvasu": "Punarvasu",
+      "pushya": "Pushya",
+      "ashlesha": "Ashlesha",
+      "magha": "Magha",
+      "purva_phalguni": "Purva Phalguni",
+      "uttara_phalguni": "Uttara Phalguni",
+      "hasta": "Hasta",
+      "chitra": "Chitra",
+      "swati": "Swati",
+      "vishakha": "Vishakha",
+      "anuradha": "Anuradha",
+      "jyeshtha": "Jyeshtha",
+      "mula": "Mula",
+      "purva_ashadha": "Purva Ashadha",
+      "uttara_ashadha": "Uttara Ashadha",
+      "shravana": "Shravana",
+      "dhanishta": "Dhanishta",
+      "shatabhisha": "Shatabhisha",
+      "purva_bhadrapada": "Purva Bhadrapada",
+      "uttara_bhadrapada": "Uttara Bhadrapada",
+      "revati": "Revati"
+    },
+    "tithis": {
+      "shukla_pratipada": "Shukla Pratipada",
+      "shukla_dwitiya": "Shukla Dwitiya",
+      "shukla_tritiya": "Shukla Tritiya",
+      "shukla_chaturthi": "Shukla Chaturthi",
+      "shukla_panchami": "Shukla Panchami",
+      "shukla_shashthi": "Shukla Shashthi",
+      "shukla_saptami": "Shukla Saptami",
+      "shukla_ashtami": "Shukla Ashtami",
+      "shukla_navami": "Shukla Navami",
+      "shukla_dashami": "Shukla Dashami",
+      "shukla_ekadashi": "Shukla Ekadashi",
+      "shukla_dwadashi": "Shukla Dwadashi",
+      "shukla_trayodashi": "Shukla Trayodashi",
+      "shukla_chaturdashi": "Shukla Chaturdashi",
+      "purnima": "Purnima",
+      "krishna_pratipada": "Krishna Pratipada",
+      "krishna_dwitiya": "Krishna Dwitiya",
+      "krishna_tritiya": "Krishna Tritiya",
+      "krishna_chaturthi": "Krishna Chaturthi",
+      "krishna_panchami": "Krishna Panchami",
+      "krishna_shashthi": "Krishna Shashthi",
+      "krishna_saptami": "Krishna Saptami",
+      "krishna_ashtami": "Krishna Ashtami",
+      "krishna_navami": "Krishna Navami",
+      "krishna_dashami": "Krishna Dashami",
+      "krishna_ekadashi": "Krishna Ekadashi",
+      "krishna_dwadashi": "Krishna Dwadashi",
+      "krishna_trayodashi": "Krishna Trayodashi",
+      "krishna_chaturdashi": "Krishna Chaturdashi",
+      "amavasya": "Amavasya"
+    },
+    "yogas": {
+      "vishkambha": "Vishkambha",
+      "priti": "Priti",
+      "ayushman": "Ayushman",
+      "saubhagya": "Saubhagya",
+      "shobhana": "Shobhana",
+      "atiganda": "Atiganda",
+      "sukarma": "Sukarma",
+      "dhriti": "Dhriti",
+      "shoola": "Shoola",
+      "ganda": "Ganda",
+      "vriddhi": "Vriddhi",
+      "dhruva": "Dhruva",
+      "vyaghata": "Vyaghata",
+      "harshana": "Harshana",
+      "vajra": "Vajra",
+      "siddhi": "Siddhi",
+      "vyatipata": "Vyatipata",
+      "variyan": "Variyan",
+      "parigha": "Parigha",
+      "shiva": "Shiva",
+      "siddha": "Siddha",
+      "sadhya": "Sadhya",
+      "shubha": "Shubha",
+      "shukla": "Shukla",
+      "brahma": "Brahma",
+      "indra": "Indra",
+      "vaidhriti": "Vaidhriti"
+    },
+    "karanas": {
+      "bava": "Bava",
+      "balava": "Balava",
+      "kaulava": "Kaulava",
+      "taitila": "Taitila",
+      "gara": "Gara",
+      "vanija": "Vanija",
+      "vishti": "Vishti (Bhadra)",
+      "shakuni": "Shakuni",
+      "chatushpada": "Chatushpada",
+      "naga": "Naga",
+      "kintughna": "Kintughna"
+    },
+    "weekdays": {
+      "sunday": "Ravivara (Sunday)",
+      "monday": "Somavara (Monday)",
+      "tuesday": "Mangalavara (Tuesday)",
+      "wednesday": "Budhavara (Wednesday)",
+      "thursday": "Guruvara (Thursday)",
+      "friday": "Shukravara (Friday)",
+      "saturday": "Shanivara (Saturday)"
+    },
+    "jaimini_karakas": {
+      "atmakaraka": "Atmakaraka (AK)",
+      "amatyakaraka": "Amatyakaraka (AmK)",
+      "bhratrikaraka": "Bhratrikaraka (BK)",
+      "matrikaraka": "Matrikaraka (MK)",
+      "pitrikaraka": "Pitrikaraka (PiK)",
+      "putrakaraka": "Putrakaraka (PK)",
+      "gnatikaraka": "Gnatikaraka (GK)",
+      "darakaraka": "Darakaraka (DK)"
+    },
+    "divisional_charts": {
+      "d1": "D1 - Rashi (Physical Constitution)",
+      "d2": "D2 - Hora (Wealth & Prosperity)",
+      "d3": "D3 - Drekkana (Siblings & Courage)",
+      "d4": "D4 - Chaturthamsha (Fortune & Property)",
+      "d7": "D7 - Saptamsha (Children & Progeny)",
+      "d9": "D9 - Navamsha (Dharma & Spouse)",
+      "d10": "D10 - Dashamsha (Career & Profession)",
+      "d12": "D12 - Dwadashamsha (Parents & Lineage)",
+      "d16": "D16 - Shodashamsha (Vehicles & Pleasures)",
+      "d20": "D20 - Vimshamsha (Spiritual Progress)",
+      "d24": "D24 - Chaturvimshamsha (Higher Knowledge)",
+      "d27": "D27 - Saptavimshamsha (Strengths & Vulnerabilities)",
+      "d30": "D30 - Trimshamsha (Misfortunes & Overcoming Evils)",
+      "d40": "D40 - Khavedamsha (Auspicious Effects)",
+      "d45": "D45 - Akshavedamsha (General Well-being)",
+      "d60": "D60 - Shashtiamsha (Past Life Karma)"
+    },
+    "ashtakavarga": {
+      "sarvashtakavarga": "Sarvashtakavarga (SAV)",
+      "bhinnashtakavarga": "Bhinnashtakavarga (BAV)",
+      "samudaya": "Samudaya Ashtakavarga",
+      "rekha": "Rekha (Benefic Point)",
+      "bindu": "Bindu (Point)",
+      "kakshya": "Kakshya (Planetary Subdivision)"
+    },
+    "dasha_lords": {
+      "ketu": "Ketu",
+      "venus": "Venus (Shukra)",
+      "sun": "Sun (Surya)",
+      "moon": "Moon (Chandra)",
+      "mars": "Mars (Mangal)",
+      "rahu": "Rahu",
+      "jupiter": "Jupiter (Guru)",
+      "saturn": "Saturn (Shani)",
+      "mercury": "Mercury (Budha)"
+    },
+    "houses": {
+      "h1": "1st House (Tanu Bhava - Self & Vitality)",
+      "h2": "2nd House (Dhana Bhava - Wealth & Speech)",
+      "h3": "3rd House (Sahaja Bhava - Courage & Siblings)",
+      "h4": "4th House (Sukha Bhava - Home & Mother)",
+      "h5": "5th House (Putra Bhava - Intellect & Children)",
+      "h6": "6th House (Ari Bhava - Health & Overcoming Obstacles)",
+      "h7": "7th House (Kalatra Bhava - Marriage & Partnerships)",
+      "h8": "8th House (Randhra Bhava - Longevity & Transformation)",
+      "h9": "9th House (Dharma Bhava - Fortune & Higher Wisdom)",
+      "h10": "10th House (Karma Bhava - Career & Status)",
+      "h11": "11th House (Labha Bhava - Gains & Aspirations)",
+      "h12": "12th House (Vyaya Bhava - Liberation & Expenses)"
+    },
+    "loshu_planes": {
+      "mental": "Mental Plane (4-3-8)",
+      "emotional": "Emotional Plane (9-5-1)",
+      "practical": "Practical Plane (2-7-6)",
+      "thought": "Thought Plane (4-9-2)",
+      "will": "Will Plane (3-5-7)",
+      "action": "Action Plane (8-1-6)",
+      "golden_raj_yoga": "Golden Raj Yoga Line (4-5-6)",
+      "silver_spirituality": "Silver Spirituality Line (2-5-8)"
+    },
+    "gems": {
+      "ruby": "Ruby (Manikya)",
+      "pearl": "Pearl (Moti)",
+      "red_coral": "Red Coral (Moonga)",
+      "emerald": "Emerald (Panna)",
+      "yellow_sapphire": "Yellow Sapphire (Pukhraj)",
+      "diamond": "Diamond (Heera)",
+      "blue_sapphire": "Blue Sapphire (Neelam)",
+      "hessonite": "Hessonite (Gomed)",
+      "cats_eye": "Cat's Eye (Lehsuniya)"
+    },
+    "lucky_colors": {
+      "red": "Red",
+      "blue": "Blue",
+      "green": "Green",
+      "yellow": "Yellow",
+      "white": "White",
+      "orange": "Orange",
+      "gold": "Gold",
+      "silver": "Silver",
+      "pink": "Pink",
+      "purple": "Purple",
+      "grey": "Grey",
+      "black": "Black",
+      "copper": "Copper",
+      "navy": "Navy",
+      "pearl_white": "Pearl White",
+      "cream": "Cream",
+      "light_green": "Light Green",
+      "bright_yellow": "Bright Yellow",
+      "golden_saffron": "Golden Saffron",
+      "amber": "Amber",
+      "electric_blue": "Electric Blue",
+      "brown": "Brown",
+      "khaki": "Khaki",
+      "emerald_green": "Emerald Green",
+      "light_turquoise": "Light Turquoise",
+      "pistachio": "Pistachio",
+      "royal_blue": "Royal Blue",
+      "pristine_white": "Pristine White",
+      "rose_pink": "Rose Pink",
+      "silvery_lilac": "Silvery Lilac",
+      "smoky_grey": "Smoky Grey",
+      "olive_green": "Olive Green",
+      "variegated": "Variegated",
+      "deep_navy": "Deep Navy",
+      "midnight_black": "Midnight Black",
+      "dark_violet": "Dark Violet",
+      "crimson_red": "Crimson Red",
+      "scarlet": "Scarlet",
+      "coral_pink": "Coral Pink"
+    },
+    "kootas": {
+      "varna": "Varna (Spiritual Alignment)",
+      "vashya": "Vashya (Mutual Attraction & Control)",
+      "tara": "Tara (Destiny & Longevity)",
+      "yoni": "Yoni (Biological & Physical Harmony)",
+      "graha_maitri": "Graha Maitri (Psychological Harmony)",
+      "gana": "Gana (Temperamental Accord)",
+      "bhakoot": "Bhakoot (Emotional & Family Growth)",
+      "nadi": "Nadi (Genetic Concord & Health)"
+    },
+    "doshas": {
+      "manglik": "Manglik Dosha (Kuja Dosha)",
+      "nadi": "Nadi Dosha",
+      "bhakoot": "Bhakoot Dosha",
+      "kaal_sarp": "Kaal Sarp Dosha",
+      "pitra": "Pitra Dosha",
+      "guru_chandal": "Guru Chandal Dosha",
+      "shani_sade_sati": "Shani Sade Sati"
+    }
+  },
+  "dailyInsights": {
+    "hero": {
+      "natalIntroVedic": "Your Janma Lagna (natal ascendant) is <signHighlight>{{sign}}</signHighlight> (Sidereal Nirayana) with <mulankHighlight>Mulank {{mulank}}</mulankHighlight> ({{planet}}).",
+      "natalIntroWestern": "Your natal Ascendant is <signHighlight>{{sign}}</signHighlight> (Tropical Sayana) with <mulankHighlight>Mulank {{mulank}}</mulankHighlight> ({{planet}})."
+    },
+    "greetings": {
+      "morning": "Shubh Prabhat, <nameHighlight>{{name}}</nameHighlight>",
+      "afternoon": "Shubh Madhyahn, <nameHighlight>{{name}}</nameHighlight>",
+      "evening": "Shubh Sandhya, <nameHighlight>{{name}}</nameHighlight>",
+      "night": "Shubh Ratri, <nameHighlight>{{name}}</nameHighlight>"
+    },
+    "transitDate": {
+      "vedic": "Vedic Sidereal Daily Transit • {{date}}",
+      "western": "Western Tropical Daily Transit • {{date}}"
+    },
+    "actions": {
+      "downloadPdf": "Download Report (PDF)",
+      "generatingPdf": "Generating PDF...",
+      "pdfTooltip": "Download daily insights as formatted PDF report",
+      "listen": "Listen",
+      "stop": "Stop",
+      "share": "Share",
+      "copied": "Copied!",
+      "speechTemplate": "{{summary}}. {{careerPrefix}}: {{career}}. {{lovePrefix}}: {{love}}. {{healthPrefix}}: {{health}}.",
+      "careerPrefix": "For your career",
+      "lovePrefix": "In love and harmony",
+      "healthPrefix": "For your health",
+      "speechNotAvailable": "Listening is not available in this language",
+      "shareTitle": "Daily Vedic Insight for {{name}}",
+      "shareTemplate": "{{title}} | AstroJunction:\nTithi: {{tithi}} | Nakshatra: {{nakshatra}}\nAbhijit Muhurta: {{abhijit}}"
+    },
+    "harmony": {
+      "badgeLabel": "Cosmic Harmony",
+      "high": {
+        "title": "High Pranic Vitality",
+        "desc": "Optimal for key initiatives"
+      },
+      "balanced": {
+        "title": "Balanced Energy",
+        "desc": "Favorable for routine tasks"
+      },
+      "mixed": {
+        "title": "Mixed Harmonics",
+        "desc": "Proceed with awareness"
+      },
+      "low": {
+        "title": "Low Vitality",
+        "desc": "Avoid major new beginnings"
+      }
+    },
+    "metrics": {
+      "luckyNumber": "Lucky Number Today",
+      "ruledBy": "Ruled by {{planet}}",
+      "luckyColor": "Lucky Color & Tone",
+      "abhijitMuhurta": "Shubh Abhijit Muhurta",
+      "rahuKaal": "Rahu Kaal (Avoid Starts)",
+      "victoryWindow": "Victory window for tasks",
+      "inauspiciousWindow": "Inauspicious time bracket",
+      "colorVital": "Amplifies vital energy & action",
+      "colorCalm": "Enhances calm focus & depth",
+      "colorGrowth": "Attracts growth & prosperity",
+      "colorWisdom": "Boosts wisdom & optimism",
+      "colorPeace": "Invokes peace & intuition",
+      "colorGround": "Grounds spiritual energy",
+      "colorProtect": "Promotes discipline & protection",
+      "colorCharm": "Nurtures compassion & charm",
+      "colorHarmony": "Amplifies cosmic harmony"
+    },
+    "interpretation": {
+      "title": "Daily Vedic Horoscope Interpretation",
+      "subtitle": "Personalized transit synthesis based on your specific birth chart & active dasha",
+      "consulting": "Consulting Planetary Ephemeris & Vedic Model...",
+      "calculating": "Calculating Moon transit, Nakshatra lord aspect, and today’s Tithi vibration for your Ascendant.",
+      "careerCommerce": "Career & Commerce",
+      "loveHarmony": "Love & Harmony",
+      "healthPrana": "Health & Prana",
+      "showingEnglishNote": "Showing English version",
+      "dominantRhythm": "Today’s Dominant Cosmic Rhythm: {{tithi}} in {{nakshatra}}",
+      "rahuKaalTemperament": "Maintain an even temperament during the Rahu Kaal window ({{time}}).",
+      "fallbackIntroHigh": "Today's planetary harmonics emphasize strategic foresight, purposeful intellect, and harmonious execution.",
+      "fallbackIntroBalanced": "Today's cosmic transits favor steady progress, routine refinement, and maintaining emotional equilibrium.",
+      "fallbackIntroMixed": "Current planetary alignments suggest cautious optimism; unexpected shifts require adaptable and measured responses.",
+      "fallbackIntroLow": "Today's challenging cosmic energy calls for deep introspection, patience, and avoiding major new commitments."
+    },
+    "sadhana": {
+      "title": "Recommended Daily Vedic Ritual (Nitya Sadhana)",
+      "morning": "Morning Sadhana",
+      "evening": "Evening Sadhana",
+      "morningTitle": "Morning Vedic Ritual",
+      "morningDesc": "Start your day with meditation and Surya Arghya.",
+      "eveningTitle": "Evening Vedic Ritual",
+      "eveningDesc": "Light a diya and practice gratitude."
+    },
+    "panchang": {
+      "title": "Sacred Panchang Parameters",
+      "system": "Sidereal Vedic",
+      "tithi": "Tithi (Lunar Day)",
+      "nakshatra": "Nakshatra (Asterism)",
+      "yoga": "Vedic Yoga",
+      "karana": "Karana (Half Tithi)",
+      "sunSign": "Sun Sign (Surya Rashi)",
+      "moonSign": "Moon Sign (Chandra Rashi)",
+      "sunriseSunset": "Sunrise / Sunset",
+      "brahmaMuhurta": "Brahma Muhurta",
+      "lordLabel": "Lord:",
+      "nakshatraWithLord": "{{nakshatra}} ({{lordLabel}} {{lord}})"
+    },
+    "blueprint": {
+      "title": "Explore Your Vedic Blueprint",
+      "traditionsTitle": "5 Indian Ancient Traditions",
+      "traditionsDesc": "Parashari, Jaimini, Lal Kitab, KP & Nadi",
+      "astrologerTitle": "Interactive Astrologer",
+      "astrologerDesc": "Counselling grounded in your exact birth chart",
+      "roadmapTitle": "Personal & Career Roadmap",
+      "roadmapDesc": "10-Year milestone forecasts & dasha windows"
+    }
+  },
+  "_review": [
+    {
+      "section": "numerology",
+      "keys": [
+        "numerology.*"
+      ],
+      "status": "verified"
+    }
+  ],
+  "birthChart": {
+    "nav": {
+      "title": "Vedic Birth Chart & Multi-Tradition Synthesis",
+      "subtitle": "Deep-dive multi-tradition roadmap & holistic celestial analysis",
+      "traditions": "5 Ancient Observational Traditions",
+      "system_vedic": "Vedic Sidereal Nirayana",
+      "active_seeker": "Active Seeker",
+      "tradition_names": {
+        "parashari": "Parashari Jyotish",
+        "jaimini": "Jaimini Sutras",
+        "lal_kitab": "Lal Kitab",
+        "kp_system": "KP System",
+        "bhrigu_nadi": "Bhrigu Nadi"
+      },
+      "tradition_tags": {
+        "parashari": "Brihat Parashara Hora Shastra",
+        "jaimini": "Chara Karakas & Sign Aspects",
+        "lal_kitab": "Planetary Debts & Practical Upayas",
+        "kp_system": "Krishnamurti Padhdhati Sub-Lords",
+        "bhrigu_nadi": "Nandi Nadi Planetary Combinations"
+      },
+      "tradition_descriptions": {
+        "parashari": "Classical foundational system analyzing bhavas, planetary dignities, Vimshottari dasha cycles, and kendra-trikona auspicious yogas.",
+        "jaimini": "Sign-based aspects, Chara Karakas (Atmakaraka, Amatyakaraka), and unique padha lagna karmic timing.",
+        "lal_kitab": "Karmic planetary debts (Rina), blind planets, sleeping houses, and practical, non-ritualistic remedial measures.",
+        "kp_system": "Precision timing through 249 sub-lords, ruling planets, and stellar nakshatra-sub lord significations.",
+        "bhrigu_nadi": "Ancient palm-leaf revelation focusing on planetary conjunctions, past-life karma, and soul destiny."
+      },
+      "roadmap_button": "25-Year Roadmap",
+      "download_pdf": "Download Report (PDF)",
+      "generating_pdf": "Generating PDF...",
+      "ayanamsha_subtitle": "Lahiri Ayanamsha (~24°) • 27 Nakshatras",
+      "system_western": "Western Tropical (Sayana) Horoscope Engine"
+    },
+    "chart": {
+      "d1_title": "D1 Rashi Chart (Birth / Lagna)",
+      "d9_title": "D9 Navamsha Chart (Soul & Destiny)",
+      "d10_title": "D10 Dashamsha Chart (Career & Status)",
+      "style_north": "North Indian (Diamond)",
+      "style_south": "South Indian (Box)",
+      "lagna": "Lagna",
+      "sign": "Sign",
+      "degree": "Degree",
+      "nakshatra": "Nakshatra",
+      "pada": "Pada",
+      "retrograde": "Retrograde (Vakri)",
+      "direct": "Direct (Margi)",
+      "combust": "Combust (Asta)",
+      "click_prompt": "Click any house or planet for deep significances & remedies",
+      "house_label": "House {{n}}",
+      "planets_in_house": "{{count}} Planets",
+      "significance": "Significance"
+    },
+    "houses": {
+      "house_1": {
+        "title": "1st House (Lagna / Tanu Bhava)",
+        "name": "Tanu Bhava",
+        "lord": "1st Lord (Lagna Lord)",
+        "significance": "Physical vitality, constitution, temperament, innate character, head, and overarching life orientation."
+      },
+      "house_2": {
+        "title": "2nd House (Dhana Bhava)",
+        "name": "Dhana Bhava",
+        "lord": "2nd Lord",
+        "significance": "Accumulated wealth, family lineage, speech, nutrition, right eye, and resource management."
+      },
+      "house_3": {
+        "title": "3rd House (Sahaja Bhava)",
+        "name": "Sahaja Bhava",
+        "lord": "3rd Lord",
+        "significance": "Younger siblings, courage, personal enterprise, communication, short travels, arms, and manual dexterity."
+      },
+      "house_4": {
+        "title": "4th House (Sukha Bhava)",
+        "name": "Sukha Bhava",
+        "lord": "4th Lord",
+        "significance": "Mother, homeland, property, vehicles, inner peace, heart, foundational education, and emotional rootedness."
+      },
+      "house_5": {
+        "title": "5th House (Putra Bhava)",
+        "name": "Putra Bhava",
+        "lord": "5th Lord",
+        "significance": "Progeny, creative intellect, sacred mantras, speculative insight, past-life merit (Purva Punya), and discernment."
+      },
+      "house_6": {
+        "title": "6th House (Shatru Bhava)",
+        "name": "Shatru Bhava",
+        "lord": "6th Lord",
+        "significance": "Overcoming obstacles, daily routine, competitive drive, debts, healing, and resolving conflicts."
+      },
+      "house_7": {
+        "title": "7th House (Jaya Bhava)",
+        "name": "Jaya Bhava",
+        "lord": "7th Lord",
+        "significance": "Spouse, marital harmony, business partnerships, legal contracts, public rapport, and external interactions."
+      },
+      "house_8": {
+        "title": "8th House (Mrityu Bhava)",
+        "name": "Mrityu Bhava",
+        "lord": "8th Lord",
+        "significance": "Longevity, sudden transformation, esoteric wisdom, research, unearned wealth, inheritance, and psychological renewal."
+      },
+      "house_9": {
+        "title": "9th House (Dharma Bhava)",
+        "name": "Dharma Bhava",
+        "lord": "9th Lord",
+        "significance": "Father, spiritual preceptor (Guru), higher wisdom, righteousness, fortune, long pilgrimages, and cosmic grace."
+      },
+      "house_10": {
+        "title": "10th House (Karma Bhava)",
+        "name": "Karma Bhava",
+        "lord": "10th Lord",
+        "significance": "Career, profession, social authority, reputation, public leadership, worldly deeds, and legacy."
+      },
+      "house_11": {
+        "title": "11th House (Labha Bhava)",
+        "name": "Labha Bhava",
+        "lord": "11th Lord",
+        "significance": "Financial gains, fulfillment of aspirations, elder siblings, extensive networks, community support, and rewards."
+      },
+      "house_12": {
+        "title": "12th House (Vyaya Bhava)",
+        "name": "Vyaya Bhava",
+        "lord": "12th Lord",
+        "significance": "Spiritual liberation (Moksha), foreign connections, solitude, meditation, charitable expenditure, and subconscious release."
+      }
+    },
+    "aspects": {
+      "title": "Planetary Aspects & Drishtis",
+      "drishti_3": "3rd Drishti (Special Mars / Saturn)",
+      "drishti_4": "4th Drishti (Mars)",
+      "drishti_5": "5th Drishti (Jupiter)",
+      "drishti_7": "7th Full Drishti (Universal)",
+      "drishti_8": "8th Drishti (Mars)",
+      "drishti_9": "9th Drishti (Jupiter)",
+      "drishti_10": "10th Drishti (Saturn)",
+      "drishti_special": "Special Planetary Drishti",
+      "cast_on": "Casting aspect onto {{target}}",
+      "mutual": "Mutual Aspect (Paraspara Drishti)",
+      "drishti_label": "Drishtis"
+    },
+    "planets_table": {
+      "title": "Planetary Positions & Dignities",
+      "subtitle": "Sidereal Nirayana degrees, nakshatra padas, and house placements",
+      "th_planet": "Planet (Graha)",
+      "th_sign": "Sign (Rashi)",
+      "th_degree": "Degree (Amsha)",
+      "th_nakshatra": "Nakshatra & Pada",
+      "th_house": "House (Bhava)",
+      "th_dignity": "Dignity (Avastha)",
+      "th_motion": "State",
+      "th_ruling": "Karakatva / Domain",
+      "dignities": {
+        "exalted": "Exalted (Uchha)",
+        "debilitated": "Debilitated (Neecha)",
+        "moolatrikona": "Moolatrikona",
+        "own": "Own Sign (Swakshetra)",
+        "friend": "Friendly Sign (Mitra)",
+        "enemy": "Inimical Sign (Shatru)",
+        "neutral": "Neutral (Sama)"
+      },
+      "grahas_label": "Grahas"
+    },
+    "dashas": {
+      "title": "Vimshottari Dasha Timeline",
+      "subtitle": "Active major, minor, and sub-minor planetary periods (120-Year Cycle)",
+      "mahadasha": "Mahadasha",
+      "antardasha": "Antardasha",
+      "pratyantardasha": "Pratyantardasha",
+      "active_now": "Active Cycle",
+      "active_badge": "ACTIVE DASHA",
+      "active_antardashas": "Active Antardashas (Sub-Periods)",
+      "completed": "Completed",
+      "upcoming": "Upcoming",
+      "period": "{{start}} to {{end}}",
+      "years": "{{count}} Years",
+      "years_label": "Years"
+    },
+    "yogas_doshas": {
+      "yogas_title": "Detected Auspicious Yogas",
+      "yogas_subtitle": "Harmonious planetary alignments amplifying fortune, wisdom, and leadership",
+      "doshas_title": "Karmic Doshas & Planetary Afflictions",
+      "doshas_subtitle": "Sensitive planetary combinations requiring balanced awareness and remedial mitigation",
+      "auspicious": "Auspicious",
+      "formed": "Present in Chart",
+      "mitigated": "Mitigated / Neutralized",
+      "not_formed": "Not Formed",
+      "remedy_title": "Prescribed Remedial Action",
+      "effect_title": "Influence & Outcome",
+      "yogas": {
+        "gajakesari": {
+          "name": "Gajakesari Yoga",
+          "type": "Auspicious Lunar-Jupiter Alignment",
+          "desc": "Jupiter in mutual kendra from the Moon.",
+          "effect": "Bestows emotional stability, high societal respect, lasting prosperity, and commanding intellectual authority.",
+          "remedy": "Chant Guru Gayatri and respect mentors and elders."
+        },
+        "budhaditya": {
+          "name": "Budhaditya Yoga",
+          "type": "Solar-Mercurial Conjunction",
+          "desc": "Sun and Mercury conjunction in auspicious house.",
+          "effect": "Sharp administrative acumen, sharp analytical intellect, and exceptional eloquence in professional matters.",
+          "remedy": "Offer morning water to Surya and chant Aditya Hridaya Stotram."
+        },
+        "hamsa": {
+          "name": "Hamsa Yoga (Pancha Mahapurusha)",
+          "type": "Jupiter Exaltation / Own Sign in Kendra",
+          "desc": "Jupiter in quadrant in Cancer, Sagittarius, or Pisces.",
+          "effect": "Elevates dharmic wisdom, spiritual leadership, and benevolence.",
+          "remedy": "Engage in charitable education and support sacred studies."
+        },
+        "ruchaka": {
+          "name": "Ruchaka Yoga (Pancha Mahapurusha)",
+          "type": "Mars Exaltation / Own Sign in Kendra",
+          "desc": "Mars in quadrant in Aries, Scorpio, or Capricorn.",
+          "effect": "Bold courage, physical stamina, leadership in enterprise and sports.",
+          "remedy": "Practice daily physical discipline and chant Hanuman Chalisa."
+        },
+        "malavya": {
+          "name": "Malavya Yoga (Pancha Mahapurusha)",
+          "type": "Venus Exaltation / Own Sign in Kendra",
+          "desc": "Venus in quadrant in Taurus, Libra, or Pisces.",
+          "effect": "Artistic refinement, luxurious material comfort, and graceful charm.",
+          "remedy": "Honor feminine energy and support artistic arts."
+        },
+        "dhana_yoga": {
+          "name": "Maha Dhana Yoga",
+          "type": "Wealth House Association",
+          "desc": "Mutual association between 1st, 2nd, 5th, 9th, and 11th lords.",
+          "effect": "Multiple streams of steady capital accumulation and economic freedom.",
+          "remedy": "Practice regular Lakshmi Aradhana and fair business ethics."
+        },
+        "vipreet_raja": {
+          "name": "Vipreet Raja Yoga",
+          "type": "Trik House Lords Interplay",
+          "desc": "Lords of 6th, 8th, or 12th houses positioned exclusively in dusthana houses.",
+          "effect": "Unexpected elevation through external crisis and resilient overcoming of rivalries.",
+          "remedy": "Maintain deep patience and practice silent meditation."
+        }
+      },
+      "doshas": {
+        "manglik": {
+          "name": "Manglik Dosha (Kuja Dosha)",
+          "type": "Mars Angular Placement",
+          "desc": "Mars located in 1st, 4th, 7th, 8th, or 12th house.",
+          "effect": "Intense passion requiring mindful dialogue and emotional tempering in intimate partnerships.",
+          "no_affliction": "No significant Mars affliction detected for marriage.",
+          "remedy": "Recite Hanuman Chalisa on Tuesdays and perform Mangal Shanti rituals."
+        },
+        "kaal_sarp": {
+          "name": "Kaal Sarp Yoga",
+          "type": "Nodal Axis Hem",
+          "desc": "All primary planets situated between Rahu and Ketu.",
+          "effect": "Intense initial life struggle that ultimately yields remarkable karmic resilience and late-life breakthrough.",
+          "remedy": "Maha Mrityunjaya Japa and respect for serpentine sacred energies."
+        },
+        "sadesati": {
+          "name": "Shani Sade Sati",
+          "type": "Saturn Moon Transit (7.5 Years)",
+          "desc": "Saturn transits the 12th, 1st, and 2nd houses from natal Moon.",
+          "effect": "Deep psychological restructuring, maturation, and development of profound self-reliance.",
+          "remedy": "Light a sesame oil lamp for Shani Dev on Saturdays and serve the underprivileged."
+        }
+      }
+    },
+    "traditions_analysis": {
+      "jaimini": {
+        "title": "Jaimini Chara Karakas",
+        "subtitle": "Soul purpose and karmic roles derived from highest to lowest planet degrees",
+        "atmakaraka": "Atmakaraka (Soul's True Purpose)",
+        "amatyakaraka": "Amatyakaraka (Career & Intellect)",
+        "bhratrukaraka": "Bhratrukaraka (Siblings & Guides)",
+        "matrukaraka": "Matrukaraka (Mother & Nurturing)",
+        "putrakaraka": "Putrakaraka (Creativity & Progeny)",
+        "gnatikaraka": "Gnatikaraka (Struggles & Obstacles)",
+        "darakaraka": "Darakaraka (Spouse & Partnerships)"
+      },
+      "kp": {
+        "title": "Krishnamurti Padhdhati (KP) Significators",
+        "subtitle": "Sub-lord level event filtration across all 12 cuspal bhavas",
+        "cusp": "Cusp",
+        "sign_lord": "Sign Lord",
+        "star_lord": "Star Lord",
+        "sub_lord": "Sub Lord",
+        "sub_sub_lord": "Sub-Sub Lord"
+      },
+      "lal_kitab": {
+        "title": "Lal Kitab Unique Dynamics",
+        "subtitle": "Sleeping houses, blind planets, and practical Vedic upayas",
+        "pakka_ghar": "Pakka Ghar (Permanent Abode)",
+        "kismat_lord": "Kismat Jagane Wala Grah",
+        "kayam_grah": "Kayam Grah",
+        "sleeping_houses": "Sleeping Houses",
+        "upayas_title": "Actionable Lal Kitab Remedies"
+      },
+      "bhrigu_nadi": {
+        "title": "Bhrigu Nadi Karmic Synthesizer",
+        "subtitle": "Planetary conjunction combinations and inherited soul contracts",
+        "jeeva_karaka": "Jeeva Karaka (Life Essence - Jupiter)",
+        "karma_karaka": "Karma Karaka (Duty & Action - Saturn)",
+        "dharma_path": "Dharma Alignment"
+      }
+    },
+    "remedies": {
+      "title": "Holistic Sacred Remedies & Harmonization",
+      "gemstones": "Auspicious Gemstone Guidance",
+      "favorable_gemstones": "Favorable Gemstones (Lagna Based)",
+      "trikona_upayas": "Trikona Vedic Upayas",
+      "mantra": "Consecrated Mantra Sadhana",
+      "daan": "Charitable Offerings (Daan)",
+      "fasting": "Recommended Fasting & Observances",
+      "deity": "Ishta Devata & Kavach",
+      "element": "Harmonizing Element",
+      "finger": "Auspicious Finger",
+      "metal": "Setting Metal",
+      "weekday": "Auspicious Day",
+      "gemstone_label": "Gemstone"
+    },
+    "planet_modal": {
+      "title": "Planetary Insights & Karakatva",
+      "overview": "Core Astrological Significance",
+      "friends": "Natural Friends (Mitra)",
+      "neutrals": "Neutrals (Sama)",
+      "enemies": "Inimical Planets (Shatru)",
+      "rudraksha": "Recommended Rudraksha",
+      "gemstone": "Auspicious Gemstone",
+      "mantra": "Seed Mantra (Beej Mantra)",
+      "daan": "Remedial Daan",
+      "close": "Close"
+    },
+    "synthesis": {
+      "title": "Multi-Tradition AI Synthesis & Deep Insights",
+      "subtitle": "Personalized cross-tradition astrological consultation grounded in your birth chart",
+      "run_button": "Run Full Synthesis",
+      "click_to_generate": "Click to Generate Deep Interpretation",
+      "generating": "Consulting Classical Sutras & Ephemeris...",
+      "calculating": "Analyzing houses, dasha periods, yogas, and tradition rules for your exact coordinates.",
+      "locked_title": "Unlock Complete 5-Tradition Synthesis",
+      "locked_desc": "Access deep Parashari, Jaimini, Lal Kitab, KP System, and Bhrigu Nadi readings for just {{price}}.",
+      "unlock_button": "Unlock Comprehensive Interpretation for {{price}}",
+      "audio_listen": "Listen to Interpretation",
+      "audio_stop": "Stop Audio",
+      "showing_english": "Showing English version",
+      "section_error": "Could not generate this section. Please click to retry.",
+      "retry_button": "Retry Section",
+      "unlocked_badge": "✓ UNLOCKED",
+      "premium_badge": "PREMIUM ₹99",
+      "copy": "Copy Interpretation",
+      "copied": "Copied to clipboard!"
+    },
+    "subscription": {
+      "badge": "Vedic Premium Subscription • ₹99 Only",
+      "title": "Unlock Comprehensive Vedic Synthesis ({{tradition}})",
+      "description": "Gain access to deep personalized multi-tradition synthesis integrating your Lagna, 12 Bhavas, active Vimshottari Mahadashas, planetary yogas, and classical Vedic sutras.",
+      "feature_1": "12-Bhava & Yoga Audit",
+      "feature_2": "Dasha Milestones & Timing",
+      "feature_3": "Remedies & Sacred Mantras",
+      "subscribe_button": "Subscribe for ₹99 & Unlock Synthesis",
+      "modal_title": "Unlock Comprehensive Vedic Synthesis ({{tradition}})",
+      "modal_desc": "Deep personalized Vedic synthesis integrating your Lagna, 12 Bhavas, active Vimshottari Mahadashas, planetary yogas, and classical sutras for just ₹99 INR.",
+      "what_unlocked": "What is unlocked with your Subscription:",
+      "feature_synthesis": "Comprehensive Vedic Synthesis: Detailed Parashari, Jaimini, Lal Kitab & KP multi-tradition cross-audits.",
+      "feature_bhavas": "12 Bhavas & Planetary Yogas: Wealth, Career, Raj Yogas, Viparita Yogas & Neecha Bhanga analysis.",
+      "feature_dashas": "Vimshottari Dasha Milestones: Antardasha timing windows, career shifts & karmic turning points.",
+      "feature_remedies": "Vedic Upayas & Remedies: Customized Vedic Mantras, Gemstones, Rudraksha, and ritual guidelines.",
+      "feature_dossier": "Full PDF Dossier & Voice Reading: Listen to your reading via audio and download full formatted chart reports.",
+      "cta_button": "Subscribe for ₹99 & Open Payment Gateway",
+      "maybe_later": "Maybe Later"
+    },
+    "common": {
+      "loading": "Loading birth chart ephemeris...",
+      "planets_count": "{{count}} Planets",
+      "planets_count_plural": "{{count}} Planets",
+      "aspecting": "Aspecting",
+      "unknown": "Unknown",
+      "pdf_download": "Download Chart Report (PDF)",
+      "generating_pdf": "Preparing PDF Report..."
+    }
+  },
+  "roadmap": {
+    "eyebrow": "25-Year Astrological Life Blueprint",
+    "title": "Vedic Destiny Roadmap",
+    "subtitle": "Synthesized through your active Vimshottari Mahadasha/Antardasha cycles, major Saturn (Shani) and Jupiter (Guru) transits.",
+    "refresh_button": "Refresh Predictions",
+    "fetching_predictions": "Fetching Predictions...",
+    "download_pdf": "Download Report (PDF)",
+    "generating_pdf": "Generating PDF...",
+    "pdf_tooltip": "Download 25-Year Vedic Destiny Roadmap (PDF)",
+    "refresh_tooltip": "Fetch/Refresh predictions via Filter API",
+    "life_spheres_label": "Life Spheres:",
+    "year_singular": "Year",
+    "years_plural": "Years",
+    "free_badge": "Free",
+    "active_badge": "✓ Active",
+    "categories": {
+      "career": "Career",
+      "wealth": "Wealth",
+      "health": "Health",
+      "relationships": "Love",
+      "family": "Family",
+      "education": "Education",
+      "travel": "Travel",
+      "spirituality": "Spirituality"
+    },
+    "category_names": {
+      "career": "Career & Profession",
+      "wealth": "Wealth & Finance",
+      "health": "Health & Vitality",
+      "relationships": "Marriage & Relationships",
+      "family": "Family & Children",
+      "education": "Education & Higher Learning",
+      "travel": "Foreign Travel & Relocation",
+      "spirituality": "Spirituality & Upayas"
+    },
+    "generating": {
+      "title": "Generating {{horizon}} Roadmap...",
+      "subtitle": "Synthesizing Vimshottari Mahadasha cycles, Saturn Gochara & Jupiter transit windows"
+    },
+    "unselected": {
+      "title": "Select a Time Horizon",
+      "subtitle": "Please select a time horizon and a life sphere from the filters above to generate your Vedic Destiny Roadmap.",
+      "button": "Explore 0-5 Years Roadmap"
+    },
+    "paywall": {
+      "badge": "Subscription Required • Premium Horizon",
+      "title": "Unlock {{horizon}} Vedic Destiny Roadmap",
+      "description": "To access multi-decade predictive insights, deep Vimshottari Mahadasha shifts, Saturn Sade Sati / Kantaka Shani, and planetary transit remedies for {{horizon}}, please unlock this subscription tier.",
+      "feature_spheres": "All 8 Life Spheres (Career, Wealth, Love, Family, Health, Education, Travel, Spirituality)",
+      "feature_dasha": "Vimshottari Dasha & Antardasha Timeline Breakdown",
+      "feature_transits": "Saturn Gochara (Sade Sati) & Jupiter (Guru) Transits",
+      "feature_pdf": "Full Printable Vedic Destiny Roadmap (PDF Report)",
+      "subscribe_button": "Subscribe {{horizon}} • ₹{{price}}",
+      "unlock_all_button": "Unlock All Horizons (Up to 25 Years) • ₹300",
+      "return_free": "← Return to Free 0-1 Year Horizon"
+    },
+    "card_overlay": {
+      "title": "Unlock {{timeframe}} Roadmap",
+      "description": "Subscription required to access all 8 life spheres, Mahadasha cycles & transit upayas for {{timeframe}}.",
+      "button": "Unlock {{timeframe}} • ₹{{price}}"
+    },
+    "card_sections": {
+      "dasha_guidance": "Dasha & Life Strategy Guidance",
+      "astrological_transits": "Astrological Window & Transits",
+      "recommended_upaya": "Recommended Upaya / Sadhana"
+    },
+    "empty": {
+      "title": "Predictive Insights for {{horizon}}",
+      "description": "Generate full planetary transit insights and dasha milestones across all 8 life spheres for {{horizon}}.",
+      "button": "Generate {{horizon}} Insights"
+    }
+  },
+  "kundliMilan": {
+    "eyebrow": "VEDIC ASHTA KOOTA MATCHMAKING & SYNASTRY",
+    "title": "Kundli Milan & Relationship Compatibility",
+    "subtitle": "Authentic Ashta Koota 36 Gunas calculation, Manglik (Kuja) Dosha balance, Nadi vitality, and Western synastry synthesis for marriage, love, and life partnerships.",
+    "saved_matches_btn": "Saved Matches",
+    "saved_matches_count": "Saved Matches {{count}}",
+    "save_match": "Save Match",
+    "saved": "Saved",
+    "download_pdf": "Download Report (PDF)",
+    "downloading": "Downloading...",
+    "generate": "Generate",
+    "edit": "Edit",
+    "save": "Save",
+    "new_match": "New Match",
+    "partner1_title": "Partner 1 (Person A / Groom)",
+    "partner2_title": "Partner 2 (Person B / Bride)",
+    "full_name": "Full Name",
+    "date_of_birth": "Date of Birth",
+    "birth_time": "Birth Time",
+    "birth_city": "Birth City / Country",
+    "p1_name_placeholder": "Enter Groom / Person A Name",
+    "p2_name_placeholder": "Enter Bride / Person B Name",
+    "city_placeholder": "e.g. Mumbai, India",
+    "am": "AM",
+    "pm": "PM",
+    "select_profile": "Select Saved Profile...",
+    "loader_step_0": "✨ Aligning Moon Nakshatras & Lunar Mansions...",
+    "loader_step_1": "🔮 Calculating 36 Gunas & Kuja Dosha Afflictions...",
+    "loader_step_2": "📜 Synthesizing Planetary Harmonization & Upayas...",
+    "in_progress": "Vedic Kundli Milan In Progress ({{pct}}%)",
+    "gunas_label": "/ 36 Gunas",
+    "gunas_caps": "/ 36 GUNAS",
+    "summary_sentence": "Ashta Koota score is {{score}}/36 ({{pct}}%). This score is based on traditional Moon Nakshatra/Rashi matching.",
+    "manglik_tile": "Manglik Dosha",
+    "nadi_tile": "Nadi Vitality",
+    "bhakoot_tile": "Bhakoot Harmony",
+    "points_out_of": "{{obtained}}/{{max}} Points",
+    "points_short": "{{got}} / {{max}} Pts",
+    "score_max": "Score: {{score}} / 36 Maximum",
+    "values_comparison": "{{partnerA}}: {{valueA}} ↔ {{partnerB}}: {{valueB}}",
+    "verdict_details": "Verdict Details:",
+    "tab_kootas": "8 Kootas Breakdown ({{score}}/36)",
+    "tab_doshas": "Manglik & Critical Doshas",
+    "tab_synastry": "Western Synastry & Elements",
+    "tab_counsel": "Astrological Counsel",
+    "tab_remedies": "Remedies & Muhurat",
+    "badge_featured": "FEATURED",
+    "matrix_title": "Ashta Koota (8 Kootas) Classical Scoring Matrix",
+    "kootas": {
+      "varna": {
+        "name": "Varna Koota",
+        "latin": "Varna Koota",
+        "area": "Spiritual Ego & Work Harmony",
+        "desc": "Measures spiritual alignment, intellectual ego balance, and vocational mutual respect."
+      },
+      "vashya": {
+        "name": "Vashya Koota",
+        "latin": "Vashya Koota",
+        "area": "Dominance & Mutual Attraction",
+        "desc": "Assesses magnetic attraction, mutual respect, power dynamics, and reciprocal influence."
+      },
+      "tara": {
+        "name": "Tara Koota",
+        "latin": "Tara Koota",
+        "area": "Destiny, Health & Longevity Accord",
+        "desc": "Evaluates cosmic fortune, health protection, longevity, and mutual auspiciousness."
+      },
+      "yoni": {
+        "name": "Yoni Koota",
+        "latin": "Yoni Koota",
+        "area": "Physical & Biological Compatibility",
+        "desc": "Measures instinctual affinity, physical comfort, intimate satisfaction, and animal archetype harmony."
+      },
+      "graha": {
+        "name": "Graha Maitri Koota",
+        "latin": "Graha Maitri Koota",
+        "area": "Psychological & Intellectual Affinity",
+        "desc": "Determines mental rapport, world outlook, communication flow, and planetary lord friendship."
+      },
+      "gana": {
+        "name": "Gana Koota",
+        "latin": "Gana Koota",
+        "area": "Temperament & Psychological Constitution",
+        "desc": "Evaluates emotional temperament, lifestyle expectations, stress tolerance, and socio-behavioral nature."
+      },
+      "bhakoot": {
+        "name": "Bhakoot Koota",
+        "latin": "Bhakoot Koota",
+        "area": "Emotional Connection & Family Welfare",
+        "desc": "Measures joy, prosperity, family growth, health, and mutual emotional bonding."
+      },
+      "nadi": {
+        "name": "Nadi Koota",
+        "latin": "Nadi Koota",
+        "area": "Genetic Compatibility & Progeny Energy",
+        "desc": "Highest-weighted Koota; ensures genetic vitality, nervous-system resonance, and healthy progeny."
+      }
+    },
+    "verdicts": {
+      "uttam": "Uttam Milan • Highly Auspicious Match",
+      "uttam_caution": "Uttam Milan (with Manglik Caution)",
+      "madhyam": "Madhyam Shubh • Very Good Match",
+      "samanya": "Samanya • Average Match (Recommended with Remedies)",
+      "alpa": "Alpa Milan • Challenging Match (Strict Remedies Needed)",
+      "excellent": "Excellent",
+      "good": "Good",
+      "average": "Average",
+      "challenging": "Challenging",
+      "critical": "Critical"
+    },
+    "status": {
+      "neutralized": "Neutralized ✓",
+      "no_dosha": "No Dosha",
+      "non_manglik": "Non-Manglik",
+      "active_manglik": "Active Manglik Dosha",
+      "active_nadi": "Active Nadi Dosha",
+      "active_bhakoot": "Active Bhakoot Dosha",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "both_manglik": "Both Partners Manglik (Perfect Mutual Neutralization)",
+      "neither_manglik": "Neither Partner Manglik (Clean Planetary Axis)",
+      "one_manglik": "One Partner Manglik (Requires Mars Pacification Remedy)"
+    },
+    "classes": {
+      "brahmin": "Brahmin",
+      "kshatriya": "Kshatriya",
+      "vaishya": "Vaishya",
+      "shudra": "Shudra",
+      "chatushpada": "Chatushpada (Quadruped)",
+      "manava": "Manava (Human)",
+      "jalachara": "Jalachara (Water)",
+      "vanachara": "Vanachara (Wild)",
+      "keeta": "Keeta (Insect)",
+      "deva": "Deva (Divine)",
+      "manushya": "Manushya (Human)",
+      "rakshasa": "Rakshasa (Demonic)",
+      "adi": "Adi (Vata)",
+      "madhya": "Madhya (Pitta)",
+      "antya": "Antya (Kapha)",
+      "ashwa": "Ashwa (Horse)",
+      "gaja": "Gaja (Elephant)",
+      "mesha": "Mesha (Ram)",
+      "sarpa": "Sarpa (Serpent)",
+      "shwan": "Shwan (Dog)",
+      "marjara": "Marjara (Cat)",
+      "mushaka": "Mushaka (Rat)",
+      "gau": "Gau (Cow)",
+      "mahisha": "Mahisha (Buffalo)",
+      "vyaghra": "Vyaghra (Tiger)",
+      "mriga": "Mriga (Deer)",
+      "vanara": "Vanara (Monkey)",
+      "nakula": "Nakula (Mongoose)",
+      "simha": "Simha (Lion)",
+      "tara_val": "Tara {{from}}/{{to}}"
+    },
+    "doshas": {
+      "manglik_assessment": "Manglik (Kuja) Dosha Comparative Assessment",
+      "mars_placement_rule": "Mars placement in 1st, 2nd, 4th, 7th, 8th, or 12th houses",
+      "house_label": "House {{house}}",
+      "severity": {
+        "none": "None",
+        "mild": "Mild",
+        "moderate": "Moderate",
+        "high": "High (Purna Manglik)"
+      },
+      "nadi_exam": "Nadi Dosha Examination",
+      "bhakoot_exam": "Bhakoot Dosha Examination",
+      "rashi_disparity": "Rashi Angular Disparity:",
+      "nadi_safe": "Different Nadis ({{nadi1}} & {{nadi2}}) provide optimal bio-magnetic balance and strong hereditary vitality.",
+      "nadi_cancelled_desc": "Nadi Dosha cancelled: {{reason}} Full 8 points awarded.",
+      "nadi_active_desc": "Active Nadi Dosha (Same {{nadi}} Nadi) requires Maha Mrityunjaya Japa and remedial donations.",
+      "bhakoot_safe": "Auspicious Rashi configuration promotes mutual emotional support and enduring family happiness.",
+      "bhakoot_cancelled_desc": "Bhakoot Dosha cancelled due to shared planetary ruler or strong Graha Maitri ({{score}}/5).",
+      "bhakoot_active_desc": "Inauspicious {{disparity}} Rashi angular disposition requires Brihaspati Upaya and Vishnu Sahasranama chanting."
+    },
+    "synastry": {
+      "title": "Western Synastry Planetary Aspects",
+      "aspects": {
+        "conjunction": "Conjunction",
+        "trine": "Trine",
+        "sextile": "Sextile",
+        "opposition": "Opposition",
+        "square": "Square",
+        "quincunx": "Quincunx",
+        "semi_sextile": "Semi-Sextile"
+      },
+      "verdict_deep_soul": "Deep Soul Understanding",
+      "verdict_flowing_harmony": "Flowing Emotional Harmony",
+      "verdict_complementary": "Complementary Polarity",
+      "verdict_passionate": "Passionate Vitality",
+      "verdict_sensual": "Sensual Devotion",
+      "verdict_dynamic_romance": "Dynamic Romantic Spark",
+      "verdict_visionary": "Visionary Mentorship",
+      "verdict_intellectual_growth": "Intellectual Growth & Trust",
+      "verdict_practical": "Practical Coordination",
+      "elemental_matrix_title": "Elemental & Numerological Matrix",
+      "elemental_synergy": "Elemental Synergy",
+      "numerological_alignment": "Numerological Alignment",
+      "life_path_label": "Life Path {{num}}",
+      "destiny_label": "Destiny {{num}}",
+      "title_sun_moon": "Sun-Moon Core Synergy",
+      "title_venus_mars": "Venus-Mars Romantic Magnetism",
+      "title_mercury_jupiter": "Mercury-Jupiter Intellectual Growth",
+      "desc": "Cross-tradition psychological harmonization between solar-lunar archetypes and interpersonal attraction vectors.",
+      "elements_label": "Elements:",
+      "synergy_score": "Synergy Score:",
+      "psychic_numbers": "Psychic Numbers (Mulank):",
+      "mulank_label": "Mulank",
+      "destiny_score": "Destiny Harmony Score:"
+    },
+    "remedies": {
+      "title": "Auspicious Relationship Remedies & Upayas",
+      "subtitle": "Traditional Vedic Upayas and practical actions designed to pacify minor planetary afflictions and enhance marital sweetness.",
+      "muhurat_title": "Auspicious Vivaha / Partnership Muhurat Guidance",
+      "gemstones_title": "Couple Favorable Gemstones (Lagna Based)",
+      "partner1_gems": "Partner 1 Gemstones",
+      "partner2_gems": "Partner 2 Gemstones",
+      "muhurat_advice": "Personalized Vivaha Muhurat for {{p1}} ({{nak1}} Nakshatra, {{rashi1}}) & {{p2}} ({{nak2}} Nakshatra, {{rashi2}}): Ideal wedding & auspicious partnership dates occur during Shukla Paksha under Rohini, Mrigashira, Magha, Uttara Phalguni, Hasta, Swati, Anuradha, or Revati Nakshatras during Venus (Shukra) or Jupiter (Guru) Hora, avoiding Rikta Tithis (4th, 9th, 14th) and Rahu Kaal.",
+      "gem_purpose_lagna": "Life Force & Health (Lagna Lord)",
+      "gem_purpose_5th": "Intelligence & Luck (5th Lord)",
+      "gem_purpose_9th": "Fortune & Dharma (9th Lord)"
+    },
+    "counsel": {
+      "eyebrow": "SACRED JYOTISH MATCHMAKING SYNTHESIS",
+      "title": "Daivajna Deep Relationship Synthesis",
+      "subtitle": "Deep classical analysis integrating Ashta Kootas, Kuja dosha pacification, planetary aspect dynamics, and personalized Vedic life counsel.",
+      "regenerate_btn": "Regenerate Full Counsel",
+      "subscribe_btn": "Subscribe for ₹149 to regenerate counsel",
+      "shown_in_notice": "Shown in {{lang}}. Press Regenerate Full Counsel to get it in your language.",
+      "download_counsel_pdf": "Download Counsel (PDF)",
+      "sec_guna_milan": "✨ Guna Milan & Cosmic Alignment",
+      "sec_manglik": "Manglik (Kuja) Dosha Evaluation",
+      "sec_nadi": "Nadi Koota & Genetic Prana Harmony",
+      "sec_bhakoot": "Bhakoot Harmony & Emotional Rhythm",
+      "sec_psychological": "🧠 Psychological & Intellectual Affinity",
+      "sec_emotional": "❤️ Emotional Resonance & Temperament",
+      "sec_karmic": "🪐 Karmic Bond & Destiny",
+      "sec_biological": "🌿 Biological & Physical Harmonization",
+      "sec_family": "🏡 Family & Married Life",
+      "sec_wealth": "💰 Wealth Multiplication & Prosperity",
+      "sec_strengths": "Major Relationship Strengths",
+      "sec_challenges": "Potential Growth Areas & Challenges",
+      "sec_resolution": "Actionable Conflict Resolution Counsel",
+      "sec_upayas": "Auspicious Vedic Remedies & Upayas",
+      "sec_blessing": "Divine Daivajna Blessing & Final Verdict",
+      "empty_desc": "Generate an exhaustive consultation covering psychological affinity, biological vitality, wealth generation, marital timing, and conflict resolution."
+    },
+    "saved_modal": {
+      "title": "Saved Kundli Milan Matches",
+      "search": "Search by partner name...",
+      "load": "Load Match",
+      "delete": "Delete",
+      "empty": "No saved matches found.",
+      "close": "Close"
+    },
+    "subscription_modal": {
+      "title": "Unlock Unlimited Matchmaking Counsel",
+      "subtitle": "Get recurring deep AI syntheses and customized life counsel for all your relationship matches.",
+      "price": "₹149",
+      "feature_1": "Unlimited Daivajna AI Deep Syntheses",
+      "feature_2": "Complete Manglik & Nadi Pacification Upayas",
+      "feature_3": "High-Definition 2-Page Matchmaking PDF",
+      "cta": "Unlock Full Counsel for ₹149"
+    },
+    "partner_a": "Partner A",
+    "partner_b": "Partner B",
+    "nadi_label": "Nadi",
+    "rashi_label": "Rashi",
+    "status_label": "Status"
+  },
+  "numerology": {
+    "eyebrow": "Vedic & Chaldean Numerology Matrix",
+    "title": "Sacred Numbers & Lo Shu Magic Grid",
+    "subtitle": "Decode the planetary vibrational codes governing your psyche (Mulank), karmic destiny (Bhagyank), and name resonance (Namank).",
+    "badges": {
+      "mulank": "Mulank",
+      "bhagyank": "Bhagyank",
+      "namank": "Namank"
+    },
+    "download_btn": "Download Report (PDF)",
+    "generating_pdf": "Generating PDF...",
+    "download_title": "Download full Numerology & Lo Shu magic grid PDF report",
+    "tabs": {
+      "matrix": "Mulank & Bhagyank Synthesis",
+      "loshu": "Lo Shu 3x3 Magic Grid ({{count}} Planes)",
+      "name_correction": "Chaldean Name Correction Tool",
+      "remedies": "Numerology Remedies & Gems"
+    },
+    "matrix": {
+      "mulank_card_title": "Mulank (Psychic / Driver Number)",
+      "mulank_sum_day": "Sum of Birth Day ({{day}})",
+      "psychological_drivers": "Psychological Drivers",
+      "instinctive_nature": "Instinctive Nature",
+      "instinctive_desc": "Your Mulank reveals how you instinctively react to challenges, your personal desires, and your subconscious behavioral patterns. Ruled by {{planet}}, you radiate authority and strive for self-directed excellence.",
+      "favorable_days": "Favorable Days",
+      "lucky_colors": "Lucky Colors",
+      "bhagyank_card_title": "Bhagyank (Destiny / Conductor Number)",
+      "bhagyank_sum_date": "Sum of Day + Month + Year ({{date}})",
+      "karmic_life_mission": "Karmic Life Mission",
+      "synergy_title": "Mulank-Bhagyank Synergy",
+      "synergy_desc": "Your combination of Mulank {{mulank}} and Bhagyank {{bhagyank}} creates an energetic balance between daily execution and grand karmic accomplishments. Harness this alignment by scheduling critical launches on your auspicious dates.",
+      "friendly_numbers": "Friendly Numbers",
+      "unfavorable_numbers": "Unfavorable Numbers",
+      "universal_friend": "None (Universal Friend)"
+    },
+    "loshu": {
+      "matrix_title": "Sacred 3x3 Lo Shu Matrix",
+      "date_label": "Date: {{date}}",
+      "count_times": "{{count}}x",
+      "absent": "Absent",
+      "note_extracted": "Numbers extracted directly from your complete birth date string ({{date}}).",
+      "note_remedy": "Missing numbers can be energetically balanced using spatial Vastu & crystal remedies.",
+      "planes_title": "Planes of Strength & Arrows of Destiny",
+      "planes_count": "{{count}} Geometric Vectors",
+      "synthesizing": "Synthesizing Vedic Insights...",
+      "status": {
+        "strong": "Strong",
+        "moderate": "Moderate",
+        "weak": "Weak",
+        "empty": "Empty"
+      },
+      "status_with_pct": "{{status}} ({{pct}}%)"
+    },
+    "chaldean": {
+      "title": "Chaldean & Pythagorean Name Spelling Optimizer",
+      "subtitle": "Ancient Chaldean numerology assigns sacred vibrations to each letter. Test subtle spelling variations to achieve optimum wealth (5 or 6) or authority (1).",
+      "input_label": "Test Name Spelling",
+      "gematria_label": "Letter Gematria Values",
+      "compound_vibration": "Total Compound Vibration:",
+      "single_namank": "Single Digit Namank:",
+      "compatibility_title": "Vibrational Compatibility",
+      "favorable_desc": "✓ Highly favorable vibration {{n}}. Resonates strongly with commercial prosperity, leadership respect, and smooth financial transactions.",
+      "adjust_desc": "⚠️ Vibration {{n}} requires conscious balancing or a slight single-letter adjustment to align with Mercury (5) or Venus (6).",
+      "recommendations_title": "Classical Recommendations",
+      "sug_favorable": "Your name resonates on auspicious Chaldean vibration {{n}}, in harmony with commercial prosperity and public recognition.",
+      "sug_adjust_1": "Adjust spelling slightly (e.g. adding or modifying an 'A', 'E', or 'N') to bring Chaldean vibration to 1 (Solar Authority), 5 (Mercury Commerce), or 6 (Venus Abundance).",
+      "sug_adjust_2": "Your current name vibrates to Chaldean {{n}}, which may attract periodic delays in legal or financial transactions."
+    },
+    "remedies": {
+      "title": "Personalized Ancient Numerology Remedies & Vastu Upayas",
+      "subtitle": "Correct missing energetic vibrations from your Lo Shu grid and strengthen your Mulank planetary ruler.",
+      "card_num": "{{n}}"
+    },
+    "meta": {
+      "planets": {
+        "1": "Sun (Surya - The Sovereign Creator)",
+        "2": "Moon (Chandra - The Intuitive Healer)",
+        "3": "Jupiter (Brihaspati - The Wise Guru)",
+        "4": "Rahu (The Revolutionary Architect)",
+        "5": "Mercury (Budha - The Master Trader & Strategist)",
+        "6": "Venus (Shukra - The Aesthetic Alchemist)",
+        "7": "Ketu (The Mystic Philosopher & Researcher)",
+        "8": "Saturn (Shani - The Karmic Master & Judge)",
+        "9": "Mars (Mangal - The Valiant Warrior & Champion)"
+      },
+      "missions": {
+        "1": "To pioneer trailblazing innovations, command respect through honorable leadership, and illuminate organizations with clarity.",
+        "2": "To build bridges of mutual understanding, foster nurturing environments, and express subtle artistic beauty.",
+        "3": "To disseminate transformative knowledge, mentor rising generations, and uphold ethical and spiritual righteousness.",
+        "4": "To dismantle outdated paradigms, engineer futuristic structural frameworks, and bring order to chaotic systems.",
+        "5": "To connect global networks, orchestrate thriving commercial ventures, and convey complex ideas with effortless charm.",
+        "6": "To infuse life with artistic elegance, foster harmonious relationships, and design sublime experiences of abundance.",
+        "7": "To unravel universal mysteries, discover hidden metaphysical truths, and guide humanity toward spiritual liberation (Moksha).",
+        "8": "To construct enduring legacies through relentless perseverance, honor divine justice, and uplift the underprivileged.",
+        "9": "To champion righteous causes, execute ambitious physical and leadership feats, and channel raw power into noble protection."
+      },
+      "traits": {
+        "natural_leader": "Natural Leader",
+        "independent_ambitious": "Independent & Ambitious",
+        "visionary_authority": "Visionary Authority",
+        "high_vitality_dignity": "High Vitality & Dignity",
+        "empathetic_diplomatic": "Empathetic & Diplomatic",
+        "creative_imagination": "Creative Imagination",
+        "peaceful_harmony": "Peaceful Harmony",
+        "deep_emotional_resonance": "Deep Emotional Resonance",
+        "philosophical_wisdom": "Philosophical Wisdom",
+        "expansive_optimism": "Expansive Optimism",
+        "master_communicator": "Master Communicator",
+        "lifelong_teacher": "Lifelong Teacher & Advisor",
+        "methodical_organizer": "Methodical Organizer",
+        "out_of_box_thinker": "Out-of-the-Box Thinker",
+        "technological_genius": "Technological Genius",
+        "courageous_reformer": "Courageous Reformer",
+        "rapid_adaptability": "Rapid Adaptability",
+        "commercial_brilliance": "Commercial Brilliance",
+        "witty_eloquence": "Witty Eloquence",
+        "multi_faceted_curiosity": "Multi-Faceted Curiosity",
+        "refined_aesthetics": "Refined Aesthetics",
+        "sensory_luxury": "Sensory Luxury",
+        "magnetic_charisma": "Magnetic Charisma",
+        "devoted_compassion": "Devoted Compassion",
+        "deep_introspection": "Deep Introspection",
+        "occult_insight": "Occult & Metaphysical Insight",
+        "analytical_researcher": "Analytical Researcher",
+        "detached_clarity": "Detached Clarity",
+        "unyielding_endurance": "Unyielding Endurance",
+        "mastery_discipline": "Mastery of Discipline",
+        "deep_justice_humility": "Deep Justice & Humility",
+        "empire_builder": "Empire Builder",
+        "fearless_courage": "Fearless Courage",
+        "dynamic_action": "Dynamic Action",
+        "generous_passion": "Generous Passion",
+        "protector_righteous": "Protector of the Righteous"
+      },
+      "days": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      },
+      "colors": {
+        "gold": "Gold",
+        "copper": "Copper",
+        "orange": "Orange",
+        "yellow": "Yellow",
+        "pearl_white": "Pearl White",
+        "cream": "Cream",
+        "silver": "Silver",
+        "light_green": "Light Green",
+        "bright_yellow": "Bright Yellow",
+        "golden_saffron": "Golden Saffron",
+        "amber": "Amber",
+        "electric_blue": "Electric Blue",
+        "grey": "Grey",
+        "brown": "Brown",
+        "khaki": "Khaki",
+        "emerald_green": "Emerald Green",
+        "light_turquoise": "Light Turquoise",
+        "pistachio": "Pistachio",
+        "royal_blue": "Royal Blue",
+        "pristine_white": "Pristine White",
+        "rose_pink": "Rose Pink",
+        "silvery_lilac": "Silvery Lilac",
+        "smoky_grey": "Smoky Grey",
+        "olive_green": "Olive Green",
+        "white": "White",
+        "variegated": "Variegated",
+        "deep_navy": "Deep Navy",
+        "midnight_black": "Midnight Black",
+        "dark_violet": "Dark Violet",
+        "crimson_red": "Crimson Red",
+        "scarlet": "Scarlet",
+        "coral_pink": "Coral Pink"
+      },
+      "planes": {
+        "thought": {
+          "name": "Thought Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Thought Plane",
+          "meaning": "Strategic foresight, deep planning capabilities, photographic memory, and conceptual thinking."
+        },
+        "will": {
+          "name": "Will Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Will Plane",
+          "meaning": "Unshakeable willpower, persistence, spiritual resilience, and capacity to overcome adversity."
+        },
+        "action": {
+          "name": "Action Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Action Plane",
+          "meaning": "Execution speed, commercial pragmatism, physical stamina, and turning concepts into physical assets."
+        },
+        "mental": {
+          "name": "Mental Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Mental Plane",
+          "meaning": "High analytical IQ, intellectual curiosity, structured logic, and academic brilliance."
+        },
+        "emotional": {
+          "name": "Emotional Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Emotional Plane",
+          "meaning": "Intuitive empathy, emotional intelligence, charisma, and ability to connect deeply with others."
+        },
+        "practical": {
+          "name": "Practical Plane ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Practical Plane",
+          "meaning": "Attention to detail, material execution, artistic craftsmanship, and dependable consistency."
+        },
+        "raj_yoga": {
+          "name": "Golden Raj Yoga Line ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Golden Raj Yoga Line",
+          "meaning": "Supreme financial prosperity, steady business expansions, political/administrative victory, and immense prestige."
+        },
+        "spirituality": {
+          "name": "Silver Spirituality Line ({{n1}} - {{n2}} - {{n3}})",
+          "title": "Silver Spirituality Line",
+          "meaning": "Real estate acumen, grounded stability, spiritual mastery, emotional maturity, and ancestral blessings."
+        }
+      },
+      "remedies": {
+        "1": "Place a small indoor water fountain or image of flowing water in the North zone to activate Career & Communication flow (Number {{n}}).",
+        "2": "Keep a pair of rose quartz crystals or earthy pottery in the South-West corner to ground Relationships & Emotional balance (Number {{n}}).",
+        "3": "Introduce lush green plants or wooden artifacts in the East direction to stimulate Knowledge & Family blessings (Number {{n}}).",
+        "4": "Keep a wooden money plant or green aventurine in the South-East corner to anchor Discipline & Financial discipline (Number {{n}}).",
+        "5": "Keep the central Brahmasthan of your home open, clutter-free, and well-lit to maintain core stability and vitality (Number {{n}}).",
+        "6": "Hang a 6-rod metal wind chime or silver bowl with water in the North-West zone to magnetize Helpful Friends & Travel luck (Number {{n}}).",
+        "7": "Wear a silver bracelet or cat’s eye gemstone to boost spiritual focus, creative progeny, and mental stamina (Number {{n}}).",
+        "8": "Place 8 natural crystals or river stones in the North-East zone to enhance Wisdom & Systematic wealth accumulation (Number {{n}}).",
+        "9": "Place bright warm lighting or a red pyramid in the South zone to amplify Fame, Social recognition, and Ambition (Number {{n}})."
+      }
+    }
+  },
+  "plans": {
+    "header": {
+      "eyebrow": "Certified Vedic Consultations & Premium Gateways",
+      "title": "Unlock Deeper Planetary Wisdom & 1-on-1 Guidance",
+      "subtitle": "Certified astrological accuracy backed by Swiss Ephemeris, 256-bit SSL encrypted transactions, and sacred Vedic remediations.",
+      "payment_history_btn": "Payment History",
+      "certified_precision": "100% Certified Astrological Precision",
+      "features": {
+        "pdf_dossier_title": "Instant PDF Dossier",
+        "pdf_dossier_desc": "Automated Download",
+        "shastras_title": "Classical Shastras",
+        "shastras_desc": "Brihat Parashara Rigor",
+        "upayas_title": "Personalized Upayas",
+        "upayas_desc": "Sacred Remedial Mantras",
+        "activation_title": "Instant Activation",
+        "activation_desc": "Seamless Razorpay Sync"
+      }
+    },
+    "badges": {
+      "unlocked_active": "PLAN UNLOCKED & ACTIVE",
+      "master_25": "MASTER 25-YEAR BLUEPRINT • BEST VALUE",
+      "roadmap_horizon": "VEDIC DESTINY HORIZON",
+      "relationship_karma": "RELATIONSHIP KARMA",
+      "daily_seeker": "DAILY SEEKER",
+      "active_on_profile": "Active on Profile",
+      "instant_activation": "Instant Activation",
+      "instant_access": "Instant Access",
+      "recommended_daivajna": "Recommended by Daivajna",
+      "predictive_transit": "Predictive Transit Cycle",
+      "deep_synastry": "Deep Synastry",
+      "daily_precision": "Daily Precision",
+      "free_price": "FREE (₹0)",
+      "included_benefits": "Included Benefits:"
+    },
+    "buttons": {
+      "view_unlocked": "View Unlocked Plan Data ➔",
+      "unlock_and_pay": "Unlock Consultation & Pay",
+      "view_unlocked_data_tab": "View Unlocked Data ({{tab}}) ➔",
+      "go_to_unlocked": "Go to Unlocked Data",
+      "print_slip": "Print Slip",
+      "close": "Close",
+      "history": "History"
+    },
+    "trust": {
+      "ssl_title": "256-Bit SSL Secured",
+      "ssl_desc": "Bank-grade Razorpay gateway",
+      "fulfillment_title": "Instant Fulfillment",
+      "fulfillment_desc": "Zero waiting, immediate activation",
+      "rigor_title": "Ancient Vedic Rigor",
+      "rigor_desc": "Parashari & Jaimini precision",
+      "confidential_title": "100% Confidential",
+      "confidential_desc": "Strict privacy for your birth data"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about our consultations and instant payment verification",
+      "q1": "How does instant payment activation work with Razorpay?",
+      "a1": "As soon as your payment is completed via Razorpay (UPI, Credit/Debit Card, NetBanking), our system instantly generates and cryptographically verifies the transaction. Your profile unlocks the selected consultation dossier and features immediately.",
+      "q2": "Can I download the report dossier as a high-resolution PDF?",
+      "a2": "Yes! All premium consultations and roadmap unlocks include downloadable, print-ready high-resolution PDF dossiers complete with classical Shastra references and personalized planetary remedies.",
+      "q3": "Are my birth chart details kept confidential?",
+      "a3": "100% strictly confidential. Your birth date, time, latitude/longitude, and addresses are encrypted with 256-bit SSL and stored in a secured vault accessible only to you.",
+      "q4": "Which astrological computational engine is used?",
+      "a4": "AstroJunction uses high-precision Swiss Ephemeris (Lahiri Ayanamsha) coupled with classical Brihat Parashara Hora Shastra, Jaimini Sutras, and Ashtakavarga algorithms."
+    },
+    "modal": {
+      "price_inr": "₹{{price}} INR",
+      "confirm_details": "Confirm your personal details below to proceed with payment and sync your profile.",
+      "full_name": "Full Name",
+      "full_name_placeholder": "Your legal or chart name",
+      "phone": "Phone / WhatsApp",
+      "phone_placeholder": "+91 98765 43210",
+      "address": "Current Full Address",
+      "address_placeholder": "House/Flat No, Street, Landmark, City, State, Pincode",
+      "err_name_required": "Full Name is required",
+      "err_phone_required": "Phone / WhatsApp number is required",
+      "err_phone_invalid": "Please enter a valid 10-digit mobile number",
+      "err_address_required": "Current Full Address is required",
+      "pay_and_confirm": "Pay ₹{{price}} & Confirm",
+      "processing": "Processing Payment Order...",
+      "secure_payment": "100% Safe & Secure Payment"
+    },
+    "success": {
+      "verified_unlocked": "Payment Verified • Plan Unlocked",
+      "congrats": "Congratulations, {{name}}!",
+      "unlocked_message": "Your plan {{plan}} is now unlocked & active. Your personalized astrological data and features are ready to explore.",
+      "active_badge": "ACTIVE",
+      "client_chart": "Client / Chart:",
+      "birth_coordinates": "Birth Coordinates:",
+      "unlocked_calculations": "Unlocked Data & Calculations:",
+      "view_data_now": "View Unlocked {{plan}} Data Now ➔",
+      "transaction_id": "Transaction ID:",
+      "amount_paid": "Amount Paid:",
+      "amount_paid_val": "₹{{amount}} INR",
+      "order_verification": "Order Verification:",
+      "hmac_verified": "HMAC Verified & Synced",
+      "phone_whatsapp": "Phone / WhatsApp:",
+      "current_address": "Current Address:"
+    },
+    "history": {
+      "title": "Payment & Transaction History",
+      "subtitle": "Official record of your consultations and orders",
+      "loading": "Loading transaction history...",
+      "err_login": "Please log in to view your payment history.",
+      "err_fetch": "Could not load payment history. Please try again.",
+      "empty_title": "No transactions yet",
+      "empty_desc": "Your confirmed consultation orders and payments will appear here.",
+      "status_success": "SUCCESS • UNLOCKED",
+      "features_unlocked": "Plan Features & Predictions Unlocked",
+      "active_for_profile": "Active for your Profile",
+      "payment_id": "Payment ID:",
+      "order_id": "Order ID:",
+      "date": "Date:",
+      "recently": "Recently",
+      "method": "Method:"
+    },
+    "errors": {
+      "login_required": "Please log in to your account to complete consultation payment.",
+      "order_failed": "Failed to obtain Razorpay Order ID from server.",
+      "sdk_failed": "Failed to load Razorpay SDK. Please check your internet connection.",
+      "verification_failed": "Payment signature verification failed. Please contact support.",
+      "payment_cancelled": "Payment was cancelled or failed.",
+      "creation_failed": "Payment order creation failed. Please try again."
+    },
+    "unlocked_details": {
+      "roadmap_title": "{{years}}-Year Astrological Destiny Roadmap",
+      "roadmap_destination": "Vedic Roadmap Dashboard",
+      "dasha_label": "Vimshottari Dasha Milestones",
+      "dasha_desc": "Complete {{years}}-Year Mahadasha & Antardasha transition timings unlocked.",
+      "career_label": "Career & Financial Turning Points",
+      "career_desc": "Optimal career progression, business growth & wealth yogas.",
+      "destiny_label": "Destiny & Life Progression",
+      "destiny_desc": "Predictions across all 8 core life dimensions synthesized.",
+      "upaya_label": "Planetary Upayas & Remedial Guide",
+      "upaya_desc": "Customized gemstone, Yantra, Kavach & Vedic Stotras.",
+      "pdf_label": "Full High-Res PDF Life Dossier",
+      "pdf_desc": "Printable Vedic Destiny Blueprint unlocked for instant export.",
+      "matchmaking_title": "Daivajna Cosmic Relationship & Synastry",
+      "matchmaking_destination": "Kundli Milan & Synastry Dashboard",
+      "milan_label": "36-Guna Ashta Koota Milan",
+      "milan_desc": "Deep breakdown of Varn, Vashya, Tara, Yoni, Maitri, Gana, Bhakoot & Nadi.",
+      "cancellation_label": "Dosha Cancellation Analysis",
+      "cancellation_desc": "Mangal Dosha & Nadi Dosha cancellations computed from classical Shastras.",
+      "synastry_label": "Daivajna Karmic Synastry",
+      "synastry_desc": "Emotional, psychological & spiritual harmony analysis.",
+      "regenerations_label": "Unlimited Regenerations",
+      "regenerations_desc": "Re-synthesize matchmaking counsel anytime with updated partner data.",
+      "milan_pdf_label": "Printable Kundli Milan Dossier",
+      "milan_pdf_desc": "Instant export of the full comprehensive matchmaking report.",
+      "daily_title": "Vedic Daily Horoscope & Real-time Panchang",
+      "daily_destination": "Daily Vedic Horoscope Dashboard",
+      "gochar_label": "Real-time Gochar (Transits)",
+      "gochar_desc": "Live Chandra Gochar, Nakshatra lord vibrations & 12 Bhavas analysis.",
+      "muhurat_label": "Auspicious Muhurats & Kaal Windows",
+      "muhurat_desc": "Precise Abhijit Muhurat, Rahu Kaal, Gulika Kaal & Yamaganda timings.",
+      "lucky_label": "Personalized Lucky Vibrations",
+      "lucky_desc": "Daily lucky numbers, color frequencies & auspicious planetary hours.",
+      "synthesis_label": "Daivajna Daily Synthesis",
+      "synthesis_desc": "Personalized transit reading calculated directly from your birth chart."
+    },
+    "items": {
+      "parashari_synthesis": {
+        "name": "Comprehensive Vedic Synthesis (Parashari)",
+        "description": "Comprehensive Parashari birth chart synthesis, 12 Bhavas, active Dasha timeline, planetary yogas, remedial upayas, and high-resolution PDF dossier.",
+        "tagline": "Daily Auspicious Planetary Timing",
+        "benefits": [
+          "Comprehensive Vedic Synthesis (Parashari & Multi-Tradition)",
+          "Full 12 Bhavas, Dasha Milestones & Planetary Yogas",
+          "Personalized Remedial Upayas & Sacred Mantras",
+          "Career, Relationship & Spiritual Karmic Guidance",
+          "Audio voice reading feature (Listen to synthesis)",
+          "Unlimited High-Resolution Birth Chart PDF Downloads",
+          "Priority access to Astrologer consultations"
+        ]
+      },
+      "matchmaking_counsel": {
+        "name": "Matchmaking Deep Counsel & Regeneration",
+        "description": "Unlimited Daivajna Deep Relationship Synthesis regenerations, dynamic karmic synastry audit, and marital compatibility guidance.",
+        "tagline": "Marital Harmony & Synastry Regeneration",
+        "benefits": [
+          "Unlimited Daivajna Deep Relationship Synthesis Regenerations",
+          "Dynamic Karmic Synastry & Compatibility Refinements",
+          "Comprehensive Ashta Kootas & Manglik Dosha Pacification",
+          "Psychological Affinity & Long-term Marital Timing",
+          "Personalized Remedial Upayas & Sacred Mantras",
+          "Downloadable High-Resolution PDF Matchmaking Dossier"
+        ]
+      },
+      "roadmap_5": {
+        "name": "5-Year Vedic Destiny Roadmap",
+        "description": "Comprehensive 5-year life roadmap unlock across all 8 life spheres, upcoming transit cycles, and personalized remedies.",
+        "tagline": "5-Year Life Horizon",
+        "benefits": [
+          "Comprehensive 5-Year Life Horizon Unlock (0-5 Years)",
+          "All 8 Life Spheres & Vedic Dimensions Fully Open",
+          "Vimshottari Mahadasha & Antardasha Milestones",
+          "Jupiter & Saturn Transit Influence Windows",
+          "Personalized Remedial Upayas & Daily Sadhana",
+          "Downloadable High-Resolution 5-Year PDF Report"
+        ]
+      },
+      "roadmap_10": {
+        "name": "10-Year Vedic Destiny Roadmap",
+        "description": "Decadal 10-year Vedic destiny roadmap with major life inflection points, career scaling, and wealth growth.",
+        "tagline": "10-Year Life Horizon",
+        "benefits": [
+          "Complete 10-Year Life Horizon Unlock (0-10 Years)",
+          "All 8 Life Dimensions Fully Unlocked (including 0-5 Years)",
+          "Decadal Dasha Transitions & Bhukti Analysis",
+          "Major Inflection Years for Career, Marriage & Wealth",
+          "Personalized Remedial Sadhanas & Gemstone Guidance",
+          "Downloadable Comprehensive 10-Year PDF Report"
+        ]
+      },
+      "roadmap_15": {
+        "name": "15-Year Vedic Destiny Roadmap",
+        "description": "Comprehensive 15-year life roadmap unlock across all 8 life spheres, Saturn & Jupiter transit cycles, and personalized remedies.",
+        "tagline": "15-Year Life Horizon",
+        "benefits": [
+          "Comprehensive 15-Year Life Horizon Unlock (0-15 Years)",
+          "All 8 Life Spheres & Vedic Dimensions Fully Open",
+          "Vimshottari Mahadasha & Antardasha Analysis",
+          "Saturn (Shani) & Jupiter (Guru) Transit Windows",
+          "Personalized Remedial Upayas & Daily Sadhana",
+          "Downloadable High-Resolution 15-Year PDF Report"
+        ]
+      },
+      "roadmap_20": {
+        "name": "20-Year Vedic Destiny Roadmap",
+        "description": "Multi-decade 20-year Vedic destiny roadmap with major life inflection points, Sade Sati timing, and career peaks.",
+        "tagline": "20-Year Life Horizon",
+        "benefits": [
+          "Complete 20-Year Life Horizon Unlock (0-20 Years)",
+          "All 8 Life Dimensions Fully Unlocked",
+          "Multi-Decade Dasha Sequence & Bhukti Transits",
+          "Major Inflection Years for Wealth, Status & Relocation",
+          "Personalized Remedial Sadhanas & Gemstone Guidance",
+          "Downloadable Comprehensive 20-Year PDF Report"
+        ]
+      },
+      "roadmap_25": {
+        "name": "25-Year Vedic Destiny Roadmap (Master Life Blueprint)",
+        "description": "Quarter-century master Vedic life blueprint unlocking all horizons up to 25 years with comprehensive dasha & transit synthesis.",
+        "tagline": "All Horizons (0-25 Years) Unlocked",
+        "benefits": [
+          "Complete 25-Year Master Life Blueprint (0-25 Years)",
+          "All 8 Life Spheres 100% Unlocked for Quarter-Century",
+          "Lifelong Vimshottari Mahadasha & Gochara Synthesis",
+          "Spiritual Moksha, Wealth Peaks & Karmic Resolutions",
+          "Comprehensive Energized Upayas & Sacred Mantras",
+          "Unlimited High-Resolution 25-Year Master PDF Dossiers"
+        ]
+      }
+    }
   }
 }

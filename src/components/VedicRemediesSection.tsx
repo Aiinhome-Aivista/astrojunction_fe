@@ -267,7 +267,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
                     {t('remedies.primary_graha', 'Primary Graha')}
                   </span>
                   <span className={`text-xs font-medium ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-black font-semibold'}`}>
-                    {t(`remedies.items.${remedy.id}.graha`, remedy.graha).split('(')[0]}
+                    {t(`remedies.items.${remedy.id}.graha`, remedy.graha).split('(')[0].trim()}
                   </span>
                 </div>
 

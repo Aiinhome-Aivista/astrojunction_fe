@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
@@ -48,6 +49,35 @@ import { MatchReportSummary, MatchReportFull, saveMatchReport, listMatchReports,
 import { API_ENDPOINTS } from '../config/api_config';
 import { ApiError, api } from '../services/api';
 import { getTranslation } from '../services/translations';
+import {
+  formatLocalizedDigits,
+  getLocalizedKootaName,
+  getLocalizedKootaArea,
+  getLocalizedKootaDescription,
+  getLocalizedKootaValue,
+  getLocalizedVerdict,
+  getLocalizedStatus,
+  getLocalizedSeverity,
+  getLocalizedSynastryAspect,
+  getLocalizedSynastryVerdict,
+  getLocalizedRemedy,
+  getLocalizedMuhuratAdvice,
+  getLocalizedRashi,
+  getLocalizedNakshatra,
+  getLocalizedPlanet,
+  getLocalizedGemPurpose,
+  getLocalizedElement,
+  getLocalizedElementalSynergy,
+  getLocalizedNumerologyDescription,
+  getLocalizedNadi,
+  getLocalizedNadiReason,
+  getLocalizedNadiRemedy,
+  getLocalizedBhakootReason,
+  getLocalizedBhakootRemedy,
+  getLocalizedManglikExplanation,
+  getLocalizedSynastryAspectPlanets,
+} from '../services/matchmakingTranslations';
+import { getGemstoneKey } from '../services/birthChartTranslations';
 
 interface MatchmakingViewProps {
   currentProfile: UserProfile;
@@ -135,6 +165,8 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
   theme = 'dark',
   onNavigateToTab,
 }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = language || i18n.language || 'en';
   const profileId = currentProfile?.id || 'default';
   const storageKey = `jyotish_matchmaking_state_${profileId}`;
   const historyKey = `jyotish_matchmaking_history_${profileId}`;
@@ -392,7 +424,6 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
   };
 
   const printableRef = useRef<HTMLDivElement>(null);
-  const t = (key: string) => getTranslation(key, language);
   const calculationTimerRef = useRef<NodeJS.Timeout[]>([]);
 
   // Recalculate match with cosmic celestial loader animation
@@ -599,7 +630,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         partner1: p1,
         partner2: p2,
         matchResult: validResult,
-        language,
+        language: currentLang,
         force: forceRefresh,
       });
 
@@ -722,7 +753,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       const genDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       const p1Name  = san(partner1.fullName) || 'Partner A';
       const p2Name  = san(partner2.fullName) || 'Partner B';
-      const score   = matchResult ? `${matchResult.totalPoints}/36 (${matchResult.percentage}%)` : 'N/A';
+      const score   = matchResult ? `${formatLocalizedDigits(matchResult.totalPoints, currentLang)}/36 (${formatLocalizedDigits(matchResult.percentage, currentLang)}%)` : 'N/A';
 
       // ── Shared page chrome ────────────────────────────────────────────────
       const drawChrome = (pageNum: number, totalPages: number) => {
@@ -862,7 +893,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
       const cardW = (pageWidth - 28) / 2;
       const coreCards = [
         { title: 'Guna Milan & Cosmic Alignment',     content: safeAI(aiSynthesis?.guna_milan) },
-        { title: 'Manglik (Kuja) Dosha Evaluation',   content: safeAI(aiSynthesis?.manglik_dosha) },
+        { title: t("kundliMilan.counsel.sec_manglik"),   content: safeAI(aiSynthesis?.manglik_dosha) },
         { title: 'Nadi Koota & Genetic Prana Harmony', content: safeAI(aiSynthesis?.nadi_analysis) },
         { title: 'Bhakoot Harmony & Emotional Rhythm', content: safeAI(aiSynthesis?.bhakoot_analysis) },
       ].filter(c => c.content);
@@ -1151,7 +1182,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
             doc.text('ASTROJUNCTION  •  KUNDLI MILAN & ASHTA KOOTA COMPATIBILITY REPORT', 14, 17);
             doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(100, 100, 100);
             doc.text(
-              `${sanitize(partner1.fullName) || 'Partner A'}  &  ${sanitize(partner2.fullName) || 'Partner B'}  |  Score: ${matchResult.totalPoints}/36 (${matchResult.percentage}%)`,
+              `${sanitize(partner1.fullName) || 'Partner A'}  &  ${sanitize(partner2.fullName) || 'Partner B'}  |  Score: ${formatLocalizedDigits(matchResult.totalPoints, currentLang)}/36 (${formatLocalizedDigits(matchResult.percentage, currentLang)}%)`,
               pageWidth - 14, 17, { align: 'right' }
             );
             doc.setDrawColor(226, 211, 176); doc.setLineWidth(0.3);
@@ -1217,7 +1248,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(126, 95, 24);
         doc.text('TOTAL ASHTA KOOTA COMPATIBILITY SCORE', 52, yPos + 6);
         doc.setFontSize(15); doc.setTextColor(181, 131, 40);
-        doc.text(`${matchResult.percentage}%`, 52, yPos + 15);
+        doc.text(`${formatLocalizedDigits(matchResult.percentage, currentLang)}%`, 52, yPos + 15);
         doc.setFontSize(9); doc.setTextColor(26, 26, 30);
         doc.text(sanitize(matchResult.verdictTitle).toUpperCase(), 52, yPos + 20.5);
         doc.setFont('helvetica', 'italic'); doc.setFontSize(7); doc.setTextColor(90, 85, 75);
@@ -1291,7 +1322,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
         doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(126, 95, 24);
         doc.text('TOTAL GUNAS MATCHED', 16, yPos + 6);
         doc.setFontSize(10); doc.setTextColor(181, 131, 40);
-        doc.text(`${matchResult.totalPoints} / 36  (${matchResult.percentage}%)`, pageWidth - 15, yPos + 6.2, { align: 'right' });
+        doc.text(`${formatLocalizedDigits(matchResult.totalPoints, currentLang)} / 36  (${formatLocalizedDigits(matchResult.percentage, currentLang)}%)`, pageWidth - 15, yPos + 6.2, { align: 'right' });
 
         // ════════════════════════════════════════════════════════════════
         // PAGE 2 — Dosha + Numerology + AI Synthesis + Remedies + Seal
@@ -1352,7 +1383,7 @@ export const MatchmakingView: React.FC<MatchmakingViewProps> = ({
 
         y2 += doshaBoxH + 5;
 
-        // ── Section 2: Numerology & Elemental Synergy (2-column) ─────────
+        // ── Section 2: Numerology & {t("kundliMilan.synastry.elemental_synergy")} (2-column) ─────────
         doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(126, 95, 24);
         doc.text('NUMEROLOGY & ELEMENTAL SYNERGY ANALYSIS', 13, y2);
         y2 += 3;
@@ -1507,8 +1538,8 @@ Place: ${partner2.birthPlace} (Lat: ${partner2.latitude}, Long: ${partner2.longi
 
 -------------------------------------------------------------------
 MATCH SUMMARY & ASHTA KOOTA SCORE:
-Total Gunas Matched: ${matchResult.totalPoints} / 36 Points (${matchResult.percentage}%)
-Verdict: ${matchResult.verdictTitle}
+Total Gunas Matched: ${formatLocalizedDigits(matchResult.totalPoints, currentLang)} / 36 Points (${formatLocalizedDigits(matchResult.percentage, currentLang)}%)
+Verdict: ${getLocalizedVerdict(matchResult.verdictTitle, t)}
 Summary: ${matchResult.summary}
 
 -------------------------------------------------------------------
@@ -1542,7 +1573,7 @@ AUSPICIOUS REMEDIES & UPAYAS:
 ${matchResult.remedies.map((r, i) => `${i + 1}. ${r}`).join('\n')}
 
 Auspicious Muhurat Guidance:
-${matchResult.auspiciousMuhuratAdvice}
+${getLocalizedMuhuratAdvice(matchResult.auspiciousMuhuratAdvice, partner1.fullName, partner2.fullName, currentLang, t)}
 
 ===================================================================
 Issued by AstroJunction Daivajna Astrological Intelligence Engine
@@ -1558,7 +1589,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
   };
 
   const handleCopyReport = () => {
-    const summary = `${matchResult.verdictTitle} - ${matchResult.totalPoints}/36 Gunas Matched (${matchResult.percentage}%) between ${partner1.fullName} and ${partner2.fullName}. ${matchResult.summary}`;
+    const summary = `${getLocalizedVerdict(matchResult.verdictTitle, t)} - ${formatLocalizedDigits(matchResult.totalPoints, currentLang)}/36 Gunas Matched (${formatLocalizedDigits(matchResult.percentage, currentLang)}%) between ${partner1.fullName} and ${partner2.fullName}. ${matchResult.summary}`;
     navigator.clipboard.writeText(summary);
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2500);
@@ -1582,13 +1613,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           <div>
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
               <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C9A050]" />
-              <span>{t('matchmaking.title')}</span>
+              <span>{t('kundliMilan.eyebrow')}</span>
             </div>
             <h1 className="astro-page-header-title">
-              Kundli Milan &amp; Relationship Compatibility
+              {t("kundliMilan.title")}
             </h1>
             <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-2.5 max-w-2xl leading-relaxed`}>
-              Authentic Ashta Koota 36 Gunas calculation, Manglik (Kuja) Dosha balance, Nadi vitality, and Western synastry synthesis for marriage, love, and life partnerships.
+              {t("kundliMilan.subtitle")}
             </p>
           </div>
 
@@ -1603,10 +1634,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#222228]'
                   : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E] hover:border-[#C9A050] hover:bg-[#F0ECE1]'
               }`}
-              title="View saved matchmaking reports"
+              title={t("kundliMilan.saved_matches_btn")}
             >
               <FileText className="w-4 h-4 text-[#C9A050]" />
-              <span>Saved Matches</span>
+              <span>{t("kundliMilan.saved_matches_btn")}</span>
               {savedMatches.length > 0 && (
                 <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#C9A050]/20 text-[#C9A050]">
                   {savedMatches.length}
@@ -1614,7 +1645,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               )}
             </button>
 
-            {/* Save Match Button */}
+            {/* {t('kundliMilan.save_match')} Button */}
             {matchResult && (
               <button
                 type="button"
@@ -1629,7 +1660,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#222228]'
                     : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E] hover:border-[#C9A050] hover:bg-[#F0ECE1]'
                 }`}
-                title="Save this match report"
+                title={t("kundliMilan.save_match")}
               >
                 {saveState === 'saving' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-[#C9A050]" />
@@ -1640,12 +1671,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 )}
                 <span>
                   {saveState === 'saved'
-                    ? 'Saved'
+                    ? t('kundliMilan.saved')
                     : saveState === 'saving'
-                    ? 'Saving...'
+                    ? t('kundliMilan.downloading')
                     : saveState === 'error'
                     ? 'Save Error'
-                    : 'Save Match'}
+                    : t('kundliMilan.save_match')}
                 </span>
               </button>
             )}
@@ -1672,14 +1703,14 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-[#C9A050]/20'
                   : 'bg-[#C9A050] hover:bg-[#B38730] text-white border-[#C9A050] shadow-[#C9A050]/20'
               } disabled:opacity-50`}
-              title="Download Match Report (PDF)"
+              title={t("kundliMilan.download_pdf")}
             >
               {isGeneratingPdf ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Download className="w-4 h-4" />
               )}
-              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Report (PDF)'}</span>
+              <span>{isGeneratingPdf ? 'Generating PDF...' : t('kundliMilan.download_pdf')}</span>
             </button>
           </div>
         </div>
@@ -1701,7 +1732,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 </div>
                 <div>
                   <h3 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                    {t('matchmaking.partner1')}
+                    {t('kundliMilan.partner1_title')}
                   </h3>
                 </div>
               </div>
@@ -1709,7 +1740,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               {isP1Saved && (
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40 shadow-sm">
                   <Check className="w-3.5 h-3.5 text-[#C9A050] stroke-[2.5]" />
-                  <span>Saved</span>
+                  <span>{t("kundliMilan.saved")}</span>
                 </span>
               )}
             </div>
@@ -1717,11 +1748,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <div className="space-y-4">
               {/* Full Name */}
               <div>
-                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Full Name</label>
+                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.full_name")}</label>
                 <input
                   type="text"
                   disabled={isP1Saved}
-                  placeholder="Enter Groom / Person A Name"
+                  placeholder={t("kundliMilan.p1_name_placeholder")}
                   value={partner1.fullName}
                   onChange={(e) => setPartner1({ ...partner1, fullName: e.target.value })}
                   className={`w-full rounded-xl px-3.5 py-2.5 text-xs sm:text-sm border outline-none transition ${
@@ -1736,7 +1767,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Birth Date */}
                 <div>
-                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Date of Birth</label>
+                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.date_of_birth")}</label>
                   <VedicDatePicker
                     value={partner1.birthDate}
                     onChange={(newDate) => setPartner1({ ...partner1, birthDate: newDate })}
@@ -1748,7 +1779,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
                 {/* Birth Time */}
                 <div>
-                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Birth Time</label>
+                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.birth_time")}</label>
                   <VedicTimePicker
                     value={partner1.birthTime}
                     onChange={(newTime) => setPartner1({ ...partner1, birthTime: newTime })}
@@ -1761,11 +1792,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
               {/* Birth City */}
               <div>
-                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Birth City / Country</label>
+                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.birth_city")}</label>
                 <input
                   type="text"
                   disabled={isP1Saved}
-                  placeholder="e.g. Kolkata, India"
+                  placeholder={t("kundliMilan.city_placeholder")}
                   value={partner1.birthPlace}
                   onChange={(e) => setPartner1({ ...partner1, birthPlace: e.target.value })}
                   className={`w-full rounded-xl px-3.5 py-2.5 text-xs sm:text-sm border outline-none transition ${
@@ -1790,7 +1821,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#F0ECE1]'
                 }`}
               >
-                Edit
+                {t("kundliMilan.edit")}
               </button>
 
               <button
@@ -1806,7 +1837,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     : 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] shadow-[#C9A050]/20 hover:scale-[1.02]'
                 }`}
               >
-                <span>{isP1Saved ? 'Saved' : 'Save'}</span>
+                <span>{isP1Saved ? t("kundliMilan.saved") : t("kundliMilan.save")}</span>
               </button>
             </div>
           </div>
@@ -1826,7 +1857,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 </div>
                 <div>
                   <h3 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                    {t('matchmaking.partner2')}
+                    {t('kundliMilan.partner2_title')}
                   </h3>
                 </div>
               </div>
@@ -1834,7 +1865,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               {isP2Saved && (
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40 shadow-sm">
                   <Check className="w-3.5 h-3.5 text-[#C9A050] stroke-[2.5]" />
-                  <span>Saved</span>
+                  <span>{t("kundliMilan.saved")}</span>
                 </span>
               )}
             </div>
@@ -1842,11 +1873,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <div className="space-y-4">
               {/* Full Name */}
               <div>
-                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Full Name</label>
+                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.full_name")}</label>
                 <input
                   type="text"
                   disabled={isP2Saved}
-                  placeholder="Enter Bride / Person B Name"
+                  placeholder={t("kundliMilan.p2_name_placeholder")}
                   value={partner2.fullName}
                   onChange={(e) => setPartner2({ ...partner2, fullName: e.target.value })}
                   className={`w-full rounded-xl px-3.5 py-2.5 text-xs sm:text-sm border outline-none transition ${
@@ -1861,7 +1892,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Birth Date */}
                 <div>
-                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Date of Birth</label>
+                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.date_of_birth")}</label>
                   <VedicDatePicker
                     value={partner2.birthDate}
                     onChange={(newDate) => setPartner2({ ...partner2, birthDate: newDate })}
@@ -1873,7 +1904,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
                 {/* Birth Time */}
                 <div>
-                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Birth Time</label>
+                  <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.birth_time")}</label>
                   <VedicTimePicker
                     value={partner2.birthTime}
                     onChange={(newTime) => setPartner2({ ...partner2, birthTime: newTime })}
@@ -1886,11 +1917,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
               {/* Birth City */}
               <div>
-                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Birth City / Country</label>
+                <label className={`block mb-1.5 text-xs font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.birth_city")}</label>
                 <input
                   type="text"
                   disabled={isP2Saved}
-                  placeholder="e.g. Mumbai, India"
+                  placeholder={t("kundliMilan.city_placeholder")}
                   value={partner2.birthPlace}
                   onChange={(e) => setPartner2({ ...partner2, birthPlace: e.target.value })}
                   className={`w-full rounded-xl px-3.5 py-2.5 text-xs sm:text-sm border outline-none transition ${
@@ -1915,7 +1946,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#F0ECE1]'
                 }`}
               >
-                Edit
+                {t("kundliMilan.edit")}
               </button>
 
               <button
@@ -1931,7 +1962,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     : 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] shadow-[#C9A050]/20 hover:scale-[1.02]'
                 }`}
               >
-                <span>{isP2Saved ? 'Saved' : 'Save'}</span>
+                <span>{isP2Saved ? t("kundliMilan.saved") : t("kundliMilan.save")}</span>
               </button>
             </div>
           </div>
@@ -1954,8 +1985,8 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <Sparkles className={`w-5 h-5 text-[#0D0D0F] ${isCalculatingMilan ? 'animate-spin' : ''}`} />
             <span>
               {isCalculatingMilan
-                ? 'Synthesizing Celestial Mansions...'
-                : 'Generate'}
+                ? t('kundliMilan.counsel.synthesizing_title', { defaultValue: 'Synthesizing Celestial Mansions...' })
+                : t('kundliMilan.generate')}
             </span>
           </button>
         </div>
@@ -2014,12 +2045,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
                   } tracking-wide min-h-[32px] transition-all`}
                 >
-                  {loadingStep === 0 && '✨ Aligning Moon Nakshatras & Lunar Mansions...'}
-                  {loadingStep === 1 && '🪐 Computing 8 Kootas & 36 Guna Milan Matrix...'}
-                  {loadingStep === 2 && '🔮 Synthesizing Manglik (Kuja), Nadi & Synastry Vitality...'}
+                  {loadingStep === 0 && t("kundliMilan.loader_step_0")}
+                    {loadingStep === 1 && t("kundliMilan.loader_step_1")}
+                    {loadingStep === 2 && t("kundliMilan.loader_step_2")}
                 </h3>
                 <p className="text-xs sm:text-sm text-[#C9A050] font-semibold tracking-widest uppercase">
-                  Vedic Kundli Milan In Progress ({loadingStep === 0 ? '33%' : loadingStep === 1 ? '66%' : '99%'})
+                  {t('kundliMilan.in_progress', { pct: formatLocalizedDigits(loadingStep === 0 ? 33 : loadingStep === 1 ? 66 : 99, currentLang) })}
                 </p>
               </div>
 
@@ -2084,10 +2115,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className={`text-3xl sm:text-4xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                  {matchResult.totalPoints}
+                  {formatLocalizedDigits(matchResult.totalPoints, currentLang)}
                 </span>
-                <span className="text-[10px] sm:text-xs text-[#C9A050] font-bold tracking-wider uppercase">/ 36 Gunas</span>
-                <span className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} font-sans font-semibold`}>{matchResult.percentage}%</span>
+                <span className="text-[10px] sm:text-xs text-[#C9A050] font-bold tracking-wider uppercase">/ {formatLocalizedDigits(36, currentLang)} {t("kundliMilan.gunas_label")}</span>
+                <span className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} font-sans font-semibold`}>{formatLocalizedDigits(matchResult.percentage, currentLang)}%</span>
               </div>
             </div>
 
@@ -2095,21 +2126,17 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="flex flex-wrap items-center gap-2 mb-2.5">
                 <span className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40 shadow-sm">
                   <Award className="w-3.5 h-3.5" />
-                  <span>
-                    {matchResult.verdictTitle ||
-                      (typeof matchResult.summary === 'object' ? (matchResult.summary as any)?.verdictTitle : null) ||
-                      'Kundli Milan'}
-                  </span>
+                  <span>{getLocalizedVerdict(matchResult.verdictTitle || (typeof matchResult.summary === 'object' ? (matchResult.summary as any)?.verdictTitle : null) || 'Kundli Milan', t)}</span>
                 </span>
                 {isAutoRefreshing ? (
                   <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 animate-pulse">
                     <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-600 dark:text-amber-400" />
-                    <span>Auto-refreshing...</span>
+                    <span>{t("kundliMilan.auto_refreshing", { defaultValue: "Auto-refreshing..." })}</span>
                   </span>
                 ) : lastAutoRefreshedAt ? (
                   <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                     <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Live Auto-Updated</span>
+                    <span>{t("kundliMilan.live_auto_updated", { defaultValue: "Live Auto-Updated" })}</span>
                   </span>
                 ) : null}
               </div>
@@ -2117,9 +2144,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 {partner1.fullName || 'Partner 1'} &amp; {partner2.fullName || 'Partner 2'}
               </h2>
               <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-2.5 max-w-xl leading-relaxed`}>
-                {typeof matchResult.summary === 'object'
-                  ? (matchResult.summary as any)?.description
-                  : (matchResult.summary || (matchResult as any)?.description || '')}
+                {t("kundliMilan.summary_sentence", { score: formatLocalizedDigits(matchResult.totalPoints, currentLang), pct: formatLocalizedDigits(matchResult.percentage, currentLang) })}
               </p>
             </div>
           </div>
@@ -2132,9 +2157,9 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="flex items-center justify-center text-[#C9A050] mb-1.5">
                 <Flame className="w-4 h-4" />
               </div>
-              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>Manglik Dosha</span>
+              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>{t("kundliMilan.manglik_tile")}</span>
               <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'} mt-1 block`}>
-                {matchResult.manglik?.isNeutralized ? 'Neutralized ✓' : 'Remedy Needed ⚠️'}
+                {getLocalizedStatus(matchResult.manglik?.isNeutralized ? "Neutralized ✓" : (matchResult.manglik?.partner1?.isManglik || matchResult.manglik?.partner2?.isManglik ? "Active" : "No Dosha"), t)}
               </span>
             </div>
 
@@ -2144,9 +2169,9 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="flex items-center justify-center text-[#C9A050] mb-1.5">
                 <Dna className="w-4 h-4" />
               </div>
-              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>Nadi Vitality</span>
+              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>{t("kundliMilan.nadi_tile")}</span>
               <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'} mt-1 block`}>
-                {matchResult.kootas?.find((k) => k.id === 'nadi')?.obtainedPoints ?? 0}/8 Points
+                {t("kundliMilan.points_out_of", { obtained: formatLocalizedDigits(matchResult.kootas?.find((k) => k.id === "nadi")?.obtainedPoints ?? 0, currentLang), max: formatLocalizedDigits(8, currentLang) })}
               </span>
             </div>
 
@@ -2156,9 +2181,9 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="flex items-center justify-center text-[#C9A050] mb-1.5">
                 <Heart className="w-4 h-4" />
               </div>
-              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>Bhakoot Harmony</span>
+              <span className={`text-[10px] sm:text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block`}>{t("kundliMilan.bhakoot_tile")}</span>
               <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'} mt-1 block`}>
-                {matchResult.kootas?.find((k) => k.id === 'bhakoot')?.obtainedPoints ?? 0}/7 Points
+                {t("kundliMilan.points_out_of", { obtained: formatLocalizedDigits(matchResult.kootas?.find((k) => k.id === "bhakoot")?.obtainedPoints ?? 0, currentLang), max: formatLocalizedDigits(7, currentLang) })}
               </span>
             </div>
           </div>
@@ -2166,10 +2191,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className={`flex flex-wrap items-center justify-center gap-1.5 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} pb-3`}>
+      <div className={`flex flex-nowrap overflow-x-auto scrollbar-none items-center justify-start sm:justify-center gap-1 sm:gap-1.5 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'} pb-3`}>
         <button
           onClick={() => setActiveTab('kootas')}
-          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition cursor-pointer ${
             activeTab === 'kootas'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2178,12 +2203,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>8 Kootas Breakdown ({matchResult.totalPoints}/36)</span>
+          <span>{t("kundliMilan.tab_kootas", { score: formatLocalizedDigits(matchResult.totalPoints, currentLang) })}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('doshas')}
-          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition cursor-pointer ${
             activeTab === 'doshas'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2192,12 +2217,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           }`}
         >
           <Flame className="w-4 h-4" />
-          <span>Manglik &amp; Critical Doshas</span>
+          <span>{t("kundliMilan.tab_doshas")}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('synastry')}
-          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition cursor-pointer ${
             activeTab === 'synastry'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2206,12 +2231,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>Western Synastry &amp; Elements</span>
+          <span>{t("kundliMilan.tab_synastry")}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('ai_counsel')}
-          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer border-2 shadow-sm ${
+          className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer border-2 shadow-sm ${
             activeTab === 'ai_counsel'
               ? 'bg-gradient-to-r from-[#C9A050] to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-md shadow-[#C9A050]/30 font-bold'
               : theme === 'dark'
@@ -2224,7 +2249,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               activeTab === 'ai_counsel' ? 'text-[#0D0D0F]' : 'text-[#C9A050]'
             }`}
           />
-          <span>Astrological Counsel</span>
+          <span>{t("kundliMilan.tab_counsel")}</span>
           <span
             className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase tracking-wider ml-1 shadow-xs ${
               activeTab === 'ai_counsel'
@@ -2238,7 +2263,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         <button
           onClick={() => setActiveTab('remedies')}
-          className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+          className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold whitespace-nowrap shrink-0 transition cursor-pointer ${
             activeTab === 'remedies'
               ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20 font-bold'
               : theme === 'dark'
@@ -2247,7 +2272,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Remedies &amp; Muhurat</span>
+          <span>{t("kundliMilan.tab_remedies")}</span>
         </button>
       </div>
 
@@ -2256,10 +2281,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <h3 className={`text-lg sm:text-xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-              Ashta Koota (8 Kootas) Classical Scoring Matrix
+              {t("kundliMilan.matrix_title")}
             </h3>
             <span className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-              Score: <strong className="text-[#C9A050] font-bold">{matchResult.totalPoints}</strong> / 36 Maximum
+              {t("kundliMilan.score_max", { score: formatLocalizedDigits(matchResult.totalPoints, currentLang) })}
             </span>
           </div>
 
@@ -2290,11 +2315,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div>
                         <div className="flex items-center space-x-2">
                           <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                            {koota.name}
+                            {getLocalizedKootaName(koota.id, koota.name, currentLang, t)}
                           </h4>
                           <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} italic`}>({koota.sanskritName})</span>
                         </div>
-                        <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-0.5`}>{koota.area}</p>
+                        <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-0.5`}>{getLocalizedKootaArea(koota.id, koota.area, t)}</p>
                       </div>
                     </div>
 
@@ -2303,14 +2328,14 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`hidden md:flex items-center space-x-2 text-xs px-3.5 py-1.5 rounded-xl border ${
                         theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-[#9E9A90]' : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#544B3D]'
                       }`}>
-                        <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{partner1.fullName.split(' ')[0]}: <strong className="text-[#C9A050]">{koota.p1Value}</strong></span>
+                        <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{partner1.fullName.split(' ')[0]}: <strong className="text-[#C9A050]">{getLocalizedKootaValue(koota.id, koota.p1Value, currentLang, t)}</strong></span>
                         <span>↔</span>
-                        <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{partner2.fullName.split(' ')[0]}: <strong className="text-[#C9A050]">{koota.p2Value}</strong></span>
+                        <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{partner2.fullName.split(' ')[0]}: <strong className="text-[#C9A050]">{getLocalizedKootaValue(koota.id, koota.p2Value, currentLang, t)}</strong></span>
                       </div>
 
                       {/* Points Badge */}
                       <div className={`px-3.5 py-1 rounded-full text-xs font-bold border ${badgeClass}`}>
-                        {koota.obtainedPoints} / {koota.maxPoints} Pts
+                        {t("kundliMilan.points_short", { got: formatLocalizedDigits(koota.obtainedPoints, currentLang), max: formatLocalizedDigits(koota.maxPoints, currentLang) })}
                       </div>
 
                       {isExpanded ? (
@@ -2332,14 +2357,14 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                           theme === 'dark' ? 'border-[#2A2A2E] text-[#E5E1D8]' : 'border-[#E5E1D8] text-[#2A2A2E]'
                         } text-xs sm:text-sm space-y-2.5 leading-relaxed`}
                       >
-                        <p className={theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}>{koota.description}</p>
+                        <p className={theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}>{getLocalizedKootaDescription(koota.id, koota.description, t)}</p>
                         <div className={`p-3.5 sm:p-4 rounded-xl border flex items-start space-x-2.5 ${
                           theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                         }`}>
                           <Info className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                           <div>
-                            <span className={`font-semibold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>Verdict Details: </span>
-                            <span>{koota.details}</span>
+                            <span className={`font-semibold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{t("kundliMilan.verdict_details")} </span>
+                            <span>{getLocalizedVerdict(koota.details, t)}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -2367,9 +2392,9 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               </div>
               <div>
                 <h3 className={`text-lg sm:text-xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                  Manglik (Kuja) Dosha Comparative Assessment
+                  {t("kundliMilan.doshas.manglik_assessment")}
                 </h3>
-                <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>Mars placement in 1st, 2nd, 4th, 7th, 8th, or 12th houses</p>
+                <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{t("kundliMilan.doshas.mars_placement_rule")}</p>
               </div>
             </div>
 
@@ -2379,20 +2404,20 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
               }`}>
                 <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block mb-1.5`}>
-                  {partner1.fullName} (Partner A)
+                  {partner1.fullName} ({t("kundliMilan.partner_a", { defaultValue: "Partner A" })})
                 </span>
                 <div className="flex items-center justify-between">
                   <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                    {matchResult.manglik?.partner1?.isManglik ? `Manglik (${matchResult.manglik?.partner1?.severity || 'Active'})` : 'Non-Manglik'}
+                    {matchResult.manglik?.partner1?.isManglik ? `${t('kundliMilan.doshas.manglik_active', { defaultValue: 'Manglik' })} (${getLocalizedSeverity(matchResult.manglik?.partner1?.severity || 'Active', t)})` : t('kundliMilan.status.non_manglik', { defaultValue: 'Non-Manglik' })}
                   </span>
                   <span className={`text-xs px-2.5 py-0.5 rounded-lg border font-semibold ${
                     theme === 'dark' ? 'bg-[#1A1A1E] text-[#9E9A90] border-[#2A2A2E]' : 'bg-white text-[#544B3D] border-[#E5E1D8]'
                   }`}>
-                    House {matchResult.manglik?.partner1?.marsHouse || '-'}
+                    {t("kundliMilan.doshas.house_label", { house: formatLocalizedDigits(matchResult.manglik?.partner1?.marsHouse || "-", currentLang) })}
                   </span>
                 </div>
                 <p className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-2.5`}>
-                  Status: <strong className="text-[#C9A050] font-semibold">{matchResult.manglik?.partner1?.cancellation || 'Standard Evaluation'}</strong>
+                  {t("kundliMilan.status_label", { defaultValue: "Status" })}: <strong className="text-[#C9A050] font-semibold">{getLocalizedStatus(matchResult.manglik?.partner1?.cancellation || "Standard Evaluation", t)}</strong>
                 </p>
               </div>
 
@@ -2401,20 +2426,20 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
               }`}>
                 <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} font-semibold uppercase tracking-wider block mb-1.5`}>
-                  {partner2.fullName} (Partner B)
+                  {partner2.fullName} ({t("kundliMilan.partner_b", { defaultValue: "Partner B" })})
                 </span>
                 <div className="flex items-center justify-between">
                   <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                    {matchResult.manglik?.partner2?.isManglik ? `Manglik (${matchResult.manglik?.partner2?.severity || 'Active'})` : 'Non-Manglik'}
+                    {matchResult.manglik?.partner2?.isManglik ? `${t('kundliMilan.doshas.manglik_active', { defaultValue: 'Manglik' })} (${getLocalizedSeverity(matchResult.manglik?.partner2?.severity || 'Active', t)})` : t('kundliMilan.status.non_manglik', { defaultValue: 'Non-Manglik' })}
                   </span>
                   <span className={`text-xs px-2.5 py-0.5 rounded-lg border font-semibold ${
                     theme === 'dark' ? 'bg-[#1A1A1E] text-[#9E9A90] border-[#2A2A2E]' : 'bg-white text-[#544B3D] border-[#E5E1D8]'
                   }`}>
-                    House {matchResult.manglik?.partner2?.marsHouse || '-'}
+                    {t("kundliMilan.doshas.house_label", { house: formatLocalizedDigits(matchResult.manglik?.partner2?.marsHouse || "-", currentLang) })}
                   </span>
                 </div>
                 <p className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-2.5`}>
-                  Status: <strong className="text-[#C9A050] font-semibold">{matchResult.manglik?.partner2?.cancellation || 'Standard Evaluation'}</strong>
+                  {t("kundliMilan.status_label", { defaultValue: "Status" })}: <strong className="text-[#C9A050] font-semibold">{getLocalizedStatus(matchResult.manglik?.partner2?.cancellation || "Standard Evaluation", t)}</strong>
                 </p>
               </div>
             </div>
@@ -2429,10 +2454,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   : 'bg-rose-950/20 border-rose-500/40 text-rose-300'
             }`}>
               <div className={`font-bold text-sm sm:text-base mb-1.5 ${theme === 'light' ? 'text-[#C9A050]' : 'text-[#E8C470]'}`}>
-                {matchResult.manglik?.verdict || 'Manglik Analysis'}
+                {getLocalizedStatus(matchResult.manglik?.verdict || "Manglik Analysis", t)}
               </div>
               <p className={theme === 'light' ? 'text-[#544B3D]' : 'text-[#9E9A90]'}>
-                {matchResult.manglik?.explanation || ''}
+                {getLocalizedManglikExplanation(matchResult.manglik?.explanation, currentLang, t)}
               </p>
             </div>
           </div>
@@ -2447,31 +2472,31 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             } border rounded-2xl p-6 sm:p-8`}>
               <div className="flex items-center space-x-3 mb-3.5">
                 <Dna className="w-5 h-5 text-[#C9A050]" />
-                <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>Nadi Dosha Examination</h4>
+                <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{t("kundliMilan.doshas.nadi_exam")}</h4>
               </div>
               <div className={`space-y-2.5 text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
                 <div className="flex justify-between">
-                  <span>{partner1.fullName.split(' ')[0]} Nadi:</span>
-                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{matchResult.nadiDosha?.partner1Nadi || '-'}</strong>
+                  <span>{partner1.fullName.split(' ')[0]} {t('kundliMilan.nadi_label', { defaultValue: 'Nadi' })}:</span>
+                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{getLocalizedNadi(matchResult.nadiDosha?.partner1Nadi, currentLang, t)}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span>{partner2.fullName.split(' ')[0]} Nadi:</span>
-                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{matchResult.nadiDosha?.partner2Nadi || '-'}</strong>
+                  <span>{partner2.fullName.split(' ')[0]} {t('kundliMilan.nadi_label', { defaultValue: 'Nadi' })}:</span>
+                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{getLocalizedNadi(matchResult.nadiDosha?.partner2Nadi, currentLang, t)}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span>Status:</span>
+                  <span>{t("kundliMilan.status_label", { defaultValue: "Status" })}:</span>
                   <strong className={matchResult.nadiDosha?.hasDosha && !matchResult.nadiDosha?.isCancelled ? 'text-rose-400 font-bold' : 'text-[#C9A050] font-bold'}>
                     {matchResult.nadiDosha?.hasDosha
-                      ? matchResult.nadiDosha?.isCancelled
-                        ? 'Dosha Cancelled (Parihara) ✓'
-                        : 'Active Nadi Dosha ⚠️'
-                      : 'No Dosha (Pure Harmony) ✓'}
+                      ? (matchResult.nadiDosha?.isCancelled
+                        ? t("kundliMilan.status.cancelled", { defaultValue: "Dosha Cancelled (Parihara) ✓" })
+                        : t("kundliMilan.status.active_nadi", { defaultValue: "Active Nadi Dosha ⚠️" }))
+                      : t("kundliMilan.status.no_dosha", { defaultValue: "No Dosha (Pure Harmony) ✓" })}
                   </strong>
                 </div>
                 <p className={`p-3.5 rounded-xl border text-xs sm:text-sm mt-3.5 leading-relaxed ${
                   theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E]'
                 }`}>
-                  {matchResult.nadiDosha?.reason || 'Evaluation completed'}. {matchResult.nadiDosha?.remedy || ''}
+                  {getLocalizedNadiReason(matchResult.nadiDosha?.reason, partner1.fullName, partner2.fullName, currentLang, t)}. {getLocalizedNadiRemedy(matchResult.nadiDosha?.remedy, currentLang, t)}
                 </p>
               </div>
             </div>
@@ -2484,25 +2509,25 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             } border rounded-2xl p-6 sm:p-8`}>
               <div className="flex items-center space-x-3 mb-3.5">
                 <Heart className="w-5 h-5 text-[#C9A050]" />
-                <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>Bhakoot Dosha Examination</h4>
+                <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{t("kundliMilan.doshas.bhakoot_exam")}</h4>
               </div>
               <div className={`space-y-2.5 text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
                 <div className="flex justify-between">
-                  <span>{partner1.fullName.split(' ')[0]} Rashi:</span>
-                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{matchResult.bhakootDosha?.partner1Rashi || '-'}</strong>
+                  <span>{partner1.fullName.split(' ')[0]} {t('kundliMilan.rashi_label', { defaultValue: 'Rashi' })}:</span>
+                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{getLocalizedRashi(matchResult.bhakootDosha?.partner1Rashi, currentLang, t)}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span>{partner2.fullName.split(' ')[0]} Rashi:</span>
-                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{matchResult.bhakootDosha?.partner2Rashi || '-'}</strong>
+                  <span>{partner2.fullName.split(' ')[0]} {t('kundliMilan.rashi_label', { defaultValue: 'Rashi' })}:</span>
+                  <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>{getLocalizedRashi(matchResult.bhakootDosha?.partner2Rashi, currentLang, t)}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span>Rashi Angular Disparity:</span>
+                  <span>{t("kundliMilan.doshas.rashi_disparity")}</span>
                   <strong className="text-[#C9A050] font-bold">{matchResult.bhakootDosha?.rashiDistance || '-'}</strong>
                 </div>
                 <p className={`p-3.5 rounded-xl border text-xs sm:text-sm mt-3.5 leading-relaxed ${
                   theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E]'
                 }`}>
-                  {matchResult.bhakootDosha?.reason || 'Evaluation completed'}. {matchResult.bhakootDosha?.remedy || ''}
+                  {getLocalizedBhakootReason(matchResult.bhakootDosha?.reason, currentLang, t)}. {getLocalizedBhakootRemedy(matchResult.bhakootDosha?.remedy, currentLang, t)}
                 </p>
               </div>
             </div>
@@ -2519,10 +2544,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               : 'bg-white border-[#E5E1D8] shadow-sm'
           } border rounded-2xl p-6 sm:p-8`}>
             <h3 className={`text-lg sm:text-xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'} mb-2`}>
-              Western Synastry &amp; Cosmic Planetary Aspects
+              {t("kundliMilan.synastry.title")}
             </h3>
             <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mb-6 leading-relaxed`}>
-              Cross-tradition psychological harmonization between solar-lunar archetypes and interpersonal attraction vectors.
+              {t("kundliMilan.synastry.desc")}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -2531,20 +2556,20 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                 }`}>
                   <div className="flex justify-between items-center gap-2">
-                    <span className="text-xs sm:text-sm font-bold text-[#C9A050] truncate">{syn.title}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#C9A050] truncate">{getLocalizedSynastryAspect(syn.title, t)}</span>
                     <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0 shadow-sm ${
                       theme === 'light'
                         ? 'bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30'
                         : 'bg-[#C9A050]/20 text-[#E8C470] border border-[#C9A050]/40'
                     }`}>
-                      {syn.harmonyScore}%
+                      {formatLocalizedDigits(syn.harmonyScore, currentLang)}%
                     </span>
                   </div>
-                  <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} block`}>{syn.planets}</span>
+                  <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#9E9A90]'} block`}>{getLocalizedSynastryAspectPlanets(syn.planets, currentLang, t)}</span>
                   <div className={`w-full ${theme === 'light' ? 'bg-[#E5E1D8]' : 'bg-[#1A1A1E]'} h-2 rounded-full overflow-hidden`}>
-                    <div className="bg-[#C9A050] h-full rounded-full transition-all duration-500" style={{ width: `${syn.harmonyScore}%` }} />
+                    <div className="bg-[#C9A050] h-full rounded-full transition-all duration-500" style={{ width: `${formatLocalizedDigits(syn.harmonyScore, currentLang)}%` }} />
                   </div>
-                  <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{syn.description}</p>
+                  <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{getLocalizedSynastryVerdict(syn.description, currentLang, t)}</p>
                 </div>
               ))}
             </div>
@@ -2557,27 +2582,27 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 ? 'bg-[#141418] border-[#2A2A2E]' 
                 : 'bg-white border-[#E5E1D8] shadow-sm'
             } border rounded-2xl p-6 sm:p-8`}>
-              <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'} mb-3`}>Elemental Synergy</h4>
+              <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'} mb-3`}>{t("kundliMilan.synastry.elemental_synergy")}</h4>
               <div className={`p-4 sm:p-5 rounded-xl border space-y-2.5 text-xs sm:text-sm ${
                 theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
               }`}>
                 <div className={`flex justify-between ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                  <span>Elements:</span>
+                  <span>{t("kundliMilan.synastry.elements_label", { defaultValue: "Elements:" })}</span>
                   <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>
-                    {matchResult.elementalBalance?.partner1Element || '-'} ↔ {matchResult.elementalBalance?.partner2Element || '-'}
+                    {getLocalizedElement(matchResult.elementalBalance?.partner1Element, currentLang)} ↔ {getLocalizedElement(matchResult.elementalBalance?.partner2Element, currentLang)}
                   </strong>
                 </div>
                 <div className={`flex justify-between items-center ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                  <span>Synergy Score:</span>
+                  <span>{t("kundliMilan.synastry.synergy_score", { defaultValue: "Synergy Score:" })}</span>
                   <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full ${
                     theme === 'light'
                       ? 'bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30'
                       : 'bg-[#C9A050]/20 text-[#E8C470] border border-[#C9A050]/40'
                   }`}>
-                    {matchResult.elementalBalance?.score || 0}%
+                    {formatLocalizedDigits(matchResult.elementalBalance?.score || 0, currentLang)}%
                   </span>
                 </div>
-                <p className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{matchResult.elementalBalance?.synergy || ''}</p>
+                <p className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{getLocalizedElementalSynergy(matchResult.elementalBalance?.synergy, currentLang)}</p>
               </div>
             </div>
 
@@ -2586,27 +2611,27 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 ? 'bg-[#141418] border-[#2A2A2E]' 
                 : 'bg-white border-[#E5E1D8] shadow-sm'
             } border rounded-2xl p-6 sm:p-8`}>
-              <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'} mb-3`}>Numerological Alignment (Mulank &amp; Bhagyank)</h4>
+              <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'} mb-3`}>{t("kundliMilan.synastry.numerological_alignment")}</h4>
               <div className={`p-4 sm:p-5 rounded-xl border space-y-2.5 text-xs sm:text-sm ${
                 theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
               }`}>
                 <div className={`flex justify-between ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                  <span>Psychic Numbers (Mulank):</span>
+                  <span>{t("kundliMilan.synastry.psychic_numbers", { defaultValue: "Psychic Numbers (Mulank):" })}</span>
                   <strong className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}>
-                    Mulank {matchResult.numerologyMilan?.partner1Mulank || 0} ↔ Mulank {matchResult.numerologyMilan?.partner2Mulank || 0}
+                    {t("kundliMilan.synastry.mulank_label", { defaultValue: "Mulank" })} {formatLocalizedDigits(matchResult.numerologyMilan?.partner1Mulank || 0, currentLang)} ↔ {t("kundliMilan.synastry.mulank_label", { defaultValue: "Mulank" })} {formatLocalizedDigits(matchResult.numerologyMilan?.partner2Mulank || 0, currentLang)}
                   </strong>
                 </div>
                 <div className={`flex justify-between items-center ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                  <span>Destiny Harmony Score:</span>
+                  <span>{t("kundliMilan.synastry.destiny_score", { defaultValue: "Destiny Harmony Score:" })}</span>
                   <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full ${
                     theme === 'light'
                       ? 'bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30'
                       : 'bg-[#C9A050]/20 text-[#E8C470] border border-[#C9A050]/40'
                   }`}>
-                    {matchResult.numerologyMilan?.harmonyScore || 0}%
+                    {formatLocalizedDigits(matchResult.numerologyMilan?.harmonyScore || 0, currentLang)}%
                   </span>
                 </div>
-                <p className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{matchResult.numerologyMilan?.description || ''}</p>
+                <p className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} pt-1 leading-relaxed`}>{getLocalizedNumerologyDescription(matchResult.numerologyMilan?.description, matchResult.numerologyMilan?.partner1Mulank, matchResult.numerologyMilan?.partner2Mulank, currentLang)}</p>
               </div>
             </div>
           </div>
@@ -2624,13 +2649,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <div>
               <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2.5 backdrop-blur-md">
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C9A050]" />
-                <span>{t('matchmaking.ai_counsel')}</span>
+                <span>{t('kundliMilan.counsel.eyebrow')}</span>
               </div>
               <h3 className={`text-xl sm:text-2xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                Daivajna Deep Relationship Synthesis
+                {t("kundliMilan.counsel.title")}
               </h3>
               <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} mt-1`}>
-                Multidimensional karmic counsel generated dynamically for {partner1.fullName} &amp; {partner2.fullName}.
+                {t("kundliMilan.counsel.subtitle")}
               </p>
             </div>
 
@@ -2645,17 +2670,17 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                         ? 'bg-[#1C1C22] hover:bg-[#25252E] text-[#E5E1D8] border-[#3A3A42]'
                         : 'bg-[#F9F7F1] hover:bg-[#F0ECE1] text-[#2A2A2E] border-[#E5E1D8]'
                     }`}
-                    title="Download counsel report as PDF"
+                    title={t("kundliMilan.counsel.download_counsel_pdf")}
                   >
                     {isGeneratingPdf ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin text-[#C9A050]" />
-                        <span>Generating PDF...</span>
+                        <span>{t("kundliMilan.downloading")}</span>
                       </>
                     ) : (
                       <>
                         <Download className="w-4 h-4 text-[#C9A050]" />
-                        <span>Download Report</span>
+                        <span>{t("kundliMilan.download_pdf")}</span>
                       </>
                     )}
                   </button>
@@ -2669,7 +2694,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       title="Subscribe for ₹149 to regenerate counsel"
                     >
                       <Crown className="w-3.5 h-3.5 text-[#C9A050]" />
-                      <span>₹149 / Matchmaking Subscription</span>
+                      <span>{t("kundliMilan.subscription_modal.badge", { defaultValue: "₹149 / Matchmaking Subscription" })}</span>
                     </button>
                   ) : (
                     <button
@@ -2681,12 +2706,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       {isGeneratingAI ? (
                         <>
                           <RefreshCw className="w-4 h-4 animate-spin" />
-                          <span>Synthesizing Cosmic Charts...</span>
+                          <span>{t("kundliMilan.counsel.synthesizing_title", { defaultValue: "Synthesizing Cosmic Charts..." })}</span>
                         </>
                       ) : (
                         <>
                           <Sparkles className="w-4 h-4" />
-                          <span>Regenerate Full Counsel</span>
+                          <span>{t("kundliMilan.counsel.regenerate_btn")}</span>
                         </>
                       )}
                     </button>
@@ -2699,7 +2724,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer"
                 >
                   <Crown className="w-4 h-4 text-[#0D0D0F]" />
-                  <span>Unlock Counsel (₹149)</span>
+                  <span>{t("kundliMilan.subscription_modal.cta", { defaultValue: "Unlock Counsel (₹149)" })}</span>
                 </button>
               ) : (
                 <button
@@ -2711,12 +2736,12 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   {isGeneratingAI ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Synthesizing Cosmic Charts...</span>
+                      <span>{t("kundliMilan.counsel.synthesizing_title", { defaultValue: "Synthesizing Cosmic Charts..." })}</span>
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />
-                      <span>Generate Full Counsel</span>
+                      <span>{t("kundliMilan.counsel.regenerate_btn", { defaultValue: "Generate Full Counsel" })}</span>
                     </>
                   )}
                 </button>
@@ -2729,6 +2754,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               {typeof aiSynthesis === 'object' ? (
                 <div className="space-y-6 text-xs sm:text-sm">
                   {/* Overall Compatibility Hero */}
+                  {aiSynthesis?.language && aiSynthesis.language !== currentLang && (
+                    <div className="text-xs text-[#C9A050] bg-[#C9A050]/10 border border-[#C9A050]/20 rounded-xl p-3 mb-6 text-center font-medium">
+                      {t('kundliMilan.counsel.shown_in_notice', { lang: aiSynthesis.language.toUpperCase() })}
+                    </div>
+                  )}
                   {aiSynthesis.overall_compatibility && (
                     <div className={`p-5 sm:p-6 rounded-2xl border ${
                       theme === 'dark' ? 'bg-[#0D0D0F] border-[#C9A050]/40' : 'bg-[#F9F7F1] border-[#E5E1D8]'
@@ -2736,7 +2766,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 text-[#C9A050] font-serif font-bold text-sm sm:text-base">
                           <Sparkles className="w-4 h-4" />
-                          <span>Overall Astrological Compatibility</span>
+                          <span>{t("kundliMilan.counsel.overall_compatibility", { defaultValue: "Overall Astrological Compatibility" })}</span>
                         </div>
                         {typeof aiSynthesis.overall_compatibility === 'string' && aiSynthesis.overall_compatibility.length < 30 && (
                           <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#C9A050]/20 text-[#C9A050] border border-[#C9A050]/40">
@@ -2755,7 +2785,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.guna_milan && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>✨ Guna Milan &amp; Cosmic Alignment</span>
+                          <span>{t("kundliMilan.counsel.sec_guna_milan")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.guna_milan)}
@@ -2767,7 +2797,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-amber-500 text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <Flame className="w-4 h-4 text-amber-500" />
-                          <span>Manglik (Kuja) Dosha Evaluation</span>
+                          <span>{t("kundliMilan.counsel.sec_manglik")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.manglik_dosha)}
@@ -2779,7 +2809,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-purple-400 text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <Dna className="w-4 h-4 text-purple-400" />
-                          <span>Nadi Koota &amp; Genetic Prana Harmony</span>
+                          <span>{t("kundliMilan.counsel.sec_nadi")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.nadi_analysis)}
@@ -2791,7 +2821,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <Heart className="w-4 h-4 text-[#C9A050]" />
-                          <span>Bhakoot Harmony &amp; Emotional Rhythm</span>
+                          <span>{t("kundliMilan.counsel.sec_bhakoot")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.bhakoot_analysis)}
@@ -2802,7 +2832,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.psychological_affinity && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>🧠 Psychological &amp; Intellectual Affinity</span>
+                          <span>{t("kundliMilan.counsel.sec_psychological")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.psychological_affinity)}
@@ -2813,7 +2843,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.emotional_resonance && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>❤️ Emotional Resonance &amp; Temperament</span>
+                          <span>{t("kundliMilan.counsel.sec_emotional")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.emotional_resonance)}
@@ -2824,7 +2854,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.karmic_bond && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>🪐 Karmic Bond &amp; Destiny</span>
+                          <span>{t("kundliMilan.counsel.sec_karmic")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.karmic_bond)}
@@ -2835,7 +2865,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.physical_harmonization && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>🌿 Biological &amp; Physical Harmonization</span>
+                          <span>{t("kundliMilan.counsel.sec_biological")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.physical_harmonization)}
@@ -2846,7 +2876,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.family_and_married_life && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>🏡 Family &amp; Married Life</span>
+                          <span>{t("kundliMilan.counsel.sec_family")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.family_and_married_life)}
@@ -2857,7 +2887,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     {aiSynthesis.wealth_and_prosperity && (
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
-                          <span>💰 Wealth Multiplication &amp; Prosperity</span>
+                          <span>{t("kundliMilan.counsel.sec_wealth")}</span>
                         </h4>
                         <p className={`${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
                           {renderSafeAiText(aiSynthesis.wealth_and_prosperity)}
@@ -2872,7 +2902,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0D0D0F] border-emerald-500/30' : 'bg-[#F9F7F1] border-emerald-500/30'} space-y-2.5`}>
                         <h4 className="font-serif font-bold text-emerald-500 text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                          <span>Major Relationship Strengths</span>
+                          <span>{t("kundliMilan.counsel.sec_strengths")}</span>
                         </h4>
                         <ul className="space-y-2">
                           {aiSynthesis.major_strengths.map((str: any, i: number) => (
@@ -2889,7 +2919,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0D0D0F] border-amber-500/30' : 'bg-[#F9F7F1] border-amber-500/30'} space-y-2.5`}>
                         <h4 className="font-serif font-bold text-amber-500 text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <AlertTriangle className="w-4 h-4 text-amber-500" />
-                          <span>Potential Challenges &amp; Growth Areas</span>
+                          <span>{t("kundliMilan.counsel.sec_challenges")}</span>
                         </h4>
                         <ul className="space-y-2">
                           {aiSynthesis.major_challenges.map((ch: any, i: number) => (
@@ -2909,7 +2939,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2.5`}>
                         <h4 className="font-serif font-bold text-blue-400 text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <ShieldCheck className="w-4 h-4 text-blue-400" />
-                          <span>Conflict Resolution Guidance</span>
+                          <span>{t("kundliMilan.counsel.sec_resolution")}</span>
                         </h4>
                         <ul className="space-y-2">
                           {aiSynthesis.conflict_resolution.map((cr: any, i: number) => (
@@ -2926,7 +2956,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#C9A050]/40' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2.5`}>
                         <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                           <Sparkles className="w-4 h-4 text-[#C9A050]" />
-                          <span>Vedic Upayas &amp; Remedies</span>
+                          <span>{t("kundliMilan.counsel.sec_upayas")}</span>
                         </h4>
                         <ul className="space-y-2">
                           {aiSynthesis.vedic_remedies.map((vr: any, i: number) => (
@@ -2947,7 +2977,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     } space-y-2.5`}>
                       <h4 className="font-serif font-bold text-[#C9A050] text-sm sm:text-base flex items-center space-x-2">
                         <HeartHandshake className="w-4 h-4 text-[#C9A050]" />
-                        <span>Daivajna Final Assessment &amp; Blessings</span>
+                        <span>{t("kundliMilan.counsel.sec_blessing")}</span>
                       </h4>
                       <p className={`${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#2A2A2E]'} font-serif italic text-xs sm:text-sm leading-relaxed`}>
                         "{renderSafeAiText(aiSynthesis.final_assessment)}"
@@ -2972,7 +3002,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <RefreshCw className="w-8 h-8 text-[#C9A050] mx-auto animate-spin" />
               <div className="space-y-1.5">
                 <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                  Synthesizing Vedic Charts &amp; Planetary Alignments...
+                  {t("kundliMilan.counsel.synthesizing_title", { defaultValue: "Synthesizing Vedic Charts & Planetary Alignments..." })}
                 </h4>
                 <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
                   Daivajna is analyzing Guna Milan, Doshas, and synastry dynamics for {partner1.fullName} &amp; {partner2.fullName}.
@@ -2989,13 +3019,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className="space-y-1.5 max-w-lg mx-auto">
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
                   <Lock className="w-3.5 h-3.5" />
-                  <span>Matchmaking Subscription Feature • ₹149</span>
+                  <span>{t("kundliMilan.subscription_modal.badge", { defaultValue: "Matchmaking Subscription Feature • ₹149" })}</span>
                 </div>
                 <h4 className={`text-lg sm:text-xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                  Daivajna Deep Relationship Synthesis
+                  {t("kundliMilan.counsel.title")}
                 </h4>
                 <p className={`text-xs sm:text-sm font-sans ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'} leading-relaxed`}>
-                  Generate an exhaustive consultation covering psychological affinity, biological vitality, wealth generation, marital timing, and conflict resolution.
+                  {t("kundliMilan.counsel.empty_desc")}
                 </p>
               </div>
               <div className="pt-2">
@@ -3004,16 +3034,16 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   className="inline-flex items-center space-x-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-xl shadow-[#C9A050]/30 transition cursor-pointer hover:scale-[1.02] active:scale-95"
                 >
                   <Crown className="w-4 h-4" />
-                  <span>Subscribe for ₹149 &amp; Generate Full Counsel</span>
+                  <span>{t("kundliMilan.subscription_modal.cta", { defaultValue: "Subscribe for ₹149 & Generate Full Counsel" })}</span>
                   <Sparkles className="w-4 h-4" />
                 </button>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[#9E9A90] pt-1">
-                <span className="flex items-center space-x-1"><ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" /><span>Instant Activation</span></span>
+                <span className="flex items-center space-x-1"><ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" /><span>{t("kundliMilan.subscription_modal.feature_instant", { defaultValue: "Instant Activation" })}</span></span>
                 <span>•</span>
-                <span>Unlimited Regenerations</span>
+                <span>{t("kundliMilan.subscription_modal.feature_1", { defaultValue: "Unlimited Regenerations" })}</span>
                 <span>•</span>
-                <span>High-Res PDF Dossier</span>
+                <span>{t("kundliMilan.subscription_modal.feature_3", { defaultValue: "High-Res PDF Dossier" })}</span>
               </div>
             </div>
           ) : (
@@ -3022,7 +3052,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             }`}>
               <Sparkles className="w-8 h-8 text-[#C9A050] mx-auto opacity-70" />
               <p className={`text-xs sm:text-sm font-serif ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
-                Generate an exhaustive consultation covering psychological affinity, wealth generation, marital timing, and conflict resolution.
+                {t("kundliMilan.counsel.empty_desc")}
               </p>
               <div>
                 <button
@@ -3031,7 +3061,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   className="mt-2 inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-[#C9A050] hover:bg-[#D4AF37] disabled:opacity-50 text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/20 transition cursor-pointer hover:scale-[1.02] active:scale-95"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Generate Full Counsel</span>
+                  <span>{t("kundliMilan.counsel.regenerate_btn", { defaultValue: "Generate Full Counsel" })}</span>
                 </button>
               </div>
             </div>
@@ -3050,11 +3080,11 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <div className="flex items-center space-x-2.5 text-[#C9A050]">
               <ShieldCheck className="w-5 h-5" />
               <h3 className={`text-lg sm:text-xl font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                {t('matchmaking.remedies_title')}
+                {t("kundliMilan.remedies.title")}
               </h3>
             </div>
             <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-              Traditional Vedic Upayas and practical actions designed to pacify minor planetary afflictions and enhance marital sweetness.
+              {t("kundliMilan.remedies.subtitle")}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
@@ -3065,7 +3095,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   <span className="w-6 h-6 rounded-full bg-[#C9A050]/20 text-[#C9A050] font-bold flex items-center justify-center shrink-0 text-xs">
                     {idx + 1}
                   </span>
-                  <span className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} leading-relaxed`}>{rem}</span>
+                  <span className={`${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'} leading-relaxed`}>{getLocalizedRemedy(rem, partner1.fullName, partner2.fullName, currentLang, t)}</span>
                 </div>
               ))}
             </div>
@@ -3074,13 +3104,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
               <div className={`p-4 sm:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0D0D0F] border-[#C9A050]/40' : 'bg-[#F9F7F1] border-[#E5E1D8]'} space-y-2.5 mt-4`}>
                 <h4 className="font-serif font-bold text-[#C9A050] text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5">
                   <Sparkles className="w-4 h-4 text-[#C9A050]" />
-                  <span>Daivajna Personalized Relationship Upayas</span>
+                  <span>{t("kundliMilan.counsel.sec_upayas")}</span>
                 </h4>
                 <ul className="space-y-2">
                   {aiSynthesis.vedic_remedies.map((vr: string, i: number) => (
                     <li key={i} className="flex items-start space-x-2 text-xs sm:text-sm">
                       <span className="text-[#C9A050] font-bold">•</span>
-                      <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}>{vr}</span>
+                      <span className={theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}>{getLocalizedRemedy(vr, partner1.fullName, partner2.fullName, currentLang, t)}</span>
                     </li>
                   ))}
                 </ul>
@@ -3097,13 +3127,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
             <div className="flex items-center space-x-2.5 text-amber-500">
               <Calendar className="w-5 h-5" />
               <h4 className={`text-base sm:text-lg font-serif font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                Auspicious Vivaha / Partnership Muhurat Guidance
+                {t("kundliMilan.remedies.muhurat_title")}
               </h4>
             </div>
             <p className={`text-xs sm:text-sm leading-relaxed p-4 sm:p-5 rounded-xl border ${
               theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#F9F7F1] border-[#E5E1D8] text-[#2A2A2E]'
             }`}>
-              {matchResult.auspiciousMuhuratAdvice}
+              {getLocalizedMuhuratAdvice(matchResult.auspiciousMuhuratAdvice, partner1.fullName, partner2.fullName, currentLang, t)}
             </p>
           </div>
 
@@ -3116,7 +3146,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
             return (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Partner 1 Gemstones */}
+                {/* {t("kundliMilan.remedies.partner1_gems")} */}
                 <div className={`${
                   theme === 'dark' 
                     ? 'bg-[#141418] border-[#2A2A2E]' 
@@ -3125,7 +3155,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   <div className="flex items-center space-x-2 font-serif font-bold text-xs sm:text-sm pb-2.5 border-b border-[#E5E1D8]">
                     <Layers className="w-4 h-4 text-[#C9A050]" />
                     <span className={theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}>
-                      Favorable Gemstones (Lagna Based) • {partner1.fullName || 'Partner 1'}
+                      {t("kundliMilan.remedies.partner1_gems")} • {partner1.fullName || "Partner 1"}
                     </span>
                   </div>
                   <div className="space-y-2.5">
@@ -3134,16 +3164,16 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                         theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                       }`}>
                         <div className="flex justify-between items-center mb-1">
-                          <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{g.gem}</span>
-                          <span className="text-[10px] sm:text-xs font-bold text-[#C9A050] uppercase tracking-wider">{g.planet}</span>
+                          <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{t("vedic.gems." + getGemstoneKey(g.gem, g.planet))}</span>
+                          <span className="text-[10px] sm:text-xs font-bold text-[#C9A050] uppercase tracking-wider">{getLocalizedPlanet(g.planet, t)}</span>
                         </div>
-                        <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{g.purpose}</span>
+                        <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{getLocalizedGemPurpose(g.purpose, t)}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Partner 2 Gemstones */}
+                {/* {t("kundliMilan.remedies.partner2_gems")} */}
                 <div className={`${
                   theme === 'dark' 
                     ? 'bg-[#141418] border-[#2A2A2E]' 
@@ -3152,7 +3182,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   <div className="flex items-center space-x-2 font-serif font-bold text-xs sm:text-sm pb-2.5 border-b border-[#E5E1D8]">
                     <Layers className="w-4 h-4 text-[#C9A050]" />
                     <span className={theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}>
-                      Favorable Gemstones (Lagna Based) • {partner2.fullName || 'Partner 2'}
+                      {t("kundliMilan.remedies.partner2_gems")} • {partner2.fullName || "Partner 2"}
                     </span>
                   </div>
                   <div className="space-y-2.5">
@@ -3161,10 +3191,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                         theme === 'dark' ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                       }`}>
                         <div className="flex justify-between items-center mb-1">
-                          <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{g.gem}</span>
-                          <span className="text-[10px] sm:text-xs font-bold text-[#C9A050] uppercase tracking-wider">{g.planet}</span>
+                          <span className={`text-xs sm:text-sm font-bold ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{t("vedic.gems." + getGemstoneKey(g.gem, g.planet))}</span>
+                          <span className="text-[10px] sm:text-xs font-bold text-[#C9A050] uppercase tracking-wider">{getLocalizedPlanet(g.planet, t)}</span>
                         </div>
-                        <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{g.purpose}</span>
+                        <span className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>{getLocalizedGemPurpose(g.purpose, t)}</span>
                       </div>
                     ))}
                   </div>
@@ -3201,7 +3231,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
         {/* Partners Banner */}
         <div className="grid grid-cols-2 gap-6 my-6 p-4 bg-amber-50/50 border border-amber-200 rounded-lg">
           <div>
-            <div className="text-xs uppercase tracking-wider font-bold text-[#8C6D23]">Groom / Partner A</div>
+            <div className="text-xs uppercase tracking-wider font-bold text-[#8C6D23]">{t("kundliMilan.saved_modal.groom", { defaultValue: "Groom / Partner A" })}</div>
             <div className="text-lg font-bold text-gray-900">{partner1.fullName}</div>
             <div className="text-xs text-gray-600 mt-1">
               Born: {partner1.birthDate} at {partner1.birthTime}
@@ -3210,7 +3240,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           </div>
 
           <div className="text-right">
-            <div className="text-xs uppercase tracking-wider font-bold text-[#8C6D23]">Bride / Partner B</div>
+            <div className="text-xs uppercase tracking-wider font-bold text-[#8C6D23]">{t("kundliMilan.saved_modal.bride", { defaultValue: "Bride / Partner B" })}</div>
             <div className="text-lg font-bold text-gray-900">{partner2.fullName}</div>
             <div className="text-xs text-gray-600 mt-1">
               Born: {partner2.birthDate} at {partner2.birthTime}
@@ -3221,9 +3251,9 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
         {/* Score & Verdict Banner */}
         <div className="text-center my-6 p-4 bg-amber-100/60 border-2 border-[#C9A050] rounded-lg">
-          <div className="text-xs font-bold uppercase tracking-widest text-[#8C6D23]">Total Compatibility Score</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[#8C6D23]">{t("kundliMilan.saved_modal.total_score", { defaultValue: "Total Compatibility Score" })}</div>
           <div className="text-4xl font-bold text-[#8C6D23] my-1">
-            {matchResult.totalPoints} / 36 Gunas ({matchResult.percentage}%)
+            {formatLocalizedDigits(matchResult.totalPoints, currentLang)} / 36 Gunas ({formatLocalizedDigits(matchResult.percentage, currentLang)}%)
           </div>
           <div className="text-sm font-bold text-gray-800 uppercase tracking-wide">
             {matchResult.verdictTitle ||
@@ -3232,9 +3262,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
           </div>
           <p className="text-xs text-gray-700 mt-2 max-w-xl mx-auto italic">
             &ldquo;
-            {typeof matchResult.summary === 'object'
-              ? (matchResult.summary as any)?.description
-              : (matchResult.summary || (matchResult as any)?.description || '')}
+            {t("kundliMilan.summary_sentence", { score: formatLocalizedDigits(matchResult.totalPoints, currentLang), pct: formatLocalizedDigits(matchResult.percentage, currentLang) })}
             &rdquo;
           </p>
         </div>
@@ -3319,10 +3347,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   </div>
                   <div>
                     <h3 className={`font-serif font-bold text-base sm:text-lg ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
-                      Saved Matchmaking Reports
+                      {t("kundliMilan.saved_modal.title")}
                     </h3>
                     <p className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                      History for {currentProfile?.fullName || 'Current User'} ({savedMatches.length} records)
+                      {t("kundliMilan.saved_modal.history_for", { defaultValue: "History for" })} {currentProfile?.fullName || "User"} ({formatLocalizedDigits(savedMatches.length, currentLang)})
                     </p>
                   </div>
                 </div>
@@ -3343,7 +3371,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   <div className="text-center py-12 space-y-3">
                     <HeartHandshake className="w-12 h-12 text-[#9E9A90]/40 mx-auto" />
                     <p className={`text-sm ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#544B3D]'}`}>
-                      No saved matchmaking reports yet for this profile.
+                      {t("kundliMilan.saved_modal.empty")}
                     </p>
                     <p className={`text-xs ${theme === 'dark' ? 'text-[#9E9A90]/60' : 'text-[#9E9A90]'}`}>
                       When you enter partner details and save them, your match reports will appear here.
@@ -3373,10 +3401,10 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
                         <div className="flex flex-wrap items-center gap-2 text-xs">
                           <span className="px-2.5 py-0.5 rounded-full font-bold bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
-                            {m.totalScore} / {m.maxScore || 36} Gunas ({m.percentage || Math.round((m.totalScore / (m.maxScore || 36)) * 100)}%)
+                            {formatLocalizedDigits(m.totalScore, currentLang)} / {formatLocalizedDigits(m.maxScore || 36, currentLang)} {t("kundliMilan.gunas_label")} ({formatLocalizedDigits(m.percentage || Math.round((m.totalScore / (m.maxScore || 36)) * 100), currentLang)}%)
                           </span>
                           <span className={`text-xs font-semibold ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>
-                            {m.verdictTitle || 'Calculated Match'}
+                            {getLocalizedVerdict(m.verdictTitle || "Calculated Match", t)}
                           </span>
                         </div>
 
@@ -3392,7 +3420,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                           onClick={() => handleLoadFromHistory(m)}
                           className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#C9A050] hover:bg-[#D4AF37] text-black transition shadow-sm cursor-pointer"
                         >
-                          <span>Load</span>
+                          <span>{t("kundliMilan.saved_modal.load")}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
 
@@ -3400,7 +3428,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                           type="button"
                           onClick={(e) => handleDeleteFromHistory(m.id, e)}
                           className="p-1.5 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition cursor-pointer"
-                          title="Delete from history"
+                          title={t("kundliMilan.saved_modal.delete")}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -3424,7 +3452,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                     theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-white border-[#E5E1D8] text-[#2A2A2E] hover:bg-[#F0ECE1]'
                   }`}
                 >
-                  Close
+                  {t("kundliMilan.saved_modal.close")}
                 </button>
               </div>
             </motion.div>
@@ -3465,17 +3493,17 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
 
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30">
                   <Crown className="w-3.5 h-3.5" />
-                  <span>Matchmaking Subscription • ₹149 Only</span>
+                  <span>{t("kundliMilan.subscription_modal.badge", { defaultValue: "Matchmaking Subscription • ₹149 Only" })}</span>
                 </div>
 
                 <h3 className={`text-xl sm:text-2xl font-serif font-bold ${
                   theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
                 }`}>
-                  Unlock Daivajna Cosmic Relationship Counsel
+                  {t("kundliMilan.subscription_modal.title")}
                 </h3>
 
                 <p className="text-xs font-sans text-[#9E9A90] max-w-md leading-relaxed">
-                  Generating deep multidimensional relationship counsel, custom planetary synchronizations, and synastry refinements for your matching Kundlis requires the ₹149 Matchmaking Subscription.
+                  {t("kundliMilan.subscription_modal.subtitle")}
                 </p>
               </div>
 
@@ -3484,7 +3512,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                 theme === 'dark' ? 'bg-[#1A1A1E]/80 border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
               }`}>
                 <div className="text-xs font-bold text-[#C9A050] uppercase tracking-wider font-sans mb-1">
-                  What is unlocked with your ₹149 Subscription:
+                  {t("kundliMilan.subscription_modal.unlocked_header", { defaultValue: "What is unlocked with your ₹149 Subscription:" })}
                 </div>
                 
                 <div className="flex items-start space-x-2.5 text-xs">
@@ -3520,7 +3548,7 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                   className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-lg shadow-[#C9A050]/25 transition cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Subscribe for ₹149 &amp; Open Payment Gateway</span>
+                  <span>{t("kundliMilan.subscription_modal.cta", { defaultValue: "Subscribe for ₹149 & Open Payment Gateway" })}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
@@ -3533,13 +3561,13 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
                       : 'border-[#E5E1D8] text-[#6E6A60] hover:text-black hover:bg-[#F0ECE1]'
                   }`}
                 >
-                  Maybe Later
+                  {t("kundliMilan.subscription_modal.maybe_later", { defaultValue: "Maybe Later" })}
                 </button>
               </div>
 
               <div className="mt-4 flex items-center justify-center space-x-2 text-[11px] text-[#9E9A90]">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" />
-                <span>Instant Activation • 256-bit Secure Gateway</span>
+                <span>{t("kundliMilan.subscription_modal.secure_gateway", { defaultValue: "Instant Activation • 256-bit Secure Gateway" })}</span>
               </div>
             </motion.div>
           </div>

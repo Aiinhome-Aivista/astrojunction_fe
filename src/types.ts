@@ -107,6 +107,8 @@ export interface PanchangInfo {
   abhijitMuhurta: string;
   brahmaMuhurta: string;
   auspiciousScore: number;
+  bandCode?: 'high' | 'balanced' | 'mixed' | 'low';
+  isRealPanchang?: boolean;
   timings?: {
     sunrise: string;
     sunset: string;
@@ -129,9 +131,11 @@ export interface PanchangInfo {
 export interface NumerologyReport {
   mulank: number; // Psychic Number (1-9)
   mulankPlanet: string;
+  mulankPlanetClean?: string;
   mulankCharacteristics: string[];
   bhagyank: number; // Destiny Number (1-9 or Master 11, 22, 33)
   bhagyankPlanet: string;
+  bhagyankPlanetClean?: string;
   bhagyankMission: string;
   namankChaldean: number;
   namankPythagorean: number;

@@ -23,7 +23,15 @@ const LANGUAGE_LIST = [
   { code: 'fr', label: 'Français', short: 'FR' },
 ];
 
-function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
+export function HeaderLanguageSwitcher({
+  theme,
+  dropUp = false,
+  className = '',
+}: {
+  theme: 'light' | 'dark';
+  dropUp?: boolean;
+  className?: string;
+}) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -37,6 +45,7 @@ function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
     i18n.changeLanguage(code);
     try {
       localStorage.setItem('astrojunction_lang', code);
+      localStorage.setItem('jyotish_language', code);
     } catch {
       // storage unavailable
     }
@@ -90,7 +99,7 @@ function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
   };
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef} onKeyDown={handleKeyDown}>
+    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef} onKeyDown={handleKeyDown}>
       <button
         ref={buttonRef}
         type="button"
@@ -119,7 +128,7 @@ function HeaderLanguageSwitcher({ theme }: { theme: 'light' | 'dark' }) {
         <div
           role="listbox"
           aria-label="Language"
-          className={`absolute right-0 mt-2 w-40 sm:w-44 rounded-2xl border shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${
+          className={`absolute right-0 ${dropUp ? 'bottom-full mb-2' : 'mt-2'} w-40 sm:w-44 rounded-2xl border shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${
             theme === 'dark'
               ? 'bg-[#141418]/95 border-[#2A2A2E] text-[#E5E1D8]'
               : 'bg-white/95 border-gray-200 text-gray-800 shadow-xl'

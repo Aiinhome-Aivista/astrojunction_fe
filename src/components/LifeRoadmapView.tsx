@@ -1,6 +1,7 @@
 import { api, getToken } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Milestone,
   Sparkles,
@@ -25,6 +26,12 @@ import {
 } from 'lucide-react';
 import { UserProfile, LifeMilestone, HoroscopeTradition, NumerologyReport } from '../types';
 import { generateCustomRoadmap } from '../services/astroEngine';
+import {
+  formatLocalizedDigits,
+  getLocalizedMilestoneGuidance,
+  getLocalizedMilestoneTransits,
+  getLocalizedMilestoneRemedy
+} from '../services/birthChartTranslations';
 import { jsPDF } from 'jspdf';
 
 export const normalizeTimeframe = (rawTf?: string): string => {
@@ -63,6 +70,19 @@ interface LifeRoadmapViewProps {
   language?: string;
 }
 
+export const getCategoryKey = (cat: string): string => {
+  const c = (cat || '').toLowerCase();
+  if (c.includes('career') || c.includes('profession')) return 'career';
+  if (c.includes('wealth') || c.includes('finance')) return 'wealth';
+  if (c.includes('health') || c.includes('vitality') || c.includes('well')) return 'health';
+  if (c.includes('relation') || c.includes('marriage') || c.includes('love')) return 'relationships';
+  if (c.includes('family') || c.includes('child')) return 'family';
+  if (c.includes('education') || c.includes('learn')) return 'education';
+  if (c.includes('travel') || c.includes('relocation') || c.includes('foreign')) return 'travel';
+  if (c.includes('spirit') || c.includes('upaya')) return 'spirituality';
+  return 'career';
+};
+
 export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
   profile,
   tradition,
@@ -74,6 +94,19 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
   theme = 'dark',
   language = 'en',
 }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || language || 'en';
+  const isIndic = ['hi', 'bn', 'ta'].includes(currentLang);
+
+  const formatHorizonLabel = (rawTf: string, lang: string): string => {
+    const norm = normalizeTimeframe(rawTf);
+    const parts = norm.split(' ');
+    const range = parts[0] || '0-1';
+    const isSingular = range === '0-1';
+    const unit = isSingular ? t('roadmap.year_singular', 'Year') : t('roadmap.years_plural', 'Years');
+    const localizedRange = formatLocalizedDigits(range, lang);
+    return `${localizedRange} ${unit}`;
+  };
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedHorizon, setSelectedHorizon] = useState<string>('0-1 Year');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -81,7 +114,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [loadingText, setLoadingText] = useState<string>('0-1 Year');
 
-  const getStorageKey = () => `jyotish_roadmap_horizons_${profile?.id || profile?.fullName || 'user'}_${profile?.birthDate || ''}`;
+  const getStorageKey = () => `jyotish_roadmap_horizons_${profile?.id || profile?.fullName || 'user'}_${profile?.birthDate || ''}_${currentLang}`;
 
   // Ensure roadmap is initialized on mount/profile change
   useEffect(() => {
@@ -130,9 +163,11 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
     if (!hasLoadedCache && (!roadmap || roadmap.length < 25)) {
       setRoadmap(generateCustomRoadmap(profile, chartData));
+      // Auto-fetch free 0-1 Year predictions for the active language
+      handleGenerateHorizon('0-1 Year');
     }
     setSelectedHorizon('0-1 Year');
-  }, [profile?.fullName, profile?.birthDate]);
+  }, [profile?.fullName, profile?.birthDate, currentLang]);
 
   // Helper to load image as base64 DataURL for jsPDF canvas rendering
   const loadImageBase64 = (url: string): Promise<string | null> => {
@@ -279,7 +314,8 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
     setIsGenerating(true);
     const catObj = categories.find((c) => c.id === selectedCategory);
-    setLoadingText(`${catObj && catObj.id !== 'all' ? catObj.label + ' • ' : ''}${targetHorizon}`);
+    const catLabel = catObj && catObj.id !== 'all' ? t(`roadmap.categories.${getCategoryKey(catObj.id)}`, catObj.label) + ' • ' : '';
+    setLoadingText(`${catLabel}${formatHorizonLabel(targetHorizon, currentLang)}`);
     
     let updatedRoadmap = roadmap && roadmap.length > 0 ? [...roadmap] : generateCustomRoadmap(profile, chartData);
 
@@ -294,7 +330,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
         numerology,
         filter: targetHorizon,
         horizon: targetHorizon,
-        language,
+        language: currentLang,
       });
 
       console.log('✅ [Roadmap] Received predictions response:', res);
@@ -379,26 +415,8 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
   };
 
   const getCategoryDisplayName = (cat: string) => {
-    switch (cat?.toLowerCase()) {
-      case 'relationships':
-        return 'Marriage & Love';
-      case 'wealth':
-        return 'Wealth & Finance';
-      case 'health':
-        return 'Health & Vitality';
-      case 'spirituality':
-        return 'Spirituality & Upayas';
-      case 'career':
-        return 'Career & Profession';
-      case 'family':
-        return 'Family & Children';
-      case 'education':
-        return 'Education & Learning';
-      case 'travel':
-        return 'Travel & Relocation';
-      default:
-        return cat || '';
-    }
+    const key = getCategoryKey(cat);
+    return t(`roadmap.category_names.${key}`, cat || '');
   };
 
   const defaultRoadmap = generateCustomRoadmap(profile, chartData);
@@ -847,17 +865,19 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
           theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
         }`}>
           <div>
-            <div className="flex items-center space-x-2 text-xs font-sans font-semibold tracking-widest text-[#C9A050] uppercase mb-1">
+            <div className={`flex items-center space-x-2 text-xs font-sans font-semibold text-[#C9A050] mb-1 ${
+              isIndic ? 'normal-case tracking-normal' : 'uppercase tracking-widest'
+            }`}>
               <Milestone className="w-4 h-4" />
-              <span>25-Year Astrological Life Blueprint</span>
+              <span>{t('roadmap.eyebrow', '25-Year Astrological Life Blueprint')}</span>
             </div>
             <h1 className="astro-page-header-title">
-              Vedic Destiny Roadmap
+              {t('roadmap.title', 'Vedic Destiny Roadmap')}
             </h1>
             <p className={`text-xs font-sans mt-1 leading-relaxed ${
               theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'
             }`}>
-              Synthesized through your active Vimshottari Mahadasha/Antardasha cycles, major Saturn (Shani) and Jupiter (Guru) transits.
+              {t('roadmap.subtitle', 'Synthesized through your active Vimshottari Mahadasha/Antardasha cycles, major Saturn (Shani) and Jupiter (Guru) transits.')}
             </p>
           </div>
 
@@ -877,10 +897,10 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                   ? 'bg-[#1A1A1E] hover:bg-[#25252A] text-[#C9A050] border-[#C9A050]/40'
                   : 'bg-white hover:bg-gray-50 text-[#96721E] border-[#C9A050]/40'
               } disabled:opacity-50`}
-              title="Fetch/Refresh predictions via Filter API"
+              title={t('roadmap.refresh_tooltip', 'Fetch/Refresh predictions via Filter API')}
             >
               <Sparkles className={`w-3.5 h-3.5 text-[#C9A050] ${isGenerating ? 'animate-spin' : ''}`} />
-              <span>{isGenerating ? 'Fetching Predictions...' : 'Refresh Predictions'}</span>
+              <span>{isGenerating ? t('roadmap.fetching_predictions', 'Fetching Predictions...') : t('roadmap.refresh_button', 'Refresh Predictions')}</span>
             </button>
 
             <button
@@ -891,14 +911,14 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                   ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-[#C9A050]/20'
                   : 'bg-[#C9A050] hover:bg-[#B38730] text-white border-[#C9A050] shadow-[#C9A050]/20'
               } disabled:opacity-50`}
-              title="Download 25-Year Vedic Destiny Roadmap (PDF)"
+              title={t('roadmap.pdf_tooltip', 'Download 25-Year Vedic Destiny Roadmap (PDF)')}
             >
               {isGeneratingPdf ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Download className="w-4 h-4" />
               )}
-              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Report (PDF)'}</span>
+              <span>{isGeneratingPdf ? t('roadmap.generating_pdf', 'Generating PDF...') : t('roadmap.download_pdf', 'Download Report (PDF)')}</span>
             </button>
           </div>
         </div>
@@ -924,18 +944,20 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                 }`}
               >
                 <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-[#0D0D0F]' : 'text-[#C9A050]'}`} />
-                <span>{hor}</span>
+                <span>{formatHorizonLabel(hor, currentLang)}</span>
                 {isFree ? (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
+                    isIndic ? 'normal-case' : 'uppercase tracking-wider'
+                  } ${
                     isSelected ? 'bg-black/20 text-[#0D0D0F]' : 'bg-emerald-500/15 text-emerald-500'
                   }`}>
-                    Free
+                    {t('roadmap.free_badge', 'Free')}
                   </span>
                 ) : (
                   <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
                     isSelected ? 'bg-black/20 text-[#0D0D0F]' : 'bg-[#C9A050]/20 text-[#C9A050]'
                   }`}>
-                    {isLocked ? `₹${price}` : '✓ Active'}
+                    {isLocked ? `₹${formatLocalizedDigits(price, currentLang)}` : t('roadmap.active_badge', '✓ Active')}
                   </span>
                 )}
               </button>
@@ -946,7 +968,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
         {/* 2. Life Spheres / Categories (Compact Flex-Wrap Row without Scrollbar) */}
         <div ref={categoryContainerRef} className="flex flex-wrap items-center gap-1.5 pt-2.5 text-xs font-sans">
           <span className={`text-[11px] shrink-0 font-medium mr-1 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-            Life Spheres:
+            {t('roadmap.life_spheres_label', 'Life Spheres:')}
           </span>
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -971,7 +993,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                 }`}
               >
                 <Icon className="w-3 h-3 text-[#C9A050]" />
-                <span>{cat.label}</span>
+                <span>{t(`roadmap.categories.${getCategoryKey(cat.id)}`, cat.label)}</span>
               </button>
             );
           })}
@@ -994,12 +1016,12 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
               <h3 className={`font-serif font-bold text-base sm:text-lg ${
                 theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'
               }`}>
-                Generating {loadingText} Roadmap...
+                {t('roadmap.generating.title', { horizon: loadingText, defaultValue: `Generating ${loadingText} Roadmap...` })}
               </h3>
               <p className={`text-xs font-sans max-w-sm mx-auto ${
                 theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'
               }`}>
-                Synthesizing Vimshottari Mahadasha cycles, Saturn Gochara &amp; Jupiter transit windows
+                {t('roadmap.generating.subtitle', 'Synthesizing Vimshottari Mahadasha cycles, Saturn Gochara & Jupiter transit windows')}
               </p>
             </div>
           </div>
@@ -1010,19 +1032,19 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
             <h3 className={`font-serif font-bold text-base sm:text-lg ${
               theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'
             }`}>
-              Select a Time Horizon
+              {t('roadmap.unselected.title', 'Select a Time Horizon')}
             </h3>
             <p className={`text-xs font-sans max-w-sm mx-auto ${
               theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'
             }`}>
-              Please select a time horizon and a life sphere from the filters above to generate your Vedic Destiny Roadmap.
+              {t('roadmap.unselected.subtitle', 'Please select a time horizon and a life sphere from the filters above to generate your Vedic Destiny Roadmap.')}
             </p>
             <button
               onClick={() => handleHorizonTabClick('0-5 Years')}
               className="mt-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs shadow-lg shadow-[#C9A050]/20 transition cursor-pointer flex items-center space-x-2"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Explore 0-5 Years Roadmap</span>
+              <span>{t('roadmap.unselected.button', 'Explore 0-5 Years Roadmap')}</span>
             </button>
           </div>
         ) : isHorizonLocked(selectedHorizon) ? (
@@ -1037,9 +1059,11 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
             <div className="relative z-10 max-w-2xl mx-auto space-y-5">
               {/* Badge & Sacred Icon */}
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#C9A050]/15 border border-[#C9A050]/40 text-[#C9A050] text-xs font-semibold uppercase tracking-wider">
+              <div className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#C9A050]/15 border border-[#C9A050]/40 text-[#C9A050] text-xs font-semibold ${
+                isIndic ? 'normal-case' : 'uppercase tracking-wider'
+              }`}>
                 <Lock className="w-3.5 h-3.5" />
-                <span>Subscription Required • Premium Horizon</span>
+                <span>{t('roadmap.paywall.badge', 'Subscription Required • Premium Horizon')}</span>
               </div>
 
               {/* Title & Description */}
@@ -1047,12 +1071,12 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                 <h2 className={`font-serif font-bold text-2xl sm:text-3xl ${
                   theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'
                 }`}>
-                  Unlock {selectedHorizon} Vedic Destiny Roadmap
+                  {t('roadmap.paywall.title', { horizon: formatHorizonLabel(selectedHorizon, currentLang), defaultValue: `Unlock ${selectedHorizon} Vedic Destiny Roadmap` })}
                 </h2>
                 <p className={`text-xs sm:text-sm font-sans max-w-lg mx-auto ${
                   theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'
                 }`}>
-                  To access multi-decade predictive insights, deep Vimshottari Mahadasha shifts, Saturn Sade Sati / Kantaka Shani, and planetary transit remedies for {selectedHorizon}, please unlock this subscription tier.
+                  {t('roadmap.paywall.description', { horizon: formatHorizonLabel(selectedHorizon, currentLang), defaultValue: `To access multi-decade predictive insights, deep Vimshottari Mahadasha shifts, Saturn Sade Sati / Kantaka Shani, and planetary transit remedies for ${selectedHorizon}, please unlock this subscription tier.` })}
                 </p>
               </div>
 
@@ -1063,25 +1087,25 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                 <div className="flex items-start space-x-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <span className={`text-xs font-sans ${theme === 'dark' ? 'text-[#D0CCC2]' : 'text-gray-700'}`}>
-                    All 8 Life Spheres (Career, Wealth, Love, Family, Health, Education, Travel, Spirituality)
+                    {t('roadmap.paywall.feature_spheres', 'All 8 Life Spheres (Career, Wealth, Love, Family, Health, Education, Travel, Spirituality)')}
                   </span>
                 </div>
                 <div className="flex items-start space-x-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <span className={`text-xs font-sans ${theme === 'dark' ? 'text-[#D0CCC2]' : 'text-gray-700'}`}>
-                    Vimshottari Dasha &amp; Antardasha Timeline Breakdown
+                    {t('roadmap.paywall.feature_dasha', 'Vimshottari Dasha & Antardasha Timeline Breakdown')}
                   </span>
                 </div>
                 <div className="flex items-start space-x-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <span className={`text-xs font-sans ${theme === 'dark' ? 'text-[#D0CCC2]' : 'text-gray-700'}`}>
-                    Saturn Gochara (Sade Sati) &amp; Jupiter (Guru) Transits
+                    {t('roadmap.paywall.feature_transits', 'Saturn Gochara (Sade Sati) & Jupiter (Guru) Transits')}
                   </span>
                 </div>
                 <div className="flex items-start space-x-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C9A050] shrink-0 mt-0.5" />
                   <span className={`text-xs font-sans ${theme === 'dark' ? 'text-[#D0CCC2]' : 'text-gray-700'}`}>
-                    Full Printable Vedic Destiny Roadmap (PDF Report)
+                    {t('roadmap.paywall.feature_pdf', 'Full Printable Vedic Destiny Roadmap (PDF Report)')}
                   </span>
                 </div>
               </div>
@@ -1093,7 +1117,13 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                   className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-[#C9A050] via-[#D4AF37] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-sm shadow-xl shadow-[#C9A050]/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Subscribe {selectedHorizon} • ₹{getHorizonPrice(selectedHorizon)}</span>
+                  <span>
+                    {t('roadmap.paywall.subscribe_button', {
+                      horizon: formatHorizonLabel(selectedHorizon, currentLang),
+                      price: formatLocalizedDigits(getHorizonPrice(selectedHorizon), currentLang),
+                      defaultValue: `Subscribe ${selectedHorizon} • ₹${getHorizonPrice(selectedHorizon)}`,
+                    })}
+                  </span>
                 </button>
 
                 {selectedHorizon !== '0-25 Years' && (
@@ -1105,7 +1135,11 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                         : 'border-[#C9A050] text-[#96721E] hover:bg-[#C9A050]/10'
                     }`}
                   >
-                    <span>Unlock All Horizons (Up to 25 Years) • ₹300</span>
+                    <span>
+                      {t('roadmap.paywall.unlock_all_button', {
+                        defaultValue: 'Unlock All Horizons (Up to 25 Years) • ₹300',
+                      })}
+                    </span>
                   </button>
                 )}
               </div>
@@ -1118,7 +1152,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                     theme === 'dark' ? 'text-[#9E9A90] hover:text-[#F0ECE1]' : 'text-gray-500 hover:text-black'
                   }`}
                 >
-                  ← Return to Free 0-1 Year Horizon
+                  {t('roadmap.paywall.return_free', '← Return to Free 0-1 Year Horizon')}
                 </button>
               </div>
             </div>
@@ -1147,17 +1181,23 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                         <span className="text-[#C9A050] text-xl font-bold">🔒</span>
                       </div>
                       <h3 className="text-base sm:text-lg font-serif font-bold text-[#F0ECE1] mb-1">
-                        Unlock {item.timeframe} Roadmap
+                        {t('roadmap.card_overlay.title', { timeframe: formatHorizonLabel(item.timeframe, currentLang), defaultValue: `Unlock ${item.timeframe} Roadmap` })}
                       </h3>
                       <p className="text-xs text-[#9E9A90] font-sans max-w-sm mb-3.5">
-                        Subscription required to access all 8 life spheres, Mahadasha cycles &amp; transit upayas for {item.timeframe}.
+                        {t('roadmap.card_overlay.description', { timeframe: formatHorizonLabel(item.timeframe, currentLang), defaultValue: `Subscription required to access all 8 life spheres, Mahadasha cycles & transit upayas for ${item.timeframe}.` })}
                       </p>
                       <button 
                         onClick={() => onNavigateToConsultations && onNavigateToConsultations(getHorizonTierId(item.timeframe) || undefined)} 
                         className="px-6 py-2.5 bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-[#C9A050]/25 cursor-pointer transition flex items-center space-x-2"
                       >
                         <Sparkles className="w-4 h-4" />
-                        <span>Unlock {item.timeframe} • ₹{getHorizonPrice(item.timeframe)}</span>
+                        <span>
+                          {t('roadmap.card_overlay.button', {
+                            timeframe: formatHorizonLabel(item.timeframe, currentLang),
+                            price: formatLocalizedDigits(getHorizonPrice(item.timeframe), currentLang),
+                            defaultValue: `Unlock ${item.timeframe} • ₹${getHorizonPrice(item.timeframe)}`
+                          })}
+                        </span>
                       </button>
                     </div>
                   )}
@@ -1168,12 +1208,12 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                     }`}>
                       <div className="flex items-center space-x-3.5">
                         <div className="w-8 h-8 rounded-xl bg-[#C9A050]/20 text-[#C9A050] font-serif font-bold text-xs flex items-center justify-center shrink-0 border border-[#C9A050]/30">
-                          {idx + 1}
+                          {formatLocalizedDigits(idx + 1, currentLang)}
                         </div>
                         <h3 className={`text-base font-serif font-bold ${
                           theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'
                         }`}>
-                          {item.title}
+                          {t(`roadmap.category_names.${getCategoryKey(item.category || item.title)}`, item.title || getCategoryDisplayName(item.category))}
                         </h3>
                       </div>
                     </div>
@@ -1183,11 +1223,13 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                       <div className={`p-4 rounded-xl border space-y-1.5 flex flex-col ${
                         theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                       }`}>
-                        <span className="text-[9px] uppercase font-bold text-[#C9A050] block tracking-wider">
-                          Dasha & Life Strategy Guidance
+                        <span className={`text-[9px] font-bold text-[#C9A050] block ${
+                          isIndic ? 'normal-case tracking-normal' : 'uppercase tracking-wider'
+                        }`}>
+                          {t('roadmap.card_sections.dasha_guidance', 'Dasha & Life Strategy Guidance')}
                         </span>
                         <p className={`leading-relaxed text-xs ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
-                          {item.guidance}
+                          {getLocalizedMilestoneGuidance(item, currentLang)}
                         </p>
                       </div>
 
@@ -1203,11 +1245,13 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                               <Clock className="w-3 h-3 text-[#B38730] dark:text-[#C9A050]" />
                             </div>
                             <div className="space-y-1 flex-1 min-w-0">
-                              <span className="text-[10px] uppercase font-black block tracking-wider text-[#966C1E] dark:text-[#C9A050]">
-                                Astrological Window &amp; Transits
+                              <span className={`text-[10px] font-black block text-[#966C1E] dark:text-[#C9A050] ${
+                                isIndic ? 'normal-case tracking-normal' : 'uppercase tracking-wider'
+                              }`}>
+                                {t('roadmap.card_sections.astrological_transits', 'Astrological Window & Transits')}
                               </span>
                               <p className={`text-xs leading-relaxed font-medium pt-0.5 ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
-                                {item.favorableTransits}
+                                {getLocalizedMilestoneTransits(item, currentLang)}
                               </p>
                             </div>
                           </div>
@@ -1223,13 +1267,15 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                             <Flame className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                           </div>
                           <div className="space-y-1 flex-1 min-w-0">
-                            <span className={`text-[9px] uppercase font-bold block tracking-wider ${
+                            <span className={`text-[9px] font-bold block ${
+                              isIndic ? 'normal-case tracking-normal' : 'uppercase tracking-wider'
+                            } ${
                               theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'
                             }`}>
-                              Recommended Upaya / Sadhana
+                              {t('roadmap.card_sections.recommended_upaya', 'Recommended Upaya / Sadhana')}
                             </span>
                             <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
-                              {item.remedialAction}
+                              {getLocalizedMilestoneRemedy(item, currentLang)}
                             </p>
                           </div>
                         </div>
@@ -1246,16 +1292,16 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
           }`}>
             <Clock className="w-8 h-8 text-[#C9A050] mx-auto opacity-70" />
             <h3 className={`font-serif font-bold text-base ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
-              Predictive Insights for {selectedHorizon}
+              {t('roadmap.empty.title', { horizon: formatHorizonLabel(selectedHorizon, currentLang), defaultValue: `Predictive Insights for ${selectedHorizon}` })}
             </h3>
             <p className="text-xs text-[#9E9A90] max-w-md mx-auto">
-              Generate full planetary transit insights and dasha milestones across all 8 life spheres for {selectedHorizon}.
+              {t('roadmap.empty.description', { horizon: formatHorizonLabel(selectedHorizon, currentLang), defaultValue: `Generate full planetary transit insights and dasha milestones across all 8 life spheres for ${selectedHorizon}.` })}
             </p>
             <button
               onClick={() => handleGenerateHorizon(selectedHorizon)}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs cursor-pointer shadow-md transition"
             >
-              Generate {selectedHorizon} Insights
+              {t('roadmap.empty.button', { horizon: formatHorizonLabel(selectedHorizon, currentLang), defaultValue: `Generate ${selectedHorizon} Insights` })}
             </button>
           </div>
         )}

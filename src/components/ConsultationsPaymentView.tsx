@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   CreditCard,
   ShieldCheck,
@@ -35,6 +36,13 @@ import {
 import { UserProfile, ConsultationTier } from '../types';
 import { API_ENDPOINTS } from '../config/api_config';
 import { api, getToken } from '../services/api';
+import {
+  formatLocalizedDigits,
+  formatLocalizedPrice,
+  formatLocalizedUsdPrice,
+  getPlanCode,
+  isIndicLang,
+} from '../services/consultationTranslations';
 
 interface ConsultationsPaymentViewProps {
   profile: UserProfile;
@@ -43,6 +51,7 @@ interface ConsultationsPaymentViewProps {
   onPaymentSuccess?: (tier: ConsultationTier, txId: string) => void;
   onNavigateTab?: (tab: string) => void;
   theme?: 'light' | 'dark';
+  language?: string;
 }
 
 export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> = ({
@@ -52,7 +61,20 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
   onPaymentSuccess,
   onNavigateTab,
   theme = 'dark',
+  language,
 }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = language || i18n.language || 'en';
+  const indic = isIndicLang(currentLang);
+  const isDark = theme === 'dark';
+
+  // Typography helpers respecting Font Rule:
+  // hi/bn/ta: weight 600, no forced uppercase, no letter-spacing, line-height 1.4
+  // en/fr: Stardom headings, uppercase badges with tracking
+  const headingFontClass = indic ? 'font-sans font-semibold leading-[1.4]' : 'font-serif font-bold';
+  const badgeFontClass = indic ? 'normal-case tracking-normal font-semibold' : 'uppercase tracking-wider font-bold';
+  const priceFontClass = indic ? 'font-sans font-bold' : 'font-serif font-bold';
+
   const [selectedTier, setSelectedTier] = useState<ConsultationTier | null>(null);
 
   // User Database Information Form State
@@ -101,19 +123,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     if (itemId === 'daily_vedic_subscription' || itemId === 'birth_chart_subscription' || amount === 99) {
       return {
         id: 'daily_vedic_subscription',
-        name: 'Comprehensive Vedic Synthesis (Parashari)',
+        name: t('plans.items.parashari_synthesis.name'),
         tab: 'horoscope',
-        tabName: 'Birth Chart',
-        highlights: 'Comprehensive Vedic Synthesis (Parashari & Multi-Traditions), 12 Bhavas, Yogas & Dashas.',
+        tabName: t('userPanel.tabs.horoscope', { defaultValue: 'Birth Chart' }),
+        highlights: t('plans.items.parashari_synthesis.description'),
       };
     }
     if (itemId === 'matchmaking_regenerate_subscription' || amount === 149) {
       return {
         id: 'matchmaking_regenerate_subscription',
-        name: 'Relationship Karma & Synastry (Matchmaking)',
+        name: t('plans.items.matchmaking_counsel.name'),
         tab: 'matchmaking',
-        tabName: 'Kundli Milan',
-        highlights: '36-Guna Ashta Koota Milan, Manglik & Nadi Dosha Analysis & Karmic Synastry.',
+        tabName: t('userPanel.tabs.matchmaking', { defaultValue: 'Kundli Milan' }),
+        highlights: t('plans.items.matchmaking_counsel.description'),
       };
     }
     if (itemId.startsWith('roadmap_') || [100, 150, 169, 200, 199, 250, 249, 300].includes(amount)) {
@@ -122,33 +144,35 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       const is15 = itemId === 'roadmap_15_subscription' || amount === 200 || amount === 169;
       const is10 = itemId === 'roadmap_10_subscription' || amount === 150;
       const id = is25 ? 'roadmap_25_subscription' : is20 ? 'roadmap_20_subscription' : is15 ? 'roadmap_15_subscription' : is10 ? 'roadmap_10_subscription' : 'roadmap_5_subscription';
-      const name = is25 ? '25-Year Life Horizon' : is20 ? '20-Year Life Horizon' : is15 ? '15-Year Life Horizon' : is10 ? '10-Year Life Horizon' : '5-Year Life Horizon';
+      const planCode = is25 ? 'roadmap_25' : is20 ? 'roadmap_20' : is15 ? 'roadmap_15' : is10 ? 'roadmap_10' : 'roadmap_5';
+      const name = t(`plans.items.${planCode}.name`);
       return {
         id,
         name,
         tab: 'roadmap',
-        tabName: 'Destiny Roadmap',
-        highlights: `${name} Vimshottari Dasha Milestones, Career/Wealth Yogas & Lifetime PDF Dossier.`,
+        tabName: t('userPanel.tabs.roadmap', { defaultValue: 'Destiny Roadmap' }),
+        highlights: t(`plans.items.${planCode}.description`),
       };
     }
 
     const foundTier = tiers.find((t) => t.id === itemId);
     if (foundTier) {
+      const code = getPlanCode(foundTier.id, foundTier.name);
       return {
         id: foundTier.id,
-        name: foundTier.name,
+        name: t(`plans.items.${code}.name`, { defaultValue: foundTier.name }),
         tab: foundTier.id.startsWith('roadmap_') ? 'roadmap' : foundTier.id === 'daily_vedic_subscription' ? 'daily' : foundTier.id === 'matchmaking_regenerate_subscription' ? 'matchmaking' : 'roadmap',
-        tabName: foundTier.id.startsWith('roadmap_') ? 'Destiny Roadmap' : foundTier.id === 'daily_vedic_subscription' ? 'Daily Horoscope' : 'Kundli Milan',
-        highlights: foundTier.description || foundTier.features.join(' • '),
+        tabName: foundTier.id.startsWith('roadmap_') ? t('userPanel.tabs.roadmap', { defaultValue: 'Destiny Roadmap' }) : foundTier.id === 'daily_vedic_subscription' ? t('userPanel.tabs.daily', { defaultValue: 'Daily Horoscope' }) : t('userPanel.tabs.matchmaking', { defaultValue: 'Kundli Milan' }),
+        highlights: t(`plans.items.${code}.description`, { defaultValue: foundTier.description || foundTier.features.join(' • ') }),
       };
     }
 
     return {
       id: itemId || 'daily_vedic_subscription',
-      name: 'Vedic Consultation & Astrology Services',
+      name: t('plans.items.parashari_synthesis.name'),
       tab: 'daily',
-      tabName: 'Daily Horoscope',
-      highlights: 'Personalized Astrological Insights & Transit Forecasts.',
+      tabName: t('userPanel.tabs.daily', { defaultValue: 'Daily Horoscope' }),
+      highlights: t('plans.items.parashari_synthesis.description'),
     };
   };
 
@@ -182,7 +206,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     try {
       const token = getToken();
       if (!token) {
-        setHistoryError('Please log in to view your payment history.');
+        setHistoryError(t('plans.history.err_login'));
         return;
       }
       const res = await api.get<any>(API_ENDPOINTS.PAYMENT.HISTORY);
@@ -191,7 +215,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       syncUnlockedFromHistory(list);
     } catch (err: any) {
       console.error('Failed to fetch payment history:', err);
-      setHistoryError(err?.message || 'Could not load payment history. Please try again.');
+      setHistoryError(err?.message || t('plans.history.err_fetch'));
     } finally {
       setHistoryLoading(false);
     }
@@ -214,7 +238,6 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     silentLoad();
   }, []);
 
-
   const handleInitiatePayment = (tier: ConsultationTier) => {
     setSelectedTier(tier);
     setPaymentSuccess(null);
@@ -229,15 +252,15 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     // Validation
     const errors: { [key: string]: string } = {};
     if (!userData.fullName.trim()) {
-      errors.fullName = 'Full Name is required';
+      errors.fullName = t('plans.modal.err_name_required');
     }
     if (!userData.phone.trim()) {
-      errors.phone = 'Phone / WhatsApp number is required';
+      errors.phone = t('plans.modal.err_phone_required');
     } else if (userData.phone.replace(/\D/g, '').length < 10) {
-      errors.phone = 'Please enter a valid 10-digit mobile number';
+      errors.phone = t('plans.modal.err_phone_invalid');
     }
     if (!userData.currentAddress.trim()) {
-      errors.currentAddress = 'Current Full Address is required';
+      errors.currentAddress = t('plans.modal.err_address_required');
     }
 
     if (Object.keys(errors).length > 0) {
@@ -252,7 +275,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
     try {
       const token = getToken();
       if (!token) {
-        setApiError('Please log in to your account to complete consultation payment.');
+        setApiError(t('plans.errors.login_required'));
         setIsProcessing(false);
         return;
       }
@@ -276,7 +299,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
       const rzpOrderId = orderData?.order_id;
       if (!rzpOrderId) {
-        throw new Error('Failed to obtain Razorpay Order ID from server.');
+        throw new Error(t('plans.errors.order_failed'));
       }
 
       // Step 2: Ensure Razorpay SDK is loaded
@@ -285,10 +308,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           const script = document.createElement('script');
           script.src = 'https://checkout.razorpay.com/v1/checkout.js';
           script.onload = () => resolve(true);
-          script.onerror = () => reject(new Error('Failed to load Razorpay SDK. Please check your internet connection.'));
+          script.onerror = () => reject(new Error(t('plans.errors.sdk_failed')));
           document.body.appendChild(script);
         });
       }
+
+      const planCode = getPlanCode(selectedTier.id, selectedTier.name);
+      const localizedPlanName = t(`plans.items.${planCode}.name`, { defaultValue: selectedTier.name });
 
       // Step 3: Open Razorpay Checkout Modal
       const options = {
@@ -296,8 +322,9 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         amount: orderData?.amount_paise || selectedTier.priceINR * 100,
         currency: orderData?.currency || 'INR',
         name: 'AstroJunction',
-        description: `${selectedTier.name} Consultation Booking`,
+        description: `${localizedPlanName} Consultation Booking`,
         order_id: rzpOrderId,
+        language: currentLang === 'hi' ? 'hi' : 'en',
         prefill: {
           name: userData.fullName,
           email: userData.email,
@@ -348,7 +375,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             setPaymentSuccess({
               tier: selectedTier,
               txId,
-              date: new Date().toLocaleDateString('en-US', {
+              date: new Date().toLocaleDateString(currentLang === 'hi' ? 'hi-IN' : currentLang === 'bn' ? 'bn-BD' : currentLang === 'ta' ? 'ta-IN' : currentLang === 'fr' ? 'fr-FR' : 'en-US', {
                 month: 'short',
                 day: 'numeric',
                 year: 'numeric',
@@ -364,7 +391,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           } catch (verifyErr: any) {
             console.error('[Payment Verification Failed]', verifyErr);
             setApiError(
-              verifyErr?.message || 'Payment signature verification failed. Please contact support.'
+              verifyErr?.message || t('plans.errors.verification_failed')
             );
           } finally {
             setIsProcessing(false);
@@ -376,13 +403,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       razorpayInstance.on('payment.failed', (resp: any) => {
         setIsProcessing(false);
         setApiError(
-          resp.error?.description || 'Payment was cancelled or failed.'
+          resp.error?.description || t('plans.errors.payment_cancelled')
         );
       });
       razorpayInstance.open();
     } catch (err: any) {
       console.error('[ConsultationsPaymentView] Payment flow failed:', err);
-      setApiError(err?.message || 'Payment order creation failed. Please try again.');
+      setApiError(err?.message || t('plans.errors.creation_failed'));
       setIsProcessing(false);
     }
   };
@@ -464,55 +491,56 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
       const is20 = tierId === 'roadmap_20_subscription';
       const is15 = tierId === 'roadmap_15_subscription';
       const is10 = tierId === 'roadmap_10_subscription';
-      const labelHorizon = is25 ? '25-Year' : is20 ? '20-Year' : is15 ? '15-Year' : is10 ? '10-Year' : '5-Year';
+      const rawYears = is25 ? 25 : is20 ? 20 : is15 ? 15 : is10 ? 10 : 5;
+      const formattedYears = formatLocalizedDigits(rawYears, currentLang);
       return {
-        title: `${labelHorizon} Astrological Destiny Roadmap`,
-        destination: 'Vedic Roadmap Dashboard',
+        title: t('plans.unlocked_details.roadmap_title', { years: formattedYears }),
+        destination: t('plans.unlocked_details.roadmap_destination'),
         tab: 'roadmap',
         highlights: [
-          { label: 'Vimshottari Dasha Milestones', desc: `Complete ${labelHorizon} Mahadasha & Antardasha transition timings unlocked.` },
-          { label: 'Career & Financial Turning Points', desc: 'Optimal career progression, business growth & wealth yogas.' },
-          { label: 'Destiny & Life Progression', desc: 'Predictions across all 8 core life dimensions synthesized.' },
-          { label: 'Planetary Upayas & Remedial Guide', desc: 'Customized gemstone, Yantra, Kavach & Vedic Stotras.' },
-          { label: 'Full High-Res PDF Life Dossier', desc: 'Printable Vedic Destiny Blueprint unlocked for instant export.' },
+          { label: t('plans.unlocked_details.dasha_label'), desc: t('plans.unlocked_details.dasha_desc', { years: formattedYears }) },
+          { label: t('plans.unlocked_details.career_label'), desc: t('plans.unlocked_details.career_desc') },
+          { label: t('plans.unlocked_details.destiny_label'), desc: t('plans.unlocked_details.destiny_desc') },
+          { label: t('plans.unlocked_details.upaya_label'), desc: t('plans.unlocked_details.upaya_desc') },
+          { label: t('plans.unlocked_details.pdf_label'), desc: t('plans.unlocked_details.pdf_desc') },
         ],
       };
     }
     if (tierId === 'matchmaking_regenerate_subscription') {
       return {
-        title: 'Daivajna Cosmic Relationship & Synastry',
-        destination: 'Kundli Milan & Synastry Dashboard',
+        title: t('plans.unlocked_details.matchmaking_title'),
+        destination: t('plans.unlocked_details.matchmaking_destination'),
         tab: 'matchmaking',
         highlights: [
-          { label: '36-Guna Ashta Koota Milan', desc: 'Deep breakdown of Varn, Vashya, Tara, Yoni, Maitri, Gana, Bhakoot & Nadi.' },
-          { label: 'Dosha Cancellation Analysis', desc: 'Mangal Dosha & Nadi Dosha cancellations computed from classical Shastras.' },
-          { label: 'Daivajna Karmic Synastry', desc: 'Emotional, psychological & spiritual harmony analysis.' },
-          { label: 'Unlimited Regenerations', desc: 'Re-synthesize matchmaking counsel anytime with updated partner data.' },
-          { label: 'Printable Kundli Milan Dossier', desc: 'Instant export of the full comprehensive matchmaking report.' },
+          { label: t('plans.unlocked_details.milan_label'), desc: t('plans.unlocked_details.milan_desc') },
+          { label: t('plans.unlocked_details.cancellation_label'), desc: t('plans.unlocked_details.cancellation_desc') },
+          { label: t('plans.unlocked_details.synastry_label'), desc: t('plans.unlocked_details.synastry_desc') },
+          { label: t('plans.unlocked_details.regenerations_label'), desc: t('plans.unlocked_details.regenerations_desc') },
+          { label: t('plans.unlocked_details.milan_pdf_label'), desc: t('plans.unlocked_details.milan_pdf_desc') },
         ],
       };
     }
     if (tierId === 'daily_vedic_subscription') {
       return {
-        title: 'Vedic Daily Horoscope & Real-time Panchang',
-        destination: 'Daily Vedic Horoscope Dashboard',
+        title: t('plans.unlocked_details.daily_title'),
+        destination: t('plans.unlocked_details.daily_destination'),
         tab: 'daily',
         highlights: [
-          { label: 'Real-time Gochar (Transits)', desc: 'Live Chandra Gochar, Nakshatra lord vibrations & 12 Bhavas analysis.' },
-          { label: 'Auspicious Muhurats & Kaal Windows', desc: 'Precise Abhijit Muhurat, Rahu Kaal, Gulika Kaal & Yamaganda timings.' },
-          { label: 'Personalized Lucky Vibrations', desc: 'Daily lucky numbers, color frequencies & auspicious planetary hours.' },
-          { label: 'Daivajna Daily Synthesis', desc: 'Personalized transit reading calculated directly from your birth chart.' },
+          { label: t('plans.unlocked_details.gochar_label'), desc: t('plans.unlocked_details.gochar_desc') },
+          { label: t('plans.unlocked_details.muhurat_label'), desc: t('plans.unlocked_details.muhurat_desc') },
+          { label: t('plans.unlocked_details.lucky_label'), desc: t('plans.unlocked_details.lucky_desc') },
+          { label: t('plans.unlocked_details.synthesis_label'), desc: t('plans.unlocked_details.synthesis_desc') },
         ],
       };
     }
     return {
-      title: 'Certified Vedic Consultation Services',
-      destination: 'Consultation Services',
+      title: t('plans.items.parashari_synthesis.name'),
+      destination: t('plans.unlocked_details.roadmap_destination'),
       tab: 'roadmap',
       highlights: [
-        { label: 'Verified Vedic Synthesis', desc: 'Personalized astrologer analysis customized for your birth chart.' },
-        { label: 'Planetary Remedial Guide', desc: 'Authentic remedies, gemstone & mantra recommendations.' },
-        { label: 'Downloadable Consultation Report', desc: 'Printable astrological summary and recommendations.' },
+        { label: t('plans.unlocked_details.career_label'), desc: t('plans.unlocked_details.career_desc') },
+        { label: t('plans.unlocked_details.upaya_label'), desc: t('plans.unlocked_details.upaya_desc') },
+        { label: t('plans.unlocked_details.pdf_label'), desc: t('plans.unlocked_details.pdf_desc') },
       ],
     };
   };
@@ -520,68 +548,69 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
   const getTierMeta = (tier: ConsultationTier, index: number) => {
     if (tier.id === 'roadmap_25_subscription') {
       return {
-        badge: 'MASTER 25-YEAR BLUEPRINT • BEST VALUE',
-        badgeBg: 'bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A050] text-[#0D0D0F] font-black shadow-lg shadow-amber-500/25',
+        badge: t('plans.badges.master_25'),
+        badgeBg: indic
+          ? 'bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A050] text-[#0D0D0F] font-semibold shadow-lg shadow-amber-500/25'
+          : 'bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A050] text-[#0D0D0F] font-black shadow-lg shadow-amber-500/25',
         icon: Crown,
         iconBox: 'bg-amber-500/20 text-[#E5C378] border border-amber-500/40 shadow-inner',
         highlight: true,
-        tagline: 'All Horizons (0-25 Years) Unlocked',
-        popularLabel: 'Recommended by Daivajna',
+        tagline: t('plans.items.roadmap_25.tagline'),
+        popularLabel: t('plans.badges.recommended_daivajna'),
       };
     }
     if (tier.id.includes('roadmap')) {
+      const code = getPlanCode(tier.id, tier.name);
       return {
-        badge: 'VEDIC DESTINY HORIZON',
-        badgeBg: 'bg-amber-500/20 text-[#E5C378] border border-amber-500/40 font-bold backdrop-blur-md',
+        badge: t('plans.badges.roadmap_horizon'),
+        badgeBg: 'bg-amber-500/20 text-[#E5C378] border border-amber-500/40 font-semibold backdrop-blur-md',
         icon: Crown,
         iconBox: 'bg-amber-500/15 text-[#E5C378] border border-amber-500/30',
         highlight: false,
-        tagline: tier.name,
-        popularLabel: 'Predictive Transit Cycle',
+        tagline: t(`plans.items.${code}.tagline`, { defaultValue: tier.name }),
+        popularLabel: t('plans.badges.predictive_transit'),
       };
     }
     if (tier.id.includes('matchmaking') || index === 1) {
       return {
-        badge: 'RELATIONSHIP KARMA',
-        badgeBg: 'bg-[#C9A050]/20 text-[#E2C378] border border-[#C9A050]/40 font-bold backdrop-blur-md',
+        badge: t('plans.badges.relationship_karma'),
+        badgeBg: 'bg-[#C9A050]/20 text-[#E2C378] border border-[#C9A050]/40 font-semibold backdrop-blur-md',
         icon: HeartHandshake,
         iconBox: 'bg-[#C9A050]/15 text-[#C9A050] border border-[#C9A050]/30',
         highlight: false,
-        tagline: 'Marital Harmony & Synastry Regeneration',
-        popularLabel: 'Deep Synastry',
+        tagline: t('plans.items.matchmaking_counsel.tagline'),
+        popularLabel: t('plans.badges.deep_synastry'),
       };
     }
     return {
-      badge: 'DAILY SEEKER',
-      badgeBg: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold backdrop-blur-md',
+      badge: t('plans.badges.daily_seeker'),
+      badgeBg: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold backdrop-blur-md',
       icon: Compass,
       iconBox: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
       highlight: false,
-      tagline: 'Daily Auspicious Planetary Timing',
-      popularLabel: 'Daily Precision',
+      tagline: t('plans.items.parashari_synthesis.tagline'),
+      popularLabel: t('plans.badges.daily_precision'),
     };
   };
 
   const FAQS = [
     {
-      q: 'How does instant payment activation work with Razorpay?',
-      a: 'As soon as your payment is completed via Razorpay (UPI, Credit/Debit Card, NetBanking), our system instantly generates and cryptographically verifies the transaction. Your profile unlocks the selected consultation dossier and features immediately.',
+      q: t('plans.faq.q1'),
+      a: t('plans.faq.a1'),
     },
     {
-      q: 'Can I download the report dossier as a high-resolution PDF?',
-      a: 'Yes! All premium consultations and roadmap unlocks include downloadable, print-ready high-resolution PDF dossiers complete with classical Shastra references and personalized planetary remedies.',
+      q: t('plans.faq.q2'),
+      a: t('plans.faq.a2'),
     },
     {
-      q: 'Are my birth chart details kept confidential?',
-      a: '100% strictly confidential. Your birth date, time, latitude/longitude, and addresses are encrypted with 256-bit SSL and stored in a secured vault accessible only to you.',
+      q: t('plans.faq.q3'),
+      a: t('plans.faq.a3'),
     },
     {
-      q: 'Which astrological computational engine is used?',
-      a: 'AstroJunction uses high-precision Swiss Ephemeris (Lahiri Ayanamsha) coupled with classical Brihat Parashara Hora Shastra, Jaimini Sutras, and Ashtakavarga algorithms.',
+      q: t('plans.faq.q4'),
+      a: t('plans.faq.a4'),
     },
   ];
-
-  const isDark = theme === 'dark';
 
   return (
     <div className="space-y-8 font-sans">
@@ -595,39 +624,39 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         <div className={`relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b ${isDark ? 'border-[#2A2A35]' : 'border-[#EAE6DC]'
           }`}>
           <div className="max-w-2xl space-y-2.5">
-            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-semibold tracking-wider uppercase backdrop-blur-md ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#E2C378]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs ${badgeFontClass} backdrop-blur-md ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/35 text-[#E2C378]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
               }`}>
               <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
-              <span>Certified Vedic Consultations & Premium Gateways</span>
+              <span>{t('plans.header.eyebrow')}</span>
             </div>
 
             <h1 className="astro-page-header-title">
-              Unlock Deeper Planetary Wisdom &amp; 1-on-1 Guidance
+              {t('plans.header.title')}
             </h1>
 
             <p className={`text-xs sm:text-sm leading-relaxed max-w-xl ${isDark ? 'text-[#A8A49C]' : 'text-[#666258]'
               }`}>
-              Certified astrological accuracy backed by Swiss Ephemeris, 256-bit SSL encrypted transactions, and sacred Vedic remediations.
+              {t('plans.header.subtitle')}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={fetchPaymentHistory}
-              title="View Payment History"
+              title={t('plans.header.payment_history_btn')}
               className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer shadow-md ${isDark
                   ? 'bg-[#1A1A20] hover:bg-[#25252D] border border-[#C9A050]/40 hover:border-[#C9A050] text-[#E2C378]'
                   : 'bg-[#FAF7F0] hover:bg-[#F3EFE6] border border-[#C9A050]/50 hover:border-[#C9A050] text-[#8C6517]'
                 }`}
             >
               <History className="w-4 h-4 text-[#C9A050]" />
-              <span>Payment History</span>
+              <span>{t('plans.header.payment_history_btn')}</span>
             </button>
 
             <div className={`flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-medium border ${isDark ? 'bg-[#1A1A20] border-emerald-500/30 text-emerald-300' : 'bg-emerald-50 border-emerald-500/40 text-emerald-800'
               }`}>
               <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>100% Certified Astrological Precision</span>
+              <span>{t('plans.header.certified_precision')}</span>
             </div>
           </div>
         </div>
@@ -640,8 +669,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant PDF Dossier</p>
-              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Automated Download</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.header.features.pdf_dossier_title')}</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.header.features.pdf_dossier_desc')}</p>
             </div>
           </div>
 
@@ -651,8 +680,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Classical Shastras</p>
-              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Brihat Parashara Rigor</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.header.features.shastras_title')}</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.header.features.shastras_desc')}</p>
             </div>
           </div>
 
@@ -662,8 +691,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Personalized Upayas</p>
-              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Sacred Remedial Mantras</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.header.features.upayas_title')}</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.header.features.upayas_desc')}</p>
             </div>
           </div>
 
@@ -673,8 +702,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant Activation</p>
-              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Seamless Razorpay Sync</p>
+              <p className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.header.features.activation_title')}</p>
+              <p className={`text-[10px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.header.features.activation_desc')}</p>
             </div>
           </div>
         </div>
@@ -685,6 +714,12 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
         {tiers.map((tier, idx) => {
           const meta = getTierMeta(tier, idx);
           const unlocked = isTierUnlocked(tier.id);
+          const planCode = getPlanCode(tier.id, tier.name);
+          const localizedPlanName = t(`plans.items.${planCode}.name`, { defaultValue: tier.name });
+          const localizedPlanDesc = t(`plans.items.${planCode}.description`, { defaultValue: tier.description });
+          const rawBenefits = t(`plans.items.${planCode}.benefits`, { returnObjects: true, defaultValue: tier.features }) as string[];
+          const planFeatures = Array.isArray(rawBenefits) && rawBenefits.length > 0 ? rawBenefits : tier.features;
+
           return (
             <div
               key={tier.id}
@@ -704,16 +739,16 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               {/* Top Floating Badge */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
                 {unlocked ? (
-                  <span className="px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black shadow-md shadow-emerald-500/25">
+                  <span className={`px-3 py-0.5 rounded-full text-[9px] ${badgeFontClass} flex items-center space-x-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-black shadow-md shadow-emerald-500/25`}>
                     <Check className="w-3 h-3 stroke-[3]" />
-                    <span>PLAN UNLOCKED & ACTIVE</span>
+                    <span>{t('plans.badges.unlocked_active')}</span>
                   </span>
                 ) : (
-                  <span className={`px-3 py-0.5 rounded-full text-[9px] tracking-wider uppercase flex items-center space-x-1 ${meta.highlight
+                  <span className={`px-3 py-0.5 rounded-full text-[9px] ${badgeFontClass} flex items-center space-x-1 ${meta.highlight
                       ? meta.badgeBg
                       : isDark
                         ? meta.badgeBg
-                        : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/35 font-bold shadow-sm'
+                        : 'bg-[#C9A050]/15 text-[#8C6517] border border-[#C9A050]/35 font-semibold shadow-sm'
                     }`}>
                     <meta.icon className="w-3 h-3" />
                     <span>{meta.badge}</span>
@@ -734,28 +769,31 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                       ? isDark ? 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' : 'text-emerald-800 bg-emerald-100/90 border-emerald-300'
                       : isDark ? 'text-[#A09C92] bg-[#1A1A22] border-[#2B2B36]' : 'text-[#666258] bg-[#F3EFE6] border-[#E2DDD0]'
                     }`}>
-                    {unlocked ? 'Active on Profile' : (tier.deliveryTime || 'Instant Access')}
+                    {unlocked
+                      ? t('plans.badges.active_on_profile')
+                      : (tier.deliveryTime?.toLowerCase().includes('activation') ? t('plans.badges.instant_activation') : t('plans.badges.instant_access'))
+                    }
                   </span>
                 </div>
 
-                <h3 className={`text-base sm:text-lg font-serif font-bold transition ${isDark ? 'text-[#F5F2EA] group-hover:text-[#F3E5AB]' : 'text-[#1A1A1E] group-hover:text-[#8C6517]'
+                <h3 className={`text-base sm:text-lg ${headingFontClass} transition ${isDark ? 'text-[#F5F2EA] group-hover:text-[#F3E5AB]' : 'text-[#1A1A1E] group-hover:text-[#8C6517]'
                   }`}>
-                  {tier.name}
+                  {localizedPlanName}
                 </h3>
                 <p className={`text-[11px] mt-1 leading-snug min-h-[32px] line-clamp-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'
                   }`}>
-                  {tier.description}
+                  {localizedPlanDesc}
                 </p>
 
                 {/* Price Display */}
                 <div className={`mt-3 pt-2.5 pb-3 border-y flex items-baseline justify-between ${isDark ? 'border-[#282832]' : 'border-[#EAE6DC]'
                   }`}>
                   <div className="flex items-baseline space-x-1">
-                    <span className={`text-2xl sm:text-3xl font-serif font-bold ${isDark
+                    <span className={`text-2xl sm:text-3xl ${priceFontClass} ${isDark
                         ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#FFF4D0] to-[#C9A050]'
                         : 'text-transparent bg-clip-text bg-gradient-to-r from-[#8C6517] to-[#C9A050]'
                       }`}>
-                      {tier.priceINR === 0 ? 'FREE (₹0)' : `₹${tier.priceINR.toLocaleString()}`}
+                      {tier.priceINR === 0 ? t('plans.badges.free_price') : `₹${formatLocalizedPrice(tier.priceINR, currentLang)}`}
                     </span>
                     <span className={`text-[10px] font-sans font-medium ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>INR</span>
                   </div>
@@ -764,20 +802,20 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         ? 'text-[#C9A050] bg-[#C9A050]/10 border-[#C9A050]/25'
                         : 'text-[#8C6517] bg-[#C9A050]/15 border-[#C9A050]/35'
                       }`}>
-                      ~ ${tier.priceUSD} USD
+                      {formatLocalizedUsdPrice(tier.priceUSD, currentLang)}
                     </span>
                   </div>
                 </div>
 
                 {/* Features List */}
                 <div className="mt-3 space-y-2">
-                  <p className={`text-[10px] font-bold uppercase tracking-wider flex items-center space-x-1 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6517]'
+                  <p className={`text-[10px] ${badgeFontClass} flex items-center space-x-1 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6517]'
                     }`}>
                     <Star className="w-2.5 h-2.5 text-[#C9A050] fill-[#C9A050]" />
-                    <span>Included Benefits:</span>
+                    <span>{t('plans.badges.included_benefits')}</span>
                   </p>
                   <ul className="space-y-1.5 text-[11px]">
-                    {tier.features.map((feat, i) => (
+                    {planFeatures.map((feat, i) => (
                       <li key={i} className={`flex items-start space-x-2 leading-snug ${isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'
                         }`}>
                         <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${unlocked
@@ -803,7 +841,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     }`}
                 >
                   <BookOpen className={`w-3.5 h-3.5 ${isDark ? 'text-emerald-400' : 'text-white'}`} />
-                  <span>View Unlocked Plan Data ➔</span>
+                  <span>{t('plans.buttons.view_unlocked')}</span>
                 </button>
               ) : (
                 <button
@@ -816,7 +854,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     }`}
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  <span>Unlock Consultation & Pay</span>
+                  <span>{t('plans.buttons.unlock_and_pay')}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -833,8 +871,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>256-Bit SSL Secured</h4>
-            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Bank-grade Razorpay gateway</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.trust.ssl_title')}</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.trust.ssl_desc')}</p>
           </div>
         </div>
 
@@ -844,8 +882,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Instant Fulfillment</h4>
-            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Zero waiting, immediate activation</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.trust.fulfillment_title')}</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.trust.fulfillment_desc')}</p>
           </div>
         </div>
 
@@ -855,8 +893,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>Ancient Vedic Rigor</h4>
-            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Parashari & Jaimini precision</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.trust.rigor_title')}</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.trust.rigor_desc')}</p>
           </div>
         </div>
 
@@ -866,8 +904,8 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             <Lock className="w-5 h-5" />
           </div>
           <div>
-            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>100% Confidential</h4>
-            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>Strict privacy for your birth data</p>
+            <h4 className={`text-xs font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.trust.confidential_title')}</h4>
+            <p className={`text-[11px] ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>{t('plans.trust.confidential_desc')}</p>
           </div>
         </div>
       </div>
@@ -879,11 +917,11 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
           }`}>
           <HelpCircle className="w-5 h-5 text-[#C9A050]" />
           <div>
-            <h3 className={`text-lg font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
-              Frequently Asked Questions
+            <h3 className={`text-lg ${headingFontClass} ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
+              {t('plans.faq.title')}
             </h3>
             <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
-              Everything you need to know about our consultations and instant payment verification
+              {t('plans.faq.subtitle')}
             </p>
           </div>
         </div>
@@ -936,10 +974,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     ? 'text-[#9E9A90] hover:text-[#C9A050] bg-[#1A1A1E] hover:bg-[#2A2A2E]'
                     : 'text-[#787266] hover:text-[#8C6517] bg-[#F2EFE8] hover:bg-[#EAE5DA]'
                   }`}
-                title="View Payment History"
+                title={t('plans.header.payment_history_btn')}
               >
                 <History className="w-4 h-4" />
-                <span className="text-[11px] font-medium hidden sm:inline">History</span>
+                <span className="text-[11px] font-medium hidden sm:inline">{t('plans.buttons.history')}</span>
               </button>
               <button
                 onClick={() => setSelectedTier(null)}
@@ -947,7 +985,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]'
                     : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
                   }`}
-                title="Close"
+                title={t('plans.buttons.close')}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -957,16 +995,16 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
             {!paymentSuccess && (
               <div className={`pb-4 border-b pr-10 ${isDark ? 'border-[#2A2A2E]' : 'border-[#EAE6DC]'}`}>
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] ${badgeFontClass} border ${isDark ? 'bg-[#C9A050]/15 border-[#C9A050]/30 text-[#C9A050]' : 'bg-[#C9A050]/15 border-[#C9A050]/40 text-[#8C6517]'
                     }`}>
-                    {selectedTier.name}
+                    {t(`plans.items.${getPlanCode(selectedTier.id, selectedTier.name)}.name`, { defaultValue: selectedTier.name })}
                   </span>
                 </div>
-                <div className="text-xl font-bold text-[#C9A050] font-serif mt-1">
-                  ₹{selectedTier.priceINR.toLocaleString()} INR
+                <div className={`text-xl font-bold text-[#C9A050] ${priceFontClass} mt-1`}>
+                  {t('plans.modal.price_inr', { price: formatLocalizedPrice(selectedTier.priceINR, currentLang) })}
                 </div>
                 <p className={`text-xs mt-0.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'}`}>
-                  Confirm your personal details below to proceed with payment and sync your profile.
+                  {t('plans.modal.confirm_details')}
                 </p>
               </div>
             )}
@@ -986,21 +1024,24 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         <Sparkles className="w-3.5 h-3.5" />
                       </div>
                     </div>
-                    <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-600 border border-emerald-500/40 mb-2">
+                    <div className={`inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full text-[10px] ${badgeFontClass} bg-emerald-500/15 text-emerald-600 border border-emerald-500/40 mb-2`}>
                       <Check className="w-3 h-3 stroke-[3]" />
-                      <span>Payment Verified • Plan Unlocked</span>
+                      <span>{t('plans.success.verified_unlocked')}</span>
                     </div>
-                    <h3 className={`text-xl font-serif font-bold ${isDark ? 'text-[#F5F2EA]' : 'text-[#1A1A1E]'}`}>
-                      Congratulations, {userData.fullName}!
+                    <h3 className={`text-xl ${headingFontClass} ${isDark ? 'text-[#F5F2EA]' : 'text-[#1A1A1E]'}`}>
+                      {t('plans.success.congrats', { name: userData.fullName })}
                     </h3>
                     <p className={`text-xs mt-1 max-w-md mx-auto leading-relaxed ${isDark ? 'text-[#A8A49A]' : 'text-[#666258]'}`}>
-                      Your plan <strong>{paymentSuccess.tier.name}</strong> is now <span className="text-emerald-600 font-semibold">unlocked &amp; active</span>. Your personalized astrological data and features are ready to explore.
+                      {t('plans.success.unlocked_message', {
+                        plan: t(`plans.items.${getPlanCode(paymentSuccess.tier.id, paymentSuccess.tier.name)}.name`, { defaultValue: paymentSuccess.tier.name })
+                      })}
                     </p>
                   </div>
 
                   {/* UNLOCKED PLAN DATA SHOWCASE CARD */}
                   {(() => {
                     const unlockedInfo = getTierUnlockedDetails(paymentSuccess.tier.id);
+                    const currentPlanName = t(`plans.items.${getPlanCode(paymentSuccess.tier.id, paymentSuccess.tier.name)}.name`, { defaultValue: paymentSuccess.tier.name });
                     return (
                       <div className={`rounded-2xl p-4 border-2 shadow-lg space-y-3.5 font-sans ${isDark
                           ? 'bg-gradient-to-b from-[#181F1B] via-[#141A17] to-[#101512] border-emerald-500/50 shadow-[0_8px_30px_-6px_rgba(16,185,129,0.25)] text-[#E5E1D8]'
@@ -1010,13 +1051,13 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           }`}>
                           <div className="flex items-center space-x-2">
                             <Crown className="w-4 h-4 text-[#C9A050]" />
-                            <span className={`text-xs font-bold font-serif tracking-wide ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'
+                            <span className={`text-xs font-semibold ${indic ? 'font-sans tracking-normal' : 'font-serif tracking-wide'} ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'
                               }`}>
                               {unlockedInfo.title}
                             </span>
                           </div>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-black shadow-sm">
-                            ACTIVE
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] ${badgeFontClass} bg-emerald-500 text-black shadow-sm`}>
+                            {t('plans.success.active_badge')}
                           </span>
                         </div>
 
@@ -1024,11 +1065,11 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] p-2.5 rounded-xl border ${isDark ? 'bg-black/30 border-emerald-500/20' : 'bg-white/80 border-emerald-500/30'
                           }`}>
                           <div>
-                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Client / Chart:</span>
+                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>{t('plans.success.client_chart')}</span>
                             <span className={`font-semibold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{userData.fullName}</span>
                           </div>
                           <div>
-                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Birth Coordinates:</span>
+                            <span className={`block text-[10px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>{t('plans.success.birth_coordinates')}</span>
                             <span className={`truncate block ${isDark ? 'text-[#D8D4CA]' : 'text-[#36342E]'}`} title={`${userData.birthDate} ${userData.birthTime} • ${userData.birthAddress}`}>
                               {userData.birthDate} {userData.birthTime ? `@ ${userData.birthTime}` : ''}
                             </span>
@@ -1037,10 +1078,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                         {/* Unlocked Features / Data List */}
                         <div className="space-y-2">
-                          <p className={`text-[11px] font-bold flex items-center space-x-1.5 uppercase tracking-wider ${isDark ? 'text-[#E5C378]' : 'text-[#8C6517]'
+                          <p className={`text-[11px] font-bold flex items-center space-x-1.5 ${badgeFontClass} ${isDark ? 'text-[#E5C378]' : 'text-[#8C6517]'
                             }`}>
-                            <Sparkles className="w-3 h-3 text-[#C9A050]" />
-                            <span>Unlocked Data &amp; Calculations:</span>
+                            <Sparkles className="w-3.5 h-3.5 text-[#C9A050]" />
+                            <span>{t('plans.success.unlocked_calculations')}</span>
                           </p>
                           <div className="grid grid-cols-1 gap-2">
                             {unlockedInfo.highlights.map((h, i) => (
@@ -1064,7 +1105,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#C9A050] via-[#F3E5AB] to-[#C9A050] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs sm:text-sm shadow-xl shadow-amber-500/25 transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2 group mt-2"
                         >
                           <BookOpen className="w-4 h-4 text-black group-hover:scale-110 transition-transform" />
-                          <span>View Unlocked {paymentSuccess.tier.name} Data Now ➔</span>
+                          <span>{t('plans.success.view_data_now', { plan: currentPlanName })}</span>
                         </button>
                       </div>
                     );
@@ -1075,27 +1116,29 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                     }`}>
                     <div className={`flex items-center justify-between border-b pb-1.5 ${isDark ? 'border-[#2A2A32]' : 'border-[#EAE6DC]'
                       }`}>
-                      <span className={`text-[11px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>Transaction ID:</span>
+                      <span className={`text-[11px] ${isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}`}>{t('plans.success.transaction_id')}</span>
                       <span className="text-[#C9A050] font-mono font-bold text-[11px]">{paymentSuccess.txId}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Amount Paid:</span>
-                      <span className={`font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>₹{paymentSuccess.amount} INR</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Order Verification:</span>
-                      <span className="text-emerald-500 font-semibold flex items-center space-x-1">
-                        <CheckCircle2 className="w-3 h-3 inline" />
-                        <span>HMAC Verified &amp; Synced</span>
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>{t('plans.success.amount_paid')}</span>
+                      <span className={`font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
+                        {t('plans.success.amount_paid_val', { amount: formatLocalizedPrice(paymentSuccess.amount, currentLang) })}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Phone / WhatsApp:</span>
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>{t('plans.success.order_verification')}</span>
+                      <span className="text-emerald-500 font-semibold flex items-center space-x-1">
+                        <CheckCircle2 className="w-3 h-3 inline" />
+                        <span>{t('plans.success.hmac_verified')}</span>
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>{t('plans.success.phone_whatsapp')}</span>
                       <span className={`font-mono ${isDark ? 'text-[#D8D4CA]' : 'text-[#1A1A1E]'}`}>{userData.phone}</span>
                     </div>
                     {userData.currentAddress && (
                       <div className="flex justify-between">
-                        <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>Current Address:</span>
+                        <span className={isDark ? 'text-[#8E8A80]' : 'text-[#787266]'}>{t('plans.success.current_address')}</span>
                         <span className={`max-w-[220px] truncate text-right ${isDark ? 'text-[#D8D4CA]' : 'text-[#1A1A1E]'}`} title={userData.currentAddress}>
                           {userData.currentAddress}
                         </span>
@@ -1109,7 +1152,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                       onClick={() => handleViewUnlockedData(paymentSuccess.tier.id)}
                       className="flex-1 py-2.5 rounded-xl bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] font-bold text-xs shadow cursor-pointer transition flex items-center justify-center space-x-1.5"
                     >
-                      <span>Go to Unlocked Data</span>
+                      <span>{t('plans.buttons.go_to_unlocked')}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                     <button
@@ -1118,14 +1161,14 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         }`}
                     >
                       <Download className="w-3.5 h-3.5" />
-                      <span>Print Slip</span>
+                      <span>{t('plans.buttons.print_slip')}</span>
                     </button>
                     <button
                       onClick={() => setSelectedTier(null)}
                       className={`px-3 py-2.5 rounded-xl border text-xs transition cursor-pointer ${isDark ? 'bg-[#141418] hover:bg-[#1E1E26] text-[#9E9A90] hover:text-white border-[#25252E]' : 'bg-[#FAF8F4] hover:bg-[#F0ECE1] text-[#787266] hover:text-black border-[#E2DDD0]'
                         }`}
                     >
-                      Close
+                      {t('plans.buttons.close')}
                     </button>
                   </div>
                 </div>
@@ -1136,7 +1179,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
-                        Full Name <span className="text-amber-500">*</span>
+                        {t('plans.modal.full_name')} <span className="text-amber-500">*</span>
                       </label>
                       <div className="relative">
                         <User className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
@@ -1145,7 +1188,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           required
                           value={userData.fullName}
                           onChange={(e) => setUserData({ ...userData, fullName: e.target.value })}
-                          placeholder="Your legal or chart name"
+                          placeholder={t('plans.modal.full_name_placeholder')}
                           className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${isDark
                               ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                               : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
@@ -1159,7 +1202,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
 
                     <div>
                       <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
-                        Phone / WhatsApp <span className="text-amber-500">*</span>
+                        {t('plans.modal.phone')} <span className="text-amber-500">*</span>
                       </label>
                       <div className="relative">
                         <Phone className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
@@ -1171,7 +1214,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                             const val = e.target.value.replace(/\D/g, '').slice(0, 10);
                             setUserData({ ...userData, phone: val });
                           }}
-                          placeholder="+91 98765 43210"
+                          placeholder={t('plans.modal.phone_placeholder')}
                           className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition font-mono border ${isDark
                               ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                               : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
@@ -1187,7 +1230,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   {/* Row 2: Current Full Address */}
                   <div>
                     <label className={`block text-[11px] font-semibold mb-1 ${isDark ? 'text-[#E5E1D8]' : 'text-[#2A2A2E]'}`}>
-                      Current Full Address <span className="text-amber-500">*</span>
+                      {t('plans.modal.address')} <span className="text-amber-500">*</span>
                     </label>
                     <div className="relative">
                       <Home className={`w-4 h-4 absolute left-3 top-2.5 ${isDark ? 'text-[#9E9A90]' : 'text-[#8E8A80]'}`} />
@@ -1196,7 +1239,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         required
                         value={userData.currentAddress}
                         onChange={(e) => setUserData({ ...userData, currentAddress: e.target.value })}
-                        placeholder="House/Flat No, Street, Landmark, City, State, Pincode"
+                        placeholder={t('plans.modal.address_placeholder')}
                         className={`w-full pl-9 pr-3 py-2 rounded-lg text-xs focus:outline-none transition border ${isDark
                             ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1] focus:border-[#C9A050]'
                             : 'bg-[#FAF8F2] border-[#DED7C8] text-[#1A1A1E] focus:border-[#C9A050] focus:bg-white'
@@ -1225,19 +1268,19 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                       {isProcessing ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Processing Payment Order...</span>
+                          <span>{t('plans.modal.processing')}</span>
                         </>
                       ) : (
                         <>
                           <Lock className="w-4 h-4" />
-                          <span>Pay ₹{selectedTier.priceINR.toLocaleString()} & Confirm</span>
+                          <span>{t('plans.modal.pay_and_confirm', { price: formatLocalizedPrice(selectedTier.priceINR, currentLang) })}</span>
                         </>
                       )}
                     </button>
                     <div className={`flex items-center justify-center space-x-1.5 mt-2.5 text-xs font-medium ${isDark ? 'text-[#E5E1D8]' : 'text-[#666258]'
                       }`}>
                       <Lock className="w-3.5 h-3.5 text-[#C9A050]" />
-                      <span>100% Safe & Secure Payment</span>
+                      <span>{t('plans.modal.secure_payment')}</span>
                     </div>
                   </div>
                 </form>
@@ -1260,11 +1303,11 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className={`text-lg font-serif font-bold ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
-                    Payment & Transaction History
+                  <h2 className={`text-lg ${headingFontClass} ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>
+                    {t('plans.history.title')}
                   </h2>
                   <p className={`text-xs ${isDark ? 'text-[#9E9A90]' : 'text-[#666258]'}`}>
-                    Official record of your consultations and orders
+                    {t('plans.history.subtitle')}
                   </p>
                 </div>
               </div>
@@ -1272,7 +1315,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                 onClick={() => setShowHistoryModal(false)}
                 className={`p-1.5 rounded-lg transition cursor-pointer ${isDark ? 'text-[#9E9A90] hover:text-white bg-[#1A1A1E] hover:bg-[#2A2A2E]' : 'text-[#787266] hover:text-black bg-[#F2EFE8] hover:bg-[#EAE5DA]'
                   }`}
-                title="Close"
+                title={t('plans.buttons.close')}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1283,7 +1326,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               {historyLoading ? (
                 <div className={`py-12 flex flex-col items-center justify-center space-y-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
                   <Loader2 className="w-6 h-6 animate-spin text-[#C9A050]" />
-                  <p className="text-xs">Loading transaction history...</p>
+                  <p className="text-xs">{t('plans.history.loading')}</p>
                 </div>
               ) : historyError ? (
                 <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs flex items-center space-x-2">
@@ -1293,9 +1336,9 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
               ) : historyList.length === 0 ? (
                 <div className={`py-12 text-center space-y-2 ${isDark ? 'text-[#9E9A90]' : 'text-[#787266]'}`}>
                   <Receipt className="w-8 h-8 mx-auto opacity-40" />
-                  <p className={`text-sm font-medium ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>No transactions yet</p>
+                  <p className={`text-sm font-medium ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{t('plans.history.empty_title')}</p>
                   <p className="text-xs">
-                    Your confirmed consultation orders and payments will appear here.
+                    {t('plans.history.empty_desc')}
                   </p>
                 </div>
               ) : (
@@ -1321,7 +1364,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                             {itemInfo.name}
                           </span>
                           <span
-                            className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${isSuccess
+                            className={`text-[10px] ${badgeFontClass} px-2.5 py-0.5 rounded-full ${isSuccess
                                 ? 'bg-emerald-500/20 text-emerald-600 border border-emerald-500/40 flex items-center space-x-1'
                                 : tx.status === 'failed'
                                   ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
@@ -1331,7 +1374,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                             {isSuccess ? (
                               <>
                                 <Check className="w-2.5 h-2.5 stroke-[3] inline mr-1" />
-                                <span>SUCCESS • UNLOCKED</span>
+                                <span>{t('plans.history.status_success')}</span>
                               </>
                             ) : (
                               tx.status
@@ -1339,7 +1382,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           </span>
                         </div>
                         <div className="text-right font-mono font-bold text-[#C9A050] text-sm">
-                          ₹{Number(tx.amount).toLocaleString()} {tx.currency || 'INR'}
+                          ₹{formatLocalizedPrice(tx.amount, currentLang)} {tx.currency || 'INR'}
                         </div>
                       </div>
 
@@ -1350,10 +1393,10 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                           <div className="flex items-center justify-between">
                             <span className="text-emerald-600 font-bold flex items-center space-x-1 text-[11px]">
                               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>Plan Features &amp; Predictions Unlocked</span>
+                              <span>{t('plans.history.features_unlocked')}</span>
                             </span>
                             <span className={`text-[10px] font-medium ${isDark ? 'text-emerald-300/80' : 'text-emerald-700'}`}>
-                              Active for your Profile
+                              {t('plans.history.active_for_profile')}
                             </span>
                           </div>
                           <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#D8D4CA]' : 'text-[#2D2A24]'}`}>
@@ -1365,7 +1408,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                             className="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-[#C9A050] via-[#F3E5AB] to-[#C9A050] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] font-bold text-xs flex items-center justify-center space-x-2 transition cursor-pointer shadow-md"
                           >
                             <BookOpen className="w-3.5 h-3.5 text-black" />
-                            <span>View Unlocked Data ({itemInfo.tabName}) ➔</span>
+                            <span>{t('plans.buttons.view_unlocked_data_tab', { tab: itemInfo.tabName })}</span>
                           </button>
                         </div>
                       )}
@@ -1374,32 +1417,32 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                         }`}>
                         {tx.razorpay_payment_id && (
                           <div>
-                            Payment ID:{' '}
+                            {t('plans.history.payment_id')}{' '}
                             <span className={`font-mono ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.razorpay_payment_id}</span>
                           </div>
                         )}
                         {tx.razorpay_order_id && (
                           <div>
-                            Order ID:{' '}
+                            {t('plans.history.order_id')}{' '}
                             <span className={`font-mono ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.razorpay_order_id}</span>
                           </div>
                         )}
                         <div>
-                          Date:{' '}
+                          {t('plans.history.date')}{' '}
                           <span className={isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}>
                             {tx.created_at
-                              ? new Date(tx.created_at).toLocaleDateString('en-US', {
+                              ? new Date(tx.created_at).toLocaleDateString(currentLang === 'hi' ? 'hi-IN' : currentLang === 'bn' ? 'bn-BD' : currentLang === 'ta' ? 'ta-IN' : currentLang === 'fr' ? 'fr-FR' : 'en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit',
                               })
-                              : 'Recently'}
+                              : t('plans.history.recently')}
                           </span>
                         </div>
                         <div>
-                          Method: <span className={`capitalize ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.payment_method || 'Razorpay'}</span>
+                          {t('plans.history.method')} <span className={`capitalize ${isDark ? 'text-[#F0ECE1]' : 'text-[#1A1A1E]'}`}>{tx.payment_method || 'Razorpay'}</span>
                         </div>
                       </div>
                     </div>
@@ -1415,7 +1458,7 @@ export const ConsultationsPaymentView: React.FC<ConsultationsPaymentViewProps> =
                 className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition ${isDark ? 'bg-[#2A2A2E] hover:bg-[#3A3A3E] text-[#F0ECE1]' : 'bg-[#F2EFE8] hover:bg-[#EAE5DA] text-[#1A1A1E] border border-[#DDD6C7]'
                   }`}
               >
-                Close
+                {t('plans.buttons.close')}
               </button>
             </div>
           </div>

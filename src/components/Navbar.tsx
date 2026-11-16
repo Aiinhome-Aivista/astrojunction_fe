@@ -39,6 +39,9 @@ import { SUPPORTED_LANGUAGES, getTranslation } from '../services/translations';
 import { generateMasterFullReportPdf } from '../services/fullReportGenerator';
 import { ChangePasswordModal } from './ChangePasswordModal';
 import { calculateVedicChart, ZODIAC_SIGNS } from '../services/astroEngine';
+import { useTranslation } from 'react-i18next';
+import { HeaderLanguageSwitcher } from './LandingPage';
+import { tVedic } from '../i18n';
 
 const BENGALI_RASHIS = [
   'মেষ',
@@ -168,9 +171,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
 
+  const { t: tI18n, i18n } = useTranslation();
+
   const t = (key: string, fallback?: string) => {
-    const val = getTranslation(key, language);
-    return val === key && fallback ? fallback : val;
+    const val = tI18n(key, { defaultValue: '' });
+    if (val && val !== key) return val;
+    const currentLang = (i18n.language || language || 'en').split('-')[0].toLowerCase();
+    const legacyVal = getTranslation(key, currentLang);
+    return legacyVal === key && fallback ? fallback : legacyVal;
   };
 
   const handleDownloadFullReport = async () => {
@@ -225,11 +233,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       { id: 'admin', label: 'K-Graph', icon: Network },
     ]
     : [
-      { id: 'daily', label: t('tab.daily'), icon: Sun },
-      { id: 'horoscope', label: t('tab.horoscope'), icon: Compass },
-      { id: 'matchmaking', label: t('tab.matchmaking'), icon: HeartHandshake },
-      { id: 'numerology', label: t('tab.numerology'), icon: Hash },
-      { id: 'consultations', label: t('tab.consultations'), icon: CreditCard },
+      { id: 'daily', label: t('userPanel.tabs.daily', 'Daily Insights'), icon: Sun },
+      { id: 'horoscope', label: t('userPanel.tabs.horoscope', 'Birth Chart'), icon: Compass },
+      { id: 'matchmaking', label: t('userPanel.tabs.matchmaking', 'Kundli Milan'), icon: HeartHandshake },
+      { id: 'numerology', label: t('userPanel.tabs.numerology', 'Numerology'), icon: Hash },
+      { id: 'consultations', label: t('userPanel.tabs.consultations', 'Consultations'), icon: CreditCard },
     ];
 
   // Mobile Bottom Bar Quick Tabs (Panjika excluded)
@@ -242,10 +250,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       { id: 'blogs', label: 'Blogs', icon: FileText },
     ]
     : [
-      { id: 'daily', label: 'Daily', icon: Sun },
-      { id: 'horoscope', label: 'Kundli', icon: Compass },
-      { id: 'matchmaking', label: 'Match', icon: HeartHandshake },
-      { id: 'counsellor', label: 'Daivajna', icon: MessageSquareText },
+      { id: 'daily', label: t('userPanel.quickTabs.daily', 'Daily'), icon: Sun },
+      { id: 'horoscope', label: t('userPanel.quickTabs.kundli', 'Kundli'), icon: Compass },
+      { id: 'matchmaking', label: t('userPanel.quickTabs.match', 'Match'), icon: HeartHandshake },
+      { id: 'counsellor', label: t('userPanel.quickTabs.daivajna', 'Daivajna'), icon: MessageSquareText },
     ];
 
   const isViewingAdmin = isAdmin || activeTab?.startsWith('admin_') || activeTab === 'admin';
@@ -259,8 +267,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           }`}
       >
         {/* Main Header Row */}
-        <div className="w-full px-3 sm:px-5 lg:px-6 py-1.5 sm:py-2">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 lg:gap-4">
+        <div className="w-full px-2.5 sm:px-4 lg:px-6 py-1.5 sm:py-2">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-1.5 sm:gap-2 lg:gap-3">
             {/* Logo & Brand */}
             <div
               className="flex items-center space-x-2 sm:space-x-3 cursor-pointer select-none shrink-0"
@@ -286,8 +294,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </span>
                   )}
                 </div>
-                <p className={`text-[10px] sm:text-[11px] leading-tight ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'} hidden 2xl:block whitespace-nowrap`}>
-                  {t('brand.tagline')}
+                <p
+                  className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'} hidden xl:block whitespace-nowrap`}
+                >
+                  {t('header.authentic_wisdom', 'Authentic Vedic Wisdom')}
                 </p>
               </div>
             </div>
@@ -295,52 +305,59 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Center: Single Unified Navigation Tabs */}
             <nav
               className={`${isAdmin ? 'hidden lg:flex' : 'hidden md:flex'
-                } flex-1 items-center justify-start xl:justify-center space-x-1 xl:space-x-1.5 px-1 sm:px-2 overflow-x-auto scrollbar-none min-w-0 py-1`}
+                } flex-1 items-center overflow-x-auto scrollbar-none min-w-0 py-1`}
               aria-label="Navigation Tabs"
             >
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-1 xl:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${isActive
-                        ? theme === 'dark'
-                          ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
-                          : 'bg-[#FAF2DA] text-[#8C6218] border border-[#C9A050] font-bold shadow-xs'
-                        : theme === 'dark'
-                          ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
-                          : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
-                      }`}
-                  >
-                    <Icon
-                      className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8A847A]'
+              <div className="flex items-center space-x-1 lg:space-x-1.5 px-0.5 sm:px-1 mx-auto shrink-0">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center space-x-1 lg:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${isActive
+                          ? theme === 'dark'
+                            ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
+                            : 'bg-[#FAF2DA] text-[#8C6218] border border-[#C9A050] font-bold shadow-xs'
+                          : theme === 'dark'
+                            ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
+                            : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
                         }`}
-                    />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+                    >
+                      <Icon
+                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-[#C9A050]' : theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#8A847A]'
+                          }`}
+                      />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </nav>
 
-            {/* Controls: Home Button (User only), All-in-One Profile Dropdown & Mobile Menu Button */}
+            {/* Controls: Language Selector, Home Button (User only), All-in-One Profile Dropdown & Mobile Menu Button */}
             <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+              {/* Language Selector (Desktop) - Left of Home */}
+              {!isAdmin && (
+                <HeaderLanguageSwitcher theme={theme} />
+              )}
+
               {/* Home Navigation Button - Only for normal users */}
               {!isAdmin && (
                 <button
                   onClick={() => setActiveTab('landing')}
-                  title={t('tab.home') || 'Home'}
+                  title={t('userPanel.tabs.home', 'Home')}
                   className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm shrink-0 ${activeTab === 'landing' || activeTab === 'home'
                       ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
                       : theme === 'dark'
                         ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
                         : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
                     }`}
-                  aria-label="Home"
+                  aria-label={t('userPanel.tabs.home', 'Home')}
                 >
                   <Home className="w-3.5 h-3.5 text-[#C9A050]" />
-                  <span className="hidden sm:inline font-semibold">{t('tab.home') || 'Home'}</span>
+                  <span className="hidden sm:inline font-semibold">{t('userPanel.tabs.home', 'Home')}</span>
                 </button>
               )}
 
@@ -398,13 +415,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                             ) : (
                               <Sun className="w-3.5 h-3.5 text-[#8C6218] shrink-0" />
                             )}
-                            <span>Theme</span>
+                            <span>{t('userPanel.menu.theme', 'Theme')}</span>
                           </div>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${theme === 'dark'
                               ? 'border-[#C9A050]/40 text-[#C9A050] bg-[#C9A050]/10'
                               : 'border-[#DFC896] text-[#8C6218] bg-[#FAF2DA]'
                             }`}>
-                            {theme === 'dark' ? 'Dark' : 'Light'}
+                            {theme === 'dark' ? t('userPanel.menu.dark', 'Dark') : t('userPanel.menu.light', 'Light')}
                           </span>
                         </button>
 
@@ -420,7 +437,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             }`}
                         >
                           <Key className="w-3.5 h-3.5 shrink-0" />
-                          <span>Change Password</span>
+                          <span>{t('userPanel.menu.changePassword', 'Change Password')}</span>
                         </button>
 
                         {/* Logout Option */}
@@ -433,7 +450,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             className="w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left text-red-500 hover:bg-red-500/10"
                           >
                             <LogOut className="w-3.5 h-3.5 shrink-0" />
-                            <span>Logout</span>
+                            <span>{t('userPanel.menu.logout', 'Logout')}</span>
                           </button>
                         )}
                       </div>
@@ -480,27 +497,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <div className="flex items-center justify-between text-[11px] font-bold text-[#C9A050] mb-2 pb-1.5 border-b border-inherit/40">
                             <span className="flex items-center gap-1.5">
                               <Moon className="w-3.5 h-3.5 text-[#C9A050]" />
-                              {language === 'bn' ? 'চন্দ্র রাশি (Moon Sign)' : 'Chandra Rashi (Moon Sign)'}
+                              {t('userPanel.menu.chandraRashi', 'Chandra Rashi (Moon Sign)')}
                             </span>
                             <span className="text-base leading-none">{userRashi.symbol}</span>
                           </div>
 
                           <div className="flex items-baseline justify-between mb-1.5">
                             <span className={`text-xs font-bold ${theme === 'dark' ? 'text-[#F3EAD3]' : 'text-[#2C2825]'}`}>
-                              {language === 'bn'
-                                ? `রাশি ${userRashi.rashiNumber}: ${userRashi.bengali} (${userRashi.name})`
-                                : `Rashi ${userRashi.rashiNumber}: ${userRashi.name} (${userRashi.sanskrit.split(' ')[0]})`}
+                              {userRashi.rashiNumber}: {tVedic('signs', userRashi.name.toLowerCase(), userRashi.name)}
                             </span>
                           </div>
 
                           <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-inherit/30 text-[10px]">
                             <div className={`p-1.5 rounded-lg ${theme === 'dark' ? 'bg-[#15141D]' : 'bg-[#FFFDF4]'}`}>
-                              <span className="block text-[#9E9A90] font-medium">{language === 'bn' ? 'অধিপতি গ্রহ' : 'Ruler Lord'}</span>
-                              <span className={`font-semibold ${theme === 'dark' ? 'text-[#E6C670]' : 'text-[#8C6218]'}`}>{userRashi.lord}</span>
+                              <span className="block text-[#9E9A90] font-medium">{t('userPanel.menu.rashiLord', 'Rashi Lord')}</span>
+                              <span className={`font-semibold ${theme === 'dark' ? 'text-[#E6C670]' : 'text-[#8C6218]'}`}>
+                                {tVedic('planets', userRashi.lord.toLowerCase(), userRashi.lord)}
+                              </span>
                             </div>
                             <div className={`p-1.5 rounded-lg ${theme === 'dark' ? 'bg-[#15141D]' : 'bg-[#FFFDF4]'}`}>
-                              <span className="block text-[#9E9A90] font-medium">{language === 'bn' ? 'নক্ষত্র' : 'Nakshatra'}</span>
-                              <span className={`font-semibold truncate block ${theme === 'dark' ? 'text-[#E6C670]' : 'text-[#8C6218]'}`}>{userRashi.nakshatra}</span>
+                              <span className="block text-[#9E9A90] font-medium">{t('userPanel.menu.moonNakshatra', 'Moon Nakshatra')}</span>
+                              <span className={`font-semibold truncate block ${theme === 'dark' ? 'text-[#E6C670]' : 'text-[#8C6218]'}`}>
+                                {tVedic('nakshatras', userRashi.nakshatra.toLowerCase(), userRashi.nakshatra)}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -521,7 +540,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         >
                           <div className="flex items-center space-x-2">
                             <Edit3 className="w-3.5 h-3.5 shrink-0" />
-                            <span>{language === 'bn' ? 'প্রোফাইল এডিট' : 'Edit Profile'}</span>
+                            <span>{t('userPanel.menu.editAddProfile', 'Edit Profile')}</span>
                           </div>
                           <span className="text-[10px] text-gray-400">→</span>
                         </button>
@@ -541,7 +560,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               }`}
                           >
                             <LogOut className="w-3.5 h-3.5 shrink-0" />
-                            <span>{language === 'bn' ? 'লগআউট' : 'Logout'}</span>
+                            <span>{t('userPanel.menu.logout', 'Logout')}</span>
                           </button>
                         )}
                       </div>
@@ -587,7 +606,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <h3 className="font-bold text-sm text-[#F0ECE1]">
                       ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                     </h3>
-                    <p className="text-[10px] text-[#9E9A90]">Astrological Intelligence</p>
+                    <p className="text-[10px] text-[#9E9A90]">{t('brand.tagline')}</p>
                   </div>
                 </div>
                 <button
@@ -637,13 +656,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#141418]" />
                     </div>
                     <div className="min-w-0">
-                      <div className="font-bold text-xs text-[#F0ECE1] truncate">{currentProfile.fullName || 'Seeker'}</div>
+                      <div className="font-bold text-xs text-[#F0ECE1] truncate">{currentProfile.fullName || t('userPanel.menu.seeker', 'Seeker')}</div>
                       <div className="flex items-center gap-1 text-[10px] text-[#C9A050] font-semibold mt-0.5">
                         <span>{userRashi.symbol}</span>
                         <span>
-                          {language === 'bn'
-                            ? `রাশি ${userRashi.rashiNumber} • ${userRashi.bengali}`
-                            : `Rashi ${userRashi.rashiNumber} • ${userRashi.name}`}
+                          {userRashi.rashiNumber} • {tVedic('signs', userRashi.name.toLowerCase(), userRashi.name)}
                         </span>
                       </div>
                     </div>
@@ -654,17 +671,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onOpenNewProfile();
                     }}
                     className="p-1.5 rounded-xl bg-[#C9A050]/15 text-[#C9A050] hover:bg-[#C9A050]/25 text-xs font-semibold shrink-0 transition"
-                    title="Edit or Add Profile"
+                    title={t('userPanel.menu.editAddProfile', 'Edit or Add Profile')}
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
                 </div>
               )}
 
+              {/* Language Selector in Mobile Drawer */}
+              {!isAdmin && (
+                <div className="flex items-center justify-between px-3 py-2 my-2 rounded-xl bg-[#1C1A27]/60 border border-[#2A2A2E]">
+                  <span className="text-xs text-[#9E9A90] font-medium">{t('userPanel.drawer.selectLanguage', 'Language')}</span>
+                  <HeaderLanguageSwitcher theme={theme} />
+                </div>
+              )}
+
               {/* Navigation Tabs List */}
               <div className="space-y-1 mt-2">
                 <div className="text-[10px] font-bold text-[#9E9A90] uppercase tracking-wider px-2 py-1">
-                  Navigation
+                  {t('userPanel.drawer.navigationControls', 'Navigation')}
                 </div>
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -704,8 +729,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                     <span>
                       {isGeneratingFullReport
-                        ? 'Generating Report...'
-                        : t('header.download_full_report', 'Download Full Report')}
+                        ? t('userPanel.menu.generating', 'Generating Report...')
+                        : t('userPanel.menu.downloadDossier', 'Download Full Report')}
                     </span>
                   </button>
                 )}
@@ -723,7 +748,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }`}
                   >
                     <MessageSquareText className="w-4 h-4 text-[#C9A050]" />
-                    <span>Daivajna Consultation</span>
+                    <span>{t('userPanel.drawer.daivajnaConsultation', 'Daivajna Consultation')}</span>
                   </button>
                 )}
               </div>
@@ -740,7 +765,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="w-full flex items-center space-x-2 text-xs text-[#C9A050] hover:text-[#D4AF37] py-1.5 px-2 rounded hover:bg-[#C9A050]/10 transition"
                 >
                   <Key className="w-3.5 h-3.5 text-[#C9A050]" />
-                  <span>Change Password</span>
+                  <span>{t('userPanel.menu.changePassword', 'Change Password')}</span>
                 </button>
               )}
 
@@ -752,7 +777,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full flex items-center space-x-2 text-xs text-[#9E9A90] hover:text-[#C9A050] py-1.5 px-2 rounded"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#C9A050]" />
-                <span>Astrological Disclaimer</span>
+                <span>{t('userPanel.drawer.astrologicalDisclaimer', 'Astrological Disclaimer')}</span>
               </button>
 
               {onLogout && (
@@ -767,7 +792,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }`}
                 >
                   <LogOut className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`} />
-                  <span>Log Out of Account</span>
+                  <span>{t('userPanel.menu.logOutOfAccount', 'Log Out of Account')}</span>
                 </button>
               )}
             </div>
@@ -798,37 +823,28 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
       </div>
 
-      {/* Floating Ask Daivajna Action Button (User Role Only - Round Circular FAB) */}
+      {/* Floating Ask Daivajna Action Button (User Role Only - Clean Circular FAB matching Landing Page) */}
       {!isViewingAdmin && !isAdmin && (
         <button
           onClick={() => setActiveTab('counsellor')}
-          title="Ask Daivajna Astrologer"
-          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex flex-col items-center justify-center p-0 shadow-2xl transition-all duration-300 cursor-pointer group hover:scale-110 hover:-translate-y-1 active:scale-95 ${activeTab === 'counsellor'
+          title={t('userPanel.fab.title', 'Ask Daivajna Astrologer')}
+          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center p-0 shadow-lg shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${activeTab === 'counsellor'
               ? 'ring-4 ring-[#C9A050] ring-offset-2'
               : ''
             } ${theme === 'dark'
-              ? 'bg-gradient-to-tr from-[#A07828] via-[#C9A050] to-[#DFB76C] text-[#0D0D0F] shadow-[0_8px_25px_rgba(201,160,80,0.45)] border-2 border-[#FFE8A3]/70'
-              : 'bg-gradient-to-tr from-[#A87E2C] via-[#C9A050] to-[#E2BC73] text-[#FFFFFF] shadow-[0_8px_25px_rgba(201,160,80,0.4)] border-2 border-[#FFF0C2]/80'
+              ? 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F]'
+              : 'bg-[#C9A050] hover:bg-[#B38730] text-white'
             }`}
-          aria-label="Ask Daivajna"
+          aria-label={t('userPanel.fab.ariaLabel', 'Ask Daivajna')}
         >
-          {/* Animated Pulsing Beacon */}
-          <span className="absolute top-1 right-1 flex h-3 w-3 pointer-events-none">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-200 opacity-80"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-300"></span>
-          </span>
-
-          <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300" />
-          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider leading-none mt-1 select-none">
-            Daivajna
-          </span>
+          <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current transition-transform duration-200" />
 
           {/* Hover Tooltip on Left */}
-          <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${theme === 'dark'
+          <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${theme === 'dark'
               ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
               : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
             }`}>
-            Ask Daivajna
+            {t('userPanel.fab.title', 'Ask Daivajna Astrologer')}
           </span>
         </button>
       )}

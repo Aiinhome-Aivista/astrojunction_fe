@@ -24,6 +24,23 @@ import { CHALDEAN_VALUES, reduceToSingleDigit } from '../services/astroEngine';
 import { saveNumerologyReport } from '../services/numerologyApi';
 import { ApiError, api } from '../services/api';
 import { API_ENDPOINTS } from '../config/api_config';
+import { useTranslation } from 'react-i18next';
+import {
+  formatLocalizedDigits,
+  formatLocalizedDate,
+  getLocalizedPlanetTitle,
+  getLocalizedTrait,
+  getLocalizedMission,
+  getLocalizedDays,
+  getLocalizedColors,
+  getLocalizedPlaneName,
+  getLocalizedPlaneMeaning,
+  getLocalizedPlaneStatus,
+  getLocalizedRemedy,
+  getLocalizedChaldeanCompatibility,
+  getLocalizedChaldeanSuggestion,
+} from '../services/numerologyTranslations';
+
 
 interface NumerologyViewProps {
   profile: UserProfile;
@@ -38,6 +55,8 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
   isAuthenticated,
   theme = 'dark',
 }) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = (i18n.language?.split('-')[0]?.toLowerCase() || 'en');
   const [testName, setTestName] = useState(profile.fullName);
   
   const [backendData, setBackendData] = useState<NumerologyReport | null>(null);
@@ -83,14 +102,14 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
         if (calcData && calcData.data) {
           setBackendData(calcData.data);
           
-          // Then fetch AI insights
+          // Then fetch AI insights in current language
           const missingNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(n => !calcData.data.loShuGrid[n]);
           const aiData = await api.post<any>(API_ENDPOINTS.NUMEROLOGY.AI_INSIGHTS, {
             mulank: calcData.data.mulank,
             bhagyank: calcData.data.bhagyank,
             namank: calcData.data.namankChaldean,
             missingNumbers,
-            language: 'en'
+            language: currentLang
           });
           
           if (aiData) setAiInsights(aiData);
@@ -102,7 +121,7 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
       }
     };
     fetchBackendData();
-  }, [profile.fullName, profile.birthDate]);
+  }, [profile.fullName, profile.birthDate, currentLang]);
 
   const activeNumerology = backendData || numerology;
   const [activeTab, setActiveTab] = useState<'matrix' | 'loshu' | 'name_correction' | 'remedies'>('matrix');
@@ -719,29 +738,29 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
           <div>
             <div className="flex items-center space-x-2 text-xs font-semibold tracking-widest text-[#C9A050] uppercase mb-1">
               <Hash className="w-4 h-4" />
-              <span>Vedic & Chaldean Numerology Matrix</span>
+              <span>{t('numerology.eyebrow')}</span>
             </div>
             <h1 className="astro-page-header-title">
-              Sacred Numbers &amp; Lo Shu Magic Grid
+              {t('numerology.title')}
             </h1>
             <p className="text-xs text-[#9E9A90] mt-1 leading-relaxed">
-              Decode the planetary vibrational codes governing your psyche (Mulank), karmic destiny (Bhagyank), and name resonance (Namank).
+              {t('numerology.subtitle')}
             </p>
           </div>
 
           {/* Core Numbers Badges & Download Report Action */}
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <div className="text-center bg-[#1A1A1E] border border-[#C9A050]/30 px-3.5 py-2 rounded-xl">
-              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">Mulank</div>
-              <div className="text-xl font-bold text-[#C9A050]">{activeNumerology.mulank}</div>
+              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">{t('numerology.badges.mulank')}</div>
+              <div className="text-xl font-bold text-[#C9A050]">{formatLocalizedDigits(activeNumerology.mulank, currentLang)}</div>
             </div>
             <div className="text-center bg-[#1A1A1E] border border-[#C9A050]/30 px-3.5 py-2 rounded-xl">
-              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">Bhagyank</div>
-              <div className="text-xl font-bold text-[#C9A050]">{activeNumerology.bhagyank}</div>
+              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">{t('numerology.badges.bhagyank')}</div>
+              <div className="text-xl font-bold text-[#C9A050]">{formatLocalizedDigits(activeNumerology.bhagyank, currentLang)}</div>
             </div>
             <div className="text-center bg-[#1A1A1E] border border-[#C9A050]/30 px-3.5 py-2 rounded-xl">
-              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">Namank</div>
-              <div className="text-xl font-bold text-[#C9A050]">{activeNumerology.namankChaldean}</div>
+              <div className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">{t('numerology.badges.namank')}</div>
+              <div className="text-xl font-bold text-[#C9A050]">{formatLocalizedDigits(activeNumerology.namankChaldean, currentLang)}</div>
             </div>
 
             <button
@@ -752,63 +771,63 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
                   ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-[#C9A050]/20'
                   : 'bg-[#C9A050] hover:bg-[#B38730] text-white border-[#C9A050] shadow-[#C9A050]/20'
               } disabled:opacity-50`}
-              title="Download full Numerology & Lo Shu magic grid PDF report"
+              title={t('numerology.download_title')}
             >
               {isGeneratingPdf ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Download className="w-4 h-4" />
               )}
-              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Report (PDF)'}</span>
+              <span>{isGeneratingPdf ? t('numerology.generating_pdf') : t('numerology.download_btn')}</span>
             </button>
           </div>
         </div>
 
         {/* View Switcher Tabs */}
-        <div className="flex flex-wrap gap-2 pt-4">
+        <div className="flex flex-nowrap overflow-x-auto scrollbar-none items-center justify-start gap-1.5 sm:gap-2 pt-4">
           <button
             onClick={() => setActiveTab('matrix')}
-            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition cursor-pointer flex items-center space-x-1.5 ${
               activeTab === 'matrix'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20'
                 : 'bg-[#1A1A1E] text-[#9E9A90] hover:text-white border border-[#2A2A2E]'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Mulank & Bhagyank Synthesis</span>
+            <Layers className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('numerology.tabs.matrix')}</span>
           </button>
           <button
             onClick={() => setActiveTab('loshu')}
-            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition cursor-pointer flex items-center space-x-1.5 ${
               activeTab === 'loshu'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20'
                 : 'bg-[#1A1A1E] text-[#9E9A90] hover:text-white border border-[#2A2A2E]'
             }`}
           >
-            <Grid className="w-3.5 h-3.5" />
-            <span>Lo Shu 3x3 Magic Grid ({activeNumerology.loShuPlanes.length} Planes)</span>
+            <Grid className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('numerology.tabs.loshu', { count: formatLocalizedDigits(activeNumerology.loShuPlanes?.length || 8, currentLang) })}</span>
           </button>
           <button
             onClick={() => setActiveTab('name_correction')}
-            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition cursor-pointer flex items-center space-x-1.5 ${
               activeTab === 'name_correction'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20'
                 : 'bg-[#1A1A1E] text-[#9E9A90] hover:text-white border border-[#2A2A2E]'
             }`}
           >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Chaldean Name Correction Tool</span>
+            <Sliders className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('numerology.tabs.name_correction')}</span>
           </button>
           <button
             onClick={() => setActiveTab('remedies')}
-            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold transition cursor-pointer flex items-center space-x-1.5 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-sans font-bold whitespace-nowrap shrink-0 transition cursor-pointer flex items-center space-x-1.5 ${
               activeTab === 'remedies'
                 ? 'bg-[#C9A050] text-[#0D0D0F] shadow-md shadow-[#C9A050]/20'
                 : 'bg-[#1A1A1E] text-[#9E9A90] hover:text-white border border-[#2A2A2E]'
             }`}
           >
-            <Flame className="w-3.5 h-3.5" />
-            <span>Numerology Remedies & Gems</span>
+            <Flame className="w-3.5 h-3.5 shrink-0" />
+            <span>{t('numerology.tabs.remedies')}</span>
           </button>
         </div>
       </div>
@@ -821,47 +840,46 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2E]">
               <div className="flex items-center space-x-2">
                 <span className="w-8 h-8 rounded-xl bg-[#C9A050]/20 text-[#C9A050] font-serif font-bold text-base flex items-center justify-center border border-[#C9A050]/30">
-                  {activeNumerology.mulank}
+                  {formatLocalizedDigits(activeNumerology.mulank, currentLang)}
                 </span>
                 <div>
-                  <h3 className="text-sm font-serif font-bold text-[#F0ECE1]">Mulank (Psychic / Driver Number)</h3>
-                  <p className="text-[11px] text-[#9E9A90]">Sum of Birth Day ({profile.birthDate.split('-')[2]})</p>
+                  <h3 className="text-sm font-serif font-bold text-[#F0ECE1]">{t('numerology.matrix.mulank_card_title')}</h3>
+                  <p className="text-[11px] text-[#9E9A90]">{t('numerology.matrix.mulank_sum_day', { day: formatLocalizedDigits(profile.birthDate.split('-')[2], currentLang) })}</p>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-[#C9A050]">{activeNumerology.mulankPlanet}</span>
+              <span className="text-xs font-semibold text-[#C9A050]">{getLocalizedPlanetTitle(activeNumerology.mulankPlanet, activeNumerology.mulank, t)}</span>
             </div>
 
             <div className="space-y-3 text-xs font-sans">
               <div>
-                <span className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">Psychological Drivers</span>
+                <span className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">{t('numerology.matrix.psychological_drivers')}</span>
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {(aiInsights?.mulankCharacteristics || activeNumerology.mulankCharacteristics).map((trait: string) => (
                     <span
                       key={trait}
                       className="px-2.5 py-1 rounded-lg bg-[#1A1A1E] border border-[#2A2A2E] text-[#C9A050] font-medium"
                     >
-                      {trait}
+                      {getLocalizedTrait(trait, t)}
                     </span>
                   ))}
                 </div>
               </div>
 
               <div className="p-3.5 bg-[#1A1A1E] rounded-xl border border-[#2A2A2E] space-y-1">
-                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">Instinctive Nature</span>
+                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">{t('numerology.matrix.instinctive_nature')}</span>
                 <p className="text-[#E5E1D8] leading-relaxed">
-                  Your Mulank reveals how you instinctively react to challenges, your personal desires, and your subconscious behavioral patterns.
-                  Ruled by {activeNumerology.mulankPlanet}, you radiate authority and strive for self-directed excellence.
+                  {t('numerology.matrix.instinctive_desc', { planet: getLocalizedPlanetTitle(activeNumerology.mulankPlanet, activeNumerology.mulank, t) })}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div className="p-3 bg-[#1A1A1E]/60 rounded-lg border border-[#2A2A2E]">
-                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">Favorable Days</span>
-                  <span className="font-semibold text-[#C9A050]">{activeNumerology.luckyDays.join(', ')}</span>
+                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">{t('numerology.matrix.favorable_days')}</span>
+                  <span className="font-semibold text-[#C9A050]">{getLocalizedDays(activeNumerology.luckyDays, t)}</span>
                 </div>
                 <div className="p-3 bg-[#1A1A1E]/60 rounded-lg border border-[#2A2A2E]">
-                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">Lucky Colors</span>
-                  <span className="font-semibold text-[#C9A050]">{activeNumerology.luckyColors.join(', ')}</span>
+                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">{t('numerology.matrix.lucky_colors')}</span>
+                  <span className="font-semibold text-[#C9A050]">{getLocalizedColors(activeNumerology.luckyColors, t)}</span>
                 </div>
               </div>
             </div>
@@ -872,38 +890,44 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2E]">
               <div className="flex items-center space-x-2">
                 <span className="w-8 h-8 rounded-xl bg-[#C9A050]/20 text-[#C9A050] font-serif font-bold text-base flex items-center justify-center border border-[#C9A050]/30">
-                  {activeNumerology.bhagyank}
+                  {formatLocalizedDigits(activeNumerology.bhagyank, currentLang)}
                 </span>
                 <div>
-                  <h3 className="text-sm font-serif font-bold text-[#F0ECE1]">Bhagyank (Destiny / Conductor Number)</h3>
-                  <p className="text-[11px] text-[#9E9A90]">Sum of Day + Month + Year ({profile.birthDate})</p>
+                  <h3 className="text-sm font-serif font-bold text-[#F0ECE1]">{t('numerology.matrix.bhagyank_card_title')}</h3>
+                  <p className="text-[11px] text-[#9E9A90]">{t('numerology.matrix.bhagyank_sum_date', { date: formatLocalizedDate(profile.birthDate, currentLang) })}</p>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-[#C9A050]">{activeNumerology.bhagyankPlanet}</span>
+              <span className="text-xs font-semibold text-[#C9A050]">{getLocalizedPlanetTitle(activeNumerology.bhagyankPlanet, activeNumerology.bhagyank, t)}</span>
             </div>
 
             <div className="space-y-3 text-xs font-sans">
               <div className="p-3.5 bg-[#1A1A1E] rounded-xl border border-[#2A2A2E] space-y-1">
-                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">Karmic Life Mission</span>
-                <p className="text-[#E5E1D8] leading-relaxed">{activeNumerology.bhagyankMission}</p>
+                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">{t('numerology.matrix.karmic_life_mission')}</span>
+                <p className="text-[#E5E1D8] leading-relaxed">{getLocalizedMission(activeNumerology.bhagyankMission, activeNumerology.bhagyank, t)}</p>
               </div>
 
               <div className="p-3.5 bg-[#1A1A1E] rounded-xl border border-[#2A2A2E] space-y-1">
-                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">Mulank-Bhagyank Synergy</span>
+                <span className="text-[9px] uppercase font-bold text-[#C9A050] tracking-wider">{t('numerology.matrix.synergy_title')}</span>
                 <p className="text-[#E5E1D8] leading-relaxed">
-                  Your combination of Mulank {activeNumerology.mulank} and Bhagyank {activeNumerology.bhagyank} creates an energetic balance between 
-                  daily execution and grand karmic accomplishments. Harness this alignment by scheduling critical launches on your auspicious dates.
+                  {t('numerology.matrix.synergy_desc', {
+                    mulank: formatLocalizedDigits(activeNumerology.mulank, currentLang),
+                    bhagyank: formatLocalizedDigits(activeNumerology.bhagyank, currentLang)
+                  })}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div className="p-3 bg-[#1A1A1E]/60 rounded-lg border border-[#2A2A2E]">
-                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">Friendly Numbers</span>
-                  <span className="font-semibold text-[#C9A050]">{activeNumerology.luckyNumbers.join(', ')}</span>
+                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">{t('numerology.matrix.friendly_numbers')}</span>
+                  <span className="font-semibold text-[#C9A050]">{activeNumerology.luckyNumbers?.map(n => formatLocalizedDigits(n, currentLang)).join(', ')}</span>
                 </div>
                 <div className="p-3 bg-[#1A1A1E]/60 rounded-lg border border-[#2A2A2E]">
-                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">Unfavorable Numbers</span>
-                  <span className="font-semibold text-[#C9A050]">{activeNumerology.unfavorableNumbers.join(', ') || 'None (Universal Friend)'}</span>
+                  <span className="text-[9px] text-[#9E9A90] block uppercase font-bold tracking-wider">{t('numerology.matrix.unfavorable_numbers')}</span>
+                  <span className="font-semibold text-[#C9A050]">
+                    {activeNumerology.unfavorableNumbers?.length
+                      ? activeNumerology.unfavorableNumbers.map(n => formatLocalizedDigits(n, currentLang)).join(', ')
+                      : t('numerology.matrix.universal_friend')}
+                  </span>
                 </div>
               </div>
             </div>
@@ -917,8 +941,8 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
           {/* Left 5 Cols: Visual Lo Shu Grid */}
           <div className="lg:col-span-5 bg-[#141418] border border-[#2A2A2E] rounded-xl p-6 text-[#E5E1D8] shadow-xl flex flex-col justify-between items-center h-full min-h-[485px]">
             <div className="w-full flex items-center justify-between pb-3 border-b border-[#2A2A2E] mb-3 text-xs">
-              <span className="font-serif font-bold text-[#F0ECE1]">Sacred 3x3 Lo Shu Matrix</span>
-              <span className="text-[#C9A050] font-mono">Date: {profile.birthDate.replace(/-/g, '')}</span>
+              <span className="font-serif font-bold text-[#F0ECE1]">{t('numerology.loshu.matrix_title')}</span>
+              <span className="text-[#C9A050] font-mono">{t('numerology.loshu.date_label', { date: formatLocalizedDigits(profile.birthDate.replace(/-/g, ''), currentLang) })}</span>
             </div>
 
             {/* 3x3 Grid */}
@@ -937,14 +961,14 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
                       }`}
                     >
                       <span className={`text-2xl font-serif font-bold ${isPresent ? 'text-[#C9A050]' : 'text-[#504E48]'}`}>
-                        {num}
+                        {formatLocalizedDigits(num, currentLang)}
                       </span>
                       <span
                         className={`text-[10px] font-sans font-bold px-1.5 py-0.5 rounded-full mt-1 ${
                           isPresent ? 'bg-[#C9A050] text-[#0D0D0F]' : 'bg-[#1A1A1E] text-[#9E9A90]'
                         }`}
                       >
-                        {isPresent ? `${count}x` : 'Absent'}
+                        {isPresent ? t('numerology.loshu.count_times', { count: formatLocalizedDigits(count, currentLang) }) : t('numerology.loshu.absent')}
                       </span>
                     </div>
                   );
@@ -953,8 +977,8 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             </div>
 
             <div className="mt-3 text-xs text-[#9E9A90] text-center space-y-1 font-sans">
-              <p>Numbers extracted directly from your complete birth date string ({profile.birthDate}).</p>
-              <p className="text-[#C9A050]/90 font-medium">Missing numbers can be energetically balanced using spatial Vastu & crystal remedies.</p>
+              <p>{t('numerology.loshu.note_extracted', { date: formatLocalizedDate(profile.birthDate, currentLang) })}</p>
+              <p className="text-[#C9A050]/90 font-medium">{t('numerology.loshu.note_remedy')}</p>
             </div>
           </div>
 
@@ -962,15 +986,15 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
           <div className="lg:col-span-7">
             <div className="bg-[#141418] border border-[#2A2A2E] rounded-xl p-6 text-[#E5E1D8] shadow-xl flex flex-col max-h-[485px]">
               <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2E] shrink-0 mb-3">
-                <h3 className="text-base font-bold text-[#F0ECE1]">Planes of Strength & Arrows of Destiny</h3>
-                <span className="text-xs text-[#C9A050] font-medium">8 Geometric Vectors</span>
+                <h3 className="text-base font-bold text-[#F0ECE1]">{t('numerology.loshu.planes_title')}</h3>
+                <span className="text-xs text-[#C9A050] font-medium">{t('numerology.loshu.planes_count', { count: formatLocalizedDigits(activeNumerology.loShuPlanes?.length || 8, currentLang) })}</span>
               </div>
 
               <div className="space-y-3 font-sans overflow-y-auto pr-1.5 custom-scrollbar">
                 {activeNumerology.loShuPlanes.map((plane) => (
                   <div key={plane.name} className="p-3.5 bg-[#1A1A1E] rounded-xl border border-[#2A2A2E] space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="font-serif font-bold text-[#F0ECE1]">{plane.name}</span>
+                      <span className="font-serif font-bold text-[#F0ECE1]">{getLocalizedPlaneName(plane, currentLang, t)}</span>
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-transparent ${
                           plane.status !== 'Empty'
@@ -978,7 +1002,7 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
                             : 'bg-[#141418] text-[#9E9A90]'
                         }`}
                       >
-                        {plane.status} ({Math.round(plane.strength)}%)
+                        {getLocalizedPlaneStatus(plane.status, plane.strength, currentLang, t)}
                       </span>
                     </div>
 
@@ -992,9 +1016,9 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
 
                     <p className="text-[11px] text-[#9E9A90] leading-relaxed">
                       {isAiLoading ? (
-                        <span className="flex items-center text-[#C9A050] space-x-2 animate-pulse"><Sparkles className="w-3 h-3" /> <span>Synthesizing Vedic Insights...</span></span>
+                        <span className="flex items-center text-[#C9A050] space-x-2 animate-pulse"><Sparkles className="w-3 h-3" /> <span>{t('numerology.loshu.synthesizing')}</span></span>
                       ) : (
-                        (aiInsights?.planeMeanings && aiInsights.planeMeanings[plane.name]) || plane.meaning
+                        (aiInsights?.planeMeanings && aiInsights.planeMeanings[plane.name]) || getLocalizedPlaneMeaning(plane.name, plane.meaning, t)
                       )}
                     </p>
                   </div>
@@ -1011,10 +1035,10 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
           <div className="pb-4 border-b border-[#2A2A2E]">
             <h3 className="text-base font-serif font-bold text-[#F0ECE1] flex items-center space-x-2">
               <Sliders className="w-4 h-4 text-[#C9A050]" />
-              <span>Chaldean & Pythagorean Name Spelling Optimizer</span>
+              <span>{t('numerology.chaldean.title')}</span>
             </h3>
             <p className="text-xs font-sans text-[#9E9A90] mt-1">
-              Ancient Chaldean numerology assigns sacred vibrations to each letter. Test subtle spelling variations to achieve optimum wealth (5 or 6) or authority (1).
+              {t('numerology.chaldean.subtitle')}
             </p>
           </div>
 
@@ -1022,7 +1046,7 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#C9A050] mb-1">
-                  Test Name Spelling
+                  {t('numerology.chaldean.input_label')}
                 </label>
                 <input
                   type="text"
@@ -1034,12 +1058,12 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
 
               {/* Letter breakdown */}
               <div className="p-3 bg-[#08080A] rounded-xl border border-[#2A2A2E] space-y-2">
-                <span className="text-[9px] uppercase font-bold text-[#9E9A90] block tracking-wider">Letter Gematria Values</span>
+                <span className="text-[9px] uppercase font-bold text-[#9E9A90] block tracking-wider">{t('numerology.chaldean.gematria_label')}</span>
                 <div className="flex flex-wrap gap-1">
                   {cleanTestName.split('').map((char, idx) => (
                     <div key={idx} className="p-1 px-2 bg-[#1A1A1E] rounded text-center border border-[#2A2A2E]">
                       <div className="text-xs font-bold text-[#F0ECE1]">{char}</div>
-                      <div className="text-[10px] font-mono text-[#C9A050]">{CHALDEAN_VALUES[char] || 0}</div>
+                      <div className="text-[10px] font-mono text-[#C9A050]">{formatLocalizedDigits(CHALDEAN_VALUES[char] || 0, currentLang)}</div>
                     </div>
                   ))}
                 </div>
@@ -1049,27 +1073,25 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             {/* Results Output */}
             <div className="bg-[#1A1A1E] p-5 rounded-xl border border-[#2A2A2E] space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-[#9E9A90]">Total Compound Vibration:</span>
-                <span className="text-lg font-serif font-bold text-[#C9A050] font-mono">{testChaldeanSum}</span>
+                <span className="text-xs font-semibold text-[#9E9A90]">{t('numerology.chaldean.compound_vibration')}</span>
+                <span className="text-lg font-serif font-bold text-[#C9A050] font-mono">{formatLocalizedDigits(testChaldeanSum, currentLang)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-[#9E9A90]">Single Digit Namank:</span>
-                <span className="text-2xl font-serif font-bold text-[#C9A050] font-mono">{testChaldeanSingle}</span>
+                <span className="text-xs font-semibold text-[#9E9A90]">{t('numerology.chaldean.single_namank')}</span>
+                <span className="text-2xl font-serif font-bold text-[#C9A050] font-mono">{formatLocalizedDigits(testChaldeanSingle, currentLang)}</span>
               </div>
 
               <div className="p-3 rounded-lg bg-[#141418] border border-[#2A2A2E] text-xs">
-                <span className="font-serif font-bold text-[#C9A050] block mb-1">Vibrational Compatibility</span>
+                <span className="font-serif font-bold text-[#C9A050] block mb-1">{t('numerology.chaldean.compatibility_title')}</span>
                 <p className="text-[#9E9A90] text-[11px] leading-relaxed">
-                  {[1, 3, 5, 6].includes(testChaldeanSingle)
-                    ? `✓ Highly favorable vibration ${testChaldeanSingle}. Resonates strongly with commercial prosperity, leadership respect, and smooth financial transactions.`
-                    : `⚠️ Vibration ${testChaldeanSingle} requires conscious balancing or a slight single-letter adjustment to align with Mercury (5) or Venus (6).`}
+                  {getLocalizedChaldeanCompatibility(testChaldeanSingle, currentLang, t)}
                 </p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">Classical Recommendations</span>
+                <span className="text-[9px] uppercase font-bold text-[#9E9A90] tracking-wider">{t('numerology.chaldean.recommendations_title')}</span>
                 {activeNumerology.nameCorrectionSuggestions.map((sug, i) => (
-                  <p key={i} className="text-[11px] text-[#9E9A90]">• {sug}</p>
+                  <p key={i} className="text-[11px] text-[#9E9A90]">• {getLocalizedChaldeanSuggestion(sug, testChaldeanSingle, currentLang, t)}</p>
                 ))}
               </div>
             </div>
@@ -1083,10 +1105,10 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
           <div className="pb-3 border-b border-[#2A2A2E]">
             <h3 className="text-base font-serif font-bold text-[#F0ECE1] flex items-center space-x-2">
               <Flame className="w-4 h-4 text-[#C9A050]" />
-              <span>Personalized Ancient Numerology Remedies & Vastu Upayas</span>
+              <span>{t('numerology.remedies.title')}</span>
             </h3>
             <p className="text-xs font-sans text-[#9E9A90] mt-1">
-              Correct missing energetic vibrations from your Lo Shu grid and strengthen your Mulank planetary ruler.
+              {t('numerology.remedies.subtitle')}
             </p>
           </div>
 
@@ -1094,9 +1116,11 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             {(aiInsights?.remedies || activeNumerology.remedies).map((rem: string, idx: number) => (
               <div key={idx} className="p-3.5 bg-[#1A1A1E] rounded-xl border border-[#2A2A2E] flex items-start space-x-3">
                 <span className="w-6 h-6 rounded-full bg-[#C9A050]/20 text-[#C9A050] font-serif font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border border-[#C9A050]/30">
-                  {idx + 1}
+                  {formatLocalizedDigits(idx + 1, currentLang)}
                 </span>
-                <p className="text-xs text-[#E5E1D8] leading-relaxed">{rem}</p>
+                <p className="text-xs text-[#E5E1D8] leading-relaxed">
+                  {(aiInsights?.remedies ? aiInsights.remedies[idx] : null) || getLocalizedRemedy(rem, idx, currentLang, t)}
+                </p>
               </div>
             ))}
           </div>

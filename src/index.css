@@ -43,24 +43,36 @@ html[lang="ta"] {
   --font-display: "Noto Serif Tamil", "Vijaya", serif;
 }
 
-html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .font-serif, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title,
-html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, html[lang="bn"] .font-serif, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title,
-html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .font-serif, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
+/* Indic Script Heading Stack & Font Safety (hi, bn, ta) */
+html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4,
+html[lang="hi"] .font-serif, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title,
+html[lang="hi"] [role="heading"], html[lang="hi"] [role="heading"] *,
+html[lang="hi"] .astro-card-title, html[lang="hi"] .astro-card-title *,
+html[lang="hi"] .astro-section-title, html[lang="hi"] .astro-section-title *,
+html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4,
+html[lang="bn"] .font-serif, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title,
+html[lang="bn"] [role="heading"], html[lang="bn"] [role="heading"] *,
+html[lang="bn"] .astro-card-title, html[lang="bn"] .astro-card-title *,
+html[lang="bn"] .astro-section-title, html[lang="bn"] .astro-section-title *,
+html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4,
+html[lang="ta"] .font-serif, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title,
+html[lang="ta"] [role="heading"], html[lang="ta"] [role="heading"] *,
+html[lang="ta"] .astro-card-title, html[lang="ta"] .astro-card-title *,
+html[lang="ta"] .astro-section-title, html[lang="ta"] .astro-section-title * {
+  font-family: var(--font-heading, var(--font-serif)) !important;
+  font-weight: 600 !important;
   letter-spacing: normal !important;
   text-transform: none !important;
-  line-height: 1.4 !important;
-  -webkit-text-stroke: 0.015em currentColor !important;
-  font-synthesis: weight !important;
+  line-height: 1.45 !important;
+  -webkit-text-stroke: 0 transparent !important;
+  font-synthesis: none !important;
 }
 
-html[lang="hi"] .font-serif, html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title {
-  font-family: "Rozha One", "Noto Serif Devanagari", "Kokila", "Aparajita", Georgia, serif !important;
+html[lang="hi"] .uppercase, html[lang="bn"] .uppercase, html[lang="ta"] .uppercase {
+  text-transform: none !important;
 }
-html[lang="bn"] .font-serif, html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title {
-  font-family: "Noto Serif Bengali", "Kalpurush", "Vrinda", Georgia, serif !important;
-}
-html[lang="ta"] .font-serif, html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title {
-  font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
+html[lang="hi"] [class*="tracking-"], html[lang="bn"] [class*="tracking-"], html[lang="ta"] [class*="tracking-"] {
+  letter-spacing: normal !important;
 }
 
 @layer base {
@@ -1494,74 +1506,74 @@ html body .jodit-ui-button_active:not([disabled]) svg {
 /* ========================================================================= */
 
 /* 1. Global Reset for Non-English Headings & Elements: No Fake Bold or Stroke */
-html:not([lang="en"]) {
+html:not([lang="en"]):not([lang="fr"]) {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-html:not([lang="en"]) h1,
-html:not([lang="en"]) h2,
-html:not([lang="en"]) h3,
-html:not([lang="en"]) h4,
-html:not([lang="en"]) h5,
-html:not([lang="en"]) h6,
-html:not([lang="en"]) h1 *,
-html:not([lang="en"]) h2 *,
-html:not([lang="en"]) h3 *,
-html:not([lang="en"]) h4 *,
-html:not([lang="en"]) h5 *,
-html:not([lang="en"]) h6 *,
-html:not([lang="en"]) .font-display,
-html:not([lang="en"]) .font-display *,
-html:not([lang="en"]) .font-heading,
-html:not([lang="en"]) .font-heading *,
-html:not([lang="en"]) .font-serif,
-html:not([lang="en"]) .font-serif *,
-html:not([lang="en"]) .astro-hero-title,
-html:not([lang="en"]) .astro-hero-title *,
-html:not([lang="en"]) .astro-page-header-title,
-html:not([lang="en"]) .astro-page-header-title *,
-html:not([lang="en"]) .astro-section-title,
-html:not([lang="en"]) .astro-section-title *,
-html:not([lang="en"]) .astro-card-title,
-html:not([lang="en"]) .astro-card-title *,
-html:not([lang="en"]) .astro-modal-title,
-html:not([lang="en"]) .astro-modal-title *,
-html:not([lang="en"]) [role="heading"],
-html:not([lang="en"]) [role="heading"] * {
+html:not([lang="en"]):not([lang="fr"]) h1,
+html:not([lang="en"]):not([lang="fr"]) h2,
+html:not([lang="en"]):not([lang="fr"]) h3,
+html:not([lang="en"]):not([lang="fr"]) h4,
+html:not([lang="en"]):not([lang="fr"]) h5,
+html:not([lang="en"]):not([lang="fr"]) h6,
+html:not([lang="en"]):not([lang="fr"]) h1 *,
+html:not([lang="en"]):not([lang="fr"]) h2 *,
+html:not([lang="en"]):not([lang="fr"]) h3 *,
+html:not([lang="en"]):not([lang="fr"]) h4 *,
+html:not([lang="en"]):not([lang="fr"]) h5 *,
+html:not([lang="en"]):not([lang="fr"]) h6 *,
+html:not([lang="en"]):not([lang="fr"]) .font-display,
+html:not([lang="en"]):not([lang="fr"]) .font-display *,
+html:not([lang="en"]):not([lang="fr"]) .font-heading,
+html:not([lang="en"]):not([lang="fr"]) .font-heading *,
+html:not([lang="en"]):not([lang="fr"]) .font-serif,
+html:not([lang="en"]):not([lang="fr"]) .font-serif *,
+html:not([lang="en"]):not([lang="fr"]) .astro-hero-title,
+html:not([lang="en"]):not([lang="fr"]) .astro-hero-title *,
+html:not([lang="en"]):not([lang="fr"]) .astro-page-header-title:not(.astro-name-bold),
+html:not([lang="en"]):not([lang="fr"]) .astro-page-header-title *:not(.astro-name-bold):not(.astro-name-bold *),
+html:not([lang="en"]):not([lang="fr"]) .astro-section-title,
+html:not([lang="en"]):not([lang="fr"]) .astro-section-title *,
+html:not([lang="en"]):not([lang="fr"]) .astro-card-title,
+html:not([lang="en"]):not([lang="fr"]) .astro-card-title *,
+html:not([lang="en"]):not([lang="fr"]) .astro-modal-title,
+html:not([lang="en"]):not([lang="fr"]) .astro-modal-title *,
+html:not([lang="en"]):not([lang="fr"]) [role="heading"]:not(.astro-name-bold),
+html:not([lang="en"]):not([lang="fr"]) [role="heading"] *:not(.astro-name-bold):not(.astro-name-bold *) {
   -webkit-text-stroke: 0 transparent !important;
   font-synthesis: none !important;
   letter-spacing: normal !important;
 }
 
 /* 2. Scale down heavy Tailwind font-weight utility classes for Non-English */
-html:not([lang="en"]) .font-black {
+html:not([lang="en"]):not([lang="fr"]) .font-black {
   font-weight: 700 !important;
 }
 
-html:not([lang="en"]) .font-extrabold {
+html:not([lang="en"]):not([lang="fr"]) .font-extrabold {
   font-weight: 600 !important;
 }
 
-html:not([lang="en"]) .font-bold {
+html:not([lang="en"]):not([lang="fr"]) .font-bold:not(.astro-name-bold) {
   font-weight: 600 !important;
 }
 
-html:not([lang="en"]) .font-semibold {
+html:not([lang="en"]):not([lang="fr"]) .font-semibold {
   font-weight: 500 !important;
 }
 
-html:not([lang="en"]) b,
-html:not([lang="en"]) strong {
+html:not([lang="en"]):not([lang="fr"]) b,
+html:not([lang="en"]):not([lang="fr"]) strong {
   font-weight: 600 !important;
 }
 
 /* 3. Hero and Top Page Heading optical softness */
-html:not([lang="en"]) .astro-hero-title,
-html:not([lang="en"]) .astro-hero-title *,
-html:not([lang="en"]) .astro-page-header-title,
-html:not([lang="en"]) .astro-page-header-title * {
+html:not([lang="en"]):not([lang="fr"]) .astro-hero-title,
+html:not([lang="en"]):not([lang="fr"]) .astro-hero-title *,
+html:not([lang="en"]):not([lang="fr"]) .astro-page-header-title:not(.astro-name-bold),
+html:not([lang="en"]):not([lang="fr"]) .astro-page-header-title *:not(.astro-name-bold):not(.astro-name-bold *) {
   font-weight: 650 !important;
   line-height: 1.35 !important;
 }
@@ -1591,9 +1603,9 @@ html[lang="ta"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand
   font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
 }
 
-html[lang="bn"] h1:not(.astro-hero-title), html[lang="bn"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *),
-html[lang="hi"] h1:not(.astro-hero-title), html[lang="hi"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *),
-html[lang="ta"] h1:not(.astro-hero-title), html[lang="ta"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *) {
+html[lang="bn"] h1:not(.astro-hero-title), html[lang="bn"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
+html[lang="hi"] h1:not(.astro-hero-title), html[lang="hi"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
+html[lang="ta"] h1:not(.astro-hero-title), html[lang="ta"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *) {
   font-weight: 600 !important;
   line-height: 1.4 !important;
 }
@@ -1638,35 +1650,65 @@ html[lang="ta"] .font-semibold {
   font-weight: 500 !important;
 }
 
-/* 5. French Refinements - Balanced presence for accented European glyphs */
+/* 5. French Typography: EXACT SAME boldness, text sizes, font weights, and Stardom styling as English */
+html[lang="fr"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html[lang="fr"] .astro-hero-title,
 html[lang="fr"] .astro-hero-title *,
 html[lang="fr"] .astro-page-header-title,
-html[lang="fr"] .astro-page-header-title * {
-  font-weight: 700 !important;
-  line-height: 1.3 !important;
+html[lang="fr"] .astro-page-header-title *,
+html[lang="fr"] .astro-section-title,
+html[lang="fr"] .astro-section-title *,
+html[lang="fr"] .astro-card-title,
+html[lang="fr"] .astro-card-title *,
+html[lang="fr"] .astro-modal-title,
+html[lang="fr"] .astro-modal-title * {
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 800 !important;
+  font-synthesis: weight !important;
+  -webkit-text-stroke: 0.015em currentColor !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
 }
 
 html[lang="fr"] h1, html[lang="fr"] h1 *,
 html[lang="fr"] h2, html[lang="fr"] h2 * {
-  font-weight: 650 !important;
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 800 !important;
+  font-synthesis: weight !important;
+  -webkit-text-stroke: 0.015em currentColor !important;
+  letter-spacing: 0.02em !important;
 }
 
 html[lang="fr"] h3, html[lang="fr"] h3 *,
 html[lang="fr"] h4, html[lang="fr"] h4 * {
-  font-weight: 600 !important;
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 700 !important;
+  font-synthesis: weight !important;
+}
+
+html[lang="fr"] .font-black {
+  font-weight: 900 !important;
 }
 
 html[lang="fr"] .font-extrabold {
-  font-weight: 700 !important;
+  font-weight: 800 !important;
 }
 
 html[lang="fr"] .font-bold {
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 
 html[lang="fr"] .font-semibold {
-  font-weight: 500 !important;
+  font-weight: 600 !important;
+}
+
+html[lang="fr"] b,
+html[lang="fr"] strong {
+  font-weight: 700 !important;
 }
 
 /* Master Brand Accent: ASTROJUNCTION brand word in Hero & Navigation across ALL languages */
@@ -1749,4 +1791,40 @@ html[lang="ta"] .horoscope-dynamic-paragraph {
   text-transform: none !important;
   word-break: break-word;
   overflow-wrap: break-word;
+}
+
+/* ========================================================================= */
+/* User Profile Name Typography in Page Headers (Daily Insights, etc.)       */
+/* Ensures the name renders bold, prominent uppercase in Stardom serif,       */
+/* matching the English appearance across all language modes.                 */
+/* ========================================================================= */
+.astro-name-bold,
+.astro-page-header-title .astro-name-bold,
+h1 .astro-name-bold,
+html[lang] .astro-page-header-title .astro-name-bold,
+html[lang] h1 .astro-name-bold,
+html:not([lang="en"]):not([lang="fr"]) .astro-page-header-title .astro-name-bold,
+html:not([lang="en"]):not([lang="fr"]) h1 .astro-name-bold {
+  font-family: 'Stardom', Georgia, serif !important;
+  font-weight: 800 !important;
+  font-style: normal !important;
+  font-synthesis: weight style !important;
+  -webkit-text-stroke: 0.035em currentColor !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  display: inline-block !important;
+}
+
+html[lang]:not(.dark) .astro-name-bold,
+html.light[lang] .astro-name-bold,
+html:not(.dark) .astro-name-bold {
+  color: #9B782B !important;
+  -webkit-text-stroke: 0.035em #9B782B !important;
+}
+
+html[lang].dark .astro-name-bold,
+html.dark[lang] .astro-name-bold,
+html.dark .astro-name-bold {
+  color: #E5C170 !important;
+  -webkit-text-stroke: 0.03em #E5C170 !important;
 }

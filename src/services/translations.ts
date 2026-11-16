@@ -1500,3 +1500,12 @@ export function getTranslation(key: string, lang: string = 'en'): string {
   }
   return key;
 }
+
+export {
+  formatDate,
+  formatTime,
+  formatNumber,
+  formatCurrency,
+  tVedic,
+  getCurrentLang,
+} from '../i18n';

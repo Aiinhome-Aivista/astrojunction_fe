@@ -45,6 +45,7 @@ import {
   KGraphEdge,
   RunbookConfig,
 } from './types';
+import i18n from './i18n';
 
 import {
   calculateVedicChart,
@@ -232,7 +233,21 @@ export function App() {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<string>('daily');
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search || window.location.hash.replace(/^#/, ''));
+        let urlTab = params.get('tab');
+        if (!urlTab) {
+          try {
+            urlTab = new URL(window.location.href).searchParams.get('tab');
+          } catch {}
+        }
+        if (urlTab) return urlTab;
+      }
+    } catch {}
+    return 'daily';
+  });
   const [landingResetKey, setLandingResetKey] = useState(0);
 
   const handleResetLanding = () => {
@@ -284,6 +299,15 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const urlTab = new URLSearchParams(window.location.search).get('tab');
+        if (urlTab) {
+          setActiveTab(urlTab);
+          return;
+        }
+      }
+    } catch {}
     if (authUser?.role === 'admin') {
       setActiveTab('admin_dashboard');
     } else {
@@ -310,14 +334,51 @@ export function App() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDisclaimerModalOpen, setIsDisclaimerModalOpen] = useState(false);
 
-  // Language state
+  // Language state synchronized with i18next and local storage
   const [language, setLanguage] = useState<string>(() => {
-    return localStorage.getItem('jyotish_language') || 'en';
+    try {
+      if (typeof window !== 'undefined') {
+        const urlLang = new URLSearchParams(window.location.search).get('lang');
+        if (urlLang) return urlLang.split('-')[0].toLowerCase();
+      }
+    } catch {}
+    return (
+      localStorage.getItem('jyotish_language') ||
+      localStorage.getItem('astrojunction_lang') ||
+      'en'
+    ).split('-')[0].toLowerCase();
   });
 
+  const handleSetLanguage = (lang: string) => {
+    const clean = (lang || 'en').split('-')[0].toLowerCase();
+    setLanguage(clean);
+    i18n.changeLanguage(clean);
+    try {
+      localStorage.setItem('jyotish_language', clean);
+      localStorage.setItem('astrojunction_lang', clean);
+    } catch {}
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = clean;
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem('jyotish_language', language);
-  }, [language]);
+    const onLangChanged = (lng: string) => {
+      const clean = (lng || 'en').split('-')[0].toLowerCase();
+      setLanguage(clean);
+      try {
+        localStorage.setItem('jyotish_language', clean);
+        localStorage.setItem('astrojunction_lang', clean);
+      } catch {}
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = clean;
+      }
+    };
+    i18n.on('languageChanged', onLangChanged);
+    return () => {
+      i18n.off('languageChanged', onLangChanged);
+    };
+  }, []);
 
   // Theme Management (Dark / Light)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -394,7 +455,7 @@ export function App() {
           currentProfile
         );
 
-        if (data && active) {
+        if (data && data.houses && data.planets && active) {
           // Backend now returns a FULLY ASSEMBLED chart (planets, houses, dashas, etc.)
           // No frontend mapping needed — use it directly.
           setChartData(data);
@@ -737,7 +798,7 @@ export function App() {
         theme={theme}
         toggleTheme={toggleTheme}
         language={language}
-        setLanguage={setLanguage}
+        setLanguage={handleSetLanguage}
         onLogout={handleLogout}
         isAdmin={authUser?.role === 'admin'}
         userEmail={authUser?.email}

@@ -99,5 +99,134 @@ i18n.on('languageChanged', (lng: string) => {
   }
 });
 
+/**
+ * Internationalization Helpers with strict Latin digits (numberingSystem: "latn")
+ */
+
+export function getCurrentLang(): SupportedLanguage {
+  const current = (i18n.language || 'en').split('-')[0].toLowerCase();
+  return (SUPPORTED_LANGUAGES as readonly string[]).includes(current)
+    ? (current as SupportedLanguage)
+    : 'en';
+}
+
+export function getNumberingSystem(lang?: string): string {
+  const l = (lang || getCurrentLang()).split('-')[0].toLowerCase();
+  if (l === 'hi') return 'deva';
+  if (l === 'bn') return 'beng';
+  return 'latn';
+}
+
+export function formatDate(
+  date: Date | string | number,
+  lang?: string,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  try {
+    const d = date instanceof Date ? date : new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const locale = (lang || getCurrentLang());
+    const numSys = getNumberingSystem(locale);
+    return new Intl.DateTimeFormat(locale, {
+      numberingSystem: numSys,
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      ...options,
+    }).format(d);
+  } catch {
+    return String(date);
+  }
+}
+
+export function formatTime(
+  date: Date | string | number,
+  lang?: string,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  try {
+    const d = date instanceof Date ? date : new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const locale = (lang || getCurrentLang());
+    const numSys = getNumberingSystem(locale);
+    return new Intl.DateTimeFormat(locale, {
+      numberingSystem: numSys,
+      hour: '2-digit',
+      minute: '2-digit',
+      ...options,
+    }).format(d);
+  } catch {
+    return String(date);
+  }
+}
+
+export function formatPanchangTime(
+  timeStr: string,
+  lang?: string
+): string {
+  if (!timeStr) return '';
+  const locale = (lang || getCurrentLang());
+  return timeStr.replace(/(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)?/g, (match, h, m, period) => {
+    let hour = parseInt(h, 10);
+    const minute = parseInt(m, 10);
+    if (period) {
+      if (period.toUpperCase() === 'PM' && hour < 12) hour += 12;
+      if (period.toUpperCase() === 'AM' && hour === 12) hour = 0;
+    }
+    const d = new Date(2026, 0, 1, hour, minute);
+    return formatTime(d, locale, { hour: '2-digit', minute: '2-digit', hour12: true });
+  });
+}
+
+export function formatNumber(
+  num: number,
+  lang?: string,
+  options?: Intl.NumberFormatOptions
+): string {
+  try {
+    const locale = (lang || getCurrentLang());
+    const numSys = getNumberingSystem(locale);
+    return new Intl.NumberFormat(locale, {
+      numberingSystem: numSys,
+      ...options,
+    }).format(num);
+  } catch {
+    return String(num);
+  }
+}
+
+export function formatCurrency(
+  amount: number,
+  currency: string = 'INR',
+  lang?: string
+): string {
+  try {
+    const locale = (lang || getCurrentLang());
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      numberingSystem: 'latn',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `${currency} ${amount}`;
+  }
+}
+
+/**
+ * Universal Vedic lookup helper
+ * Looks up i18n key `vedic.${type}.${normalizedCode}`
+ */
+export function tVedic(type: string, code: string | number, fallback?: string): string {
+  if (code === undefined || code === null || code === '') return fallback || '';
+  const rawStr = String(code).trim().toLowerCase().replace(/[\s-]+/g, '_');
+  const key = `vedic.${type}.${rawStr}`;
+  const translated = i18n.t(key, { defaultValue: '' });
+  if (translated && translated !== key) {
+    return translated;
+  }
+  return fallback || String(code);
+}
+
 export default i18n;
 

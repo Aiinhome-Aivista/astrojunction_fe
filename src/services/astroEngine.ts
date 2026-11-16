@@ -953,9 +953,11 @@ export function calculateNumerology(profileOrName?: UserProfile | string, birthD
   return {
     mulank,
     mulankPlanet: meta.planet,
+    mulankPlanetClean: meta.planet.split('(')[0].trim(),
     mulankCharacteristics: meta.traits,
     bhagyank,
     bhagyankPlanet: mulankMeta[reduceToSingleDigit(bhagyank)]?.planet || meta.planet,
+    bhagyankPlanetClean: (mulankMeta[reduceToSingleDigit(bhagyank)]?.planet || meta.planet).split('(')[0].trim(),
     bhagyankMission: meta.mission,
     namankChaldean,
     namankPythagorean,
@@ -1045,12 +1047,21 @@ export function getDailyPanchang(dateOrLat?: Date | number, lng?: number, apiDat
   const brahmaMuhurtaStr = apiData?.timings?.brahmaMuhurta || '04:32 AM - 05:20 AM (Ideal for Meditation & Sadhana)';
   const auspiciousScoreVal = apiData?.auspiciousScore || (50 + ((tithiIdx * 3 + nakIdx * 2 + dayOfYear) % 50));
 
+  let bandCode: 'high' | 'balanced' | 'mixed' | 'low' = 'balanced';
+  if (auspiciousScoreVal >= 80) bandCode = 'high';
+  else if (auspiciousScoreVal >= 60) bandCode = 'balanced';
+  else if (auspiciousScoreVal >= 40) bandCode = 'mixed';
+  else bandCode = 'low';
+  if (apiData?.bandCode) bandCode = apiData.bandCode;
+
+  const isReal = Boolean(apiData);
+
   return {
     date: date.toISOString().split('T')[0],
     tithi: tithi,
-    tithiEnd: 'Backend IST',
+    tithiEnd: apiData?.tithiEnd || '',
     nakshatra: nakshatra,
-    nakshatraEnd: 'Backend IST',
+    nakshatraEnd: apiData?.nakshatraEnd || '',
     yoga: yoga,
     karana: karana,
     solarSign: apiData && apiData.sunLongitude !== undefined ? ZODIAC_SIGNS[Math.floor(apiData.sunLongitude / 30) % 12].sanskrit : ZODIAC_SIGNS[(Math.floor(dayOfYear / 30.5) + 4) % 12].sanskrit,
@@ -1061,6 +1072,8 @@ export function getDailyPanchang(dateOrLat?: Date | number, lng?: number, apiDat
     abhijitMuhurta: abhijitMuhurtaStr,
     brahmaMuhurta: brahmaMuhurtaStr,
     auspiciousScore: auspiciousScoreVal,
+    bandCode: bandCode,
+    isRealPanchang: isReal,
   };
 }
 
@@ -2254,7 +2267,7 @@ export function calculateKundliMilan(partner1: UserProfile, partner2: UserProfil
     partner1Bhagyank: num1.bhagyank,
     partner2Bhagyank: num2.bhagyank,
     harmonyScore: numScore,
-    description: `Mulank ${num1.mulank} (${num1.mulankPlanet.split('(')[0]}) and Mulank ${num2.mulank} (${num2.mulankPlanet.split('(')[0]}) share an intuitive numerical frequency for cooperative success.`,
+    description: `Mulank ${num1.mulank} (${num1.mulankPlanet.split('(')[0].trim()}) and Mulank ${num2.mulank} (${num2.mulankPlanet.split('(')[0].trim()}) share an intuitive numerical frequency for cooperative success.`,
   };
 
   // ELEMENTAL BALANCE
