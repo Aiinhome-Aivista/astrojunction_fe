@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   MessageSquareText,
   Send,
@@ -26,6 +27,19 @@ import { API_ENDPOINTS } from '../config/api_config';
 import { API_BASE_URL } from '../services/api';
 import * as counsellingApi from '../services/counsellingApi';
 import { generateAIResponse, clearChatHistory } from '../services/aiChatService';
+
+const formatDigits = (val: string | number, lang: string): string => {
+  const str = String(val);
+  if (lang === 'bn') {
+    const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    return str.replace(/[0-9]/g, (d) => bnDigits[Number(d)]);
+  }
+  if (lang === 'hi') {
+    const hiDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+    return str.replace(/[0-9]/g, (d) => hiDigits[Number(d)]);
+  }
+  return str;
+};
 
 interface AICounsellorChatProps {
   profile: UserProfile;
@@ -124,7 +138,15 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
     }
   };
 
-  const t = (key: string) => getTranslation(key, language);
+  const { t: tI18n, i18n } = useTranslation();
+  const currentLang = (i18n.language || language || 'en').split('-')[0].toLowerCase();
+
+  const t = (key: string, options?: any) => {
+    const val = tI18n(key, { ...options, defaultValue: '' });
+    if (val && val !== key) return val;
+    const legacyVal = getTranslation(key, currentLang);
+    return legacyVal === key && options?.defaultValue ? options.defaultValue : legacyVal;
+  };
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -173,7 +195,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
 
       const replyContent = Array.isArray(result.response)
         ? result.response.join('\n\n')
-        : String(result.response || 'I am analyzing your celestial placements.');
+        : String(result.response || t('chat.default_analyzing'));
 
       const assistantMessage: ChatMessage = {
         id: `msg-ai-${Date.now()}`,
@@ -193,8 +215,8 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
         id: `msg-err-${Date.now()}`,
         role: 'assistant',
         content: isGuardrail
-          ? '⚠️ This is not my content, I am an astro AI. Please ask questions related to astrology, horoscopes, planets, or numerology.'
-          : (err?.message || 'A momentary celestial calculation variance occurred. Please try asking again.'),
+          ? t('chat.guardrail_warning')
+          : (err?.message || t('chat.calculation_variance')),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -235,7 +257,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
       zu: 'zu-ZA',
       en: 'en-US',
     };
-    utterance.lang = langMap[language] || 'en-US';
+    utterance.lang = langMap[currentLang] || langMap[language] || 'en-US';
     utterance.rate = 0.95;
     utterance.pitch = 1.0;
     utterance.onend = () => setSpeakingMsgId(null);
@@ -263,7 +285,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
   };
 
   const handleClearHistory = async () => {
-    if (confirm('Clear consultation session history and transcript from database?')) {
+    if (confirm(t('chat.clear_confirm'))) {
       try {
         await clearChatHistory(profile.id, activeSessionId || undefined);
         setMessages([]);
@@ -282,13 +304,17 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
           <AncientTraditionLogo size="md" isLight={theme === 'light'} />
           <div>
             <h2 className="text-base font-bold text-[#F0ECE1] flex items-center space-x-2">
-              <span>{t('counsellor.title')}</span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] tracking-wider bg-[#C9A050]/20 text-[#C9A050] font-semibold border border-[#C9A050]/30 uppercase">
-                Active & Grounded
+              <span>{t('chat.title')}</span>
+              <span className="px-2 py-0.5 rounded-full text-[9px] tracking-normal bg-[#C9A050]/20 text-[#C9A050] font-semibold border border-[#C9A050]/30">
+                {t('chat.badge_active')}
               </span>
             </h2>
-            <p className="text-xs text-[#9E9A90] mt-0.5">
-              Live consultation grounded in {profile.fullName}’s chart ({chartData?.ascendant?.signName || 'Vedic'} Lagna, Mulank {numerology.mulank})
+            <p className="text-xs text-[#9E9A90] mt-0.5 font-sans leading-relaxed">
+              {t('chat.banner_grounded', {
+                name: profile.fullName,
+                lagna: chartData?.ascendant?.signName || 'Vedic',
+                mulank: formatDigits(numerology.mulank, currentLang),
+              })}
             </p>
           </div>
         </div>
@@ -300,10 +326,10 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
               <button
                 onClick={handleNewConsultation}
                 className="p-2 px-3 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] border border-[#2A2A2E] text-[#9E9A90] hover:text-[#F0ECE1] transition cursor-pointer text-xs flex items-center space-x-1.5"
-                title="Start a New Consultation"
+                title={t('chat.new_consultation_title')}
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">New Consultation</span>
+                <span className="hidden sm:inline">{t('chat.new_consultation')}</span>
               </button>
               <button
                 onClick={() => {
@@ -311,16 +337,16 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                   setIsSessionsPanelOpen((v) => !v);
                 }}
                 className="p-2 px-3 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] border border-[#2A2A2E] text-[#9E9A90] hover:text-[#F0ECE1] transition cursor-pointer text-xs flex items-center space-x-1.5"
-                title="Past Consultations"
+                title={t('chat.sessions_title')}
               >
                 <History className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Sessions</span>
+                <span className="hidden sm:inline">{t('chat.sessions')}</span>
               </button>
 
               {isSessionsPanelOpen && (
                 <div className="absolute top-full right-0 mt-2 w-72 bg-[#141418] border border-[#2A2A2E] rounded-xl shadow-2xl z-20 max-h-80 overflow-y-auto">
                   {sessions.length === 0 ? (
-                    <div className="p-4 text-xs text-[#9E9A90] text-center">No saved consultations yet for this profile.</div>
+                    <div className="p-4 text-xs text-[#9E9A90] text-center">{t('chat.no_sessions')}</div>
                   ) : (
                     sessions.map((s) => (
                       <div
@@ -352,7 +378,9 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                               className="flex-1 text-left cursor-pointer"
                             >
                               <div className="text-xs font-semibold text-[#E5E1D8] truncate">{s.title}</div>
-                              <div className="text-[10px] text-[#9E9A90]">{s.messageCount} messages</div>
+                              <div className="text-[10px] text-[#9E9A90]">
+                                {t('chat.session_messages_count', { count: formatDigits(s.messageCount, currentLang) })}
+                              </div>
                             </button>
                             <div className="flex items-center space-x-1 shrink-0 ml-2">
                               <button
@@ -361,14 +389,14 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                                   setRenameValue(s.title);
                                 }}
                                 className="p-1 text-[#9E9A90] hover:text-[#C9A050] cursor-pointer"
-                                title="Rename"
+                                title={t('chat.rename')}
                               >
                                 <Pencil className="w-3 h-3" />
                               </button>
                               <button
                                 onClick={() => handleDeleteSession(s.id)}
                                 className="p-1 text-[#9E9A90] hover:text-rose-400 cursor-pointer"
-                                title="Delete"
+                                title={t('chat.delete')}
                               >
                                 <Trash2 className="w-3 h-3" />
                               </button>
@@ -386,15 +414,15 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
           <button
             onClick={handleExportTranscript}
             className="p-2 px-3 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] border border-[#2A2A2E] text-[#9E9A90] hover:text-[#F0ECE1] transition cursor-pointer text-xs flex items-center space-x-1.5"
-            title="Export Consultation Transcript"
+            title={t('chat.download_transcript')}
           >
             <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{t('action.download')}</span>
+            <span className="hidden sm:inline">{t('action.download', { defaultValue: 'Export' })}</span>
           </button>
           <button
             onClick={handleClearHistory}
             className="p-2 rounded-lg bg-[#1A1A1E] hover:bg-[#2A2A2E] border border-[#2A2A2E] text-[#9E9A90] hover:text-[#F0ECE1] transition cursor-pointer text-xs"
-            title="Clear Chat History"
+            title={t('chat.clear_history')}
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
@@ -411,9 +439,12 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
             <div className="w-14 h-14 rounded-2xl bg-[#C9A050]/10 border border-[#C9A050]/30 flex items-center justify-center text-[#C9A050]">
               <Sparkles className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-[#F0ECE1]">{t('counsellor.title')}</h3>
-            <p className="text-xs text-[#9E9A90] max-w-md leading-relaxed">
-              {t('counsellor.subtitle')}
+            <h3 className="text-lg font-bold text-[#F0ECE1]">{t('chat.title')}</h3>
+            <p className="text-xs text-[#9E9A90] max-w-md leading-relaxed font-sans">
+              {t('chat.subtitle')}
+            </p>
+            <p className="text-xs text-[#7A766E] max-w-md leading-relaxed font-sans">
+              {t('chat.welcome_empty')}
             </p>
           </div>
         ) : (
@@ -435,22 +466,28 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                   {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
 
-                {/* Message Bubble */}
+                {/* Message Bubble with strict Indic-safe typography */}
                 <div
-                  className={`rounded-xl p-4 max-w-[85%] text-xs sm:text-sm leading-relaxed shadow-md space-y-2.5 ${
+                  className={`chat-bubble rounded-xl p-4 max-w-[85%] text-xs sm:text-sm shadow-md space-y-2.5 break-words font-sans ${
                     isUser
                       ? 'bg-[#C9A050] text-[#0D0D0F] font-medium rounded-tr-none'
                       : 'bg-[#1C1C22] text-[#E5E1D8] border border-[#2A2A2E] rounded-tl-none'
                   }`}
+                  style={{
+                    lineHeight: 1.6,
+                    letterSpacing: 'normal',
+                    textTransform: 'none',
+                    fontFamily: 'var(--font-sans)',
+                  }}
                 >
-                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                  <div className="whitespace-pre-wrap break-words">{msg.content}</div>
 
                   {/* Interactive Suggested Questions Chips (for Assistant) */}
                   {!isUser && msg.suggestedQuestions && msg.suggestedQuestions.length > 0 && (
                     <div className="pt-2.5 border-t border-[#2A2A2E]/60 space-y-1.5 mt-2">
                       <div className="flex items-center space-x-1.5 text-[11px] font-semibold text-[#C9A050]">
                         <HelpCircle className="w-3.5 h-3.5 text-[#C9A050]" />
-                        <span>Suggested Follow-Up Questions:</span>
+                        <span>{t('chat.suggested_header')}</span>
                       </div>
                       <div className="flex flex-col gap-1.5 pt-1">
                         {msg.suggestedQuestions.map((sq, sqIdx) => (
@@ -477,7 +514,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                       <button
                         onClick={() => handleSpeech(msg.id, msg.content)}
                         className="hover:text-[#C9A050] transition cursor-pointer p-1"
-                        title="Text-to-Speech Voice"
+                        title={t('chat.tts_voice')}
                       >
                         {speakingMsgId === msg.id ? (
                           <VolumeX className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
@@ -488,7 +525,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                       <button
                         onClick={() => handleCopy(msg.id, msg.content)}
                         className="hover:text-[#C9A050] transition cursor-pointer p-1"
-                        title="Copy Response"
+                        title={t('chat.copy')}
                       >
                         {copiedId === msg.id ? (
                           <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -496,7 +533,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                           <Copy className="w-3.5 h-3.5" />
                         )}
                       </button>
-                      <span className="text-[10px] text-[#9E9A90]">{msg.timestamp}</span>
+                      <span className="text-[10px] text-[#9E9A90]">{formatDigits(msg.timestamp, currentLang)}</span>
                     </div>
                   )}
                 </div>
@@ -511,9 +548,9 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
             <div className="w-8 h-8 rounded-xl bg-[#1A1A1E] border border-[#C9A050]/30 flex items-center justify-center">
               <Bot className="w-4 h-4 animate-spin text-[#C9A050]" />
             </div>
-            <div className="bg-[#1C1C22] p-3 rounded-xl border border-[#2A2A2E] text-xs text-[#9E9A90] flex items-center space-x-2">
+            <div className="bg-[#1C1C22] p-3 rounded-xl border border-[#2A2A2E] text-xs text-[#9E9A90] flex items-center space-x-2 font-sans" style={{ lineHeight: 1.5, letterSpacing: 'normal', textTransform: 'none', fontFamily: 'var(--font-sans)' }}>
               <Sparkles className="w-3.5 h-3.5 text-[#C9A050] animate-pulse" />
-              <span>Daivajna is consulting classical ephemeris & formulating astrological guidance...</span>
+              <span>{t('chat.thinking')}</span>
             </div>
           </div>
         )}
@@ -533,9 +570,10 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder={t('counsellor.placeholder')}
+          placeholder={t('chat.input_placeholder')}
           disabled={isLoading}
-          className="flex-1 bg-transparent border-0 text-[#F0ECE1] placeholder-[#9E9A90] focus:outline-none text-xs sm:text-sm px-3"
+          className="flex-1 bg-transparent border-0 text-[#F0ECE1] placeholder-[#9E9A90] focus:outline-none text-xs sm:text-sm px-3 font-sans"
+          style={{ letterSpacing: 'normal' }}
         />
         <button
           type="submit"
@@ -543,9 +581,22 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
           className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C9A050] to-[#8C6D2E] hover:from-[#D4AF37] hover:to-[#A07828] text-[#0D0D0F] font-bold text-xs shadow-md shadow-[#C9A050]/20 flex items-center space-x-1.5 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Send className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">{t('counsellor.send')}</span>
+          <span className="hidden sm:inline">{t('chat.send')}</span>
         </button>
       </form>
+
+      {/* Astrological Disclaimer */}
+      <p
+        className="text-[10px] sm:text-[11px] text-center text-[#9E9A90] px-2 leading-relaxed tracking-normal font-sans"
+        style={{
+          lineHeight: 1.5,
+          letterSpacing: 'normal',
+          textTransform: 'none',
+          fontFamily: 'var(--font-sans)',
+        }}
+      >
+        {t('chat.disclaimer')}
+      </p>
     </div>
   );
 };

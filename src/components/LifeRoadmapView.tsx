@@ -32,7 +32,6 @@ import {
   getLocalizedMilestoneTransits,
   getLocalizedMilestoneRemedy
 } from '../services/birthChartTranslations';
-import { jsPDF } from 'jspdf';
 
 export const normalizeTimeframe = (rawTf?: string): string => {
   if (!rawTf) return '0-1 Year';
@@ -479,9 +478,9 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
     const activeHor = normalizeTimeframe(selectedHorizon || '0-5 Years');
     const cleanName = (profile.fullName || (profile as any)?.name || 'Seeker').trim().replace(/\s+/g, '_');
     const cleanHorizon = activeHor.replace(/\s+/g, '_');
-    const fileName = `Vedic_Destiny_Roadmap_${cleanName}_${cleanHorizon}.pdf`;
+    const lang = i18n.language || 'en';
+    const fileName = `Vedic_Destiny_Roadmap_${cleanName}_${cleanHorizon}_${lang}.pdf`;
 
-    // 🌟 Collect guidance ONLY for the currently selected horizon (e.g. 0-5 Years or 0-10 Years)
     let availableMilestones = normalizedRoadmap.filter(
       (m) => m && !isMilestoneLocked(m) && normalizeTimeframe(m.timeframe) === activeHor
     );
@@ -495,361 +494,43 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
 
     const milestonesToExport = availableMilestones;
 
-    // 1. Attempt Server-Side Python Flask PDF Download via API
+    // Server-Side High-Fidelity PDF Download via API
     try {
+      const mappedMilestones = milestonesToExport.map((m) => {
+        const catKey = getCategoryKey(m.category || m.title);
+        const localizedTitle = t(`roadmap.category_names.${catKey}`, m.title || getCategoryDisplayName(m.category));
+        return {
+          ...m,
+          title: localizedTitle,
+          prediction: getLocalizedMilestoneGuidance(m, lang) || (m as any).prediction || (m as any).description || '',
+          guidance: getLocalizedMilestoneGuidance(m, lang) || (m as any).guidance || (m as any).prediction || '',
+          transit: getLocalizedMilestoneTransits(m, lang) || (m as any).transit || (m as any).planetaryTrigger || 'Direct',
+          upaya: getLocalizedMilestoneRemedy(m, lang) || (m as any).upaya || (m as any).remedy || '',
+          status: m.status || 'In-Progress',
+          timeframe: m.timeframe || activeHor,
+        };
+      });
+
       await api.downloadFile(API_ENDPOINTS.ROADMAP.DOWNLOAD_PDF, fileName, {
         method: 'POST',
         body: JSON.stringify({
+          lang,
           profile,
           selectedHorizon: activeHor,
           includeAll: false,
-          roadmap: milestonesToExport,
+          roadmap: mappedMilestones,
           chartData,
           numerology,
+          strategicGuidance: (milestonesToExport[0] as any)?.guidance || (milestonesToExport[0] as any)?.prediction || '',
+          labels: {
+            'roadmap.header.title': t('roadmap.title'),
+            'roadmap.milestones_title': t('roadmap.card_sections.milestones', 'Timeline Milestones'),
+          }
         }),
       });
-      setIsGeneratingPdf(false);
-      return;
     } catch (apiErr) {
-      console.warn('Backend PDF endpoint error or offline, falling back to Client-Side PDF generator:', apiErr);
-    }
-
-    // 2. Client-Side jsPDF Generator (Fallback)
-    try {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-
-      const bgBase64 = await loadImageBase64('/astrologer_bg.jpg');
-      const logoBase64 = await loadImageBase64('/jyotishveda_logo.png');
-
-      const ascSign = chartData?.ascendant?.signName || chartData?.ascendant?.signSanskrit || 'Vedic Ascendant';
-      const moonPlanet = chartData?.planets?.find((p: any) => p.id === 'moon' || p.name?.toLowerCase() === 'moon');
-      const moonSign = chartData?.moonSign || moonPlanet?.signName || moonPlanet?.signSanskrit || 'Chandra Rashi';
-      const nakshatra = moonPlanet?.nakshatra ? `${moonPlanet.nakshatra} (Pada ${moonPlanet.pada || 1})` : 'Vedic Nakshatra';
-
-      const currentDashaObj = chartData?.dashaPeriods?.find((d: any) => d.isCurrent);
-      const activeDashaText = currentDashaObj
-        ? `${currentDashaObj.planet || 'Vimshottari'} Mahadasha`
-        : 'Active Vimshottari Mahadasha Cycle';
-
-      const mulankText = numerology?.mulank ? `Mulank ${numerology.mulank} (${numerology.mulankPlanet || ''})` : 'Mulank -';
-      const bhagyankText = numerology?.bhagyank ? `Bhagyank ${numerology.bhagyank} (${numerology.bhagyankPlanet || ''})` : 'Bhagyank -';
-
-      let yPos = 33;
-
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, pageWidth, pageHeight, 'F');
-
-      if (bgBase64) {
-        doc.addImage(bgBase64, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
-      }
-
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.8);
-      doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
-      doc.setLineWidth(0.3);
-      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-
-      if (logoBase64) {
-        doc.addImage(logoBase64, 'PNG', 14, 13, 14, 14);
-      }
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(13);
-      doc.setTextColor(180, 130, 40);
-      doc.text('ASTROJUNCTION', 31, 19);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(110, 110, 110);
-      doc.text('Sacred Vedic Astrology & Life Horizon Synthesis', 31, 23.5);
-
-      doc.setDrawColor(220, 200, 160);
-      doc.setLineWidth(0.4);
-      doc.line(13, 29, pageWidth - 13, 29);
-
-      doc.setFillColor(252, 251, 248);
-      doc.setDrawColor(226, 211, 176);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 24, 2, 2, 'FD');
-      doc.line(pageWidth / 2, yPos, pageWidth / 2, yPos + 24);
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7.5);
-      doc.setTextColor(126, 95, 24);
-      doc.text('CLIENT & NATAL PARTICULARS', 17, yPos + 5.5);
-
-      doc.setFontSize(10.5);
-      doc.setTextColor(26, 26, 30);
-      doc.text(profile.fullName || 'Vedic Seeker', 17, yPos + 11);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.2);
-      doc.setTextColor(80, 80, 80);
-      const birthDetails = `Born: ${profile.birthDate || 'N/A'}${profile.birthTime ? ` at ${profile.birthTime}` : ''} | ${profile.birthPlace || 'Global'}`;
-      doc.text(doc.splitTextToSize(birthDetails, (pageWidth - 36) / 2)[0] || '', 17, yPos + 16);
-      doc.text(`Active Dasha: ${activeDashaText}`, 17, yPos + 20.5);
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7.5);
-      doc.setTextColor(126, 95, 24);
-      doc.text('CELESTIAL & NUMEROLOGICAL COORDINATES', pageWidth / 2 + 5, yPos + 5.5);
-
-      doc.setFontSize(8.5);
-      doc.setTextColor(26, 26, 30);
-      doc.text(`Lagna: ${ascSign}  |  Rashi: ${moonSign}`, pageWidth / 2 + 5, yPos + 11);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.2);
-      doc.setTextColor(80, 80, 80);
-      doc.text(`Nakshatra: ${nakshatra}`, pageWidth / 2 + 5, yPos + 16);
-      doc.text(`Numerology: ${mulankText}  |  ${bhagyankText}`, pageWidth / 2 + 5, yPos + 20.5);
-
-      yPos += 28;
-
-      doc.setFillColor(250, 247, 240);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.5);
-      doc.roundedRect(13, yPos, pageWidth - 26, 12, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8.5);
-      doc.setTextColor(126, 95, 24);
-      const completedCount = milestonesToExport.filter((m) => m.status === 'Completed').length;
-      const inProgressCount = milestonesToExport.filter((m) => m.status === 'In-Progress').length;
-      const pendingCount = milestonesToExport.filter((m) => m.status === 'Pending' || !m.status).length;
-
-      doc.text(`VEDIC DESTINY ROADMAP — ALL AVAILABLE GUIDANCE`, 17, yPos + 5);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(60, 60, 60);
-      doc.text(
-        `Coverage: All Available Horizons (${milestonesToExport.length} Guidance Predictions)  |  ✓ Completed: ${completedCount}  •  ⚡ In-Progress: ${inProgressCount}  •  ⏳ Pending: ${pendingCount}`,
-        17,
-        yPos + 9
-      );
-
-      yPos += 16;
-
-      // Render Milestone Cards (Exporting all predictions returned from Filter API)
-      milestonesToExport.forEach((m, idx) => {
-        if (isMilestoneLocked(m)) return;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
-
-        const guidanceLines = doc.splitTextToSize(
-          m.guidance || 'Astrological dasha guidance and strategic timing.',
-          pageWidth - 34
-        );
-        const guidanceHeight = guidanceLines.length * 3.5;
-
-        const transitVal = m.favorableTransits || 'Favorable transit alignment';
-        const remedyVal = m.remedialAction || 'Chant Maha Mrityunjaya Mantra & perform Guru Seva';
-
-        const transitLabelW = doc.getTextWidth('Astrological Window & Transits: ');
-        const remedyLabelW = doc.getTextWidth('Recommended Upaya / Sadhana: ');
-
-        const transitLines = doc.splitTextToSize(transitVal, pageWidth - 34 - transitLabelW);
-        const remedyLines = doc.splitTextToSize(remedyVal, pageWidth - 34 - remedyLabelW);
-
-        const cardHeight = 14 + guidanceHeight + 2 + transitLines.length * 3.4 + remedyLines.length * 3.4 + 5;
-
-        if (yPos + cardHeight > pageHeight - 22) {
-          doc.addPage();
-          yPos = 20; // reset yPos on subsequent pages
-        }
-
-        doc.setFillColor(252, 251, 248);
-        doc.setDrawColor(226, 211, 176);
-        doc.setLineWidth(0.35);
-        doc.roundedRect(13, yPos, pageWidth - 26, cardHeight, 1.5, 1.5, 'FD');
-
-        // Status accent indicator on left border
-        if (m.status === 'Completed') {
-          doc.setFillColor(16, 185, 129); // emerald
-        } else if (m.status === 'In-Progress') {
-          doc.setFillColor(201, 160, 80); // gold
-        } else {
-          doc.setFillColor(160, 160, 160); // gray
-        }
-        doc.roundedRect(13, yPos, 2, cardHeight, 1, 1, 'F');
-
-        // Milestone Number & Title (Matching UI without redundant category badge)
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(26, 26, 30);
-        const tfLabel = m.timeframe ? `  [${m.timeframe}]` : '';
-        doc.text(`${idx + 1}.  ${m.title || getCategoryDisplayName(m.category)}${tfLabel}`, 17, yPos + 6.5);
-
-        // Section: Dasha Guidance
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.8);
-        doc.setTextColor(126, 95, 24);
-        doc.text('DASHA & LIFE STRATEGY GUIDANCE', 17, yPos + 11.5);
-
-        // Strategic Guidance
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
-        doc.setTextColor(50, 50, 50);
-        doc.text(guidanceLines, 17, yPos + 15.5);
-
-        const afterGuidanceY = yPos + 15.5 + guidanceHeight;
-
-        // Transit Window
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(150, 108, 30);
-        doc.text('Astrological Window & Transits: ', 17, afterGuidanceY + 1);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(50, 50, 50);
-        doc.text(transitLines, 17 + transitLabelW, afterGuidanceY + 1);
-
-        const afterTransitY = afterGuidanceY + 1 + transitLines.length * 3.4;
-
-        // Remedial Upaya
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(126, 95, 24);
-        doc.text('Recommended Upaya / Sadhana: ', 17, afterTransitY + 1);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(50, 50, 50);
-        doc.text(remedyLines, 17 + remedyLabelW, afterTransitY + 1);
-
-        yPos += cardHeight + 3.5;
-      });
-
-      // Daily Sadhana & Upaya Box
-      if (yPos + 32 > pageHeight - 22) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      doc.setFillColor(248, 245, 237);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 28, 2, 2, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('LIFETIME VEDIC REMEDIES & DAILY SADHANA (PANCHA MAHABHUTA PACIFICATION)', 17, yPos + 6);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.2);
-      doc.setTextColor(60, 60, 60);
-      doc.text(
-        '• Primary Stotra: Recite Sri Vishnu Sahasranama or Sri Rudram during major planetary shifts and transits.',
-        17,
-        yPos + 10.5
-      );
-      doc.text(
-        '• Navagraha Shanti: Offer water to the rising Sun (Arghya) and light pure cow-ghee diyas every evening.',
-        17,
-        yPos + 15
-      );
-      doc.text(
-        '• Daily Sadhana: Surya Namaskar with Gayatri Mantra (108 Japa) & Thursday Vishnu/Guru Archana.',
-        17,
-        yPos + 19.5
-      );
-      doc.text(
-        '• Charitable Upaya: Feed birds on Wednesdays and donate sesame oil lamps on Saturdays for Shani Pacification.',
-        17,
-        yPos + 24
-      );
-
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-
-        if (bgBase64) {
-          try {
-            if (typeof (doc as any).setGState === 'function' && (doc as any).GState) {
-              (doc as any).setGState(new (doc as any).GState({ opacity: 0.08 }));
-            }
-          } catch {}
-          doc.addImage(bgBase64, 'JPEG', 0, 0, pageWidth, pageHeight);
-          try {
-            if (typeof (doc as any).setGState === 'function' && (doc as any).GState) {
-              (doc as any).setGState(new (doc as any).GState({ opacity: 1.0 }));
-            }
-          } catch {}
-        }
-
-        doc.setDrawColor(201, 160, 80);
-        doc.setLineWidth(1.1);
-        doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
-        doc.setLineWidth(0.35);
-        doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-
-        doc.setFillColor(201, 160, 80);
-        doc.circle(10, 10, 1.2, 'F');
-        doc.circle(pageWidth - 10, 10, 1.2, 'F');
-        doc.circle(10, pageHeight - 10, 1.2, 'F');
-        doc.circle(pageWidth - 10, pageHeight - 10, 1.2, 'F');
-
-        if (i === 1) {
-          if (logoBase64) {
-            doc.addImage(logoBase64, 'PNG', 14, 13, 16, 16);
-          }
-
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(18);
-          doc.setTextColor(20, 20, 24);
-          doc.text('ASTRO', 33, 20);
-          doc.setTextColor(181, 131, 40);
-          doc.text('JUNCTION', 33 + doc.getTextWidth('ASTRO') + 0.5, 20);
-
-          doc.setFontSize(8.5);
-          doc.setTextColor(126, 95, 24);
-          doc.text(`VEDIC DESTINY ROADMAP & LIFE BLUEPRINT (${activeHor.toUpperCase()})`, 33, 24.5);
-
-          doc.setFont('helvetica', 'italic');
-          doc.setFontSize(7);
-          doc.setTextColor(110, 105, 95);
-          doc.text(
-            `Synthesized through Vimshottari Mahadasha/Antardasha cycles & planetary transits (${new Date().getFullYear()} – ${new Date().getFullYear() + 25})`,
-            33,
-            28
-          );
-        } else {
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(8);
-          doc.setTextColor(126, 95, 24);
-          doc.text(`ASTROJUNCTION • VEDIC DESTINY ROADMAP (${activeHor.toUpperCase()})`, 14, 14);
-          doc.setDrawColor(226, 211, 176);
-          doc.setLineWidth(0.3);
-          doc.line(13, 16, pageWidth - 13, 16);
-        }
-
-        const footerY = pageHeight - 16;
-        doc.setDrawColor(226, 211, 176);
-        doc.setLineWidth(0.4);
-        doc.line(13, footerY, pageWidth - 13, footerY);
-
-        const now = new Date();
-        const generatedTimestamp = `${now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}, ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6.8);
-        doc.setTextColor(110, 105, 95);
-        doc.text(`Generated on: ${generatedTimestamp}`, 14, footerY + 5);
-        doc.text(`Page ${i} of ${totalPages}`, pageWidth - 14, footerY + 5, {
-          align: 'right',
-        });
-      }
-
-      doc.save(fileName);
-    } catch (err) {
-      console.error('Failed to generate Roadmap PDF:', err);
+      console.error('Backend Roadmap PDF endpoint error:', apiErr);
+      alert('Failed to generate PDF report. Please ensure the backend server is reachable.');
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -881,7 +562,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center space-x-3 font-sans">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto font-sans shrink-0">
             <button
               onClick={() => {
                 const targetHorizon = selectedHorizon || '0-5 Years';
@@ -892,7 +573,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                 handleGenerateHorizon(targetHorizon);
               }}
               disabled={isGenerating}
-              className={`flex items-center justify-center space-x-2 px-3.5 py-2.5 rounded-xl border text-xs font-bold transition shadow-md cursor-pointer shrink-0 ${
+              className={`flex items-center justify-center space-x-2 px-3.5 py-2.5 rounded-xl border text-xs font-bold transition shadow-md cursor-pointer w-full sm:w-auto ${
                 theme === 'dark'
                   ? 'bg-[#1A1A1E] hover:bg-[#25252A] text-[#C9A050] border-[#C9A050]/40'
                   : 'bg-white hover:bg-gray-50 text-[#96721E] border-[#C9A050]/40'
@@ -906,7 +587,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
             <button
               onClick={handleDownloadPdfReport}
               disabled={isGeneratingPdf}
-              className={`flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition shadow-lg cursor-pointer shrink-0 ${
+              className={`flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition shadow-lg cursor-pointer w-full sm:w-auto ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-[#C9A050]/20'
                   : 'bg-[#C9A050] hover:bg-[#B38730] text-white border-[#C9A050] shadow-[#C9A050]/20'
@@ -1228,7 +909,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                         }`}>
                           {t('roadmap.card_sections.dasha_guidance', 'Dasha & Life Strategy Guidance')}
                         </span>
-                        <p className={`leading-relaxed text-xs ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
+                        <p className={`leading-relaxed text-xs astro-prose-justified ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
                           {getLocalizedMilestoneGuidance(item, currentLang)}
                         </p>
                       </div>
@@ -1250,7 +931,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                               }`}>
                                 {t('roadmap.card_sections.astrological_transits', 'Astrological Window & Transits')}
                               </span>
-                              <p className={`text-xs leading-relaxed font-medium pt-0.5 ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
+                              <p className={`text-xs leading-relaxed font-medium pt-0.5 astro-prose-justified ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
                                 {getLocalizedMilestoneTransits(item, currentLang)}
                               </p>
                             </div>
@@ -1274,7 +955,7 @@ export const LifeRoadmapView: React.FC<LifeRoadmapViewProps> = ({
                             }`}>
                               {t('roadmap.card_sections.recommended_upaya', 'Recommended Upaya / Sadhana')}
                             </span>
-                            <p className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
+                            <p className={`text-xs leading-relaxed astro-prose-justified ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-gray-800'}`}>
                               {getLocalizedMilestoneRemedy(item, currentLang)}
                             </p>
                           </div>

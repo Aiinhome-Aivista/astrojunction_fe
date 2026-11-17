@@ -1828,3 +1828,66 @@ html.dark .astro-name-bold {
   color: #E5C170 !important;
   -webkit-text-stroke: 0.03em #E5C170 !important;
 }
+
+/* ========================================================================= */
+/* Master Long-Paragraph Justification Utility (Word Document Style)         */
+/* ========================================================================= */
+.astro-prose-justified,
+.prose-reading-justified,
+.article-content p,
+.blog-content p {
+  text-align: justify;
+  text-justify: inter-word;
+  text-align-last: left;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  hyphens: auto;
+  line-height: 1.65;
+}
+
+/* Ensure inline tags inside justified prose stay inline and properly spaced */
+.astro-prose-justified strong,
+.astro-prose-justified em,
+.astro-prose-justified span,
+.astro-prose-justified b,
+.astro-prose-justified i,
+.prose-reading-justified strong,
+.prose-reading-justified em,
+.prose-reading-justified span,
+.prose-reading-justified b,
+.prose-reading-justified i {
+  display: inline !important;
+  text-align: inherit;
+}
+
+/* Indic script specific rules: hi, bn, ta */
+html[lang="hi"] .astro-prose-justified,
+html[lang="bn"] .astro-prose-justified,
+html[lang="ta"] .astro-prose-justified,
+html[lang="hi"] .prose-reading-justified,
+html[lang="bn"] .prose-reading-justified,
+html[lang="ta"] .prose-reading-justified,
+html[lang="hi"] .article-content p,
+html[lang="bn"] .article-content p,
+html[lang="ta"] .article-content p {
+  line-height: 1.72 !important;
+  letter-spacing: 0 !important;
+  hyphens: manual; /* Disable aggressive browser hyphenation on Indic conjuncts */
+}
+
+/* Mobile Rivers Prevention (Screens < 640px) */
+/* In narrow phone viewports (<640px), very long agglutinative words in Tamil & Bengali */
+/* cause wide gaps ("rivers") if justified. Therefore, relax to left-aligned on phones, */
+/* while cleanly justifying from tablet (>= 640px) and desktop up. */
+@media (max-width: 639px) {
+  html[lang="ta"] .astro-prose-justified,
+  html[lang="bn"] .astro-prose-justified,
+  html[lang="ta"] .prose-reading-justified,
+  html[lang="bn"] .prose-reading-justified,
+  html[lang="ta"] .article-content p,
+  html[lang="bn"] .article-content p {
+    text-align: left !important;
+    text-align-last: left !important;
+  }
+}
+

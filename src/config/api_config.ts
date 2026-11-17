@@ -53,6 +53,7 @@ export const API_ENDPOINTS = {
   INSIGHTS: {
     DAILY_HOROSCOPE: '/daily-insights/horoscope',
     PANCHANG: '/daily-insights/panchang',
+    GENERATE_PDF: '/api/daily-insights/generate-pdf',
   },
   ZODIAC: {
     GLOBAL_FORECAST: '/zodiac/global-forecast',
@@ -67,11 +68,13 @@ export const API_ENDPOINTS = {
   BIRTH_CHART: {
     GENERATE: '/birth-chart/generate',
     INTERPRET: '/birth-chart/ai-interpretation',
+    GENERATE_PDF: '/api/birth-chart/generate-pdf',
   },
   NUMEROLOGY: {
     REPORTS: '/numerology/reports',
     AI_INSIGHTS: '/numerology/ai-insights',
     CALCULATE: '/numerology/calculate',
+    GENERATE_PDF: '/api/numerology/generate-pdf',
   },
   MATCHMAKING: {
     REPORTS: '/api/matchmaking/reports',

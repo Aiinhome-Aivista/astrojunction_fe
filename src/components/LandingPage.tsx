@@ -196,11 +196,26 @@ export function LandingPage({
       const saved = localStorage.getItem('jyotishveda_guest_chat_messages');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          if (parsed.length === 1 && parsed[0].role === 'assistant') {
+            return [{ role: 'assistant', content: t('chat.guest_greeting', 'Namaste. I am AstroJunction. How may I guide your astrological journey today?') }];
+          }
+          return parsed;
+        }
       }
     } catch (e) { }
-    return [{ role: 'assistant', content: 'Namaste. I am AstroJunction. How may I guide your astrological journey today?' }];
+    return [{ role: 'assistant', content: t('chat.guest_greeting', 'Namaste. I am AstroJunction. How may I guide your astrological journey today?') }];
   });
+
+  // Keep guest greeting in sync with current selected language
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length === 1 && prev[0].role === 'assistant') {
+        return [{ role: 'assistant', content: t('chat.guest_greeting', 'Namaste. I am AstroJunction. How may I guide your astrological journey today?') }];
+      }
+      return prev;
+    });
+  }, [i18n.language, t]);
 
   const [input, setInput] = useState('');
 
@@ -307,7 +322,7 @@ export function LandingPage({
       localStorage.removeItem('jyotishveda_guest_chat_count');
       localStorage.removeItem('jyotishveda_guest_chat_dob');
     } catch (e) { }
-    setMessages([{ role: 'assistant', content: 'Namaste. I am AstroJunction. How may I guide your astrological journey today?' }]);
+    setMessages([{ role: 'assistant', content: t('chat.guest_greeting', 'Namaste. I am AstroJunction. How may I guide your astrological journey today?') }]);
     setMsgCount(0);
     setSavedDob(null);
   };
@@ -1151,7 +1166,7 @@ export function LandingPage({
                 <div className="flex items-center space-x-1">
                   <button
                     onClick={handleResetChat}
-                    title="Restart Chat"
+                    title={t('chat.guest_restart', 'Restart Chat')}
                     className="hover:bg-black/10 p-1 rounded-md transition cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -1175,8 +1190,23 @@ export function LandingPage({
                           {m.role === 'assistant' && <Bot className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#C9A050]" />}
                           <div className="flex flex-col space-y-1.5 leading-relaxed w-full">
                             {(() => {
+                              // If initial assistant greeting, always ensure it is localized to current active language
+                              let rawContent = m.content;
+                              if (i === 0 && m.role === 'assistant' && (
+                                rawContent.includes("guide your astrological journey") ||
+                                rawContent.includes("JyotishVeda") ||
+                                rawContent.includes("AstroJunction") ||
+                                rawContent.startsWith("Namaste") ||
+                                rawContent.startsWith("नमस्ते") ||
+                                rawContent.startsWith("নমস্কার") ||
+                                rawContent.startsWith("வணக்கம்") ||
+                                rawContent.startsWith("Namasté")
+                              )) {
+                                rawContent = t('chat.guest_greeting', 'Namaste. I am AstroJunction. How may I guide your astrological journey today?');
+                              }
+
                               // Strip all asterisks (*) and any embedded login prompt from message bubble
-                              let cleanContent = m.content.replace(/\*/g, '');
+                              let cleanContent = rawContent.replace(/\*/g, '');
                               cleanContent = cleanContent.replace(/Please login to unlock deep analysis and detailed celestial wisdom\./g, '').trim();
                               const lines = cleanContent.split('\n');
 
@@ -1226,9 +1256,9 @@ export function LandingPage({
                   })}
 
                 {isAiThinking && (
-                  <div className="flex items-center space-x-1.5 p-2 rounded-xl bg-black/5 dark:bg-white/5 text-[11px] text-[#C9A050] w-fit">
+                  <div className="flex items-center space-x-1.5 p-2 rounded-xl bg-black/5 dark:bg-white/5 text-[11px] text-[#C9A050] w-fit font-sans" style={{ lineHeight: 1.5, letterSpacing: 'normal' }}>
                     <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Consulting celestial transits...</span>
+                    <span>{t('chat.guest_thinking', 'Consulting celestial transits...')}</span>
                   </div>
                 )}
                 <div ref={chatEndRef} />
@@ -1242,8 +1272,8 @@ export function LandingPage({
                   }`}>
                   <div className="flex items-start space-x-2">
                     <Lock className="w-3.5 h-3.5 text-[#C9A050] mt-0.5 shrink-0" />
-                    <p className="text-[11px] font-medium leading-relaxed">
-                      Please login to unlock deep analysis and detailed celestial wisdom.
+                    <p className="text-[11px] font-medium leading-relaxed font-sans" style={{ lineHeight: 1.5, letterSpacing: 'normal' }}>
+                      {t('chat.guest_login_gate', 'Please login to unlock deep analysis and detailed celestial wisdom.')}
                     </p>
                   </div>
                   <button
@@ -1257,7 +1287,7 @@ export function LandingPage({
                     }}
                     className="w-full py-1.5 px-3 rounded-lg bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F] font-bold text-xs transition shadow-sm cursor-pointer flex items-center justify-center space-x-1"
                   >
-                    <span>{authUser ? 'Go to Kundli Dashboard' : 'Login To Continue'}</span>
+                    <span>{authUser ? t('chat.guest_dashboard_btn', 'Go to Kundli Dashboard') : t('chat.guest_login_btn', 'Login To Continue')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -1270,7 +1300,7 @@ export function LandingPage({
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                    placeholder={msgCount >= 3 ? "Message limit reached." : "Ask a quick question..."}
+                    placeholder={msgCount >= 3 ? t('chat.guest_limit_reached', 'Message limit reached.') : t('chat.guest_ask_quick', 'Ask a quick question...')}
                     disabled={msgCount >= 3}
                     className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:border-[#C9A050] disabled:opacity-50 ${theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#F0ECE1]' : 'bg-[#F0ECE1] border-[#E5E1D8] text-[#0D0D0F]'}`}
                   />

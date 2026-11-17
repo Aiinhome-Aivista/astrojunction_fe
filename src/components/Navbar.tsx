@@ -828,7 +828,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={() => setActiveTab('counsellor')}
           title={t('userPanel.fab.title', 'Ask Daivajna Astrologer')}
-          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center p-0 shadow-lg shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${activeTab === 'counsellor'
+          className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex flex-col items-center justify-center p-0 shadow-xl shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${activeTab === 'counsellor'
               ? 'ring-4 ring-[#C9A050] ring-offset-2'
               : ''
             } ${theme === 'dark'
@@ -837,7 +837,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           aria-label={t('userPanel.fab.ariaLabel', 'Ask Daivajna')}
         >
-          <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current transition-transform duration-200" />
+          <MessageSquareText className="w-4 h-4 sm:w-5 sm:h-5 text-current transition-transform duration-200 shrink-0" />
+          <span className="text-[7.5px] sm:text-[8.5px] font-bold leading-tight text-center px-1 tracking-tight select-none whitespace-nowrap overflow-visible">
+            {t('userPanel.fab.label', 'Daivajna')}
+          </span>
 
           {/* Hover Tooltip on Left */}
           <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${theme === 'dark'

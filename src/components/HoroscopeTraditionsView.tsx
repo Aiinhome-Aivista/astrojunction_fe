@@ -17,7 +17,6 @@ import {
   X,
   CheckCircle2,
 } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import ReactMarkdown from 'react-markdown';
 
 import {
@@ -51,6 +50,7 @@ import {
   SynthesisSection,
   SynthesisCard,
 } from '../services/birthChartTranslations';
+import { getLocalizedGemPurpose } from '../services/matchmakingTranslations';
 
 const PlanetBadge = ({
   p,
@@ -215,7 +215,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
           {
             title: "लग्न आत्मिक शक्ति",
             summary: "आपका वैदिक लग्न आपकी शारीरिक जीवन-शक्ति, मौलिक स्वभाव तथा जीवन की दिशा का मुख्य आधार है। यह जीवन में स्थिरता और संकल्प शक्ति प्रदान करता है।",
-            bullets: ["शारीरिक ऊर्जा एवं तेज", "मानसिक दृढ़ता"],
+            bullets: ["शारीरिक ऊर्जा एवं तेज", "मानसिक दृढ़ता"],
             tags: ["लग्न", "ऊर्जा"]
           },
           {
@@ -223,6 +223,24 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
             summary: "जन्म नक्षत्र का सूक्ष्म प्रभाव आपकी गहरी अंतर्दृष्टि तथा निर्णय क्षमता को परिपक्व बनाता है, जिससे महत्वपूर्ण निर्णयों में स्पष्टता प्राप्त होती है।",
             bullets: ["दूरदर्शिता", "नेतृत्व क्षमता"],
             tags: ["नक्षत्र"]
+          }
+        ]
+      },
+      {
+        id: "bhava_alignments",
+        title: "भाव संरेखण एवं भाव स्वामी प्रभाव",
+        cards: [
+          {
+            title: "कर्म एवं धर्म भाव संरेखण",
+            summary: "दशम कर्म भाव तथा नवम धर्म भाव का संतुलित संबंध पेशेवर प्रतिष्ठा, दीर्घकालिक लक्ष्य और नैतिक नेतृत्व में सतत वृद्धि करता है।",
+            bullets: ["व्यावसायिक प्रतिष्ठा", "नैतिक नेतृत्व"],
+            tags: ["कर्म", "धर्म"]
+          },
+          {
+            title: "केंद्र एवं त्रिकोण शुभ संबंध",
+            summary: "केंद्र भावों की स्थिरता और त्रिकोण भावों का दैवीय अनुग्रह मिलकर जीवन में निरंतर सौभाग्य एवं व्यक्तिगत प्रगति का मार्ग प्रशस्त करते हैं।",
+            bullets: ["स्थिर प्रगति", "दैवीय अनुग्रह"],
+            tags: ["केंद्र", "त्रिकोण"]
           }
         ]
       },
@@ -246,13 +264,49 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
       },
       {
         id: "yogas_formations",
-        title: "ग्रह योग एवं शुभ विन्यास",
+        title: "ग्रह योग एवं शुभ खगोलीय विन्यास",
         cards: [
           {
-            title: "सक्रिय शुभ योग",
+            title: "सक्रिय शुभ राजयोग",
             summary: "जन्म कुंडली में निर्मित केंद्र-त्रिकोण योग आपके बौद्धिक सामर्थ्य और सामाजिक प्रतिष्ठा को निरंतर संवर्धित करते हैं।",
             bullets: ["सामाजिक प्रतिष्ठा", "आर्थिक संपन्नता"],
-            tags: ["योग"]
+            tags: ["राजयोग"]
+          },
+          {
+            title: "धन योग एवं समृद्धि",
+            summary: "द्वितीय, पंचम एवं एकादश भावों की अनुकूल युति धन संचय, वित्तीय स्थिरता और निरंतर संसाधनों की वृद्धि करती है।",
+            bullets: ["वित्तीय सुरक्षा", "संसाधन वृद्धि"],
+            tags: ["धन योग"]
+          },
+          {
+            title: "बुधादित्य एवं ज्ञान योग",
+            summary: "सूर्य और बुध का शुभ प्रभाव तार्किक बुद्धि, वाक्पटुता और रणनीतिक सोच में असाधारण प्रखरता लाता है।",
+            bullets: ["कुशाग्र बुद्धि", "रणनीतिक दक्षता"],
+            tags: ["ज्ञान योग"]
+          }
+        ]
+      },
+      {
+        id: "sacred_upayas",
+        title: "कल्याणकारी वैदिक उपाय, साधना एवं मार्गदर्शन",
+        cards: [
+          {
+            title: "लग्नेश अनुकूल रत्न एवं उपाय",
+            summary: "लग्नेश के अनुकूल रत्न का विधिवत धारण एवं संबंधित मंत्र साधना शारीरिक आरोग्य एवं आत्मिक बल को तीव्र करती है।",
+            bullets: ["आरोग्य संवर्धन", "आत्मिक बल"],
+            tags: ["रत्न उपाय"]
+          },
+          {
+            title: "दैनिक जप एवं ईष्ट साधना",
+            summary: "प्रातःकाल गायत्री मंत्र अथवा महामृत्युंजय मंत्र का शांत चित्त से जप अंतर्मन को शांति और मानसिक स्थिरता प्रदान करता है।",
+            bullets: ["मानसिक शांति", "ईष्ट कृपा"],
+            tags: ["जप साधना"]
+          },
+          {
+            title: "ग्रह शांति एवं दान विधान",
+            summary: "शुभ नक्षत्र एवं विशिष्ट वार को अन्न अथवा वस्त्र का सात्विक दान जीवन की बाधाओं को दूर कर सकारात्मक ऊर्जा का संचार करता है।",
+            bullets: ["सकारात्मक ऊर्जा", "बाधा निवारण"],
+            tags: ["वैदिक दान"]
           }
         ]
       }
@@ -280,6 +334,24 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
         ]
       },
       {
+        id: "bhava_alignments",
+        title: "ভাব সমন্বয় ও ভাবাধিপতি গতিপ্রকৃতি",
+        cards: [
+          {
+            title: "কর্ম ও ধর্ম ভাব সমন্বয়",
+            summary: "দশম কর্ম ভাব ও নবম ধর্ম ভাবের অনুকূল সংযোগ পেশাগত সমৃদ্ধি, নেতৃত্ব এবং দীর্ঘমেয়াদী সামাজিক সুনাম নিশ্চিত করে।",
+            bullets: ["পেশাগত স্থায়িত্ব", "নৈতিক নেতৃত্ব"],
+            tags: ["কর্ম", "ধর্ম"]
+          },
+          {
+            title: "কেন্দ্র ও ত্রিকোণ শুভ সম্পর্ক",
+            summary: "কেন্দ্র ভাবের স্থায়িত্ব এবং ত্রিকোণ ভাবের শুভাশীর্বাদ একত্রে জীবনে অবিচল কল্যাণ ও সৌভাগ্যের প্রবাহ অক্ষুণ্ণ রাখে।",
+            bullets: ["অবিচল কল্যাণ", "সৌভাগ্যের ধারা"],
+            tags: ["কেন্দ্র", "ত্রিকোণ"]
+          }
+        ]
+      },
+      {
         id: "tradition_deep_dive",
         title: "পরাশরী ঐতিহ্য গভীর বিশ্লেষণ",
         cards: [
@@ -299,13 +371,49 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
       },
       {
         id: "yogas_formations",
-        title: "গ্রহ যোগ ও শুভ সংস্থান",
+        title: "গ্রহ যোগ ও শুভ মহাজাগতিক সংস্থান",
         cards: [
           {
             title: "শুভ রাজযোগ প্রভাব",
             summary: "কেন্দ্র ও ত্রিকোণ ভাবের শুভ সংযোগ আপনার বুদ্ধিমত্তা এবং সামাজিক প্রতিষ্ঠার পথ সুগম করে।",
             bullets: ["সামাজিক প্রতিষ্ঠা", "আর্থিক সমৃদ্ধি"],
             tags: ["শুভ যোগ"]
+          },
+          {
+            title: "ধন যোগ ও সমৃদ্ধি",
+            summary: "দ্বিতীয়, পঞ্চম ও একাদশ ভাবের মঙ্গলজনক যোগাযোগ আর্থিক স্থায়িত্ব এবং সম্পদ বৃদ্ধির স্থায়ী সুযোগ তৈরি করে।",
+            bullets: ["আর্থিক নিরাপত্তা", "সম্পদ বৃদ্ধি"],
+            tags: ["ধন যোগ"]
+          },
+          {
+            title: "বুদ্ধি ও প্রজ্ঞা বিকাশক যোগ",
+            summary: "সূর্য ও বুধের অনুকূল দৃষ্টি ও সংযোগ আপনার কৌশলগত চিন্তা, স্পষ্ট যোগাযোগ ও সূক্ষ্ম বিচারবুদ্ধি জাগ্রত রাখে।",
+            bullets: ["সূক্ষ্ম প্রজ্ঞা", "কৌশলগত দূরদর্শিতা"],
+            tags: ["জ্ঞান যোগ"]
+          }
+        ]
+      },
+      {
+        id: "sacred_upayas",
+        title: "কল্যাণকর বৈদিক প্রতিকার, সাধনা ও নির্দেশিকা",
+        cards: [
+          {
+            title: "লগ্নেশ অনুকূল রত্ন ও প্রতিকার",
+            summary: "লগ্নাধিপতির অনুকূল রত্ন ধারণ ও বিধিসম্মত মন্ত্র পাঠ আপনার সার্বিক স্বাস্থ্য এবং মনোবল বহুগুণ বৃদ্ধি করে।",
+            bullets: ["স্বাস্থ্য সুরক্ষা", "মনোবল বৃদ্ধি"],
+            tags: ["রত্ন প্রতিকার"]
+          },
+          {
+            title: "দৈনিক জপ ও ইষ্ট সাধনা",
+            summary: "প্রত্যহ প্রাতঃকালে গায়ত্রী মন্ত্র বা মহামৃত্যুঞ্জয় মন্ত্র একাগ্রচিত্তে পাঠ মানসিক প্রশান্তি ও আত্মিক তেজ দান করে।",
+            bullets: ["আত্মিক তেজ", "মানসিক প্রশান্তি"],
+            tags: ["জপ সাধনা"]
+          },
+          {
+            title: "গ্রহ শান্তি ও বৈদিক দান",
+            summary: "শুভ তিথি ও নক্ষত্রে খাদ্যশস্য অথবা বস্ত্র দান জীবনের সকল অনাকাঙ্ক্ষিত অন্তরায় দূর করে কল্যাণ বয়ে আনে।",
+            bullets: ["অন্তরায় মুক্তি", "শুভ শক্তির বিকাশ"],
+            tags: ["বৈদিক দান"]
           }
         ]
       }
@@ -333,6 +441,24 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
         ]
       },
       {
+        id: "bhava_alignments",
+        title: "பாவ அமைப்புகள் மற்றும் அதிபதிகளின் இயக்கம்",
+        cards: [
+          {
+            title: "தர்ம மற்றும் கர்ம பாவ சீரமைப்பு",
+            summary: "10-ஆம் கர்ம பாவம் மற்றும் 9-ஆம் தர்ம பாவத்தின் சமநிலை தொழில்முறை வளர்ச்சி, சமூக அந்தஸ்து மற்றும் நீடித்த நற்பெயரை உறுதி செய்கிறது.",
+            bullets: ["தொழில் நிலைத்தன்மை", "நேர்மையான தலைமை"],
+            tags: ["கர்மம்", "தர்மம்"]
+          },
+          {
+            title: "கேந்திர-திரிகோண சுப இணைப்புகள்",
+            summary: "கேந்திர வீடுகளின் வலிமையும் திரிகோண வீடுகளின் அருளும் இணைந்து தொடர்ச்சியான வெற்றிகளையும் பாக்கியத்தையும் அளிக்கின்றன.",
+            bullets: ["நிலையான வளர்ச்சி", "இறை அருள்"],
+            tags: ["கேந்திரம்", "திரிகோணம்"]
+          }
+        ]
+      },
+      {
         id: "tradition_deep_dive",
         title: "பராசர பாரம்பரிய ஆழமான பகுப்பாய்வு",
         cards: [
@@ -341,6 +467,60 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
             summary: "லக்னாதிபதியின் நிலை உங்கள் தன்னம்பிக்கையை உயர்த்தி, சமூகத்தில் உயர் அந்தஸ்தை வழங்குகிறது.",
             bullets: ["சமூக அந்தஸ்து", "நீடித்த வெற்றி"],
             tags: ["லக்னாதிபதி"]
+          },
+          {
+            title: "செயலில் உள்ள விம்சோத்தரி தசா சுழற்சி",
+            summary: "நடப்பு மகா தசை மற்றும் அந்தர்தசை உங்கள் முயற்சிகளுக்கு சரியான பாதையையும் சுப பலன்களையும் வழங்குகிறது.",
+            bullets: ["தசா அனுகூலம்", "வெற்றி வாய்ப்புகள்"],
+            tags: ["தசா"]
+          }
+        ]
+      },
+      {
+        id: "yogas_formations",
+        title: "கிரக யோகங்கள் மற்றும் சுப அமைப்புகள்",
+        cards: [
+          {
+            title: "சுப ராஜயோக அமைப்பு",
+            summary: "ஜாதகத்தில் அமைந்துள்ள கேந்திர-திரிகோண யோகங்கள் உங்கள் அறிவுத்திறனையும் சமுதாய கௌரவத்தையும் உயர்த்துகின்றன.",
+            bullets: ["சமூக கௌரவம்", "ஆளுமைத் திறன்"],
+            tags: ["ராஜயோகம்"]
+          },
+          {
+            title: "தன யோகம் மற்றும் செல்வ வளம்",
+            summary: "2, 5 மற்றும் 11-ஆம் வீடுகளின் தொடர்பு நிதிப் பாதுகாப்பு, நிலையான செல்வம் மற்றும் தொடர் வளங்களை உருவாக்குகிறது.",
+            bullets: ["நிதிப் பாதுகாப்பு", "செல்வ வளம்"],
+            tags: ["தன யோகம்"]
+          },
+          {
+            title: "ஞானம் மற்றும் புத்தி கூர்மை யோகம்",
+            summary: "சூரியன் மற்றும் புதனின் சுப சேர்க்கை கூர்மையான பகுத்தறிவு, பேச்சுத் திறன் மற்றும் தொலைநோக்குச் சிந்தனையைத் தருகிறது.",
+            bullets: ["கூர்மையான புத்தி", "வியூகச் சிந்தனை"],
+            tags: ["ஞான யோகம்"]
+          }
+        ]
+      },
+      {
+        id: "sacred_upayas",
+        title: "மங்களகரமான வேத பரிகாரங்கள் மற்றும் சாதனை",
+        cards: [
+          {
+            title: "லக்னாதிபதி ரத்தினம் மற்றும் பரிகாரம்",
+            summary: "லக்னாதிபதிக்குரிய ரத்தினத்தை அணிவதும் உரிய மந்திரங்களை உச்சரிப்பதும் உடல் நலம் மற்றும் ஆன்மீக ஆற்றலை மேம்படுத்துகிறது.",
+            bullets: ["ஆரோக்கிய மேம்பாடு", "மன உறுதி"],
+            tags: ["ரத்தின பரிகாரம்"]
+          },
+          {
+            title: "தினசரி ஜபம் மற்றும் இஷ்ட தெய்வ வழிபாடு",
+            summary: "காலை வேளையில் காயத்ரி மந்திரம் அல்லது மகா மிருத்யுஞ்ஜய மந்திரத்தை மன அமைதியுடன் ஜபிப்பது அமைதியைத் தருகிறது.",
+            bullets: ["மன அமைதி", "தெய்வ அருள்"],
+            tags: ["மந்திர ஜபம்"]
+          },
+          {
+            title: "கிரக சாந்தி மற்றும் தான நெறி",
+            summary: "சுப நாட்களில் ஏழைகளுக்கு அன்னதானம் அல்லது ஆடை தானம் வழங்குவது தடைகளை நீக்கி நேர்மறை ஆற்றலை ஈர்க்கிறது.",
+            bullets: ["தடைகள் நீங்குதல்", "நேர்மறை ஆற்றல்"],
+            tags: ["வேத தானம்"]
           }
         ]
       }
@@ -356,14 +536,32 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
           {
             title: "Force Fondamentale de l'Ascendant",
             summary: "Votre Ascendant védique ancre votre constitution vitale, votre clarté de vision et votre résilience naturelle face aux défis de la vie.",
-            bullets: ["Vitalité physique", "Clarté d'esprit"],
+            bullets: ["Vitalité physique & équilibre mental", "Détermination inébranlable"],
             tags: ["Ascendant", "Vitalité"]
           },
           {
             title: "Influence du Nakshatra Natal",
-            summary: "Votre astérisme de naissance confère une intuition profonde et une solide capacité d'analyse stratégique.",
-            bullets: ["Intuition affinée", "Vision à long terme"],
+            summary: "Votre astérisme de naissance confère une intuition profonde et une solide capacité d'analyse stratégique pour les décisions majeures.",
+            bullets: ["Intuition affinée", "Vision prospective"],
             tags: ["Nakshatra"]
+          }
+        ]
+      },
+      {
+        id: "bhava_alignments",
+        title: "Alignement des Bhavas & Dynamique des Maîtres de Maisons",
+        cards: [
+          {
+            title: "Harmonie Karma & Dharma (Maisons 10 & 9)",
+            summary: "L'interaction harmonieuse entre la 10e maison du Karma et la 9e maison du Dharma assure l'épanouissement professionnel, un leadership éthique et une réputation pérenne.",
+            bullets: ["Stabilité professionnelle", "Leadership éthique"],
+            tags: ["Karma", "Dharma"]
+          },
+          {
+            title: "Synergie Bénéfique Kendra & Trikona",
+            summary: "La force structurelle des maisons Kendra combinée à la grâce spirituelle des maisons Trikona maintient un flux constant de prospérité et de bien-être.",
+            bullets: ["Progrès constant", "Bénédiction cosmique"],
+            tags: ["Kendra", "Trikona"]
           }
         ]
       },
@@ -373,9 +571,63 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
         cards: [
           {
             title: "Dynamique du Maître de l'Ascendant",
-            summary: "L'alignement du maître de votre Ascendant favorise l'expansion professionnelle et le discernement intellectuel.",
-            bullets: ["Leadership", "Prospérité durable"],
-            tags: ["Maître"]
+            summary: "Le positionnement favorable du maître de votre Ascendant stimule l'assurance, le statut social et une expansion professionnelle continue.",
+            bullets: ["Autorité naturelle", "Succès durable"],
+            tags: ["Lagnesha"]
+          },
+          {
+            title: "Cycle des Vimshottari Dashas Actif",
+            summary: "La période planétaire actuelle (Mahadasha & Antardasha) canalise vos initiatives vers des réalisations tangibles et hautement constructives.",
+            bullets: ["Période propice", "Opportunités d'essor"],
+            tags: ["Dasha"]
+          }
+        ]
+      },
+      {
+        id: "yogas_formations",
+        title: "Yogas Planétaires & Formations Célestes Auspicieuses",
+        cards: [
+          {
+            title: "Activation du Raja Yoga Parashari",
+            summary: "La conjonction des seigneurs angulaires et des maisons de grâce active un puissant Raja Yoga favorisant l'autorité et le respect sociétal.",
+            bullets: ["Élévation sociale", "Reconnaissance d'élite"],
+            tags: ["Raja Yoga"]
+          },
+          {
+            title: "Dhana Yoga & Multiplicateurs de Prospérité",
+            summary: "Les aspects bénéfiques reliant les 2e, 5e et 11e maisons renforcent la sécurité financière et la croissance continue du patrimoine.",
+            bullets: ["Stabilité matérielle", "Abondance pérenne"],
+            tags: ["Dhana Yoga"]
+          },
+          {
+            title: "Yoga de Discernement & d'Intelligence Stratégique",
+            summary: "L'alignement harmonieux de Mercure et du Soleil vivifie votre acuité intellectuelle, votre discernement stratégique et votre éloquence.",
+            bullets: ["Sagesse analytique", "Communication fluide"],
+            tags: ["Budhaditya"]
+          }
+        ]
+      },
+      {
+        id: "sacred_upayas",
+        title: "Remèdes Védiques Sacrés, Sadhanas & Directives",
+        cards: [
+          {
+            title: "Gemmothérapie Védique Personnalisée",
+            summary: "Le port d'une pierre gemme naturelle associée à votre planète maîtresse harmonise vos courants subtils d'énergie et fortifie votre vitalité globale.",
+            bullets: ["Vitalité renforcée", "Harmonisation aurique"],
+            tags: ["Gemmes védiques"]
+          },
+          {
+            title: "Sadhana Quotidienne & Méditation",
+            summary: "La récitation matinale concentrée du Gayatri Mantra ou du Maha Mrityunjaya Mantra purifie l'esprit et développe une grande sérénité intérieure.",
+            bullets: ["Sérénité mentale", "Élévation spirituelle"],
+            tags: ["Japa Sadhana"]
+          },
+          {
+            title: "Harmonisation Spatiale Vastu & Rituels du Jeudi",
+            summary: "L'orientation harmonieuse de votre espace d'étude vers l'Est et l'offrande d'une lampe de ghee pur au crépuscule attirent la félicité familiale.",
+            bullets: ["Paix au foyer", "Énergie purifiée"],
+            tags: ["Vastu & Rituels"]
           }
         ]
       }
@@ -592,563 +844,28 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
   const handleDownloadTraditionsPdf = async () => {
     setIsGeneratingPdf(true);
     try {
-      const sanitizePdfText = (txt?: string) => txt ? txt.replace(/[^\x00-\x7F]/g, "").replace(/\(\s*\)/g, "").trim() : "";
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
-      const pageHeight = doc.internal.pageSize.getHeight(); // 297mm
-
-      // Load background assets
-      const bgBase64 = await loadImageBase64('/astrologer_bg.jpg');
-      const logoBase64 = await loadImageBase64('/jyotishveda_logo.png');
-
-      const ascSign = chartData.ascendant?.signName || 'Aries';
-      const ascDeg = chartData.ascendant?.degree !== undefined ? chartData.ascendant.degree.toFixed(2) : '0.00';
-      const ascNak = chartData.ascendant?.nakshatra || 'Ashwini';
-      const moonPlanet = chartData.planets?.find((p) => p.id === 'moon' || p.name?.toLowerCase() === 'moon');
-      const moonSign = moonPlanet?.signName || 'Moon Sign';
-      const moonNak = moonPlanet?.nakshatra ? `${moonPlanet.nakshatra} (Pada ${moonPlanet.pada || 1})` : 'Nakshatra';
-
-      const traditionNames: Record<string, string> = {
-        parashari: 'Parashari Jyotish (Brihat Parashara Hora Shastra)',
-        jaimini: 'Jaimini Sutras (Chara Karaka & Sign Aspects)',
-        lal_kitab: 'Lal Kitab (Palmistry & Planetary Debts)',
-        kp_system: 'KP System (Krishnamurti Padhdhati Placidus Cusps)',
-        bhrigu_nadi: 'Bhrigu Nadi (Nandi Nadi Planetary Combinations)',
-      };
-      const activeTraditionTitle = traditionNames[tradition] || 'Vedic Multi-Tradition Synthesis';
-
-      // --- PAGE 1: NATAL PARTICULARS, PLANETARY EPHEMERIS & 12 HOUSES ---
-      let yPos = 33;
-
-      // 1. Client & Natal Coordinates Box
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(226, 211, 176);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 24, 2, 2, 'FD');
-      doc.line(pageWidth / 2, yPos, pageWidth / 2, yPos + 24);
-
-      // Left Column
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7.5);
-      doc.setTextColor(126, 95, 24);
-      doc.text('CLIENT & BIRTH PARTICULARS', 17, yPos + 5.5);
-
-      doc.setFontSize(10);
-      doc.setTextColor(26, 26, 30);
-      doc.text(profile.fullName || 'Vedic Seeker', 17, yPos + 10.5);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.2);
-      doc.setTextColor(80, 80, 80);
-      const birthDetails = `Born: ${profile.birthDate || 'N/A'}${profile.birthTime ? ` at ${profile.birthTime}` : ''} | ${profile.birthPlace || 'Global'}`;
-      doc.text(doc.splitTextToSize(birthDetails, (pageWidth - 36) / 2)[0] || '', 17, yPos + 15);
-
-      // Right Column
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7.5);
-      doc.setTextColor(126, 95, 24);
-      doc.text('CELESTIAL & TRADITION COORDINATES', pageWidth / 2 + 5, yPos + 5.5);
-
-      doc.setFontSize(8.5);
-      doc.setTextColor(26, 26, 30);
-      doc.text(`Lagna: ${ascSign} (${ascDeg}°)  |  Moon: ${moonSign}`, pageWidth / 2 + 5, yPos + 10.5);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.2);
-      doc.setTextColor(80, 80, 80);
-      doc.text(`Nakshatra: ${moonNak}  |  Asc: ${ascNak}`, pageWidth / 2 + 5, yPos + 15);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(181, 131, 40);
-      doc.text(`Active Tradition: ${activeTraditionTitle.split('(')[0].trim()}`, pageWidth / 2 + 5, yPos + 19.5);
-
-      yPos += 32; // Added more vertical spacing
-
-      // 2. Graha Ephemeris Positions (9 Planets Table)
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 70, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('GRAHA EPHEMERIS POSITIONS (NINE PLANETARY COORDINATES)', 17, yPos + 5);
-
-      // Table Header Bar
-      const tableHeaders = ['Planet', 'Sanskrit', 'Sign / Rashi', 'Degree', 'Nakshatra', 'Pada', 'Dignity', 'Motion'];
-      const colWidths = [24, 22, 28, 20, 32, 14, 24, 20];
-      const startX = 13;
-      let headerY = yPos + 8;
-
-      doc.setFillColor(250, 247, 240);
-      doc.rect(startX, headerY, pageWidth - 26, 5.5, 'F');
-      doc.setFontSize(6.8);
-      doc.setTextColor(100, 75, 20);
-
-      let curX = startX + 2;
-      tableHeaders.forEach((th, i) => {
-        doc.text(th, curX, headerY + 3.8);
-        curX += colWidths[i];
-      });
-
-      // Planet Rows
-      doc.setFont('helvetica', 'normal');
-      let rowY = headerY + 5.5;
-      chartData.planets.slice(0, 9).forEach((p, idx) => {
-        if (idx % 2 === 1) {
-          doc.setFillColor(253, 252, 250);
-          doc.rect(startX, rowY, pageWidth - 26, 6, 'F');
-        }
-        doc.setFontSize(6.8);
-        doc.setTextColor(30, 30, 35);
-
-        let cellX = startX + 2;
-        doc.setFont('helvetica', 'bold');
-        doc.text(p.name, cellX, rowY + 4);
-        cellX += colWidths[0];
-
-        doc.setFont('helvetica', 'normal');
-        doc.text(sanitizePdfText(p.sanskritName) || p.name, cellX, rowY + 4);
-        cellX += colWidths[1];
-
-        doc.text(`${p.signName} (H${p.house || 1})`, cellX, rowY + 4);
-        cellX += colWidths[2];
-
-        doc.text(`${p.degree.toFixed(2)}°`, cellX, rowY + 4);
-        cellX += colWidths[3];
-
-        doc.text(p.nakshatra || '-', cellX, rowY + 4);
-        cellX += colWidths[4];
-
-        doc.text(`Pada ${p.pada || 1}`, cellX, rowY + 4);
-        cellX += colWidths[5];
-
-        // Dignity with UI theme gold color
-        doc.setTextColor(181, 131, 40);
-        doc.text(p.dignity || 'Neutral', cellX, rowY + 4);
-        doc.setTextColor(30, 30, 35);
-        cellX += colWidths[6];
-
-        doc.text(p.isRetrograde ? 'Retrograde (R)' : 'Direct (D)', cellX, rowY + 4);
-
-        doc.setDrawColor(235, 225, 205);
-        doc.setLineWidth(0.15);
-        doc.line(startX, rowY + 6, pageWidth - 13, rowY + 6);
-
-        rowY += 6;
-      });
-
-      yPos += 80; // Added more vertical spacing
-
-      // 3. 12 Bhavas (Houses) Overview Grid
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 92, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('TWELVE BHAVAS (HOUSE PARTICULARS & SIGNIFICANCES)', 17, yPos + 5);
-
-      const hHalfW = (pageWidth - 36) / 2;
-      chartData.houses.slice(0, 12).forEach((h, hIdx) => {
-        const isRightCol = hIdx % 2 === 1;
-        const rowIndex = Math.floor(hIdx / 2);
-        const boxX = isRightCol ? pageWidth / 2 + 3 : 16;
-        const boxY = yPos + 8 + rowIndex * 13.5;
-
-        doc.setFillColor(255, 255, 255);
-        doc.setDrawColor(226, 211, 176);
-        doc.setLineWidth(0.2);
-        doc.roundedRect(boxX, boxY, hHalfW, 12, 1, 1, 'FD');
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.8);
-        doc.setTextColor(126, 95, 24);
-        const hSanskritSafe = sanitizePdfText(h.sanskritName);
-        doc.text(`H${h.houseNumber}: ${hSanskritSafe || `House ${h.houseNumber}`}`, boxX + 2.5, boxY + 3.8);
-
-        doc.setFontSize(6.5);
-        doc.setTextColor(26, 26, 30);
-        doc.text(`Sign: ${h.signName} (Lord: ${h.signLord})`, boxX + 2.5, boxY + 7.5);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
-        doc.setTextColor(80, 80, 80);
-        const occPlanets = h.planets?.map((p) => p.name).join(', ') || 'No Planets';
-        const subLordText = h.kpSubLord ? ` | Sub-Lord: ${h.kpSubLord}` : '';
-        doc.text(`Occupants: ${occPlanets}${subLordText}`, boxX + 2.5, boxY + 10.5);
-      });
-
-      // --- PAGE 2: YOGAS, DOSHAS, DASHA TIMELINE, AI SYNTHESIS & REMEDIES ---
-      doc.addPage();
-      yPos = 22;
-
-      // 4. Vedic Yogas Box
-      const numYogas = chartData.yogas ? Math.min(chartData.yogas.length, 5) : 0;
-      const yogaBoxHeight = numYogas > 0 ? (12 + numYogas * 10.5) : 24;
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, yogaBoxHeight, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('AUSPICIOUS VEDIC YOGAS & CELESTIAL FORMATIONS', 17, yPos + 5);
-
-      if (numYogas > 0) {
-        chartData.yogas.slice(0, 5).forEach((yoga, yIdx) => {
-          const yOff = yPos + 9.5 + yIdx * 10.5;
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.2);
-          doc.setTextColor(181, 131, 40);
-          const safeYogaSanskrit = sanitizePdfText(yoga.sanskritName);
-          const nameSuffix = safeYogaSanskrit && safeYogaSanskrit !== yoga.name ? `(${safeYogaSanskrit})` : '';
-          doc.text(`• ${yoga.name} ${nameSuffix}`.trim(), 17, yOff);
-
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(6.5);
-          doc.setTextColor(50, 50, 55);
-          const yogaDesc = doc.splitTextToSize(yoga.effect || (yoga as any).effects || yoga.description || 'Promotes auspicious spiritual and material elevation.', pageWidth - 40);
-          doc.text(yogaDesc[0] || '', 20, yOff + 4);
-        });
-      } else {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(80, 80, 80);
-        doc.text('Harmonious planetary configurations active across Kendras and Trikonas.', 17, yPos + 12);
-      }
-
-      yPos += yogaBoxHeight + 8;
-
-      // 5. Vedic Doshas Box
-      const numDoshas = chartData.doshas ? Math.min(chartData.doshas.length, 5) : 0;
-      const doshaBoxHeight = numDoshas > 0 ? (12 + numDoshas * 10) : 24;
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, doshaBoxHeight, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('VEDIC DOSHAS & PLANETARY AFFLICTION EVALUATION', 17, yPos + 5);
-
-      if (numDoshas > 0) {
-        chartData.doshas.slice(0, 5).forEach((dosha, dIdx) => {
-          const dOff = yPos + 9.5 + dIdx * 10;
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.2);
-          const isPres = dosha.isPresent || (dosha as any).present;
-          const severity = dosha.severity || (dosha as any).intensity || 'Moderate';
-          doc.setTextColor(isPres ? 181 : 80, isPres ? 131 : 80, isPres ? 40 : 80);
-          doc.text(`• ${dosha.name}: ${isPres ? `Present (${severity})` : 'Not Afflicted / Absent'}`, 17, dOff);
-
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(6.5);
-          doc.setTextColor(60, 60, 65);
-          const remediesText = Array.isArray(dosha.vedicRemedies) ? dosha.vedicRemedies.join(', ') : ((dosha as any).remedies || dosha.description || 'Standard pacification practices recommended.');
-          const doshaDesc = doc.splitTextToSize(remediesText, pageWidth - 40);
-          doc.text(doshaDesc[0] || '', 20, dOff + 3.8);
-        });
-      } else {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(80, 80, 80);
-        doc.text('No severe planetary afflictions identified; standard daily Japa maintains equilibrium.', 17, yPos + 12);
-      }
-
-      yPos += doshaBoxHeight + 8;
-
-      // 6. Vimshottari Dasha Timeline Box
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, 36, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('VIMSHOTTARI DASHA CYCLES & ACTIVE MAHADASHAS', 17, yPos + 5);
-
-      const dashaW = (pageWidth - 36) / 3;
-      chartData.dashas.slice(0, 6).forEach((d, dIdx) => {
-        const col = dIdx % 3;
-        const row = Math.floor(dIdx / 3);
-        const dX = 17 + col * (dashaW + 2);
-        const dY = yPos + 9 + row * 12.5;
-
-        doc.setFillColor(255, 255, 255);
-        doc.setDrawColor(d.isCurrent ? 201 : 226, d.isCurrent ? 160 : 211, d.isCurrent ? 80 : 176);
-        doc.setLineWidth(d.isCurrent ? 0.4 : 0.2);
-        doc.roundedRect(dX, dY, dashaW, 11, 1, 1, 'FD');
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.8);
-        doc.setTextColor(d.isCurrent ? 181 : 30, d.isCurrent ? 131 : 30, d.isCurrent ? 40 : 35);
-        const startY = parseInt(d.startDate.slice(0, 4)) || 0;
-        const endY = parseInt(d.endDate.slice(0, 4)) || 0;
-        const calcYears = endY - startY;
-        const durationStr = d.durationYears !== undefined ? d.durationYears : (calcYears > 0 ? calcYears : '?');
-        doc.text(`${d.planet} (${durationStr} Yrs)${d.isCurrent ? ' • ACTIVE' : ''}`, dX + 2.5, dY + 4);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
-        doc.setTextColor(90, 90, 90);
-        doc.text(`${d.startDate.slice(0, 4)} – ${d.endDate.slice(0, 4)}`, dX + 2.5, dY + 8);
-      });
-
-      yPos += 40;
-
-      // 7. AI Multi-Tradition Interpretation / Guidance
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-
-      const aiText = aiInterpretation || `Planetary positions synthesized across ${activeTraditionTitle}. The ascendant ${ascSign} lord and active Vimshottari Mahadasha indicate key milestones in professional leadership, intellectual growth, and dharmic alignment. Maintain focus on planetary harmonization during transition periods.`;
-      
-      // Parse markdown-like text into blocks for better PDF rendering
-      const paragraphs = aiText.split('\n').filter(p => p.trim() !== '');
-      const parsedBlocks: { lines: string[], isHeader: boolean, isList: boolean, prefix?: string }[] = [];
-      
-      paragraphs.forEach(p => {
-        let text = p.trim();
-        let isHeader = false;
-        let isList = false;
-        let prefix = '';
-        
-        if (text.startsWith('###')) {
-           isHeader = true;
-           text = text.replace(/^#+\s*/, '');
-        } else {
-           const listMatch = text.match(/^(-\s*|\*\s*|\d+\.\s*)/);
-           if (listMatch) {
-              isList = true;
-              prefix = listMatch[1];
-              text = text.substring(prefix.length); // The rest of the text
-           }
-        }
-        
-        // Clean up bold/italic markers
-        text = text.replace(/\*\*/g, '').replace(/__/g, '').replace(/`/g, '');
-        
-        doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
-        const lines = doc.splitTextToSize(text, pageWidth - (isList ? 38 : 34));
-        parsedBlocks.push({ lines, isHeader, isList, prefix });
-      });
-
-      if (yPos > 240) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      // Pre-calculate pages for AI text
-      const aiPages: { blocks: typeof parsedBlocks, height: number }[] = [];
-      let currentHeight = 10.5;
-      let currentBlocks: typeof parsedBlocks = [];
-      let simYPos = yPos;
-      
-      parsedBlocks.forEach(block => {
-         const estimatedBlockHeight = block.lines.length * 3.8 + (block.isHeader ? 2 : 1.5);
-         if (simYPos + currentHeight + estimatedBlockHeight > 275) {
-            aiPages.push({ blocks: currentBlocks, height: currentHeight });
-            currentBlocks = [block];
-            currentHeight = 10.5 + estimatedBlockHeight;
-            simYPos = 20;
-         } else {
-            currentBlocks.push(block);
-            currentHeight += estimatedBlockHeight;
-         }
-      });
-      if (currentBlocks.length > 0) {
-         aiPages.push({ blocks: currentBlocks, height: currentHeight });
-      }
-
-      aiPages.forEach((pageData, index) => {
-         if (index > 0) {
-            doc.addPage();
-            yPos = 20;
-         }
-         
-         const aiBoxHeight = pageData.height + 5;
-         doc.setFillColor(255, 255, 255);
-         doc.setDrawColor(201, 160, 80);
-         doc.setLineWidth(0.4);
-         doc.roundedRect(13, yPos, pageWidth - 26, aiBoxHeight, 1.5, 1.5, 'FD');
-
-         doc.setFont('helvetica', 'bold');
-         doc.setFontSize(8);
-         doc.setTextColor(126, 95, 24);
-         if (index === 0) {
-            doc.text(`VEDIC DEEP SYNTHESIS (${tradition.toUpperCase()} METHODOLOGY)`, 17, yPos + 5);
-         } else {
-            doc.text(`VEDIC DEEP SYNTHESIS (CONTINUED)`, 17, yPos + 5);
-         }
-
-         let currentY = yPos + 10.5;
-         pageData.blocks.forEach(block => {
-            if (block.isHeader) {
-               currentY += 1.5;
-               doc.setFont('helvetica', 'bold');
-               doc.setFontSize(7.5);
-               doc.setTextColor(126, 95, 24);
-            } else {
-               doc.setFont('helvetica', 'normal');
-               doc.setFontSize(7.2);
-               doc.setTextColor(40, 40, 45);
-            }
-            
-            if (block.isList && block.prefix) {
-               doc.text(block.prefix, 17, currentY);
-               block.lines.forEach((line: string) => {
-                  doc.text(line, 21, currentY);
-                  currentY += 3.8;
-               });
-            } else {
-               block.lines.forEach((line: string) => {
-                  doc.text(line, 17, currentY);
-                  currentY += 3.8;
-               });
-            }
-            
-            if (block.isHeader) currentY += 0.5;
-            else currentY += 1.5;
-         });
-         
-         yPos += aiBoxHeight + 8;
-      });
-      
-      // Check if Gemstone box fits
-      const numGems = chartData.gemstones ? Math.min(chartData.gemstones.length, 4) : 0;
-      const gemBoxHeight = numGems > 0 ? (12 + numGems * 5.5) : 22;
-      if (yPos + gemBoxHeight > 280) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      // 8. Recommended Gemstones & Upayas
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(201, 160, 80);
-      doc.setLineWidth(0.4);
-      doc.roundedRect(13, yPos, pageWidth - 26, gemBoxHeight, 1.5, 1.5, 'FD');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(126, 95, 24);
-      doc.text('RECOMMENDED TRIKONA GEMSTONES & VEDIC REMEDIES', 17, yPos + 5);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(50, 50, 55);
-      if (numGems > 0) {
-        chartData.gemstones.slice(0, 4).forEach((g, gIdx) => {
-          doc.text(`• ${g.gem} (${g.planet}): ${g.purpose}`, 17, yPos + 10.5 + gIdx * 5.5);
-        });
-      } else {
-        doc.text('• Primary Gemstone: Yellow Sapphire (Jupiter) or Ruby (Sun) in Gold on Sunday/Thursday morning.', 17, yPos + 11);
-        doc.text('• Daily Upaya: Gayatri Mantra (108 Japa) during Brahma Muhurta and Surya Arghya.', 17, yPos + 16.5);
-      }
-
-      // --- PAGE DECORATIONS PASS ---
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-
-        if (bgBase64) {
-          try {
-            if (typeof (doc as any).setGState === 'function' && (doc as any).GState) {
-              (doc as any).setGState(new (doc as any).GState({ opacity: 0.07 }));
-            }
-          } catch {}
-          doc.addImage(bgBase64, 'JPEG', 0, 0, pageWidth, pageHeight);
-          try {
-            if (typeof (doc as any).setGState === 'function' && (doc as any).GState) {
-              (doc as any).setGState(new (doc as any).GState({ opacity: 1.0 }));
-            }
-          } catch {}
-        }
-
-        // Outer Decorative Golden Double Border
-        doc.setDrawColor(201, 160, 80);
-        doc.setLineWidth(1.1);
-        doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
-        doc.setLineWidth(0.35);
-        doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
-
-        // Corner gold accents
-        doc.setFillColor(201, 160, 80);
-        doc.circle(10, 10, 1.2, 'F');
-        doc.circle(pageWidth - 10, 10, 1.2, 'F');
-        doc.circle(10, pageHeight - 10, 1.2, 'F');
-        doc.circle(pageWidth - 10, pageHeight - 10, 1.2, 'F');
-
-        if (i === 1) {
-          if (logoBase64) {
-            doc.addImage(logoBase64, 'PNG', 14, 13, 16, 16);
+      const pName = profile?.fullName || 'Seeker';
+      const safeName = pName.replace(/\s+/g, '_');
+      const dateStr = profile?.birthDate || new Date().toISOString().split('T')[0];
+      const lang = i18n.language || 'en';
+      const fileName = `AstroJunction_BirthChart_${tradition}_${safeName}_${dateStr}_${lang}.pdf`;
+
+      await api.downloadFile(API_ENDPOINTS.BIRTH_CHART.GENERATE_PDF, fileName, {
+        method: 'POST',
+        body: JSON.stringify({
+          lang,
+          profile,
+          chartData,
+          tradition,
+          traditionSynthesis: aiInterpretation,
+          labels: {
+            'birthChart.header.title': t('birthChart.header.title'),
           }
-
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(18);
-          doc.setTextColor(20, 20, 24);
-          doc.text('ASTRO', 33, 20);
-          doc.setTextColor(181, 131, 40);
-          doc.text('JUNCTION', 33 + doc.getTextWidth('ASTRO') + 0.5, 20);
-
-          doc.setFontSize(8.5);
-          doc.setTextColor(126, 95, 24);
-          doc.text('5 VEDIC TRADITIONS & BIRTH CHART REPORT', 33, 24.5);
-
-          doc.setFont('helvetica', 'italic');
-          doc.setFontSize(7);
-          doc.setTextColor(110, 105, 95);
-          doc.text(
-            `Precision Astronomical Ephemeris • Parashari • Jaimini • Lal Kitab • KP • Nadi (${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })})`,
-            33,
-            28
-          );
-        } else {
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(8);
-          doc.setTextColor(126, 95, 24);
-          doc.text('ASTROJUNCTION • 5 VEDIC TRADITIONS & BIRTH CHART REPORT', 14, 14);
-          doc.setDrawColor(226, 211, 176);
-          doc.setLineWidth(0.3);
-          doc.line(13, 16, pageWidth - 13, 16);
-        }
-
-        // Footer
-        const footerY = pageHeight - 18;
-        doc.setDrawColor(226, 211, 176);
-        doc.setLineWidth(0.4);
-        doc.line(13, footerY, pageWidth - 13, footerY);
-
-        const now = new Date();
-        const generatedTimestamp = `${now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}, ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6.8);
-        doc.setTextColor(110, 105, 95);
-        doc.text(`Generated on: ${generatedTimestamp}`, 14, footerY + 4);
-        doc.text(
-          `Page ${i} of ${totalPages}`,
-          pageWidth - 14,
-          footerY + 4,
-          { align: 'right' }
-        );
-      }
-
-      // Save PDF
-      const safeName = (profile.fullName || 'Seeker').replace(/[^a-zA-Z0-9]/g, '_');
-      const dateStr = new Date().toISOString().split('T')[0];
-      doc.save(`AstroJunction_BirthChart_${tradition}_${safeName}_${dateStr}.pdf`);
+        }),
+      });
     } catch (err) {
       console.error('Failed to generate birth chart traditions PDF:', err);
+      alert('Failed to generate PDF report. Please ensure the backend server is reachable.');
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -1794,10 +1511,10 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
             <button
               onClick={() => onNavigateToTab?.('roadmap')}
-              className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border text-xs font-bold transition shadow-md cursor-pointer shrink-0 ${
+              className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border text-xs font-bold transition shadow-md cursor-pointer w-full sm:w-auto ${
                 theme === 'dark'
                   ? 'bg-[#1A1A1E] hover:bg-[#222228] text-[#E5E1D8] border-[#C9A050]/50 hover:border-[#C9A050] hover:text-[#C9A050] shadow-sm'
                   : 'bg-white hover:bg-[#FAF6F0] text-[#7A5A1A] border-[#C9A050]/60 hover:border-[#C9A050] shadow-sm'
@@ -1811,7 +1528,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
             <button
               onClick={handleDownloadTraditionsPdf}
               disabled={isGeneratingPdf}
-              className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border text-xs font-bold transition shadow-lg cursor-pointer shrink-0 ${
+              className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border text-xs font-bold transition shadow-lg cursor-pointer w-full sm:w-auto ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-[#C9A050] to-[#A07828] hover:from-[#D4AF37] hover:to-[#B38730] text-[#0D0D0F] border-[#C9A050] shadow-[#C9A050]/20'
                   : 'bg-[#C9A050] hover:bg-[#B38730] text-white border-[#C9A050] shadow-[#C9A050]/20'
@@ -2333,7 +2050,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
                       )}
 
                       <td className="py-2.5 pr-3 pl-2 text-[11px] text-[#9E9A90] whitespace-nowrap">
-                        {t('vedic.gems.' + getGemstoneKey(p.gemstone, p.id), p.gemstone)}
+                        {tVedic('gems', getGemstoneKey(p.gemstone, p.id), p.gemstone)}
                       </td>
                     </tr>
                   );
@@ -2348,16 +2065,16 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
             <div className="flex items-center justify-between pb-3 border-b border-[#2A2A2E] mb-4">
               <div>
                 <h3 className="text-base font-serif font-bold text-[#F0ECE1]">
-                  {t('birthChart.dasha.title', 'Vimshottari Mahadasha Timeline')} ({formatLocalizedDigits(120, currentLang)} {t('birthChart.dasha.years', 'Years')})
+                  {t('birthChart.dashas.title', 'Vimshottari Mahadasha Timeline')} ({formatLocalizedDigits(120, currentLang)} {t('birthChart.dashas.years_label', 'Years')})
                 </h3>
 
                 <p className="text-xs text-[#9E9A90]">
-                  {t('birthChart.dasha.subtitle', 'Calculated from Moon’s natal Nakshatra degree')}
+                  {t('birthChart.dashas.subtitle', 'Calculated from Moon’s natal Nakshatra degree')}
                 </p>
               </div>
 
               <span className="text-xs text-[#C9A050] font-semibold">
-                {t('birthChart.dasha.active_prefix', 'Active:')} {tVedic('planets', (chartData.dashas.find(d => d.isCurrent)?.planet || 'Jupiter'), (chartData.dashas.find(d => d.isCurrent)?.planet || 'Jupiter'))} {t('birthChart.dasha.mahadasha_label', 'Mahadasha')}
+                {t('birthChart.dashas.active_now', 'Active:')} {tVedic('planets', (chartData.dashas.find(d => d.isCurrent)?.planet || 'Jupiter'), (chartData.dashas.find(d => d.isCurrent)?.planet || 'Jupiter'))} {t('birthChart.dashas.mahadasha', 'Mahadasha')}
               </span>
             </div>
 
@@ -2470,7 +2187,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
                         <span className={`text-xs sm:text-[13px] font-bold ${
                           isDark ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'
                         }`}>
-                          {t('vedic.gems.' + getGemstoneKey(g.gem, g.planet), g.gem)}
+                          {tVedic('gems', getGemstoneKey(g.gem, g.planet), g.gem)}
                         </span>
                         <span className="text-[10px] font-bold text-[#C9A050] uppercase tracking-wider shrink-0 bg-[#C9A050]/10 px-1.5 py-0.5 rounded">
                           {tVedic('planets', g.planet, g.planet)}
@@ -2479,7 +2196,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
                       <p className={`text-[11px] leading-relaxed pt-1 ${
                         isDark ? 'text-[#9E9A90]' : 'text-[#6E6452]'
                       }`}>
-                        {g.purpose}
+                        {getLocalizedGemPurpose(g.purpose, t)}
                       </p>
                     </div>
                   </div>
@@ -2647,7 +2364,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
                             </div>
 
                             {card.summary && (
-                              <p className="leading-relaxed font-sans text-xs sm:text-sm mb-2">
+                              <p className="leading-relaxed font-sans text-xs sm:text-sm mb-2 astro-prose-justified">
                                 {parseInlineBold(card.summary).map((part, pIdx) =>
                                   part.isBold ? (
                                     <strong key={pIdx} className={`font-semibold tracking-wide ${isDark ? 'text-[#E5B558]' : 'text-[#96721E]'}`}>
@@ -2712,7 +2429,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
                     </div>
                   ),
                   p: ({ children }) => (
-                    <p className={`text-xs sm:text-sm font-sans leading-relaxed mb-4 ${
+                    <p className={`text-xs sm:text-sm font-sans leading-relaxed mb-4 astro-prose-justified ${
                       isDark ? 'text-[#C5C0B5]' : 'text-gray-700'
                     }`}>
                       {children}

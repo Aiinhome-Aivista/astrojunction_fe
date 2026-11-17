@@ -160,13 +160,22 @@ export function formatTime(
   }
 }
 
+export function toAsciiDigits(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/[०-९]/g, d => String(d.charCodeAt(0) - 0x0966))
+    .replace(/[০-৯]/g, d => String(d.charCodeAt(0) - 0x09E6))
+    .replace(/[௦-௯]/g, d => String(d.charCodeAt(0) - 0x0BE6));
+}
+
 export function formatPanchangTime(
   timeStr: string,
   lang?: string
 ): string {
   if (!timeStr) return '';
   const locale = (lang || getCurrentLang());
-  return timeStr.replace(/(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)?/g, (match, h, m, period) => {
+  const normalized = toAsciiDigits(timeStr);
+  return normalized.replace(/(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)?/g, (match, h, m, period) => {
     let hour = parseInt(h, 10);
     const minute = parseInt(m, 10);
     if (period) {

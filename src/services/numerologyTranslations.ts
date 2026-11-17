@@ -114,12 +114,12 @@ export function getPlanetNumberFromStr(planetStr: string, fallbackNum?: number):
   return fallbackNum || 1;
 }
 
-export function getLocalizedPlanetTitle(planetStr: string, num: number, t: (k: string, opt?: any) => string): string {
+export function getLocalizedPlanetTitle(planetStr: string, num: number, t: any): string {
   const pNum = getPlanetNumberFromStr(planetStr, num);
   return t(`numerology.meta.planets.${pNum}`, { defaultValue: planetStr });
 }
 
-export function getLocalizedTrait(trait: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedTrait(trait: string, t: any): string {
   if (!trait) return '';
   const key = TRAIT_MAP[trait.trim().toLowerCase()];
   if (key) {
@@ -128,14 +128,14 @@ export function getLocalizedTrait(trait: string, t: (k: string, opt?: any) => st
   return trait;
 }
 
-export function getLocalizedMission(missionStr: string, num: number, t: (k: string, opt?: any) => string): string {
+export function getLocalizedMission(missionStr: string, num: number, t: any): string {
   if (num >= 1 && num <= 9) {
     return t(`numerology.meta.missions.${num}`, { defaultValue: missionStr });
   }
   return missionStr;
 }
 
-export function getLocalizedDays(days: string[] | string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedDays(days: string[] | string, t: any): string {
   const arr = Array.isArray(days) ? days : (days || '').split(',').map(s => s.trim());
   return arr.map(d => {
     const k = DAY_MAP[d.trim().toLowerCase()];
@@ -143,7 +143,7 @@ export function getLocalizedDays(days: string[] | string, t: (k: string, opt?: a
   }).join(', ');
 }
 
-export function getLocalizedColors(colors: string[] | string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedColors(colors: string[] | string, t: any): string {
   const arr = Array.isArray(colors) ? colors : (colors || '').split(',').map(s => s.trim());
   return arr.map(c => {
     const k = COLOR_MAP[c.trim().toLowerCase()];
@@ -164,7 +164,7 @@ export function getPlaneKey(planeName: string): string {
   return 'thought';
 }
 
-export function getLocalizedPlaneName(plane: { name: string; numbers?: number[] }, lang: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedPlaneName(plane: { name: string; numbers?: number[] }, lang: string, t: any): string {
   const key = getPlaneKey(plane.name);
   const nums = plane.numbers || [4, 9, 2];
   return t(`numerology.meta.planes.${key}.name`, {
@@ -175,12 +175,12 @@ export function getLocalizedPlaneName(plane: { name: string; numbers?: number[] 
   });
 }
 
-export function getLocalizedPlaneMeaning(planeName: string, defaultMeaning: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedPlaneMeaning(planeName: string, defaultMeaning: string, t: any): string {
   const key = getPlaneKey(planeName);
   return t(`numerology.meta.planes.${key}.meaning`, { defaultValue: defaultMeaning });
 }
 
-export function getLocalizedPlaneStatus(status: string, strength: number, lang: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedPlaneStatus(status: string, strength: number, lang: string, t: any): string {
   const sLower = (status || '').toLowerCase();
   let statusText = status;
   if (sLower === 'strong') statusText = t('numerology.loshu.status.strong', { defaultValue: 'Strong' });
@@ -192,7 +192,7 @@ export function getLocalizedPlaneStatus(status: string, strength: number, lang: 
   return t('numerology.loshu.status_with_pct', { status: statusText, pct: pctStr, defaultValue: `${statusText} (${pctStr}%)` });
 }
 
-export function getLocalizedRemedy(remStr: string, idx: number, lang: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedRemedy(remStr: string, idx: number, lang: string, t: any): string {
   // Check if string mentions a number like "(Number 1)"
   const match = remStr.match(/\(Number\s*(\d)\)/i) || remStr.match(/number\s*(\d)/i);
   const num = match ? parseInt(match[1], 10) : (idx + 1);
@@ -205,7 +205,7 @@ export function getLocalizedRemedy(remStr: string, idx: number, lang: string, t:
   return remStr;
 }
 
-export function getLocalizedChaldeanCompatibility(num: number, lang: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedChaldeanCompatibility(num: number, lang: string, t: any): string {
   const isFavorable = [1, 3, 5, 6].includes(num);
   const nStr = formatDigitsBase(num, lang);
   if (isFavorable) {
@@ -215,7 +215,7 @@ export function getLocalizedChaldeanCompatibility(num: number, lang: string, t: 
   }
 }
 
-export function getLocalizedChaldeanSuggestion(sug: string, num: number, lang: string, t: (k: string, opt?: any) => string): string {
+export function getLocalizedChaldeanSuggestion(sug: string, num: number, lang: string, t: any): string {
   const sLower = (sug || '').toLowerCase();
   const nStr = formatDigitsBase(num, lang);
 

@@ -592,7 +592,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: ABOUT US ================= */}
         {view === 'about-us' && (
-          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
+          <article className="space-y-6 astro-prose-justified">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-8 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -652,7 +652,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: FAQ ================= */}
         {view === 'faq' && (
-          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
+          <article className="space-y-6 astro-prose-justified">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-8 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -695,7 +695,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
                       </div>
                     </button>
                     {isOpen && (
-                      <p className={`pt-2 text-sm sm:text-base leading-relaxed ${isLight ? 'text-[#4A453F]' : 'text-[#B8B4C2]'}`}>
+                      <p className={`pt-2 text-sm sm:text-base leading-relaxed astro-prose-justified ${isLight ? 'text-[#4A453F]' : 'text-[#B8B4C2]'}`}>
                         {faq.a}
                       </p>
                     )}
@@ -708,7 +708,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: PRIVACY POLICY ================= */}
         {view === 'privacy-policy' && (
-          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
+          <article className="space-y-6 astro-prose-justified">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -764,7 +764,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: COOKIE POLICY ================= */}
         {view === 'cookie-policy' && (
-          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
+          <article className="space-y-6 astro-prose-justified">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'
@@ -812,7 +812,7 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
 
         {/* ================= PAGE: TERMS & CONDITIONS ================= */}
         {view === 'terms-and-conditions' && (
-          <article className="space-y-6 [&_p]:text-justify [&_li]:text-justify">
+          <article className="space-y-6 astro-prose-justified">
             <h1
               className={`text-3xl sm:text-4xl font-serif font-bold text-center mb-2 ${
                 isLight ? 'text-[#1E1B15]' : 'text-[#FAF5E8]'

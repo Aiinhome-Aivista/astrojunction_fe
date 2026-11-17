@@ -9,7 +9,7 @@ export function getLocalizedKootaName(
   kootaId: string,
   rawName: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   const normId = kootaId ? kootaId.toLowerCase() : '';
   let id = normId;
@@ -37,7 +37,7 @@ export function getLocalizedKootaName(
 export function getLocalizedKootaArea(
   kootaId: string,
   rawArea: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   const normId = kootaId ? kootaId.toLowerCase() : '';
   let id = normId;
@@ -56,7 +56,7 @@ export function getLocalizedKootaArea(
 export function getLocalizedKootaDescription(
   kootaId: string,
   rawDesc: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   const normId = kootaId ? kootaId.toLowerCase() : '';
   let id = normId;
@@ -77,7 +77,7 @@ export function getLocalizedKootaValue(
   kootaId: string,
   rawValue: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!rawValue) return '';
   const str = String(rawValue).trim();
@@ -139,15 +139,20 @@ export function getLocalizedKootaValue(
     }
   }
 
-  // Rashi with Lord e.g. "Capricorn (Saturn)" or "Scorpio (Mars)"
-  const rashiMatch = str.match(/^([A-Za-z]+)(?:\s*\(([A-Za-z]+)\))?$/);
+  // Rashi with Lord or House Number e.g. "Capricorn (Saturn)" or "Capricorn (10)"
+  const rashiMatch = str.match(/^([A-Za-z]+)(?:\s*\(([^)]+)\))?$/);
   if (rashiMatch) {
     const rName = rashiMatch[1].toLowerCase();
-    const lName = rashiMatch[2] ? rashiMatch[2].toLowerCase() : '';
     const localizedRashi = t(`vedic.signs.${rName}`, { defaultValue: rashiMatch[1] });
-    if (lName) {
-      const localizedLord = t(`vedic.planets.${lName}`, { defaultValue: rashiMatch[2] });
-      return `${localizedRashi} (${localizedLord})`;
+    if (rashiMatch[2]) {
+      const parenContent = rashiMatch[2].trim();
+      if (/^\d+$/.test(parenContent)) {
+        const localizedNum = formatLocalizedDigits(parenContent, lang);
+        return `${localizedRashi} (${localizedNum})`;
+      } else {
+        const localizedLord = t(`vedic.planets.${parenContent.toLowerCase()}`, { defaultValue: parenContent });
+        return `${localizedRashi} (${localizedLord})`;
+      }
     }
     return localizedRashi;
   }
@@ -157,10 +162,59 @@ export function getLocalizedKootaValue(
 
 export function getLocalizedVerdict(
   rawVerdict: string,
-  t: (key: string, options?: any) => string
+  t: any,
+  lang?: string
 ): string {
   if (!rawVerdict) return '';
   const lower = rawVerdict.toLowerCase();
+  const currentL = (lang || (t?.i18n ? t.i18n.language : 'en') || 'en').toLowerCase().slice(0, 2);
+
+  // Nadi Dosha Verdict Details Sentences
+  if (lower.includes('active nadi dosha detected')) {
+    if (currentL === 'hi') return 'सक्रिय नाड़ी दोष उपस्थित है (दोनों साथियों की समान मध्य नाड़ी)। महामृत्युंजय जप एवं वैदिक दान द्वारा शांति अनुशंसित है।';
+    if (currentL === 'bn') return 'সক্রিয় নাড়ী দোষ বিদ্যমান (উভয় সঙ্গীরই অভিন্ন মধ্য নাড়ী)। মহামৃত্যুঞ্জয় জপ ও দান দ্বারা প্রতিকার নির্দেশিত।';
+    if (currentL === 'ta') return 'இருவருக்கும் ஒரே நாடி (மத்திய நாடி) இருப்பதால் தீவிர நாடி தோஷம் உள்ளது. மகா மிருத்யுஞ்ஜய ஜபம் மற்றும் பரிகாரம் பரிந்துரைக்கப்படுகிறது.';
+    if (currentL === 'fr') return 'Dosha Nadi actif détecté (Madhya Nadi pour les deux partenaires). Le Japa Maha Mrityunjaya et des dons caritatifs sont recommandés.';
+    return rawVerdict;
+  }
+  if (lower.includes('different nadis') && lower.includes('bio-magnetic balance')) {
+    if (currentL === 'hi') return 'विभिन्न नाड़ियां उत्तम प्राणिक संतुलन (वात/पित्त/कफ सामंजस्य) एवं सुदृढ़ आनुवंशिक जीवन शक्ति प्रदान करती हैं।';
+    if (currentL === 'bn') return 'ভিন্ন নাড়ী শুভ বায়ো-ম্যাগনেটিক ভারসাম্য (বাত/পিত্ত/কফ সামঞ্জস্য) ও বংশাণুগত কল্যাণ নিশ্চিত করে।';
+    if (currentL === 'ta') return 'வேறுபட்ட நாடிகள் உகந்த உயிரியல் சமநிலை (வாதம்/பித்தம்/கபம்) மற்றும் வலுவான மரபணு ஆரோக்கியத்தை அளிக்கின்றன.';
+    if (currentL === 'fr') return 'Les Nadis différentes assurent un équilibre bio-magnétique optimal (Vata/Pitta/Kapha) et une forte vitalité héréditaire.';
+    return rawVerdict;
+  }
+  if (lower.includes('nadi dosha cancelled')) {
+    if (currentL === 'hi') return 'नाड़ी दोष शास्त्रीय परिहार नियमों द्वारा पूर्णतः निरस्त एवं निष्प्रभावी है। पूरे ८ अंक प्रदान किए गए।';
+    if (currentL === 'bn') return 'শাস্ত্রীয় পরিহার নিয়মানুসারে নাড়ী দোষ সম্পূর্ণরূপে প্রশমিত। পূর্ণ ৮ পয়েন্ট প্রদান করা হয়েছে।';
+    if (currentL === 'ta') return 'சாஸ்திர பரிகார விதிகளின்படி நாடி தோஷம் ரத்து செய்யப்பட்டுள்ளது. முழு 8 புள்ளிகள் வழங்கப்பட்டன.';
+    if (currentL === 'fr') return 'Dosha Nadi annulé par les règles classiques de Parihara. 8 points complets accordés.';
+    return rawVerdict;
+  }
+
+  // Bhakoot Dosha Verdict Details Sentences
+  if (lower.includes('auspicious rashi angular disposition')) {
+    if (currentL === 'hi') return 'शुभ राशि कोणीय स्थिति; दांपत्य में सुख, पारिवारिक सामंजस्य एवं आर्थिक संवृद्धि प्रदान करती है।';
+    if (currentL === 'bn') return 'শুভ রাশি অবস্থান; দাম্পত্যে আনন্দ, পারিবারিক সম্প্রীতি ও আর্থিক সমৃদ্ধি বৃদ্ধি করে।';
+    if (currentL === 'ta') return 'மங்கலகரமான ராசி அமைப்பு; மகிழ்ச்சி, குடும்ப நல்லிணக்கம் மற்றும் நிதி வளர்ச்சியைத் தருகிறது.';
+    if (currentL === 'fr') return 'Disposition angulaire favorable des Rashis accordant joie, harmonie familiale et croissance financière.';
+    return rawVerdict;
+  }
+  if (lower.includes('bhakoot dosha cancelled')) {
+    if (currentL === 'hi') return 'समान/मित्र ग्रह स्वामियों के कारण भकूट दोष निरस्त है; पारिवारिक समृद्धि सुनिश्चित होती है।';
+    if (currentL === 'bn') return 'মিত্র গ্রহাধিপতির কারণে ভকূট দোষ প্রশমিত; পারিবারিক কল্যাণ ও সমৃদ্ধি নিশ্চিত।';
+    if (currentL === 'ta') return 'நட்பு கிரக அதிபதிகளால் பகூட் தோஷம் ரத்து செய்யப்பட்டுள்ளது; குடும்ப செழிப்பு உண்டாகும்.';
+    if (currentL === 'fr') return 'Dosha Bhakoot annulé grâce à la maîtrise planétaire favorable ; harmonie familiale.';
+    return rawVerdict;
+  }
+  if (lower.includes('bhakoot dosha') && lower.includes('challenging')) {
+    if (currentL === 'hi') return 'प्रतिकूल राशि संबंध (भकूट दोष); संयुक्त दान एवं शिव-पार्वती की उपासना अनुशंसित है।';
+    if (currentL === 'bn') return 'প্রতিকূল রাশি অবস্থান (ভকূট দোষ); যৌথ দান ও শিব-পার্বতীর পূজা নির্দেশিত।';
+    if (currentL === 'ta') return 'சவாலான ராசி அமைப்பு (பகூட் தோஷம்); கூட்டு வழிபாடு மற்றும் தானம் பரிந்துரைக்கப்படுகிறது.';
+    if (currentL === 'fr') return 'Disposition difficile des Rashis (Dosha Bhakoot) ; dons et prières recommandés.';
+    return rawVerdict;
+  }
+
   if (lower.includes('uttam') && lower.includes('caution')) return t('kundliMilan.verdicts.uttam_caution', { defaultValue: rawVerdict });
   if (lower.includes('uttam')) return t('kundliMilan.verdicts.uttam', { defaultValue: rawVerdict });
   if (lower.includes('madhyam')) return t('kundliMilan.verdicts.madhyam', { defaultValue: rawVerdict });
@@ -179,7 +233,7 @@ export function getLocalizedVerdict(
 
 export function getLocalizedStatus(
   rawStatus: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!rawStatus) return '';
   const lower = rawStatus.toLowerCase();
@@ -199,7 +253,7 @@ export function getLocalizedStatus(
 
 export function getLocalizedSeverity(
   severity: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!severity) return '';
   const lower = severity.toLowerCase();
@@ -213,7 +267,7 @@ export function getLocalizedSeverity(
 export function getLocalizedRashi(
   rashiStr: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!rashiStr) return '';
   const clean = rashiStr.replace(/\s*Rashi/i, '').trim().toLowerCase();
@@ -225,7 +279,7 @@ export function getLocalizedRashi(
 export function getLocalizedNakshatra(
   nakStr: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!nakStr) return '';
   const clean = nakStr.replace(/\s*Nakshatra/i, '').trim().toLowerCase();
@@ -236,7 +290,7 @@ export function getLocalizedNakshatra(
 
 export function getLocalizedPlanet(
   planetStr: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!planetStr) return '';
   const clean = planetStr.trim().toLowerCase();
@@ -245,7 +299,7 @@ export function getLocalizedPlanet(
 
 export function getLocalizedGemPurpose(
   purposeStr: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!purposeStr) return '';
   const lower = purposeStr.toLowerCase();
@@ -345,7 +399,7 @@ export function getLocalizedNumerologyDescription(
 export function getLocalizedNadi(
   nadiStr: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!nadiStr) return '';
   const match = nadiStr.match(/^([A-Za-z]+)(?:\s*\((.*?)\))?$/);
@@ -371,7 +425,7 @@ export function getLocalizedNadiReason(
   p1Name: string,
   p2Name: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!reasonStr) return '';
   if (lang === 'en') return reasonStr;
@@ -483,7 +537,7 @@ export function getLocalizedManglikExplanation(expl: string, lang: string, t: an
   return expl;
 }
 
-export function getLocalizedSynastryAspect(aspectName: string, t: (key: string, options?: any) => string): string {
+export function getLocalizedSynastryAspect(aspectName: string, t: any): string {
   if (!aspectName) return '';
   const lower = aspectName.toLowerCase();
   if (lower.includes('sun-moon') || lower.includes('core synergy')) {
@@ -506,7 +560,7 @@ export function getLocalizedSynastryAspect(aspectName: string, t: (key: string, 
 export function getLocalizedSynastryAspectPlanets(
   planetsStr: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!planetsStr) return '';
   if (lang === 'en') return planetsStr;
@@ -539,7 +593,7 @@ export function getLocalizedSynastryAspectPlanets(
 export function getLocalizedSynastryVerdict(
   verdict: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!verdict) return '';
   if (lang === 'en') return verdict;
@@ -584,7 +638,7 @@ export function getLocalizedMuhuratAdvice(
   p1Name: string,
   p2Name: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!rawAdvice) return '';
   if (lang === 'en') return rawAdvice;
@@ -624,7 +678,7 @@ export function getLocalizedRemedy(
   p1Name: string,
   p2Name: string,
   lang: string,
-  t: (key: string, options?: any) => string
+  t: any
 ): string {
   if (!remedyStr) return '';
   if (lang === 'en') return remedyStr;
