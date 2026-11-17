@@ -1421,7 +1421,24 @@
       "not_available": "L'interprétation de transit quotidienne est actuellement indisponible.",
       "page_header": "ASTROJUNCTION | RAPPORT QUOTIDIEN DE TRANSIT VÉDIQUE & PANCHANG",
       "destiny_name": "Bhagyank (Destin): {b}  |  Namank: {n}",
-      "coordinates": "Coord.: {lat}N, {lon}E"
+      "coordinates": "Coord.: {lat}N, {lon}E",
+      "morning_title": "Surya Arghya & Invocation Méditative Gayatri",
+      "morning_desc": "Offrez de l'eau pure au Soleil levant dans un récipient en cuivre avec la vibration sacrée de la Gayatri. Concentrez le prana sur le troisième œil.",
+      "evening_title": "Deepa Daan & Réflexion sur les Mantras de Paix",
+      "evening_desc": "Allumez une lampe au ghee dans le quadrant nord-est au crépuscule. Chantez Om Namah Shivaya 108 fois pour l'équilibre émotionnel.",
+      "sankalpa_text": "Om Shanti Shanti Shanti — J'aligne consciemment mes pensées intérieures et mes actions extérieures avec le dharma universel (Rta). Aujourd'hui apporte concentration ciblée, clarté propice et protection divine à mon cheminement.",
+      "page2_header": "PANCHANGA VÉDIQUE QUOTIDIEN & TRANSITS PLANÉTAIRES",
+      "panchang_tithi": "Tithi (Jour Lunaire)",
+      "panchang_nakshatra": "Nakshatra (Astérisme)",
+      "panchang_yoga": "Yoga Védique",
+      "panchang_karana": "Karana (Demi-Tithi)",
+      "panchang_sunsign": "Signe Solaire (Surya Rashi)",
+      "panchang_moonsign": "Lune de Transit Aujourd'hui",
+      "panchang_sun_times": "Lever / Coucher du Soleil",
+      "panchang_brahma": "Brahma Muhurta",
+      "bhagyank": "Bhagyank (Destin)",
+      "namank": "Namank",
+      "dir_east": "Dir: Est"
     }
   },
   "birthChart": {
@@ -1740,7 +1757,11 @@
       "finger": "Doigt Consacré",
       "metal": "Métal de Sertissage",
       "weekday": "Jour Bénéfique",
-      "gemstone_label": "Pierre précieuse"
+      "gemstone_label": "Pierre précieuse",
+      "yellow_sapphire": "Saphir Jaune (Pukhraj) / Rubis (Manikya)",
+      "gem_note": "À porter dans de l'or ou du panchdhatu le jeudi matin après purification à l'eau de Ganga.",
+      "sadhana_title": "Sadhana Quotidienne & Remède",
+      "default_mantra": "Chantez le Gayatri Mantra (108 fois par jour au lever du soleil) et le Maha Mrityunjaya Mantra pour la protection, la perspicacité intellectuelle et la prospérité durable."
     },
     "planet_modal": {
       "title": "Profil Planétaire & Karakatva",
@@ -1772,7 +1793,8 @@
       "unlocked_badge": "✓ DÉBLOQUÉ",
       "premium_badge": "PREMIUM 99 ₹",
       "copy": "Copier l'Interprétation",
-      "copied": "Copié dans le presse-papiers !"
+      "copied": "Copié dans le presse-papiers !",
+      "default_body": "Selon le Brihat Parashara Hora Shastra, l'alignement bénéfique à travers les maisons Kendra et Trikona renforce la perspicacité analytique, le leadership éthique et une résilience spirituelle durable."
     },
     "subscription": {
       "badge": "Abonnement Védique Premium • Seulement 99 ₹",
@@ -1851,7 +1873,16 @@
       "no_doshas": "Aucune affliction planétaire grave identifiée; le Japa quotidien maintient l'équilibre.",
       "house": "Maison",
       "h_prefix": "M",
-      "pada_prefix": "Pada"
+      "pada_prefix": "Pada",
+      "coordinates": "COORDONNÉES CÉLESTES & DE TRADITION",
+      "vimshottari_title": "CYCLES DE DASHA VIMSHOTTARI & MAHADASHAS ACTIVES",
+      "remedies_title": "PIERRES PRÉCIEUSES TRIKONA RECOMMANDÉES & REMÈDES VÉDIQUES"
+    },
+    "yogas": {
+      "none_prominent": "Configurations planétaires harmonieuses actives dans les Kendras et Trikonas."
+    },
+    "dosha": {
+      "stable_transit": "Orbite Directe / Transit Stable"
     }
   },
   "roadmap": {
@@ -1946,7 +1977,14 @@
       "generated_on": "Généré le:",
       "page": "Page",
       "of": "sur",
-      "locked": "Débloquer Premium pour voir"
+      "locked": "Débloquer Premium pour voir",
+      "coordinates": "COORDONNÉES CÉLESTES & NUMÉROLOGIQUES",
+      "subtitle": "Synthétisé à travers les cycles de Mahadasha/Antardasha Vimshottari et transits planétaires (2026 – 2051)",
+      "coverage_title": "COUVERTURE STRATÉGIQUE DE LA CHRONOLOGIE",
+      "coverage_desc": "Couverture: Tous les Horizons Disponibles ({{count}} Prédictions Stratégiques) | Terminé: {{completed}} • En cours: {{inProgress}}",
+      "lifetime_remedies_title": "REMÈDES VÉDIQUES À VIE & SADHANA QUOTIDIENNE (PACIFICATION DES PANCHA MAHABHUTA)",
+      "primary_stotra": "Stotra Principal: Récitez Sri Vishnu Sahasranama ou Sri Rudram lors des transitions et transits planétaires majeurs.",
+      "strategic_guidance": "Cette période charnière exige une concentration rigoureuse pendant les épreuves saturniennes et une expansion audacieuse lors des transits bénéfiques jupitériens. Ancrez vos choix de carrière dans des compétences vérifiées et maintenez une sadhana méditative régulière."
     }
   },
   "kundliMilan": {
@@ -2102,7 +2140,8 @@
       "vanara": "Vanara (Singe)",
       "nakula": "Nakula (Mangouste)",
       "simha": "Simha (Lion)",
-      "tara_val": "Tara {{from}}/{{to}}"
+      "tara_val": "Tara {{from}}/{{to}}",
+      "aadi": "Adi (Vata)"
     },
     "doshas": {
       "manglik_assessment": "Évaluation Comparative du Dosha Manglik (Kuja)",
@@ -2522,7 +2561,11 @@
       "crystal_default": "Placez un cristal de pyrite ou de citrine sur votre bureau. Portez une perle de Rudraksha correspondant à votre nombre directeur pour renforcer votre équilibre mental.",
       "vibrational_resonance": "Résonance",
       "highly_favorable": "Hautement favorable",
-      "harmonious": "Harmonieux"
+      "harmonious": "Harmonieux",
+      "synthesis_title": "SYNTHÈSE VIBRATOIRE MULANK & BHAGYANK",
+      "methodology": "Méthodologie: Matrice de Vibration Sacrée Védique Sidérale & Chaldéenne",
+      "driver_num": "Nombre Psychique / Conducteur",
+      "conductor_num": "Nombre de Destinée / Guide"
     }
   },
   "plans": {

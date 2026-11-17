@@ -834,8 +834,12 @@ async function startServer() {
         const rawHtml = fs.readFileSync(indexPath, 'utf-8');
         const finalHtml = injectDynamicMeta(rawHtml, req);
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         res.send(finalHtml);
       } catch {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.sendFile(path.join(distPath, 'index.html'));
       }
     });
