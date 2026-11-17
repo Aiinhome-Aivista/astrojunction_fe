@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import {
   MessageSquareText,
   Send,
@@ -190,19 +191,30 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
         text.trim(),
         historyPayload,
         profile.id,
-        activeSessionId || undefined
+        activeSessionId || undefined,
+        {
+          lang: currentLang,
+          profile,
+          chartData,
+          numerology,
+          tradition,
+        }
       );
 
-      const replyContent = Array.isArray(result.response)
-        ? result.response.join('\n\n')
-        : String(result.response || t('chat.default_analyzing'));
+      const replyContent = (
+        result.answer ||
+        (Array.isArray(result.response) ? result.response.join('\n\n') : result.response) ||
+        t('chat.default_analyzing')
+      ).toString();
+
+      const followUps = result.follow_ups || result.suggested_questions || [];
 
       const assistantMessage: ChatMessage = {
         id: `msg-ai-${Date.now()}`,
         role: 'assistant',
         content: replyContent,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        suggestedQuestions: result.suggested_questions || [],
+        suggestedQuestions: followUps.slice(0, 3),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -480,7 +492,24 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                     fontFamily: 'var(--font-sans)',
                   }}
                 >
-                  <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                  {isUser ? (
+                    <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                  ) : (
+                    <div className="chat-markdown-content break-words font-sans text-xs sm:text-sm">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed font-sans">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold text-[#F0ECE1]">{children}</strong>,
+                          b: ({ children }) => <b className="font-semibold text-[#F0ECE1]">{children}</b>,
+                          ul: ({ children }) => <ul className="my-2 space-y-1 list-disc pl-4">{children}</ul>,
+                          ol: ({ children }) => <ol className="my-2 space-y-1 list-decimal pl-4">{children}</ol>,
+                          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
 
                   {/* Interactive Suggested Questions Chips (for Assistant) */}
                   {!isUser && msg.suggestedQuestions && msg.suggestedQuestions.length > 0 && (
@@ -490,7 +519,7 @@ export const AICounsellorChat: React.FC<AICounsellorChatProps> = ({
                         <span>{t('chat.suggested_header')}</span>
                       </div>
                       <div className="flex flex-col gap-1.5 pt-1">
-                        {msg.suggestedQuestions.map((sq, sqIdx) => (
+                        {msg.suggestedQuestions.slice(0, 3).map((sq, sqIdx) => (
                           <button
                             key={sqIdx}
                             onClick={() => handleSendMessage(sq)}

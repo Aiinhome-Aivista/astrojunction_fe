@@ -15,9 +15,12 @@ export interface DirectAIResponse {
   user_id?: string;
   session_id?: string;
   user_query?: string;
-  response: string[] | string;
-  suggested_questions: string[];
+  answer?: string;
+  follow_ups?: string[];
+  response?: string[] | string;
+  suggested_questions?: string[];
   message?: string;
+  lang?: string;
 }
 
 /**
@@ -27,7 +30,14 @@ export async function generateAIResponse(
   prompt: string,
   history: { role: string; content: string }[] = [],
   userId?: string,
-  sessionId?: string
+  sessionId?: string,
+  options?: {
+    lang?: string;
+    profile?: any;
+    chartData?: any;
+    numerology?: any;
+    tradition?: string;
+  }
 ): Promise<DirectAIResponse> {
   const payload: Record<string, any> = {
     prompt,
@@ -35,6 +45,13 @@ export async function generateAIResponse(
   };
   if (userId) payload.user_id = userId;
   if (sessionId) payload.session_id = sessionId;
+  if (options) {
+    if (options.lang) payload.lang = options.lang;
+    if (options.profile) payload.profile = options.profile;
+    if (options.chartData) payload.chartData = options.chartData;
+    if (options.numerology) payload.numerology = options.numerology;
+    if (options.tradition) payload.tradition = options.tradition;
+  }
 
   return api.post<DirectAIResponse>(API_ENDPOINTS.AI.GENERATE_RESPONSE, payload);
 }
