@@ -13,7 +13,6 @@ export function getApiBaseUrl(): string {
   }
   // 3. Fallback: In browser production deployment without env, use current host
   if (typeof window !== 'undefined' && window.location && window.location.origin) {
-    // If not running on standard Vite local ports (5173/3000), default to current origin
     const port = window.location.port;
     if (port !== '5173' && port !== '3000') {
       return window.location.origin;

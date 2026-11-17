@@ -113,7 +113,7 @@ export function setManualLanguage(lng: SupportedLanguage): void {
  * Saves to auto key ('astrojunction_lang_auto') ONLY.
  * NEVER writes to manual keys ('astrojunction_lang' or 'jyotish_language').
  */
-export function setAutoLanguage(lng: SupportedLanguage): void {
+export async function setAutoLanguage(lng: SupportedLanguage): Promise<void> {
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(AUTO_LANG_KEY, lng);
@@ -126,7 +126,7 @@ export function setAutoLanguage(lng: SupportedLanguage): void {
     document.documentElement.setAttribute('translate', 'no');
     document.documentElement.classList.add('notranslate');
   }
-  i18n.changeLanguage(lng);
+  await i18n.changeLanguage(lng);
 }
 
 function getInitialLanguage(): SupportedLanguage {
@@ -151,6 +151,20 @@ function getInitialLanguage(): SupportedLanguage {
  * 5. Fallback on geo error / timeout / "default" / "country-only": browser language or English
  */
 export async function initLanguage(): Promise<SupportedLanguage> {
+  // Test helper: ?first_visit=1 or ?reset_lang=1 simulates a brand-new first visit
+  try {
+    if (typeof window !== 'undefined') {
+      const sp = new URLSearchParams(window.location.search);
+      if (sp.has('first_visit') || sp.has('reset_lang') || sp.has('clear_lang')) {
+        localStorage.removeItem(MANUAL_LANG_KEY);
+        localStorage.removeItem(MANUAL_LANG_KEY_ALT);
+        localStorage.removeItem(AUTO_LANG_KEY);
+      }
+    }
+  } catch {
+    // ignore
+  }
+
   const urlLang = getUrlLanguage();
   if (urlLang) {
     if (typeof document !== 'undefined') {
@@ -190,37 +204,59 @@ export async function initLanguage(): Promise<SupportedLanguage> {
     return auto;
   }
 
-  // First visit only: Call /geo/language with 1500ms timeout
+  // First visit only: Call /geo/language with 3000ms timeout
   let resolvedLang: SupportedLanguage | null = null;
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
 
     const baseUrl = getApiBaseUrl().replace(/\/+$/, '');
     const geoUrl = baseUrl ? `${baseUrl}/geo/language` : '/geo/language';
 
-    const res = await fetch(geoUrl, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json();
-      if (
-        data &&
-        data.status === 'success' &&
-        data.lang &&
-        (SUPPORTED_LANGUAGES as readonly string[]).includes(data.lang) &&
-        data.source !== 'default' &&
-        data.source !== 'country-only'
-      ) {
-        resolvedLang = data.lang as SupportedLanguage;
+    let res: Response | null = null;
+    try {
+      res = await fetch(geoUrl, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+    } catch (directErr) {
+      // If direct backendUrl fetch was blocked (e.g. cross-origin/PNA in Edge/Chrome), fallback to same-origin relative proxy
+      if (geoUrl !== '/geo/language') {
+        try {
+          res = await fetch('/geo/language', {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+            signal: controller.signal,
+          });
+        } catch {
+          // both failed
+        }
       }
     }
-  } catch {
-    // Timeout, network error, or aborted
+    clearTimeout(timeoutId);
+
+    if (res && res.ok) {
+      const contentType = res.headers?.get ? (res.headers.get('content-type') || '') : '';
+      if (contentType && !contentType.includes('json')) {
+        console.warn(`[i18n] Non-JSON response from ${geoUrl}: ${contentType}`);
+      } else {
+        const data = await res.json();
+        console.log('[i18n] /geo/language response:', data);
+        if (
+          data &&
+          data.status === 'success' &&
+          data.lang &&
+          (SUPPORTED_LANGUAGES as readonly string[]).includes(data.lang) &&
+          data.source !== 'default' &&
+          data.source !== 'country-only'
+        ) {
+          resolvedLang = data.lang as SupportedLanguage;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[i18n] Failed to fetch geo language:', err);
   }
 
   // Browser language fallback if geo failed, timed out, or returned default / country-only
@@ -229,7 +265,7 @@ export async function initLanguage(): Promise<SupportedLanguage> {
   }
 
   // Save auto result to AUTO key ONLY (never writes manual keys)
-  setAutoLanguage(resolvedLang);
+  await setAutoLanguage(resolvedLang);
   return resolvedLang;
 }
 

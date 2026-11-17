@@ -37,6 +37,37 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Proxy for Geolocation Language Detection
+app.get(['/geo/language', '/api/geo/language'], async (req, res) => {
+  try {
+    const backendUrl = (process.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+    if (!backendUrl) {
+      return res.json({ status: 'success', lang: 'en', source: 'default' });
+    }
+    const proxyHeaders: Record<string, string> = {
+      'Accept': 'application/json',
+    };
+    const xff = req.headers['x-forwarded-for'];
+    if (xff) {
+      proxyHeaders['X-Forwarded-For'] = Array.isArray(xff) ? xff.join(', ') : xff;
+    } else if (req.socket.remoteAddress) {
+      proxyHeaders['X-Forwarded-For'] = req.socket.remoteAddress;
+    }
+    for (const h of ['cf-ipcountry', 'cf-region', 'cf-region-code', 'cf-connecting-ip', 'x-real-ip']) {
+      if (req.headers[h]) {
+        proxyHeaders[h] = req.headers[h] as string;
+      }
+    }
+    const backendRes = await fetch(`${backendUrl}/geo/language`, {
+      headers: proxyHeaders,
+    });
+    const data = await backendRes.json();
+    res.json(data);
+  } catch {
+    res.json({ status: 'success', lang: 'en', source: 'default' });
+  }
+});
+
 // API: Multi-Tradition Chart Interpretation
 app.post('/api/gemini/interpret', async (req, res) => {
   try {
