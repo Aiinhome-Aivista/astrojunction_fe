@@ -44,3 +44,14 @@ coverage/
 # Vite & cache
 .vite/
 .eslintcache
+*.tsbuildinfo
+
+# Alternative package managers & locks
+bun.lock
+bun.lockb
+
+# Temp & backup files
+*.tmp
+*.bak
+*.orig
+
