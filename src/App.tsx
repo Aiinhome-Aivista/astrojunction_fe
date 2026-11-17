@@ -45,7 +45,7 @@ import {
   KGraphEdge,
   RunbookConfig,
 } from './types';
-import i18n from './i18n';
+import i18n, { getManualLanguage, getAutoLanguage, getUrlLanguage, setManualLanguage, SupportedLanguage } from './i18n';
 
 import {
   calculateVedicChart,
@@ -336,40 +336,25 @@ export function App() {
 
   // Language state synchronized with i18next and local storage
   const [language, setLanguage] = useState<string>(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        const urlLang = new URLSearchParams(window.location.search).get('lang');
-        if (urlLang) return urlLang.split('-')[0].toLowerCase();
-      }
-    } catch {}
-    return (
-      localStorage.getItem('jyotish_language') ||
-      localStorage.getItem('astrojunction_lang') ||
-      'en'
-    ).split('-')[0].toLowerCase();
+    const urlLang = getUrlLanguage();
+    if (urlLang) return urlLang;
+    const manual = getManualLanguage();
+    if (manual) return manual;
+    const auto = getAutoLanguage();
+    if (auto) return auto;
+    return (i18n.language || 'en').split('-')[0].toLowerCase();
   });
 
   const handleSetLanguage = (lang: string) => {
-    const clean = (lang || 'en').split('-')[0].toLowerCase();
+    const clean = ((lang || 'en').split('-')[0].toLowerCase()) as SupportedLanguage;
     setLanguage(clean);
-    i18n.changeLanguage(clean);
-    try {
-      localStorage.setItem('jyotish_language', clean);
-      localStorage.setItem('astrojunction_lang', clean);
-    } catch {}
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = clean;
-    }
+    setManualLanguage(clean);
   };
 
   useEffect(() => {
     const onLangChanged = (lng: string) => {
       const clean = (lng || 'en').split('-')[0].toLowerCase();
       setLanguage(clean);
-      try {
-        localStorage.setItem('jyotish_language', clean);
-        localStorage.setItem('astrojunction_lang', clean);
-      } catch {}
       if (typeof document !== 'undefined') {
         document.documentElement.lang = clean;
       }

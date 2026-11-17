@@ -14,6 +14,7 @@ import { VedicRemediesSection } from './VedicRemediesSection';
 import { landingChatApi } from '../services/landingChatApi';
 import { sessionTracker } from '../services/sessionTracker';
 import { LegalInfoPage, LegalPageView } from './LegalInfoPage';
+import { setManualLanguage, SupportedLanguage } from '../i18n';
 
 const LANGUAGE_LIST = [
   { code: 'en', label: 'English', short: 'EN' },
@@ -42,16 +43,7 @@ export function HeaderLanguageSwitcher({
   const activeLangObj = LANGUAGE_LIST.find((l) => l.code === currentLang) || LANGUAGE_LIST[0];
 
   const handleSelect = (code: string) => {
-    i18n.changeLanguage(code);
-    try {
-      localStorage.setItem('astrojunction_lang', code);
-      localStorage.setItem('jyotish_language', code);
-    } catch {
-      // storage unavailable
-    }
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = code;
-    }
+    setManualLanguage(code as SupportedLanguage);
     setIsOpen(false);
     buttonRef.current?.focus();
   };

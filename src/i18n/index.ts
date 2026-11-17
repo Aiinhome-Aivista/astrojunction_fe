@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { getApiBaseUrl } from '../services/api';
 
 import en from './locales/en.json';
 import hi from './locales/hi.json';
@@ -9,6 +10,10 @@ import fr from './locales/fr.json';
 
 export const SUPPORTED_LANGUAGES = ['en', 'hi', 'bn', 'ta', 'fr'] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
+
+export const MANUAL_LANG_KEY = 'astrojunction_lang';
+export const MANUAL_LANG_KEY_ALT = 'jyotish_language';
+export const AUTO_LANG_KEY = 'astrojunction_lang_auto';
 
 export interface LanguageOption {
   code: SupportedLanguage;
@@ -24,7 +29,7 @@ export const LANGUAGE_OPTIONS: readonly LanguageOption[] = [
   { code: 'fr', shortLabel: 'FR', nativeName: 'Français' },
 ];
 
-function getInitialLanguage(): SupportedLanguage {
+export function getUrlLanguage(): SupportedLanguage | null {
   try {
     if (typeof window !== 'undefined') {
       const urlLang = new URLSearchParams(window.location.search).get('lang')?.toLowerCase();
@@ -35,26 +40,197 @@ function getInitialLanguage(): SupportedLanguage {
   } catch {
     // window unavailable
   }
+  return null;
+}
 
+export function getManualLanguage(): SupportedLanguage | null {
   try {
-    const saved = localStorage.getItem('astrojunction_lang');
-    if (saved && (SUPPORTED_LANGUAGES as readonly string[]).includes(saved)) {
-      return saved as SupportedLanguage;
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(MANUAL_LANG_KEY) || localStorage.getItem(MANUAL_LANG_KEY_ALT);
+      const clean = saved?.split('-')[0]?.toLowerCase();
+      if (clean && (SUPPORTED_LANGUAGES as readonly string[]).includes(clean)) {
+        return clean as SupportedLanguage;
+      }
     }
   } catch {
     // localStorage unavailable
   }
+  return null;
+}
 
+export function getAutoLanguage(): SupportedLanguage | null {
   try {
-    const browserLang = navigator.language?.split('-')[0]?.toLowerCase();
-    if (browserLang && (['hi', 'bn', 'ta', 'fr'] as string[]).includes(browserLang)) {
-      return browserLang as SupportedLanguage;
+    if (typeof localStorage !== 'undefined') {
+      const auto = localStorage.getItem(AUTO_LANG_KEY);
+      const clean = auto?.split('-')[0]?.toLowerCase();
+      if (clean && (SUPPORTED_LANGUAGES as readonly string[]).includes(clean)) {
+        return clean as SupportedLanguage;
+      }
+    }
+  } catch {
+    // localStorage unavailable
+  }
+  return null;
+}
+
+export function getBrowserFallbackLanguage(): SupportedLanguage {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.language) {
+      const browserLang = navigator.language.split('-')[0]?.toLowerCase();
+      if (browserLang && (SUPPORTED_LANGUAGES as readonly string[]).includes(browserLang)) {
+        return browserLang as SupportedLanguage;
+      }
     }
   } catch {
     // navigator unavailable
   }
+  return 'en';
+}
+
+/**
+ * Called ONLY when the user manually changes language in a language selector.
+ * Saves to manual keys ('astrojunction_lang' and 'jyotish_language').
+ */
+export function setManualLanguage(lng: SupportedLanguage): void {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(MANUAL_LANG_KEY, lng);
+      localStorage.setItem(MANUAL_LANG_KEY_ALT, lng);
+    }
+  } catch {
+    // ignore storage error
+  }
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lng;
+    document.documentElement.setAttribute('translate', 'no');
+    document.documentElement.classList.add('notranslate');
+  }
+  i18n.changeLanguage(lng);
+}
+
+/**
+ * Called ONLY by automatic resolution (geo endpoint or browser fallback).
+ * Saves to auto key ('astrojunction_lang_auto') ONLY.
+ * NEVER writes to manual keys ('astrojunction_lang' or 'jyotish_language').
+ */
+export function setAutoLanguage(lng: SupportedLanguage): void {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(AUTO_LANG_KEY, lng);
+    }
+  } catch {
+    // ignore storage error
+  }
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lng;
+    document.documentElement.setAttribute('translate', 'no');
+    document.documentElement.classList.add('notranslate');
+  }
+  i18n.changeLanguage(lng);
+}
+
+function getInitialLanguage(): SupportedLanguage {
+  const urlLang = getUrlLanguage();
+  if (urlLang) return urlLang;
+
+  const manual = getManualLanguage();
+  if (manual) return manual;
+
+  const auto = getAutoLanguage();
+  if (auto) return auto;
 
   return 'en';
+}
+
+/**
+ * Resolves language before first paint without flash of English:
+ * 1. URL parameter (?lang=) takes highest priority
+ * 2. User's manual selection (localStorage astrojunction_lang / jyotish_language)
+ * 3. Previous auto selection (localStorage astrojunction_lang_auto) for returning visitors
+ * 4. First visit: GET /geo/language with 1500ms timeout
+ * 5. Fallback on geo error / timeout / "default" / "country-only": browser language or English
+ */
+export async function initLanguage(): Promise<SupportedLanguage> {
+  const urlLang = getUrlLanguage();
+  if (urlLang) {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = urlLang;
+      document.documentElement.setAttribute('translate', 'no');
+      document.documentElement.classList.add('notranslate');
+    }
+    if (i18n.language !== urlLang) {
+      await i18n.changeLanguage(urlLang);
+    }
+    return urlLang;
+  }
+
+  const manual = getManualLanguage();
+  if (manual) {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = manual;
+      document.documentElement.setAttribute('translate', 'no');
+      document.documentElement.classList.add('notranslate');
+    }
+    if (i18n.language !== manual) {
+      await i18n.changeLanguage(manual);
+    }
+    return manual;
+  }
+
+  const auto = getAutoLanguage();
+  if (auto) {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = auto;
+      document.documentElement.setAttribute('translate', 'no');
+      document.documentElement.classList.add('notranslate');
+    }
+    if (i18n.language !== auto) {
+      await i18n.changeLanguage(auto);
+    }
+    return auto;
+  }
+
+  // First visit only: Call /geo/language with 1500ms timeout
+  let resolvedLang: SupportedLanguage | null = null;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1500);
+
+    const baseUrl = getApiBaseUrl().replace(/\/+$/, '');
+    const geoUrl = baseUrl ? `${baseUrl}/geo/language` : '/geo/language';
+
+    const res = await fetch(geoUrl, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json();
+      if (
+        data &&
+        data.status === 'success' &&
+        data.lang &&
+        (SUPPORTED_LANGUAGES as readonly string[]).includes(data.lang) &&
+        data.source !== 'default' &&
+        data.source !== 'country-only'
+      ) {
+        resolvedLang = data.lang as SupportedLanguage;
+      }
+    }
+  } catch {
+    // Timeout, network error, or aborted
+  }
+
+  // Browser language fallback if geo failed, timed out, or returned default / country-only
+  if (!resolvedLang) {
+    resolvedLang = getBrowserFallbackLanguage();
+  }
+
+  // Save auto result to AUTO key ONLY (never writes manual keys)
+  setAutoLanguage(resolvedLang);
+  return resolvedLang;
 }
 
 const initialLanguage = getInitialLanguage();
@@ -87,11 +263,6 @@ i18n
   });
 
 i18n.on('languageChanged', (lng: string) => {
-  try {
-    localStorage.setItem('astrojunction_lang', lng);
-  } catch {
-    // ignore storage error
-  }
   if (typeof document !== 'undefined') {
     document.documentElement.lang = lng;
     document.documentElement.setAttribute('translate', 'no');

@@ -319,7 +319,8 @@ const LEGAL_TEXTS: Record<string, {
     privacyS1Items: [
       'Astrological Data: Full Name, Gender, Date of Birth, Time of Birth, and Place of Birth (latitude, longitude, and timezone).',
       'Account Details: Email address, encrypted login passwords, and optional user profile preferences.',
-      'Communication Records: Questions submitted during 1-on-1 astrologer consultations.'
+      'Communication Records: Questions submitted during 1-on-1 astrologer consultations.',
+      'Approximate Location: We use your approximate location from your IP address only once, to choose the language. We do not store it. (_review)'
     ],
     privacyS2Title: '2. How We Use Your Information',
     privacyS2Text: 'Your birth data is used exclusively to compute planetary positions, divisional charts (D1 to D60), Mahadasha periods, and Panchang calendars. We do not sell, rent, or trade your personal information to third-party ad networks or brokers under any circumstances.',
@@ -365,7 +366,8 @@ const LEGAL_TEXTS: Record<string, {
     privacyS1Items: [
       'জ্যোতিষীয় তথ্য: পূর্ণ নাম, লিঙ্গ, সঠিক জন্মতারিখ, জন্মসময় এবং জন্মস্থান (অক্ষাংশ, দ্রাঘিমাংশ ও টাইমজোন)।',
       'অ্যাকাউন্ট তথ্য: ইমেল ঠিকানা, এনক্রিপ্ট করা পাসওয়ার্ড এবং ব্যবহারকারীর পছন্দের সেটিংস।',
-      'পরামর্শের রেকর্ড: জ্যোতিষী পরামর্শ চলাকালীন আপনার জিজ্ঞাসা ও আলোচনা।'
+      'পরামর্শের রেকর্ড: জ্যোতিষী পরামর্শ চলাকালীন আপনার জিজ্ঞাসা ও আলোচনা।',
+      'আনুমানিক অবস্থান: আমরা কেবল একবার আপনার ভাষা নির্বাচন করার জন্য আপনার আইপি ঠিকানা থেকে আপনার আনুমানিক অবস্থান ব্যবহার করি। আমরা এটি সংরক্ষণ করি না। (_review)'
     ],
     privacyS2Title: '২. তথ্যের ব্যবহার',
     privacyS2Text: 'আপনার জন্মের তথ্য শুধুমাত্র কুণ্ডলী, বর্গ চার্ট, বিংশোত্তরী দশা এবং পঞ্জিকা গণনার কাজে ব্যবহৃত হয়। আমরা কোনো অবস্থাতেই আপনার তথ্য কোনো তৃতীয় পক্ষ বা বিজ্ঞাপন সংস্থার কাছে বিক্রি বা ভাড়া দিই না।',
@@ -411,7 +413,8 @@ const LEGAL_TEXTS: Record<string, {
     privacyS1Items: [
       'ज्योतिषीय विवरण: पूरा नाम, लिंग, जन्म तिथि, जन्म समय और जन्म स्थान (अक्षांश, देशांतर और समय क्षेत्र)।',
       'अकाउंट विवरण: ईमेल पता, एन्क्रिप्टेड पासवर्ड और उपयोगकर्ता प्राथमिकताएं।',
-      'परामर्श रिकॉर्ड: 1-ऑन-1 ज्योतिष परामर्श के दौरान पूछे गए प्रश्न।'
+      'परामर्श रिकॉर्ड: 1-ऑन-1 ज्योतिष परामर्श के दौरान पूछे गए प्रश्न।',
+      'अनुमानित स्थान: हम आपकी भाषा का चयन करने के लिए केवल एक बार आपके आईपी पते से आपके अनुमानित स्थान का उपयोग करते हैं। हम इसे संग्रहीत नहीं करते हैं। (_review)'
     ],
     privacyS2Title: '2. जानकारी का उपयोग',
     privacyS2Text: 'आपके जन्म विवरण का उपयोग केवल ग्रहों की स्थिति, वर्ग कुंडली और दशा की गणना के लिए किया जाता है। हम आपकी जानकारी कभी किसी तीसरे पक्ष को नहीं बेचते।',
@@ -457,7 +460,8 @@ const LEGAL_TEXTS: Record<string, {
     privacyS1Items: [
       'ஜாதகத் தகவல்கள்: பெயர், பாலினம், பிறந்த தேதி, பிறந்த நேரம் மற்றும் பிறந்த இடம்.',
       'கணக்கு விவரங்கள்: மின்னஞ்சல் மற்றும் கடவுச்சொல்.',
-      'ஆலோசனை பதிவுகள்: நேரடி ஆலோசனையின் போது கேட்கப்பட்ட கேள்விகள்.'
+      'ஆலோசனை பதிவுகள்: நேரடி ஆலோசனையின் போது கேட்கப்பட்ட கேள்விகள்.',
+      'தோராயமான இருப்பிடம்: மொழியைத் தேர்வுசெய்ய உங்கள் ஐபி முகவரியிலிருந்து உங்கள் தோராயமான இருப்பிடத்தை ஒருமுறை மட்டுமே பயன்படுத்துகிறோம். நாங்கள் அதைச் சேமிப்பதில்லை. (_review)'
     ],
     privacyS2Title: '2. தகவல்களின் பயன்பாடு',
     privacyS2Text: 'உங்கள் தகவல்கள் கிரக நிலைகளைக் கணக்கிட மட்டுமே பயன்படுத்தப்படுகின்றன. யாருக்கும் விற்கப்படாது.',
@@ -503,7 +507,8 @@ const LEGAL_TEXTS: Record<string, {
     privacyS1Items: [
       'Données astrologiques : Nom, genre, date, heure exacte et lieu de naissance.',
       'Données de compte : Adresse e-mail et mot de passe chiffré.',
-      'Consultations : Questions posées lors des échanges privés.'
+      'Consultations : Questions posées lors des échanges privés.',
+      'Localisation approximative : Nous utilisons votre position approximative à partir de votre adresse IP une seule fois, pour choisir la langue. Nous ne la conservons pas. (_review)'
     ],
     privacyS2Title: '2. Utilisation des Données',
     privacyS2Text: 'Vos coordonnées astrales servent uniquement au calcul des éphémérides et cartes divisionnaires. Nous ne vendons aucune donnée.',
