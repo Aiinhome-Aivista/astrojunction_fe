@@ -127,6 +127,21 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
   const activeFetchingLangRef = useRef<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const isInsightCacheValidForLang = (data: any, lang: string): boolean => {
+    if (!data || (!data.summary && !data.career)) return false;
+    const text = String(data.summary || '') + ' ' + String(data.career || '');
+    if (lang === 'fr' || lang === 'en') {
+      if (/[\u0900-\u0DFF]/.test(text)) return false;
+    } else if (lang === 'hi') {
+      if (!/[\u0900-\u097F]/.test(text)) return false;
+    } else if (lang === 'bn') {
+      if (!/[\u0980-\u09FF]/.test(text)) return false;
+    } else if (lang === 'ta') {
+      if (!/[\u0B80-\u0BFF]/.test(text)) return false;
+    }
+    return true;
+  };
+
   // Check localStorage on mount or when profile/panchang date or language changes, and auto-fetch reading
   useEffect(() => {
     let isCancelled = false;
@@ -139,9 +154,11 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
       const cached = localStorage.getItem(storageKey);
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed && (parsed.summary || parsed.career)) {
+        if (isInsightCacheValidForLang(parsed, currentLang)) {
           if (!isCancelled) setAiInsights(parsed);
           foundCache = true;
+        } else {
+          localStorage.removeItem(storageKey);
         }
       }
     } catch {}
@@ -209,13 +226,15 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
       const cached = localStorage.getItem(storageKey);
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed && parsed.summary) {
+        if (isInsightCacheValidForLang(parsed, targetLang)) {
           if ((i18n.language || 'en').startsWith(targetLang)) {
             setAiInsights(parsed);
           }
           isFetchingAiRef.current = false;
           activeFetchingLangRef.current = null;
           return;
+        } else {
+          localStorage.removeItem(storageKey);
         }
       }
     } catch {}
@@ -238,20 +257,24 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
       }, { signal: controller.signal });
 
       if (data && data.insights) {
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(data.insights));
-        } catch (storageErr) {
-          console.warn('Could not persist daily reading to localStorage:', storageErr);
-        }
-        // ONLY apply if the request was not aborted and current UI language still matches targetLang
-        if (!controller.signal.aborted && (i18n.language || 'en').startsWith(targetLang)) {
-          console.log('[DailyHoroscope] Daily reading applied successfully for lang:', targetLang);
-          setAiInsights(data.insights);
-          if (data.auspiciousScore !== undefined && panchang.auspiciousScore !== data.auspiciousScore) {
-            panchang.auspiciousScore = data.auspiciousScore;
+        if (!isInsightCacheValidForLang(data.insights, targetLang)) {
+          console.warn(`[DailyHoroscope] Rejecting returned reading in mismatched script for ${targetLang}`);
+        } else {
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(data.insights));
+          } catch (storageErr) {
+            console.warn('Could not persist daily reading to localStorage:', storageErr);
           }
-          if (data.bandCode) {
-            panchang.bandCode = data.bandCode;
+          // ONLY apply if the request was not aborted and current UI language still matches targetLang
+          if (!controller.signal.aborted && (i18n.language || 'en').startsWith(targetLang)) {
+            console.log('[DailyHoroscope] Daily reading applied successfully for lang:', targetLang);
+            setAiInsights(data.insights);
+            if (data.auspiciousScore !== undefined && panchang.auspiciousScore !== data.auspiciousScore) {
+              panchang.auspiciousScore = data.auspiciousScore;
+            }
+            if (data.bandCode) {
+              panchang.bandCode = data.bandCode;
+            }
           }
         }
       }
@@ -491,31 +514,37 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
     setIsGeneratingPdf(true);
     try {
       // 1. Use AI insights already loaded; if not loaded yet, attempt one fetch
+      const lang = i18n.language || 'en';
       let currentAi = aiInsights;
       if (!currentAi) {
-        const storageKey = getDailyStorageKey(i18n.language);
+        const storageKey = getDailyStorageKey(lang);
         try {
           const cached = localStorage.getItem(storageKey);
           if (cached) {
             const parsed = JSON.parse(cached);
-            if (parsed && (parsed.summary || parsed.career)) {
+            if (isInsightCacheValidForLang(parsed, lang)) {
               currentAi = parsed;
               setAiInsights(parsed);
+            } else {
+              localStorage.removeItem(storageKey);
             }
           }
         } catch {}
+      }
+      if (currentAi && !isInsightCacheValidForLang(currentAi, lang)) {
+        currentAi = null;
       }
       // If still no AI content, try fetching now (PDF needs it)
       if (!currentAi && panchang?.isRealPanchang && !isFetchingAiRef.current) {
         try {
           const freshData = await api.post<{ insights: DailyAiInsights }>(
             API_ENDPOINTS.INSIGHTS.DAILY_HOROSCOPE,
-            { profile, chartData, panchang, numerology, lang: i18n.language || 'en' }
+            { profile, chartData, panchang, numerology, lang }
           );
-          if (freshData?.insights) {
+          if (freshData?.insights && isInsightCacheValidForLang(freshData.insights, lang)) {
             currentAi = freshData.insights;
             setAiInsights(freshData.insights);
-            try { localStorage.setItem(getDailyStorageKey(i18n.language), JSON.stringify(freshData.insights)); } catch {}
+            try { localStorage.setItem(getDailyStorageKey(lang), JSON.stringify(freshData.insights)); } catch {}
           }
         } catch (fetchErr) {
           console.warn('Could not pre-fetch AI insights for PDF:', fetchErr);
@@ -525,7 +554,6 @@ export const DailyHoroscopeView: React.FC<DailyHoroscopeViewProps> = ({
       const pName = profile?.fullName || 'Seeker';
       const safeName = pName.replace(/\s+/g, '_');
       const dateStr = panchang?.date || new Date().toISOString().split('T')[0];
-      const lang = i18n.language || 'en';
       const fileName = `AstroJunction_Daily_Report_${safeName}_${dateStr}_${lang}.pdf`;
 
       // 1. Try backend high-fidelity PDF engine first (full Indic font shaping & layout fidelity)
