@@ -859,13 +859,13 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
           tradition,
           traditionSynthesis: aiInterpretation,
           labels: {
-            'birthChart.header.title': t('birthChart.header.title'),
+            'birthChart.pdf.report_title': t('birthChart.pdf.report_title', 'VEDIC BIRTH CHART & NATAL ANALYSIS'),
           }
         }),
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to generate birth chart traditions PDF:', err);
-      alert('Failed to generate PDF report. Please ensure the backend server is reachable.');
+      alert(err?.message || 'Failed to generate PDF report. Please ensure the backend server is reachable.');
     } finally {
       setIsGeneratingPdf(false);
     }
