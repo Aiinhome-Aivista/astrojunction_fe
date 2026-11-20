@@ -1,21 +1,21 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import JoditEditor from 'jodit-react';
-import { 
-  Plus, 
-  List, 
-  FileText, 
-  Folder, 
-  FolderOpen, 
-  Tag, 
-  ChevronDown, 
-  Image as ImageIcon, 
-  Search, 
-  Edit, 
-  Trash2, 
-  BookOpen, 
-  CheckCircle, 
-  Clock, 
+import {
+  Plus,
+  List,
+  FileText,
+  Folder,
+  FolderOpen,
+  Tag,
+  ChevronDown,
+  Image as ImageIcon,
+  Search,
+  Edit,
+  Trash2,
+  BookOpen,
+  CheckCircle,
+  Clock,
   LayoutGrid,
   ArrowLeft,
   ArrowRight,
@@ -644,7 +644,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
         </p>
       </div>
 
-      <div 
+      <div
         className="relative w-full overflow-hidden pb-8 astro-marquee-mask"
       >
         <div className="flex w-max animate-marquee gap-6 px-4 hover:pause">
@@ -658,22 +658,21 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
             const cleanExcerpt = rawExcerpt.length > 120 ? rawExcerpt.substring(0, 120) + '...' : rawExcerpt;
 
             return (
-              <div 
+              <div
                 key={`${blog.id}-${idx}`}
                 onClick={() => {
                   if (onSelectBlog) onSelectBlog(blog);
                   else if (onViewAll) onViewAll();
                 }}
-                className={`shrink-0 w-[280px] xs:w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
-                  isDark 
-                    ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                    : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
-                }`}
+                className={`shrink-0 w-[280px] xs:w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${isDark
+                  ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60'
+                  : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
+                  }`}
               >
                 <div className="relative h-[220px] w-full overflow-hidden bg-black/20">
-                  <img 
-                    src={getBlogImageUrl(blog.image_url)} 
-                    alt={blog.title} 
+                  <img
+                    src={getBlogImageUrl(blog.image_url)}
+                    alt={blog.title}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/blog_1.jpg';
                     }}
@@ -685,8 +684,8 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     </span>
                   )}
                 </div>
-                
-                <div 
+
+                <div
                   className={`p-6 md:p-7 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-white'}`}
                 >
                   <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
@@ -699,24 +698,20 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     </span>
                   </div>
 
-                  <h4 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${
-                    isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
-                  }`}>
+                  <h4 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
+                    }`}>
                     {blog.title}
                   </h4>
-                  
-                  <p className={`text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 mt-auto ${
-                    isDark ? 'text-[#D0CCC2] font-normal' : 'text-black font-medium'
-                  }`}>
+
+                  <p className={`text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 mt-auto ${isDark ? 'text-[#D0CCC2] font-normal' : 'text-black font-medium'
+                    }`}>
                     {cleanExcerpt}
                   </p>
 
-                  <div className={`pt-3 border-t flex items-center justify-between text-xs font-semibold ${
-                    isDark ? 'border-white/10' : 'border-[#EAE3D4]'
-                  }`}>
-                    <span className={`font-black uppercase tracking-wider ${
-                      isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                  <div className={`pt-3 border-t flex items-center justify-between text-xs font-semibold ${isDark ? 'border-white/10' : 'border-[#EAE3D4]'
                     }`}>
+                    <span className={`font-black uppercase tracking-wider ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                      }`}>
                       {t('blogs.read_article', 'Read Article →')}
                     </span>
                     {blog.created_at && (
@@ -771,7 +766,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           .then(detailed => {
             if (detailed && detailed.title) setSelectedBlog(detailed);
           })
-          .catch(() => {})
+          .catch(() => { })
           .finally(() => {
             setTranslatingDetail(false);
           });
@@ -844,7 +839,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     setSelectedBlog(detailed);
                     return;
                   }
-                } catch {}
+                } catch { }
               }
               setSelectedBlog(found);
             }
@@ -856,7 +851,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               if (detailed && detailed.title) {
                 setSelectedBlog(detailed);
               }
-            } catch {} finally {
+            } catch { } finally {
               setTranslatingDetail(false);
             }
           }
@@ -881,7 +876,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         setTimeout(() => setCopied(false), 2500);
       }
       if (selectedBlog.id) {
-        blogApi.shareBlog(selectedBlog.id).catch(() => {});
+        blogApi.shareBlog(selectedBlog.id).catch(() => { });
       }
     }
   };
@@ -906,7 +901,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
   const filteredBlogs = useMemo(() => {
     return blogs.filter((blog) => {
-      const matchCat = selectedCategory === 'All' || 
+      const matchCat = selectedCategory === 'All' ||
         blog.category === selectedCategory ||
         (blog.category && selectedCategory && blog.category.toLowerCase() === selectedCategory.toLowerCase()) ||
         getLocalizedCategory(blog.category, currentLang) === selectedCategory ||
@@ -957,9 +952,8 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   if (selectedBlog) {
     const blogDescription = stripHtmlTags(selectedBlog.preview) || (selectedBlog.content ? stripHtmlTags(selectedBlog.content).slice(0, 160) : selectedBlog.title);
     return (
-      <div className={`min-h-[calc(100vh-5rem)] w-full pb-24 transition-colors ${
-        isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
-      }`}>
+      <div className={`min-h-[calc(100vh-5rem)] w-full pb-24 transition-colors ${isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
+        }`}>
         <SEO
           title={`${selectedBlog.title} • ASTROJUNCTION`}
           description={blogDescription}
@@ -990,13 +984,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
           {/* Compact Back Button (No extra bulky navbar) */}
           <div className="mb-6 flex items-center justify-between">
-            <button 
+            <button
               onClick={() => setSelectedBlog(null)}
-              className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-xs font-black transition-all border-2 cursor-pointer group shadow-sm ${
-                isDark 
-                  ? 'text-[#F0ECE1] bg-[#18181C] hover:text-[#C9A050] border-[#C9A050]/60 hover:border-[#C9A050] hover:bg-[#202025]' 
-                  : 'text-black bg-white hover:text-black hover:bg-amber-50/60 border-[#D4A328] hover:border-[#B88714] shadow-sm'
-              }`}
+              className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-xs font-black transition-all border-2 cursor-pointer group shadow-sm ${isDark
+                ? 'text-[#F0ECE1] bg-[#18181C] hover:text-[#C9A050] border-[#C9A050]/60 hover:border-[#C9A050] hover:bg-[#202025]'
+                : 'text-black bg-white hover:text-black hover:bg-amber-50/60 border-[#D4A328] hover:border-[#B88714] shadow-sm'
+                }`}
             >
               <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5 text-black" />
               <span className="text-black font-black">{t('blogs.back', 'Back')}</span>
@@ -1005,13 +998,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             {/* Compact Share Button */}
             <button
               onClick={handleShare}
-              className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer shadow-sm ${
-                copied
-                  ? 'bg-emerald-500 text-white border-emerald-600'
-                  : isDark
-                    ? 'bg-[#141418] text-[#9E9A90] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/40'
-                    : 'bg-white text-gray-600 hover:text-amber-800 border-gray-200 hover:border-amber-400'
-              }`}
+              className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer shadow-sm ${copied
+                ? 'bg-emerald-500 text-white border-emerald-600'
+                : isDark
+                  ? 'bg-[#141418] text-[#9E9A90] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/40'
+                  : 'bg-white text-gray-600 hover:text-amber-800 border-gray-200 hover:border-amber-400'
+                }`}
             >
               {copied ? (
                 <>
@@ -1033,9 +1025,8 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 {getLocalizedCategory(selectedBlog.category, currentLang) || 'Vedic Astrology'}
               </span>
               {selectedBlog.sub_category && (
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                  isDark ? 'bg-[#18181C] text-[#C9A050] border-[#C9A050]/30' : 'bg-amber-50 text-amber-900 border-amber-200'
-                }`}>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${isDark ? 'bg-[#18181C] text-[#C9A050] border-[#C9A050]/30' : 'bg-amber-50 text-amber-900 border-amber-200'
+                  }`}>
                   {getLocalizedCategory(selectedBlog.sub_category, currentLang)}
                 </span>
               )}
@@ -1045,15 +1036,13 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               </div>
             </div>
 
-            <h1 className={`text-2xl sm:text-3xl md:text-[32px] lg:text-[34px] font-serif font-bold leading-snug mb-4 sm:mb-5 ${
-              isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
-            }`}>
+            <h1 className={`text-2xl sm:text-3xl md:text-[32px] lg:text-[34px] font-serif font-bold leading-snug mb-4 sm:mb-5 ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'
+              }`}>
               {selectedBlog.title}
             </h1>
 
-            <div className={`flex items-center justify-between py-4 border-y flex-wrap gap-4 ${
-              isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
-            }`}>
+            <div className={`flex items-center justify-between py-4 border-y flex-wrap gap-4 ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+              }`}>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C9A050] to-[#E2BD68] flex items-center justify-center text-[#0D0D0F] font-serif font-bold shadow-md">
                   <BookOpen className="w-5 h-5 text-[#0D0D0F]" />
@@ -1084,29 +1073,27 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           </div>
 
           <div className="relative rounded-3xl overflow-hidden mb-10 shadow-2xl border border-white/10 aspect-[16/9] sm:aspect-[21/9] bg-black/40">
-            <img 
-              src={getBlogImageUrl(selectedBlog.image_url)} 
+            <img
+              src={getBlogImageUrl(selectedBlog.image_url)}
               alt={selectedBlog.title}
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/blog_1.jpg';
               }}
               className="w-full h-full object-cover"
             />
-            <div className={`absolute inset-0 bg-gradient-to-t ${
-              isDark ? 'from-[#0D0D0F]/60 via-transparent' : 'from-black/40 via-transparent'
-            } to-transparent pointer-events-none`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-[#0D0D0F]/60 via-transparent' : 'from-black/40 via-transparent'
+              } to-transparent pointer-events-none`}></div>
           </div>
 
           {Array.isArray(selectedBlog.tags) && selectedBlog.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">
               {selectedBlog.tags.map((tag, i) => (
-                <span 
+                <span
                   key={i}
-                  className={`inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                    isDark 
-                      ? 'bg-[#18181C] text-[#C9A050] border border-[#2A2A2E] hover:border-[#C9A050]/50' 
-                      : 'bg-amber-50 text-amber-800 border border-amber-200'
-                  }`}
+                  className={`inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${isDark
+                    ? 'bg-[#18181C] text-[#C9A050] border border-[#2A2A2E] hover:border-[#C9A050]/50'
+                    : 'bg-amber-50 text-amber-800 border border-amber-200'
+                    }`}
                 >
                   <Tag className="w-3 h-3 text-[#C9A050]" />
                   <span>{tag}</span>
@@ -1120,26 +1107,24 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               <Sparkles className="w-4 h-4 animate-spin text-[#C9A050] shrink-0" />
               <span>
                 {currentLang === 'bn' ? '✨ সম্পূর্ণ বৈদিক বিশ্লেষণ ও প্রজ্ঞার অনুবাদ লোড হচ্ছে...' :
-                 currentLang === 'hi' ? '✨ संपूर्ण वैदिक अंतर्दृष्टि और अनुवाद लोड हो रहा है...' :
-                 currentLang === 'ta' ? '✨ முழுமையான வேத பகுப்பாய்வு மற்றும் மொழிபெயர்ப்பு ஏற்றப்படுகிறது...' :
-                 currentLang === 'fr' ? '✨ Chargement de la traduction complète de la sagesse védique...' :
-                 '✨ Loading authentic Vedic insights...'}
+                  currentLang === 'hi' ? '✨ संपूर्ण वैदिक अंतर्दृष्टि और अनुवाद लोड हो रहा है...' :
+                    currentLang === 'ta' ? '✨ முழுமையான வேத பகுப்பாய்வு மற்றும் மொழிபெயர்ப்பு ஏற்றப்படுகிறது...' :
+                      currentLang === 'fr' ? '✨ Chargement de la traduction complète de la sagesse védique...' :
+                        '✨ Loading authentic Vedic insights...'}
               </span>
             </div>
           )}
 
-          <div 
-            className={`article-content prose max-w-none space-y-6 leading-relaxed text-base sm:text-lg font-sans transition-colors ${
-              isDark ? 'prose-invert text-[#E5E1D8]' : 'text-gray-900'
-            }`}
+          <div
+            className={`article-content prose max-w-none space-y-6 leading-relaxed text-base sm:text-lg font-sans transition-colors ${isDark ? 'prose-invert text-[#E5E1D8]' : 'text-gray-900'
+              }`}
             dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
           />
 
-          <div className={`my-12 p-6 sm:p-8 rounded-3xl border relative overflow-hidden ${
-            isDark 
-              ? 'bg-gradient-to-r from-[#18181C] to-[#121215] border-[#C9A050]/30 shadow-xl' 
-              : 'bg-gradient-to-r from-amber-50/80 to-white border-amber-200 shadow-md'
-          }`}>
+          <div className={`my-12 p-6 sm:p-8 rounded-3xl border relative overflow-hidden ${isDark
+            ? 'bg-gradient-to-r from-[#18181C] to-[#121215] border-[#C9A050]/30 shadow-xl'
+            : 'bg-gradient-to-r from-amber-50/80 to-white border-amber-200 shadow-md'
+            }`}>
             <div className="flex items-start space-x-4">
               <div className="p-3 rounded-2xl bg-[#C9A050]/20 text-[#C9A050] shrink-0 mt-1">
                 <BookOpen className="w-6 h-6" />
@@ -1157,28 +1142,25 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
           {/* Previous & Next Article Navigation Cards */}
           {(prevBlog || nextBlog) && (
-            <div className={`my-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t ${
-              isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
-            }`}>
+            <div className={`my-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+              }`}>
               {prevBlog ? (
                 <div
                   onClick={() => {
                     setSelectedBlog(prevBlog);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group shadow-md hover:shadow-lg ${
-                    isDark 
-                      ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60' 
-                      : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
-                  }`}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group shadow-md hover:shadow-lg ${isDark
+                    ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60'
+                    : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
+                    }`}
                 >
                   <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
                     <span>{t('blogs.prev_article', 'Previous Article')}</span>
                   </div>
-                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
-                    isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
-                  } transition-colors`}>
+                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
+                    } transition-colors`}>
                     {prevBlog.title}
                   </h5>
                 </div>
@@ -1192,19 +1174,17 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     setSelectedBlog(nextBlog);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between items-end text-right group shadow-md hover:shadow-lg ${
-                    isDark 
-                      ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60' 
-                      : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
-                  }`}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between items-end text-right group shadow-md hover:shadow-lg ${isDark
+                    ? 'bg-[#141418] border-[#2A2A2E] hover:border-[#C9A050]/60'
+                    : 'bg-white border-[#E2D9C8] hover:border-[#C9A050]'
+                    }`}
                 >
                   <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-[#C9A050]">
                     <span>{t('blogs.next_article', 'Next Article')}</span>
                     <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </div>
-                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${
-                    isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
-                  } transition-colors`}>
+                  <h5 className={`text-sm sm:text-base font-serif font-bold line-clamp-2 ${isDark ? 'text-[#F0ECE1] group-hover:text-[#C9A050]' : 'text-gray-900 group-hover:text-[#8C6218]'
+                    } transition-colors`}>
                     {nextBlog.title}
                   </h5>
                 </div>
@@ -1214,16 +1194,14 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
             </div>
           )}
 
-          <div className={`pt-8 pb-12 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${
-            isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
-          }`}>
+          <div className={`pt-8 pb-12 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${isDark ? 'border-[#2A2A2E]' : 'border-[#E5E1D8]'
+            }`}>
             <button
               onClick={() => setSelectedBlog(null)}
-              className={`w-full sm:w-auto px-7 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg border-2 group ${
-                isDark 
-                  ? 'bg-[#141418] border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]' 
-                  : 'bg-white border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
-              }`}
+              className={`w-full sm:w-auto px-7 py-3 rounded-full flex items-center justify-center space-x-2 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg border-2 group ${isDark
+                ? 'bg-[#141418] border-[#C9A050] text-[#F0ECE1] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
+                : 'bg-white border-[#C9A050] text-[#0D0D0F] hover:bg-[#C9A050] hover:text-[#0D0D0F]'
+                }`}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#C9A050] group-hover:text-inherit" />
               <span className="font-bold tracking-wider">{t('blogs.back', 'Back')}</span>
@@ -1301,9 +1279,8 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
   }
 
   return (
-    <div className={`min-h-[calc(100vh-5rem)] w-full pb-32 transition-colors ${
-      isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
-    }`}>
+    <div className={`min-h-[calc(100vh-5rem)] w-full pb-32 transition-colors ${isDark ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#FAF8F5] text-[#0D0D0F]'
+      }`}>
       <SEO
         title="Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION"
         description="Explore curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth."
@@ -1313,13 +1290,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
       />
       <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-          <button 
+          <button
             onClick={onBack}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all border shadow-sm cursor-pointer ${
-              isDark 
-                ? 'text-[#9E9A90] hover:text-[#C9A050] hover:bg-[#C9A050]/10 border-[#2A2A2E] hover:border-[#C9A050]/40' 
-                : 'text-gray-700 hover:text-amber-800 hover:bg-amber-500/10 border-gray-200 hover:border-amber-600 bg-white'
-            }`}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all border shadow-sm cursor-pointer ${isDark
+              ? 'text-[#9E9A90] hover:text-[#C9A050] hover:bg-[#C9A050]/10 border-[#2A2A2E] hover:border-[#C9A050]/40'
+              : 'text-gray-700 hover:text-amber-800 hover:bg-amber-500/10 border-gray-200 hover:border-amber-600 bg-white'
+              }`}
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="text-xs sm:text-sm font-semibold">{t('blogs.back_to_home', 'Back to Home')}</span>
@@ -1327,19 +1303,18 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
 
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
+            <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('blogs.search_placeholder', 'Search articles, topics...')}
-              className={`w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-full border outline-none transition-all ${
-                isDark 
-                  ? 'bg-[#18181C] border-[#2A2A2E] text-white focus:border-[#C9A050]' 
-                  : 'bg-white border-gray-200 text-gray-900 focus:border-amber-600 shadow-sm'
-              }`}
+              className={`w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-full border outline-none transition-all ${isDark
+                ? 'bg-[#18181C] border-[#2A2A2E] text-white focus:border-[#C9A050]'
+                : 'bg-white border-gray-200 text-gray-900 focus:border-amber-600 shadow-sm'
+                }`}
             />
             {searchQuery && (
-              <button 
+              <button
                 onClick={() => setSearchQuery('')}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
               >
@@ -1365,13 +1340,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer border ${
-                    selectedCategory === cat
-                      ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                      : isDark
-                        ? 'bg-[#18181C] text-[#9E9A90] hover:text-white border-[#2A2A2E]'
-                        : 'bg-white text-gray-700 hover:text-black border-gray-200 shadow-sm'
-                  }`}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer border ${selectedCategory === cat
+                    ? 'bg-[#C9A050] text-[#0D0D0F] border-[#C9A050] shadow-md shadow-[#C9A050]/20'
+                    : isDark
+                      ? 'bg-[#18181C] text-[#9E9A90] hover:text-white border-[#2A2A2E]'
+                      : 'bg-white text-gray-700 hover:text-black border-gray-200 shadow-sm'
+                    }`}
                 >
                   {cat === 'All' ? t('blogs.cat_all', 'All') : (getLocalizedCategory(cat, currentLang) || cat)}
                 </button>
@@ -1388,16 +1362,15 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         )}
 
         {!loading && filteredBlogs.length === 0 && (
-          <div className={`max-w-md mx-auto text-center py-16 px-6 rounded-3xl border ${
-            isDark ? 'bg-[#18181C]/60 border-white/5' : 'bg-white border-gray-100'
-          }`}>
+          <div className={`max-w-md mx-auto text-center py-16 px-6 rounded-3xl border ${isDark ? 'bg-[#18181C]/60 border-white/5' : 'bg-white border-gray-100'
+            }`}>
             <BookOpen className="w-10 h-10 text-[#C9A050]/60 mx-auto mb-3" />
             <h3 className={`text-lg font-serif font-bold mb-2 ${isDark ? 'text-[#F0ECE1]' : 'text-gray-900'}`}>
               {searchQuery ? 'No Matching Articles' : 'No Blogs Published Yet'}
             </h3>
             <p className={`text-xs mb-5 ${isDark ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
-              {searchQuery 
-                ? t('blogs.no_articles', `No articles found matching "${searchQuery}". Try a different search term.`) 
+              {searchQuery
+                ? t('blogs.no_articles', `No articles found matching "${searchQuery}". Try a different search term.`)
                 : 'Blogs created and published from the Admin Panel will appear here.'}
             </p>
             {searchQuery && (
@@ -1424,7 +1397,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                 const cleanExcerpt = rawExcerpt.length > 130 ? rawExcerpt.substring(0, 130) + '...' : rawExcerpt;
 
                 return (
-                  <div 
+                  <div
                     key={blog.id}
                     onClick={() => {
                       setSelectedBlog(blog);
@@ -1435,36 +1408,35 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                           .then(detailed => {
                             if (detailed && detailed.title) setSelectedBlog(detailed);
                           })
-                          .catch(() => {})
+                          .catch(() => { })
                           .finally(() => {
                             setTranslatingDetail(false);
                           });
                       }
                     }}
-                    className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${
-                      isDark 
-                        ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                        : 'bg-[#FFFFFF] border-[#E2D9C8] shadow-xl shadow-stone-900/10 hover:border-[#C9A050] hover:shadow-2xl'
-                    }`}
+                    className={`rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-1.5 duration-300 shadow-xl border group relative z-10 ${isDark
+                      ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60'
+                      : 'bg-[#FFFFFF] border-[#E2D9C8] shadow-xl shadow-stone-900/10 hover:border-[#C9A050] hover:shadow-2xl'
+                      }`}
                   >
                     <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-black/20">
-                      <img 
-                        src={getBlogImageUrl(blog.image_url)} 
-                        alt={blog.title} 
+                      <img
+                        src={getBlogImageUrl(blog.image_url)}
+                        alt={blog.title}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/blog_1.jpg';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      
+
                       {blog.pinned === 1 && (
                         <span className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full bg-[#C9A050] text-[#0D0D0F] text-[10px] font-bold uppercase tracking-wider shadow-md">
                           {t('blogs.featured', 'Featured')}
                         </span>
                       )}
                     </div>
-                    
-                    <div 
+
+                    <div
                       className={`p-6 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-[#FFFFFF]'}`}
                     >
                       <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
@@ -1477,24 +1449,20 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         </span>
                       </div>
 
-                      <h3 className={`text-lg sm:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${
-                        isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
-                      }`}>
+                      <h3 className={`text-lg sm:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
+                        }`}>
                         {blog.title}
                       </h3>
-                      
-                      <p className={`text-xs sm:text-sm leading-relaxed mb-5 line-clamp-3 ${
-                        isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
-                      }`}>
+
+                      <p className={`text-xs sm:text-sm leading-relaxed mb-5 line-clamp-3 ${isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
+                        }`}>
                         {cleanExcerpt}
                       </p>
 
-                      <div className={`mt-auto pt-3.5 border-t flex items-center justify-between ${
-                        isDark ? 'border-white/10' : 'border-[#EAE3D4]'
-                      }`}>
-                        <span className={`text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 ${
-                          isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                      <div className={`mt-auto pt-3.5 border-t flex items-center justify-between ${isDark ? 'border-white/10' : 'border-[#EAE3D4]'
                         }`}>
+                        <span className={`text-xs font-black uppercase tracking-wider flex items-center space-x-1.5 ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                          }`}>
                           <span>{t('blogs.read_article', 'Read Article →')}</span>
                           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                         </span>
@@ -1521,13 +1489,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     }
                   }}
                   disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${
-                    currentPage === 1
-                      ? 'opacity-30 cursor-not-allowed border-gray-700/20'
-                      : isDark
-                        ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
-                        : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${currentPage === 1
+                    ? 'opacity-30 cursor-not-allowed border-gray-700/20'
+                    : isDark
+                      ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
+                      : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
+                    }`}
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Previous</span>
@@ -1541,13 +1508,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         setCurrentPage(page);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center ${
-                        currentPage === page
-                          ? 'bg-gradient-to-r from-[#F7D36D] via-[#F3C54E] to-[#EBB738] text-black shadow-md border border-[#D4A328] font-black scale-105'
-                          : isDark
-                            ? 'bg-[#141418] text-[#9E9A90] hover:text-white border border-[#2A2A2E] hover:border-[#C9A050]/40'
-                            : 'bg-white text-gray-700 hover:text-black border border-gray-200 hover:border-amber-400 shadow-sm'
-                      }`}
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center ${currentPage === page
+                        ? 'bg-gradient-to-r from-[#F7D36D] via-[#F3C54E] to-[#EBB738] text-black shadow-md border border-[#D4A328] font-black scale-105'
+                        : isDark
+                          ? 'bg-[#141418] text-[#9E9A90] hover:text-white border border-[#2A2A2E] hover:border-[#C9A050]/40'
+                          : 'bg-white text-gray-700 hover:text-black border border-gray-200 hover:border-amber-400 shadow-sm'
+                        }`}
                     >
                       {page}
                     </button>
@@ -1562,13 +1528,12 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     }
                   }}
                   disabled={currentPage === totalPages}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${
-                    currentPage === totalPages
-                      ? 'opacity-30 cursor-not-allowed border-gray-700/20'
-                      : isDark
-                        ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
-                        : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-1 border transition-all ${currentPage === totalPages
+                    ? 'opacity-30 cursor-not-allowed border-gray-700/20'
+                    : isDark
+                      ? 'bg-[#141418] text-[#F0ECE1] hover:text-[#C9A050] border-[#2A2A2E] hover:border-[#C9A050]/60 cursor-pointer shadow-md'
+                      : 'bg-white text-gray-800 hover:text-black border-gray-200 hover:border-amber-500 shadow-sm cursor-pointer'
+                    }`}
                 >
                   <span>Next</span>
                   <ChevronRight className="w-4 h-4" />
@@ -1592,12 +1557,12 @@ export interface AdminBlogsViewProps {
 
 export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }) => {
   const editor = useRef(null);
-  
+
   const [viewMode, setViewMode] = useState<'list' | 'create' | 'categories'>('list');
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
-  
+
   const [blogs, setBlogs] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [subcategories, setSubcategories] = useState<any[]>([]);
@@ -1605,7 +1570,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
   const [selectedCategoryForSub, setSelectedCategoryForSub] = useState('');
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -1619,7 +1584,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
   });
 
   const config = useMemo(() => ({
-    readonly: false, 
+    readonly: false,
     theme: theme === 'dark' ? 'dark' : 'default',
     height: 500,
     toolbarAdaptive: false,
@@ -1667,7 +1632,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
   const handleCreateCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCategoryName.trim()) return;
-    
+
     try {
       await blogApi.createCategory(newCategoryName.trim());
       setNewCategoryName('');
@@ -1690,7 +1655,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
   const handleCreateSubcategory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newSubcategoryName.trim() || !selectedCategoryForSub) return;
-    
+
     try {
       await blogApi.createSubcategory(newSubcategoryName.trim(), Number(selectedCategoryForSub));
       setNewSubcategoryName('');
@@ -1809,7 +1774,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
     }
   };
 
-  const filteredBlogs = blogs.filter(b => 
+  const filteredBlogs = blogs.filter(b =>
     (b.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (b.category || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -1827,33 +1792,30 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
           <div className={`flex items-center space-x-2 p-1 rounded-xl border-2 shadow-sm ${theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}>
             <button
               onClick={() => { resetForm(); setViewMode('list'); }}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                viewMode === 'list' 
-                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow' 
-                  : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
-              }`}
+              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${viewMode === 'list'
+                ? 'bg-[#C9A050] text-[#0D0D0F] shadow'
+                : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
+                }`}
             >
               <List className="w-3.5 h-3.5" />
               <span>All Blogs</span>
             </button>
             <button
               onClick={() => { resetForm(); setViewMode('create'); }}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                viewMode === 'create' 
-                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow' 
-                  : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
-              }`}
+              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${viewMode === 'create'
+                ? 'bg-[#C9A050] text-[#0D0D0F] shadow'
+                : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
+                }`}
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{editingId ? 'Edit Blog' : 'Create Blog'}</span>
             </button>
             <button
               onClick={() => setViewMode('categories')}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                viewMode === 'categories' 
-                  ? 'bg-[#C9A050] text-[#0D0D0F] shadow' 
-                  : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
-              }`}
+              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${viewMode === 'categories'
+                ? 'bg-[#C9A050] text-[#0D0D0F] shadow'
+                : theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-black'
+                }`}
             >
               <FolderOpen className="w-3.5 h-3.5" />
               <span>Categories</span>
@@ -1862,7 +1824,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         </div>
 
         {viewMode === 'list' && (
-          <div 
+          <div
             className={`rounded-2xl border-2 overflow-hidden shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}
           >
             <div className={`p-3.5 border-b-2 flex items-center justify-between gap-4 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#DFC896]'}`}>
@@ -1873,9 +1835,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   placeholder="Search articles..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' : 'bg-white border-[#DFC896] text-[#0D0D0F] shadow-xs'
-                  }`}
+                  className={`w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${theme === 'dark' ? 'bg-[#1A1A1E] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' : 'bg-white border-[#DFC896] text-[#0D0D0F] shadow-xs'
+                    }`}
                 />
               </div>
               <div className={`text-xs font-semibold ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-600'}`}>
@@ -1883,10 +1844,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               </div>
             </div>
 
-            <div 
+            <div
               className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-340px)] min-h-[220px] custom-scrollbar bg-white dark:bg-[#141418]"
             >
-              <table 
+              <table
                 className="w-full text-left text-xs whitespace-nowrap border-collapse bg-white dark:bg-[#141418]"
               >
                 <thead className={`sticky top-0 z-10 text-[11px] font-bold uppercase tracking-wider border-b-2 ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#9E9A90] border-[#2A2A2E]' : 'bg-[#FAF8F2] text-gray-700 border-[#DFC896]'}`}>
@@ -1902,7 +1863,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                     <th className="px-4 py-3 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody 
+                <tbody
                   className={`divide-y ${theme === 'dark' ? 'divide-[#2A2A2E]/60 bg-[#141418]' : 'divide-gray-100 bg-white'}`}
                 >
                   {loading && blogs.length === 0 ? (
@@ -1926,16 +1887,16 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                       </td>
                       <td className="px-4 py-3.5">
                         {blog.image_url ? (
-                           <img 
-                             src={getBlogImageUrl(blog.image_url)} 
-                             alt="Thumb" 
-                             className="w-7 h-7 rounded object-cover border border-[#DFC896]/50" 
-                             onError={(e) => { (e.target as HTMLImageElement).src = '/blog_1.jpg'; }}
-                           />
+                          <img
+                            src={getBlogImageUrl(blog.image_url)}
+                            alt="Thumb"
+                            className="w-7 h-7 rounded object-cover border border-[#DFC896]/50"
+                            onError={(e) => { (e.target as HTMLImageElement).src = '/blog_1.jpg'; }}
+                          />
                         ) : (
-                           <div className={`w-7 h-7 rounded flex items-center justify-center ${theme === 'dark' ? 'bg-[#2A2A2E]' : 'bg-[#FAF2DA] border border-[#DFC896]'}`}>
-                             <ImageIcon className="w-3.5 h-3.5 text-[#9E9A90]" />
-                           </div>
+                          <div className={`w-7 h-7 rounded flex items-center justify-center ${theme === 'dark' ? 'bg-[#2A2A2E]' : 'bg-[#FAF2DA] border border-[#DFC896]'}`}>
+                            <ImageIcon className="w-3.5 h-3.5 text-[#9E9A90]" />
+                          </div>
                         )}
                       </td>
                       <td className="px-4 py-3.5 text-[#4A90E2] font-semibold">{blog.category}</td>
@@ -1949,11 +1910,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                         </div>
                       </td>
                       <td className="px-4 py-3.5">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          blog.status === 'Published' 
-                            ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' 
-                            : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-                        }`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${blog.status === 'Published'
+                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                          : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                          }`}>
                           {blog.status}
                         </span>
                       </td>
@@ -1997,8 +1957,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         )}
 
         {viewMode === 'create' && (
-          <form 
-            onSubmit={handleSubmit} 
+          <form
+            onSubmit={handleSubmit}
             className={`p-6 rounded-2xl border-2 space-y-6 shadow-xl relative z-10 ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2011,11 +1971,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   value={formData.title}
                   onChange={handleInputChange}
                   placeholder="e.g. Navigating Saturn Return: A Spiritual Guide"
-                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
-                    theme === 'dark' 
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' 
-                      : 'bg-white border-gray-300 text-black placeholder-[#9E9A90]'
-                  }`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]'
+                    : 'bg-white border-gray-300 text-black placeholder-[#9E9A90]'
+                    }`}
                 />
               </div>
 
@@ -2028,11 +1987,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                     handleInputChange(e);
                     setFormData(prev => ({ ...prev, sub_category: '' }));
                   }}
-                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
-                    theme === 'dark' 
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' 
-                      : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F]'
-                  }`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]'
+                    : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F]'
+                    }`}
                 >
                   <option value="">Select Category</option>
                   {categories.map(c => (
@@ -2048,11 +2006,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   value={formData.sub_category}
                   onChange={handleInputChange}
                   disabled={!formData.category || availableSubcategories.length === 0}
-                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
-                    theme === 'dark' 
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] disabled:opacity-50' 
-                      : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F] disabled:opacity-50'
-                  }`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] disabled:opacity-50'
+                    : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F] disabled:opacity-50'
+                    }`}
                 >
                   <option value="">Select Subcategory</option>
                   {availableSubcategories.map(s => (
@@ -2067,11 +2024,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
-                    theme === 'dark' 
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' 
-                      : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F]'
-                  }`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]'
+                    : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F]'
+                    }`}
                 >
                   <option value="Published">Published (Public)</option>
                   <option value="Draft">Draft (Hidden)</option>
@@ -2085,12 +2041,11 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   name="tags"
                   value={formData.tags}
                   onChange={handleInputChange}
-                  placeholder="e.g. Health, Anxiety, Recovery" 
-                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${
-                    theme === 'dark' 
-                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]' 
-                      : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F] placeholder-[#9E9A90]'
-                  }`}
+                  placeholder="e.g. Health, Anxiety, Recovery"
+                  className={`w-full px-3.5 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-1 focus:ring-[#C9A050] focus:border-[#C9A050] transition-colors ${theme === 'dark'
+                    ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] placeholder-[#6C6960]'
+                    : 'bg-[#FFFFFF] border-[#D5D1C8] text-[#0D0D0F] placeholder-[#9E9A90]'
+                    }`}
                 />
               </div>
 
@@ -2172,9 +2127,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               <button
                 type="button"
                 onClick={() => { resetForm(); setViewMode('list'); }}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-all ${
-                  theme === 'dark' ? 'border-[#2A2A2E] hover:bg-[#2A2A2E]' : 'border-[#D5D1C8] hover:bg-[#E5E1D8]'
-                }`}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-all ${theme === 'dark' ? 'border-[#2A2A2E] hover:bg-[#2A2A2E]' : 'border-[#D5D1C8] hover:bg-[#E5E1D8]'
+                  }`}
               >
                 Cancel
               </button>
@@ -2190,7 +2144,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
 
         {viewMode === 'categories' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div 
+            <div
               className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
             >
               <h2 className="text-sm font-bold uppercase tracking-wider mb-4 text-[#C9A050] flex items-center space-x-2">
@@ -2203,9 +2157,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                   placeholder="New Category Name"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
-                  }`}
+                  className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
+                    }`}
                 />
                 <button type="submit" className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#C9A050] text-[#0D0D0F] hover:bg-[#B89040]">
                   Add
@@ -2223,7 +2176,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               </ul>
             </div>
 
-            <div 
+            <div
               className={`p-5 rounded-xl border-2 shadow-xl ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E]' : 'bg-white border-[#E5E1D8]'}`}
             >
               <h2 className="text-sm font-bold uppercase tracking-wider mb-4 text-[#C9A050] flex items-center space-x-2">
@@ -2234,9 +2187,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                 <select
                   value={selectedCategoryForSub}
                   onChange={(e) => setSelectedCategoryForSub(e.target.value)}
-                  className={`w-full px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                    theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
-                  }`}
+                  className={`w-full px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
+                    }`}
                 >
                   <option value="">Select Parent Category</option>
                   {categories.map(c => (
@@ -2249,9 +2201,8 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                     placeholder="New Subcategory Name"
                     value={newSubcategoryName}
                     onChange={(e) => setNewSubcategoryName(e.target.value)}
-                    className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${
-                      theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
-                    }`}
+                    className={`flex-1 px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
+                      }`}
                   />
                   <button type="submit" className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#C9A050] text-[#0D0D0F] hover:bg-[#B89040]">
                     Add
