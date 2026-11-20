@@ -315,7 +315,7 @@ export const VedicDatePicker: React.FC<VedicDatePickerProps> = ({
             transition={{ duration: 0.15 }}
             className={`absolute left-0 ${
               openPlacement === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5'
-            } z-50 w-72 sm:w-80 rounded-2xl border shadow-2xl p-4 overflow-hidden backdrop-blur-md ${
+            } z-50 w-[min(18rem,calc(100vw-1.5rem))] sm:w-80 max-w-[calc(100vw-1.5rem)] rounded-2xl border shadow-2xl p-3 sm:p-4 overflow-hidden backdrop-blur-md ${
               theme === 'dark'
                 ? 'bg-[#141418] border-[#C9A050]/40 shadow-black/80'
                 : 'bg-white border-[#E5E1D8] shadow-2xl text-[#0D0D0F]'

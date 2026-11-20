@@ -206,10 +206,25 @@ interface PanjikaCalendarViewProps {
 }
 
 export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme = 'dark' }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   // Navigation & Sub-views
   const [activeSubTab, setActiveSubTab] = useState<'calendar' | 'converter'>('calendar');
-  const [calendarLang, setCalendarLang] = useState<'all' | 'bn' | 'hi' | 'en'>('all');
+  // Auto-detect/sync initial calendar language with the resolved geo/user language (e.g. West Bengal / Bengali -> 'bn')
+  const [calendarLang, setCalendarLang] = useState<'all' | 'bn' | 'hi' | 'en'>(() => {
+    const lng = (i18n?.language || '').split('-')[0].toLowerCase();
+    if (lng === 'bn') return 'bn';
+    if (lng === 'hi') return 'hi';
+    if (lng === 'en') return 'en';
+    return 'all';
+  });
+
+  // When i18n language changes (e.g. detected by geo IP or user selects from language dropdown in navbar)
+  useEffect(() => {
+    const lng = (i18n?.language || '').split('-')[0].toLowerCase();
+    if (lng === 'bn') setCalendarLang('bn');
+    else if (lng === 'hi') setCalendarLang('hi');
+    else if (lng === 'en') setCalendarLang('en');
+  }, [i18n?.language]);
 
   // Loaders for smooth interactive transition
   const [tabLoading, setTabLoading] = useState<boolean>(false);
@@ -500,11 +515,11 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
             </div>
 
             {/* Standalone Distinct Tab Buttons / Cards */}
-            <div className="flex items-center space-x-2.5">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:space-x-2.5 w-full sm:w-auto">
               {/* Card 1: Calendar Button */}
               <button
                 onClick={() => handleTabSwitch('calendar')}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border shadow-sm ${
+                className={`flex items-center justify-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border shadow-sm w-full sm:w-auto whitespace-nowrap ${
                   activeSubTab === 'calendar'
                     ? 'bg-[#C9A050] border-[#C9A050] text-[#0D0D0F] shadow-[#C9A050]/25'
                     : isDark
@@ -512,14 +527,14 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     : 'bg-white border-[#D4CFC4] text-gray-700 hover:text-[#8C6B28] hover:border-[#C9A050]/50 hover:bg-[#C9A050]/10'
                 }`}
               >
-                <CalendarIcon className="w-4 h-4" />
-                <span>{t('panjika.tab_calendar')}</span>
+                <CalendarIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate">{t('panjika.tab_calendar')}</span>
               </button>
 
               {/* Card 2: 6-Way Date Converter Button */}
               <button
                 onClick={() => handleTabSwitch('converter')}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border shadow-sm ${
+                className={`flex items-center justify-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border shadow-sm w-full sm:w-auto whitespace-nowrap ${
                   activeSubTab === 'converter'
                     ? 'bg-[#C9A050] border-[#C9A050] text-[#0D0D0F] shadow-[#C9A050]/25'
                     : isDark
@@ -527,8 +542,8 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     : 'bg-white border-[#D4CFC4] text-gray-700 hover:text-[#8C6B28] hover:border-[#C9A050]/50 hover:bg-[#C9A050]/10'
                 }`}
               >
-                <ArrowRightLeft className="w-4 h-4" />
-                <span>{t('panjika.tab_converter')}</span>
+                <ArrowRightLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate">{t('panjika.tab_converter')}</span>
               </button>
             </div>
           </div>
@@ -543,10 +558,10 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
           }`}>
             
             {/* Calendar Controls & Month Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-[#C9A050]/20 mb-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 border-b border-[#C9A050]/20 mb-3">
               
               {/* Modern Unified Month / Year Navigation Pill */}
-              <div className={`inline-flex items-center p-0.5 rounded-xl border shadow-xs transition-all ${
+              <div className={`inline-flex items-center justify-center p-0.5 rounded-xl border shadow-xs transition-all w-full sm:w-auto ${
                 isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4]'
               }`}>
                 {/* Prev Button */}
@@ -619,7 +634,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
               </div>
 
               {/* Language Dropdown Selector */}
-              <div className="flex items-center space-x-2 self-end sm:self-auto">
+              <div className="flex items-center justify-between sm:justify-start space-x-2 w-full sm:w-auto">
                 <span className={`text-xs font-bold uppercase tracking-wider ${
                   isDark ? 'text-[#9E9A90]' : 'text-gray-500'
                 }`}>
@@ -653,25 +668,41 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
 
             {/* Calendar Grid Header (Sun - Sat) */}
             <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-1.5">
-              {WEEKDAYS_MAP.map((w) => (
-                <div
-                  key={w.en}
-                  className={`text-center py-1 rounded-lg font-bold text-xs uppercase tracking-wider ${
-                    w.en === 'Sun' ? 'text-amber-600 font-extrabold' : isDark ? 'text-[#9E9A90]' : 'text-black'
-                  }`}
-                >
-                  <span>{w.en}</span>
-                  <span className="block text-xs opacity-80 font-normal">
-                    {calendarLang === 'all'
-                      ? `${w.bn} • ${w.hi}`
-                      : calendarLang === 'hi'
-                      ? w.hi
-                      : calendarLang === 'bn'
-                      ? w.bn
-                      : w.en}
-                  </span>
-                </div>
-              ))}
+              {WEEKDAYS_MAP.map((w) => {
+                const isSun = w.en === 'Sun';
+                return (
+                  <div
+                    key={w.en}
+                    className={`text-center py-1 rounded-lg font-bold text-xs uppercase tracking-wider ${
+                      isSun ? 'text-amber-600 font-extrabold' : isDark ? 'text-[#9E9A90]' : 'text-black'
+                    }`}
+                  >
+                    {calendarLang === 'bn' ? (
+                      <>
+                        <span className="block text-xs font-bold">{w.bn}</span>
+                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullBn}</span>
+                      </>
+                    ) : calendarLang === 'hi' ? (
+                      <>
+                        <span className="block text-xs font-bold">{w.hi}</span>
+                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullHi}</span>
+                      </>
+                    ) : calendarLang === 'en' ? (
+                      <>
+                        <span className="block text-xs font-bold">{w.en}</span>
+                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullEn}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="block text-xs font-bold">{w.en}</span>
+                        <span className="block text-[9px] sm:text-[10px] opacity-80 font-normal truncate">
+                          {w.bn} • {w.hi}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Calendar Days Loader or Grid */}
@@ -772,7 +803,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       whileHover={{ scale: 1.02, y: -1 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => openDayModal(dayData)}
-                      className={`min-h-[56px] sm:min-h-[62px] p-1 sm:p-1.5 rounded-xl border transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden group shadow-xs ${
+                      className={`min-h-[48px] sm:min-h-[62px] p-1 sm:p-1.5 rounded-md sm:rounded-xl border transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden group shadow-xs ${
                         isSelected
                           ? 'border-[#C9A050] bg-[#C9A050]/20 shadow-md shadow-[#C9A050]/30 ring-2 ring-[#C9A050]/40'
                           : isToday
@@ -791,7 +822,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       {/* Top Row: Gregorian Date Number & Regional Bengali/Hindi Date */}
                       <div className="flex items-center justify-between">
                         <span
-                          className={`font-serif font-bold text-xs sm:text-sm leading-none ${
+                          className={`font-serif font-bold text-[11px] sm:text-sm leading-none ${
                             isSelected || isToday
                               ? 'text-[#C9A050]'
                               : isDark
@@ -802,30 +833,30 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           {calendarLang === 'bn' ? toBengaliNum(dayData.day) : calendarLang === 'hi' ? toHindiNum(dayData.day) : dayData.day}
                         </span>
 
-                        <span className="text-xs font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate pl-1">
+                        <span className="text-[8.5px] sm:text-xs font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate pl-0.5">
                           {topRegionalDate}
                         </span>
                       </div>
 
                       {/* Bottom Row: Purnima/Amavasya/Ekadashi Badge OR Tithi */}
-                      <div className="mt-1">
+                      <div className="mt-0.5 sm:mt-1">
                         {isPurnima ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-xs font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌕</span>
                             <span className="truncate">{purnimaLabel}</span>
                           </div>
                         ) : isAmavasya ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-xs font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌑</span>
                             <span className="truncate">{amavasyaLabel}</span>
                           </div>
                         ) : isEkadashi ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-xs font-bold tracking-tight truncate w-full shadow-xs">
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
                             <span>🌿</span>
                             <span className="truncate">{ekadashiLabel}</span>
                           </div>
                         ) : (
-                          <div className={`flex items-center justify-between text-xs px-0.5 ${isDark ? 'text-gray-400' : 'text-black font-medium'}`}>
+                          <div className={`flex items-center justify-between text-[8px] sm:text-xs px-0.5 ${isDark ? 'text-gray-400' : 'text-black font-medium'}`}>
                             <span className="truncate">{tithiDisplay}</span>
                             {isShukla ? (
                               <Moon className="w-2 h-2 text-[#C9A050] shrink-0 ml-0.5" />

@@ -405,7 +405,7 @@ export const NumerologyView: React.FC<NumerologyViewProps> = ({
             </div>
 
             {/* 3x3 Grid */}
-            <div className="w-full max-w-[320px] aspect-square grid grid-cols-3 grid-rows-3 gap-2 p-3 bg-[#08080A] rounded-2xl border border-[#C9A050]/40 shadow-inner my-auto">
+            <div className="w-full max-w-[270px] xs:max-w-[300px] sm:max-w-[340px] aspect-square grid grid-cols-3 grid-rows-3 gap-2 p-3 bg-[#08080A] rounded-2xl border border-[#C9A050]/40 shadow-inner my-auto">
               {loShuPositions.map((row) =>
                 row.map((num) => {
                   const count = activeNumerology.loShuGrid[num] || 0;

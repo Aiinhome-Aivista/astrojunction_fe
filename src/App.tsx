@@ -792,7 +792,7 @@ export function App() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-32 sm:pb-36 md:pb-16 overflow-x-hidden">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-6 sm:py-8 pb-32 sm:pb-36 md:pb-16 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

@@ -206,7 +206,7 @@ export const VedicRemediesSection: React.FC<VedicRemediesSectionProps> = ({
               whileHover={{ y: -5 }}
               transition={{ duration: 0.25 }}
               onClick={() => setSelectedRemedyId(prev => prev === remedy.id ? null : remedy.id)}
-              className={`relative rounded-3xl p-6 cursor-pointer transition-all duration-300 flex flex-col justify-between overflow-hidden border ${
+              className={`relative rounded-2xl sm:rounded-3xl p-4 sm:p-6 cursor-pointer transition-all duration-300 flex flex-col justify-between overflow-hidden border ${
                 isSelected
                   ? 'border-[#C9A050] shadow-[0_0_30px_rgba(201,160,80,0.25)] ring-1 ring-[#C9A050]'
                   : theme === 'dark'

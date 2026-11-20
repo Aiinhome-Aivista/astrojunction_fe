@@ -281,7 +281,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
               <div>
                 <div className="flex items-center space-x-1.5 sm:space-x-2">
-                  <span className={`text-base sm:text-lg lg:text-xl font-bold tracking-wider ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
+                  <span className={`text-xs min-[360px]:text-sm sm:text-lg lg:text-xl font-bold tracking-wider whitespace-nowrap ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
                     ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                   </span>
                   {isAdmin ? (
@@ -304,7 +304,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Center: Single Unified Navigation Tabs */}
             <nav
-              className={`${isAdmin ? 'hidden lg:flex' : 'hidden md:flex'
+              className={`${isAdmin ? 'hidden lg:flex' : 'hidden xl:flex'
                 } flex-1 items-center overflow-x-auto scrollbar-none min-w-0 py-1`}
               aria-label="Navigation Tabs"
             >
@@ -317,12 +317,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex items-center space-x-1 lg:space-x-1.5 px-2 xl:px-2.5 py-1.5 rounded-lg text-[11px] xl:text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-200 cursor-pointer ${isActive
-                          ? theme === 'dark'
-                            ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
-                            : 'bg-[#FAF2DA] text-[#8C6218] border border-[#C9A050] font-bold shadow-xs'
-                          : theme === 'dark'
-                            ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
-                            : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
+                        ? theme === 'dark'
+                          ? 'bg-[#1C1A14] text-[#E8C470] border border-[#C9A050] font-bold shadow-xs'
+                          : 'bg-[#FAF2DA] text-[#8C6218] border border-[#C9A050] font-bold shadow-xs'
+                        : theme === 'dark'
+                          ? 'bg-[#141418] text-[#9E9A90] border border-[#2A2A2E] hover:border-[#C9A050]/60 hover:text-[#F0ECE1] hover:bg-[#1A1A1E]'
+                          : 'bg-[#FAF5E6] text-[#5C574F] border border-[#DFC896] hover:border-[#C9A050] hover:text-[#1A1816] hover:bg-[#F3EACB]'
                         }`}
                     >
                       <Icon
@@ -349,10 +349,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => setActiveTab('landing')}
                   title={t('userPanel.tabs.home', 'Home')}
                   className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer shadow-sm shrink-0 ${activeTab === 'landing' || activeTab === 'home'
-                      ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
-                      : theme === 'dark'
-                        ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
-                        : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
+                    ? 'bg-[#C9A050]/20 text-[#C9A050] border-[#C9A050]'
+                    : theme === 'dark'
+                      ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50 hover:bg-[#1A1A1E]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:border-[#C9A050] hover:bg-[#F5E8C8]'
                     }`}
                   aria-label={t('userPanel.tabs.home', 'Home')}
                 >
@@ -370,8 +370,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
                     className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
-                        ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
-                        : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
+                      ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
                       }`}
                     title={userEmail || 'Admin Profile'}
                     aria-label="Admin Profile"
@@ -405,8 +405,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <button
                           onClick={() => toggleTheme()}
                           className={`w-full flex items-center justify-between px-3 py-2 text-xs transition cursor-pointer text-left ${theme === 'dark'
-                              ? 'text-[#E5E1D8] hover:bg-[#1C1C22]'
-                              : 'text-[#2C2825] hover:bg-[#F3EADB]'
+                            ? 'text-[#E5E1D8] hover:bg-[#1C1C22]'
+                            : 'text-[#2C2825] hover:bg-[#F3EADB]'
                             }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -418,8 +418,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                             <span>{t('userPanel.menu.theme', 'Theme')}</span>
                           </div>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${theme === 'dark'
-                              ? 'border-[#C9A050]/40 text-[#C9A050] bg-[#C9A050]/10'
-                              : 'border-[#DFC896] text-[#8C6218] bg-[#FAF2DA]'
+                            ? 'border-[#C9A050]/40 text-[#C9A050] bg-[#C9A050]/10'
+                            : 'border-[#DFC896] text-[#8C6218] bg-[#FAF2DA]'
                             }`}>
                             {theme === 'dark' ? t('userPanel.menu.dark', 'Dark') : t('userPanel.menu.light', 'Light')}
                           </span>
@@ -432,8 +432,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setIsChangePasswordOpen(true);
                           }}
                           className={`w-full flex items-center space-x-2 px-3 py-2 text-xs transition cursor-pointer text-left ${theme === 'dark'
-                              ? 'text-[#C9A050] hover:bg-[#1C1C22]'
-                              : 'text-[#8C6218] hover:bg-[#F3EADB]'
+                            ? 'text-[#C9A050] hover:bg-[#1C1C22]'
+                            : 'text-[#8C6218] hover:bg-[#F3EADB]'
                             }`}
                         >
                           <Key className="w-3.5 h-3.5 shrink-0" />
@@ -465,8 +465,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
                     className={`group focus:outline-none cursor-pointer flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
-                        ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
-                        : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
+                      ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
+                      : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
                       }`}
                     title={currentProfile.fullName || 'User Profile'}
                     aria-label="User Profile"
@@ -485,14 +485,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {isProfileMenuOpen && (
                     <div className={`absolute top-full right-0 mt-2.5 w-64 sm:w-72 rounded-2xl shadow-2xl border overflow-hidden z-50 transition-all duration-200 ${theme === 'dark'
-                        ? 'bg-[#131219]/95 backdrop-blur-xl border-[#C9A050]/40 shadow-[0_12px_40px_rgba(0,0,0,0.7)]'
-                        : 'bg-[#FFFDF7]/98 backdrop-blur-xl border-[#DFC896] shadow-[0_12px_40px_rgba(180,140,50,0.22)]'
+                      ? 'bg-[#131219]/95 backdrop-blur-xl border-[#C9A050]/40 shadow-[0_12px_40px_rgba(0,0,0,0.7)]'
+                      : 'bg-[#FFFDF7]/98 backdrop-blur-xl border-[#DFC896] shadow-[0_12px_40px_rgba(180,140,50,0.22)]'
                       }`}>
                       {/* Rashi Details Card */}
                       <div className="p-3">
                         <div className={`p-3.5 rounded-xl border ${theme === 'dark'
-                            ? 'bg-gradient-to-br from-[#1C1A27]/90 to-[#121118]/90 border-[#C9A050]/30'
-                            : 'bg-gradient-to-br from-[#FAF3DF] to-[#F3E7C4] border-[#DEC590]'
+                          ? 'bg-gradient-to-br from-[#1C1A27]/90 to-[#121118]/90 border-[#C9A050]/30'
+                          : 'bg-gradient-to-br from-[#FAF3DF] to-[#F3E7C4] border-[#DEC590]'
                           }`}>
                           <div className="flex items-center justify-between text-[11px] font-bold text-[#C9A050] mb-2 pb-1.5 border-b border-inherit/40">
                             <span className="flex items-center gap-1.5">
@@ -534,8 +534,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                             onOpenNewProfile();
                           }}
                           className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition cursor-pointer font-medium ${theme === 'dark'
-                              ? 'text-[#C9A050] hover:bg-[#1E1C28]'
-                              : 'text-[#8C6218] hover:bg-[#F3EADB]'
+                            ? 'text-[#C9A050] hover:bg-[#1E1C28]'
+                            : 'text-[#8C6218] hover:bg-[#F3EADB]'
                             }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -555,8 +555,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                               onLogout();
                             }}
                             className={`w-full flex items-center space-x-2 px-3 py-2 text-xs rounded-xl transition cursor-pointer font-bold ${theme === 'dark'
-                                ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
-                                : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
+                              ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
+                              : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
                               }`}
                           >
                             <LogOut className="w-3.5 h-3.5 shrink-0" />
@@ -572,7 +572,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Mobile / Tablet Drawer Menu Toggle */}
               <button
                 onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
-                className={`${isAdmin ? 'lg:hidden' : 'md:hidden'
+                className={`${isAdmin ? 'lg:hidden' : 'xl:hidden'
                   } flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${theme === 'dark'
                     ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
                     : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:text-[#C9A050] hover:border-[#C9A050]'
@@ -588,11 +588,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Slide-Out Navigation Drawer */}
       {isMobileDrawerOpen && (
-        <div className={`fixed inset-0 z-50 ${isAdmin ? 'lg:hidden' : 'md:hidden'} bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in`}>
-          <div className="w-[82%] max-w-sm h-full bg-[#141418] border-l border-[#2A2A2E] p-5 shadow-2xl flex flex-col justify-between overflow-y-auto font-sans">
+        <div className={`fixed inset-0 z-50 ${isAdmin ? 'lg:hidden' : 'xl:hidden'} bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in`}>
+          <div className={`w-[82%] max-w-sm h-full border-l p-5 shadow-2xl flex flex-col justify-between overflow-y-auto font-sans ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#FAF5E6] border-[#DFC896] text-[#2C2825]'
+            }`}>
             <div>
               {/* Drawer Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#2A2A2E]">
+              <div className={`flex items-center justify-between pb-4 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]'}`}>
                 <div
                   className="flex items-center space-x-2.5 cursor-pointer select-none"
                   onClick={() => {
@@ -603,15 +604,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
                   <div>
-                    <h3 className="font-bold text-sm text-[#F0ECE1]">
+                    <h3 className={`font-bold text-sm ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#1E1B15]'}`}>
                       ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                     </h3>
-                    <p className="text-[10px] text-[#9E9A90]">{t('brand.tagline')}</p>
+                    <p className={`text-[10px] ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'}`}>{t('brand.tagline')}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsMobileDrawerOpen(false)}
-                  className="p-1.5 rounded-lg bg-[#1A1A1E] text-[#9E9A90] hover:text-[#F0ECE1] border border-[#2A2A2E]"
+                  className={`p-1.5 rounded-lg border transition cursor-pointer ${theme === 'dark' ? 'bg-[#1A1A1E] text-[#9E9A90] hover:text-[#F0ECE1] border-[#2A2A2E]' : 'bg-[#F0ECE1] text-[#7A6F5D] hover:text-black border-[#DFC896]'
+                    }`}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -702,8 +704,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsMobileDrawerOpen(false);
                       }}
                       className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left ${isActive
-                          ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
-                          : 'text-[#E5E1D8] hover:bg-[#1A1A1E] hover:text-[#F0ECE1]'
+                        ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
+                        : theme === 'dark' ? 'text-[#E5E1D8] hover:bg-[#1A1A1E] hover:text-[#F0ECE1]' : 'text-[#5C574F] hover:bg-black/5 hover:text-[#1A1816]'
                         }`}
                     >
                       <Icon className={`w-4 h-4 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
@@ -743,8 +745,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setIsMobileDrawerOpen(false);
                     }}
                     className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition cursor-pointer text-left mt-1.5 ${activeTab === 'counsellor'
-                        ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
-                        : 'text-[#C9A050] bg-[#C9A050]/10 hover:bg-[#C9A050]/20'
+                      ? 'bg-[#C9A050]/20 text-[#C9A050] font-bold border border-[#C9A050]/30'
+                      : 'text-[#C9A050] bg-[#C9A050]/10 hover:bg-[#C9A050]/20'
                       }`}
                   >
                     <MessageSquareText className="w-4 h-4 text-[#C9A050]" />
@@ -755,7 +757,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Drawer Footer Actions */}
-            <div className="pt-4 border-t border-[#2A2A2E] space-y-2">
+            <div className={`pt-4 border-t ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]'} space-y-2`}>
               {isAdmin && (
                 <button
                   onClick={() => {
@@ -787,8 +789,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onLogout();
                   }}
                   className={`w-full flex items-center space-x-2 text-xs py-1.5 px-2 rounded transition font-bold ${theme === 'dark'
-                      ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
-                      : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
+                    ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15'
+                    : 'text-red-700 hover:text-red-900 hover:bg-red-100/90'
                     }`}
                 >
                   <LogOut className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`} />
@@ -801,7 +803,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       )}
 
       {/* Mobile Sticky Bottom Navigation Bar (Visible on md and below) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0D0D0F]/95 backdrop-blur-xl border-t border-[#2A2A2E]/80 px-2 py-1.5 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.25)] ${theme === 'dark' ? 'bg-[#0D0D0F]/95 border-[#2A2A2E]/80 text-[#E5E1D8]' : 'bg-[#FAF7F0]/95 border-[#DFC896]/80 text-[#2C2825]'
+        }`}>
         <nav className="flex items-center justify-around" aria-label="Mobile Bottom Navigation">
           {mobileQuickTabs.map((tab) => {
             const Icon = tab.icon;
@@ -811,8 +814,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg transition-all text-[10px] font-medium min-w-[54px] cursor-pointer ${isActive
-                    ? 'text-[#C9A050] font-bold scale-105'
-                    : 'text-[#9E9A90] hover:text-[#E5E1D8]'
+                  ? 'text-[#C9A050] font-bold scale-105'
+                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8]' : 'text-[#6E6452] hover:text-[#1A1816]'
                   }`}
               >
                 <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'text-[#C9A050]' : 'text-[#9E9A90]'}`} />
@@ -829,8 +832,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setActiveTab('counsellor')}
           title={t('userPanel.fab.title', 'Ask Daivajna Astrologer')}
           className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex flex-col items-center justify-center p-0 shadow-xl shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${activeTab === 'counsellor'
-              ? 'ring-4 ring-[#C9A050] ring-offset-2'
-              : ''
+            ? 'ring-4 ring-[#C9A050] ring-offset-2'
+            : ''
             } ${theme === 'dark'
               ? 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F]'
               : 'bg-[#C9A050] hover:bg-[#B38730] text-white'
@@ -844,8 +847,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Hover Tooltip on Left */}
           <span className={`absolute right-full mr-3.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none shadow-xl border ${theme === 'dark'
-              ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
-              : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
+            ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
+            : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
             }`}>
             {t('userPanel.fab.title', 'Ask Daivajna Astrologer')}
           </span>

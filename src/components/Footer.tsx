@@ -61,7 +61,7 @@ export const Footer: React.FC<FooterProps> = ({
   return (
     <>
       <footer
-        className={`py-4 relative z-20 border-t transition-colors duration-300 font-sans ${isLight
+        className={`py-4 pb-20 sm:pb-4 relative z-20 border-t transition-colors duration-300 font-sans ${isLight
             ? 'bg-[#F7F2E7] text-[#2C2825] border-[#DFC896]'
             : 'bg-[#08080C] text-[#E5E1D8] border-[#22232A]'
           }`}
@@ -138,11 +138,11 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
 
           {/* Bottom: Copyright */}
-          <div className={`border-t pt-3 flex items-center justify-center text-center text-xs ${isLight ? 'border-[#DFC896]/60 text-[#6E6452]' : 'border-[#22232A] text-[#9E9A90]'
+          <div className={`border-t pt-3 flex items-center justify-center text-center ${isLight ? 'border-[#DFC896]/60 text-[#6E6452]' : 'border-[#22232A] text-[#9E9A90]'
             }`}>
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex items-center justify-center space-x-1.5 sm:space-x-2 max-w-full overflow-hidden px-2">
               <AncientTraditionLogo size="sm" isLight={isLight} />
-              <p>
+              <p className="whitespace-nowrap text-[10px] sm:text-xs tracking-tight sm:tracking-normal font-medium">
                 Copyright © {new Date().getFullYear()}{' '}
                 <span className={`font-semibold ${isLight ? 'text-[#1A1816]' : 'text-white'}`}>AstroJunction</span> | {t('footer.all_rights_reserved')}
               </p>

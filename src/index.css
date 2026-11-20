@@ -11,6 +11,7 @@
 }
 
 @theme {
+  --breakpoint-xs: 375px;
   --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Stardom", Georgia, serif;
   --font-mono: "Nunito", ui-monospace, SFMono-Regular, monospace;
@@ -44,21 +45,45 @@ html[lang="ta"] {
 }
 
 /* Indic Script Heading Stack & Font Safety (hi, bn, ta) */
-html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4,
-html[lang="hi"] .font-serif, html[lang="hi"] .astro-hero-title, html[lang="hi"] .astro-page-header-title,
-html[lang="hi"] [role="heading"], html[lang="hi"] [role="heading"] *,
-html[lang="hi"] .astro-card-title, html[lang="hi"] .astro-card-title *,
-html[lang="hi"] .astro-section-title, html[lang="hi"] .astro-section-title *,
-html[lang="bn"] h1, html[lang="bn"] h2, html[lang="bn"] h3, html[lang="bn"] h4,
-html[lang="bn"] .font-serif, html[lang="bn"] .astro-hero-title, html[lang="bn"] .astro-page-header-title,
-html[lang="bn"] [role="heading"], html[lang="bn"] [role="heading"] *,
-html[lang="bn"] .astro-card-title, html[lang="bn"] .astro-card-title *,
-html[lang="bn"] .astro-section-title, html[lang="bn"] .astro-section-title *,
-html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4,
-html[lang="ta"] .font-serif, html[lang="ta"] .astro-hero-title, html[lang="ta"] .astro-page-header-title,
-html[lang="ta"] [role="heading"], html[lang="ta"] [role="heading"] *,
-html[lang="ta"] .astro-card-title, html[lang="ta"] .astro-card-title *,
-html[lang="ta"] .astro-section-title, html[lang="ta"] .astro-section-title * {
+html[lang="hi"] h1,
+html[lang="hi"] h2,
+html[lang="hi"] h3,
+html[lang="hi"] h4,
+html[lang="hi"] .font-serif,
+html[lang="hi"] .astro-hero-title,
+html[lang="hi"] .astro-page-header-title,
+html[lang="hi"] [role="heading"],
+html[lang="hi"] [role="heading"] *,
+html[lang="hi"] .astro-card-title,
+html[lang="hi"] .astro-card-title *,
+html[lang="hi"] .astro-section-title,
+html[lang="hi"] .astro-section-title *,
+html[lang="bn"] h1,
+html[lang="bn"] h2,
+html[lang="bn"] h3,
+html[lang="bn"] h4,
+html[lang="bn"] .font-serif,
+html[lang="bn"] .astro-hero-title,
+html[lang="bn"] .astro-page-header-title,
+html[lang="bn"] [role="heading"],
+html[lang="bn"] [role="heading"] *,
+html[lang="bn"] .astro-card-title,
+html[lang="bn"] .astro-card-title *,
+html[lang="bn"] .astro-section-title,
+html[lang="bn"] .astro-section-title *,
+html[lang="ta"] h1,
+html[lang="ta"] h2,
+html[lang="ta"] h3,
+html[lang="ta"] h4,
+html[lang="ta"] .font-serif,
+html[lang="ta"] .astro-hero-title,
+html[lang="ta"] .astro-page-header-title,
+html[lang="ta"] [role="heading"],
+html[lang="ta"] [role="heading"] *,
+html[lang="ta"] .astro-card-title,
+html[lang="ta"] .astro-card-title *,
+html[lang="ta"] .astro-section-title,
+html[lang="ta"] .astro-section-title * {
   font-family: var(--font-heading, var(--font-serif)) !important;
   font-weight: 600 !important;
   letter-spacing: normal !important;
@@ -68,10 +93,15 @@ html[lang="ta"] .astro-section-title, html[lang="ta"] .astro-section-title * {
   font-synthesis: none !important;
 }
 
-html[lang="hi"] .uppercase, html[lang="bn"] .uppercase, html[lang="ta"] .uppercase {
+html[lang="hi"] .uppercase,
+html[lang="bn"] .uppercase,
+html[lang="ta"] .uppercase {
   text-transform: none !important;
 }
-html[lang="hi"] [class*="tracking-"], html[lang="bn"] [class*="tracking-"], html[lang="ta"] [class*="tracking-"] {
+
+html[lang="hi"] [class*="tracking-"],
+html[lang="bn"] [class*="tracking-"],
+html[lang="ta"] [class*="tracking-"] {
   letter-spacing: normal !important;
 }
 
@@ -179,8 +209,9 @@ html[lang="hi"] [class*="tracking-"], html[lang="bn"] [class*="tracking-"], html
   html,
   body,
   #root {
-    overflow-x: clip;
+    overflow-x: hidden;
     max-width: 100vw;
+    width: 100%;
   }
 
   body {
@@ -358,7 +389,8 @@ h6 *,
 /* Master Top Page Heading Class - Centralized in index.css */
 .astro-page-header-title {
   font-family: 'Stardom', Georgia, serif !important;
-  font-size: 1.375rem !important; /* ~22px mobile */
+  font-size: 1.375rem !important;
+  /* ~22px mobile */
   line-height: 1.25 !important;
   font-weight: 800 !important;
   font-synthesis: weight !important;
@@ -370,13 +402,15 @@ h6 *,
 
 @media (min-width: 640px) {
   .astro-page-header-title {
-    font-size: 1.625rem !important; /* ~26px tablet */
+    font-size: 1.625rem !important;
+    /* ~26px tablet */
   }
 }
 
 @media (min-width: 1024px) {
   .astro-page-header-title {
-    font-size: 1.875rem !important; /* ~30px desktop */
+    font-size: 1.875rem !important;
+    /* ~30px desktop */
   }
 }
 
@@ -447,6 +481,15 @@ samp {
 .astro-marquee-mask {
   mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+@media (max-width: 768px) {
+  .astro-marquee-mask {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    mask: none !important;
+    -webkit-mask: none !important;
+  }
 }
 
 /* Light Mode Overrides for Hardcoded Theme Classes */
@@ -898,6 +941,17 @@ samp {
   padding: 1.25rem 1.5rem;
 }
 
+@media (max-width: 480px) {
+  .astro-modal-card {
+    padding: 1.15rem 0.85rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .astro-modal-card-auth {
+    padding: 1rem 0.85rem !important;
+  }
+}
+
 .astro-modal-card-lg {
   max-width: 42rem;
 }
@@ -1150,13 +1204,12 @@ samp {
   scrollbar-color: #C9A050 transparent;
 }
 
-/* Touch-friendly interactive targets */
+/* Touch-friendly interactive targets for primary form buttons only */
 @media (max-width: 768px) {
 
-  button,
-  select,
-  input[type="checkbox"],
-  input[type="radio"] {
+  button.btn-primary,
+  button.btn-secondary,
+  .astro-touch-target {
     min-height: 38px;
   }
 }
@@ -1603,36 +1656,54 @@ html[lang="ta"] .astro-hero-title *:not(.astro-hero-brand):not(.astro-hero-brand
   font-family: "Noto Serif Tamil", "Vijaya", "Latha", Georgia, serif !important;
 }
 
-html[lang="bn"] h1:not(.astro-hero-title), html[lang="bn"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
-html[lang="hi"] h1:not(.astro-hero-title), html[lang="hi"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
-html[lang="ta"] h1:not(.astro-hero-title), html[lang="ta"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *) {
+html[lang="bn"] h1:not(.astro-hero-title),
+html[lang="bn"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
+html[lang="hi"] h1:not(.astro-hero-title),
+html[lang="hi"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *),
+html[lang="ta"] h1:not(.astro-hero-title),
+html[lang="ta"] h1:not(.astro-hero-title) *:not(.astro-hero-brand):not(.astro-hero-brand *):not(.astro-name-bold):not(.astro-name-bold *) {
   font-weight: 600 !important;
   line-height: 1.4 !important;
 }
 
-html[lang="bn"] h2, html[lang="bn"] h2 *,
-html[lang="hi"] h2, html[lang="hi"] h2 *,
-html[lang="ta"] h2, html[lang="ta"] h2 * {
+html[lang="bn"] h2,
+html[lang="bn"] h2 *,
+html[lang="hi"] h2,
+html[lang="hi"] h2 *,
+html[lang="ta"] h2,
+html[lang="ta"] h2 * {
   font-weight: 600 !important;
   line-height: 1.45 !important;
 }
 
-html[lang="bn"] h3, html[lang="bn"] h3 *,
-html[lang="hi"] h3, html[lang="hi"] h3 *,
-html[lang="ta"] h3, html[lang="ta"] h3 * {
+html[lang="bn"] h3,
+html[lang="bn"] h3 *,
+html[lang="hi"] h3,
+html[lang="hi"] h3 *,
+html[lang="ta"] h3,
+html[lang="ta"] h3 * {
   font-weight: 600 !important;
   line-height: 1.45 !important;
 }
 
-html[lang="bn"] h4, html[lang="bn"] h4 *,
-html[lang="bn"] h5, html[lang="bn"] h5 *,
-html[lang="bn"] h6, html[lang="bn"] h6 *,
-html[lang="hi"] h4, html[lang="hi"] h4 *,
-html[lang="hi"] h5, html[lang="hi"] h5 *,
-html[lang="hi"] h6, html[lang="hi"] h6 *,
-html[lang="ta"] h4, html[lang="ta"] h4 *,
-html[lang="ta"] h5, html[lang="ta"] h5 *,
-html[lang="ta"] h6, html[lang="ta"] h6 * {
+html[lang="bn"] h4,
+html[lang="bn"] h4 *,
+html[lang="bn"] h5,
+html[lang="bn"] h5 *,
+html[lang="bn"] h6,
+html[lang="bn"] h6 *,
+html[lang="hi"] h4,
+html[lang="hi"] h4 *,
+html[lang="hi"] h5,
+html[lang="hi"] h5 *,
+html[lang="hi"] h6,
+html[lang="hi"] h6 *,
+html[lang="ta"] h4,
+html[lang="ta"] h4 *,
+html[lang="ta"] h5,
+html[lang="ta"] h5 *,
+html[lang="ta"] h6,
+html[lang="ta"] h6 * {
   font-weight: 500 !important;
   line-height: 1.5 !important;
 }
@@ -1674,8 +1745,10 @@ html[lang="fr"] .astro-modal-title * {
   letter-spacing: 0.025em !important;
 }
 
-html[lang="fr"] h1, html[lang="fr"] h1 *,
-html[lang="fr"] h2, html[lang="fr"] h2 * {
+html[lang="fr"] h1,
+html[lang="fr"] h1 *,
+html[lang="fr"] h2,
+html[lang="fr"] h2 * {
   font-family: 'Stardom', Georgia, serif !important;
   font-weight: 800 !important;
   font-synthesis: weight !important;
@@ -1683,8 +1756,10 @@ html[lang="fr"] h2, html[lang="fr"] h2 * {
   letter-spacing: 0.02em !important;
 }
 
-html[lang="fr"] h3, html[lang="fr"] h3 *,
-html[lang="fr"] h4, html[lang="fr"] h4 * {
+html[lang="fr"] h3,
+html[lang="fr"] h3 *,
+html[lang="fr"] h4,
+html[lang="fr"] h4 * {
   font-family: 'Stardom', Georgia, serif !important;
   font-weight: 700 !important;
   font-synthesis: weight !important;
@@ -1730,7 +1805,7 @@ html[lang] .astro-hero-brand *,
 /* Ensure ASTROJUNCTION brand size in Hero is large and prominent in all languages */
 html .astro-hero-title .astro-hero-brand,
 html[lang] .astro-hero-title .astro-hero-brand {
-  font-size: clamp(2.1rem, 4.8vw, 3.85rem) !important;
+  font-size: clamp(1.1rem, 5.2vw, 3.85rem) !important;
   line-height: 1.15 !important;
   display: inline-flex !important;
 }
@@ -1768,12 +1843,12 @@ html.dark[lang] .astro-hero-brand .brand-junction {
 /* Indic Scripts Optical Size & Balance for Hero Heading (Avoids premature line breaking & gaps) */
 html[lang="hi"] .astro-hero-title,
 html[lang="bn"] .astro-hero-title {
-  font-size: clamp(1.6rem, 3.5vw, 2.75rem) !important;
+  font-size: clamp(1.15rem, 4.2vw, 2.75rem) !important;
   line-height: 1.32 !important;
 }
 
 html[lang="ta"] .astro-hero-title {
-  font-size: clamp(1.5rem, 3.2vw, 2.35rem) !important;
+  font-size: clamp(1.1rem, 3.8vw, 2.35rem) !important;
   line-height: 1.32 !important;
 }
 
@@ -1872,7 +1947,8 @@ html[lang="bn"] .article-content p,
 html[lang="ta"] .article-content p {
   line-height: 1.72 !important;
   letter-spacing: 0 !important;
-  hyphens: manual; /* Disable aggressive browser hyphenation on Indic conjuncts */
+  hyphens: manual;
+  /* Disable aggressive browser hyphenation on Indic conjuncts */
 }
 
 /* Mobile Rivers Prevention (Screens < 640px) */
@@ -1880,6 +1956,7 @@ html[lang="ta"] .article-content p {
 /* cause wide gaps ("rivers") if justified. Therefore, relax to left-aligned on phones, */
 /* while cleanly justifying from tablet (>= 640px) and desktop up. */
 @media (max-width: 639px) {
+
   html[lang="ta"] .astro-prose-justified,
   html[lang="bn"] .astro-prose-justified,
   html[lang="ta"] .prose-reading-justified,
@@ -1890,4 +1967,3 @@ html[lang="ta"] .article-content p {
     text-align-last: left !important;
   }
 }
-

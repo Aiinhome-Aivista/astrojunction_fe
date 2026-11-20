@@ -335,7 +335,7 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
       )}
 
       {hasAnalyzed && !isCompatLoading && compatResult && (
-        <div ref={compatResultRef} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 items-stretch">
+        <div ref={compatResultRef} className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 items-stretch">
         {/* Score circle */}
         <div className={`flex flex-col items-center justify-center p-4 sm:p-6 rounded-xl border text-center h-full ${isDark ? 'bg-[#1C1C22] border-[#2A2A2E]' : 'bg-[#FFFFFF] border-[#E5E1D8]'}`}>
           <div className="w-20 h-20 rounded-full border-4 border-[#C9A050] flex flex-col items-center justify-center shadow-lg shadow-[#C9A050]/20 mb-3">

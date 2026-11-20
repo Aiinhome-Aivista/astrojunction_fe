@@ -569,9 +569,9 @@ export const LegalInfoPage: React.FC<LegalInfoPageProps> = ({
   const backLabel = BACK_LABELS[activeLang] || BACK_LABELS.en;
 
   return (
-    <div className="w-full py-8 transition-colors duration-300 font-sans">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`rounded-3xl p-6 sm:p-10 border shadow-2xl backdrop-blur-xl transition-all duration-300 ${
+    <div className="w-full py-4 sm:py-8 transition-colors duration-300 font-sans">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-10 border shadow-2xl backdrop-blur-xl transition-all duration-300 ${
           isLight ? 'bg-white/90 border-[#E5E1D8]' : 'bg-[#141418]/85 border-[#2A2A2E]'
         }`}>
         {/* Navigation Bar: Back Option */}

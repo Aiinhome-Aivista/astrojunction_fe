@@ -84,8 +84,8 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
         </p>
       </div>
 
-      <div 
-        className="relative w-full overflow-hidden pb-8 astro-marquee-mask"
+      <div
+        className="relative w-full overflow-hidden pb-8 md:astro-marquee-mask"
       >
         <div className="flex w-max animate-marquee gap-6 px-4 hover:pause">
           {displayBlogs.map((blog, idx) => {
@@ -97,22 +97,21 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
             const cleanExcerpt = rawExcerpt.length > 120 ? rawExcerpt.substring(0, 120) + '...' : rawExcerpt;
 
             return (
-              <div 
+              <div
                 key={`${blog.id}-${idx}`}
                 onClick={() => {
                   if (onSelectBlog) onSelectBlog(blog);
                   else if (onViewAll) onViewAll();
                 }}
-                className={`shrink-0 w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
-                  isDark 
-                    ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
-                    : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
-                }`}
+                className={`shrink-0 w-[280px] xs:w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${isDark
+                  ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60'
+                  : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
+                  }`}
               >
                 <div className="relative h-[220px] w-full overflow-hidden bg-black/20">
-                  <img 
-                    src={getBlogImageUrl(blog.image_url)} 
-                    alt={blog.title} 
+                  <img
+                    src={getBlogImageUrl(blog.image_url)}
+                    alt={blog.title}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/blog_1.jpg';
                     }}
@@ -124,8 +123,8 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     </span>
                   )}
                 </div>
-                
-                <div 
+
+                <div
                   className={`p-6 md:p-7 flex-1 flex flex-col ${isDark ? 'bg-[#141418]' : 'bg-white'}`}
                 >
                   <div className="flex items-center space-x-2 mb-3 flex-wrap gap-y-1">
@@ -138,24 +137,20 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     </span>
                   </div>
 
-                  <h4 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${
-                    isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
-                  }`}>
+                  <h4 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
+                    }`}>
                     {blog.title}
                   </h4>
-                  
-                  <p className={`text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 mt-auto ${
-                    isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
-                  }`}>
+
+                  <p className={`text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 mt-auto ${isDark ? 'text-[#D0CCC2] font-normal' : 'text-[#4D473E] font-medium'
+                    }`}>
                     {cleanExcerpt}
                   </p>
 
-                  <div className={`pt-3 border-t flex items-center justify-between text-xs font-semibold ${
-                    isDark ? 'border-white/10' : 'border-[#EAE3D4]'
-                  }`}>
-                    <span className={`font-black uppercase tracking-wider ${
-                      isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                  <div className={`pt-3 border-t flex items-center justify-between text-xs font-semibold ${isDark ? 'border-white/10' : 'border-[#EAE3D4]'
                     }`}>
+                    <span className={`font-black uppercase tracking-wider ${isDark ? 'text-[#C9A050]' : 'text-[#8C6218] group-hover:text-[#63440B]'
+                      }`}>
                       Read Article →
                     </span>
                     {blog.created_at && (

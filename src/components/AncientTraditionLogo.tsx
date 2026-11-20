@@ -22,7 +22,7 @@ export const AncientTraditionLogo: React.FC<AncientTraditionLogoProps> = ({
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center rounded-xl p-1.5 transition-transform duration-300 hover:scale-105 ${
+      className={`relative inline-flex items-center justify-center rounded-xl p-1.5 transition-transform duration-300 hover:scale-105 shrink-0 aspect-square ${
         isLight
           ? 'bg-gradient-to-br from-[#FAF5EC] to-[#E8DCBE] border border-[#C9A050]/40 shadow-md shadow-[#C9A050]/10'
           : 'bg-gradient-to-br from-[#1E1B15] to-[#121114] border border-[#C9A050]/40 shadow-lg shadow-black/40'

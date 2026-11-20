@@ -1030,8 +1030,8 @@ Issued by AstroJunction Daivajna Astrological Intelligence Engine
         </div>
       </div>
 
-      {/* 2-Column Grid: Partner 1 & Partner 2 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+      {/* Partner 1 & Partner 2 Cards (Single column on mobile & tablet, 2 columns on desktop) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Partner 1 Card */}
         <div id="partner-card-1" className={`rounded-2xl p-6 sm:p-8 shadow-sm border ${
           theme === 'dark' 

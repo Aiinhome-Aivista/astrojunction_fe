@@ -1547,7 +1547,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
 
         {/* TRADITIONS */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2.5 mt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-5">
           {traditionsList.map((traditionItem) => {
             const isActive =
               tradition === traditionItem.id;
@@ -1595,10 +1595,10 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
         </div>
       </div>
 
-      {/* MAIN GRID (2 COLUMNS ON TABLETS & DESKTOPS) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+      {/* MAIN GRID (2 COLUMNS ON DESKTOPS, STACKED COMFORTABLY ON TABLETS) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT COLUMN */}
-        <div className="md:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-6">
           <div className="bg-[#141418] border border-[#2A2A2E] rounded-xl p-5 text-[#E5E1D8] shadow-xl flex flex-col items-center">
             <div className="w-full pb-3 mb-3 border-b border-[#2A2A2E] space-y-2.5">
               <div className="flex items-center justify-between text-xs">
@@ -1934,7 +1934,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="md:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-6">
           {/* PLANETARY TABLE */}
 
           <div className="bg-[#141418] border border-[#2A2A2E] rounded-xl p-6 text-[#E5E1D8] shadow-xl overflow-x-auto">
@@ -1954,7 +1954,7 @@ Your Vedic Ascendant (Lagna) is placed in **Libra (Tula)** under the sacred aste
               </span>
             </div>
 
-            <table className="w-full text-left text-xs border-collapse font-sans">
+            <table className="w-full min-w-[520px] text-left text-xs border-collapse font-sans">
               <thead>
                 <tr className="border-b border-[#2A2A2E] text-[#9E9A90] font-semibold">
                   <th className="pb-2.5 pl-3 pr-2">{t('birthChart.planets_table.th_planet', 'Planet')}</th>

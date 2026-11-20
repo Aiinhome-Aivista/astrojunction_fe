@@ -767,7 +767,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
       </div>
 
       {/* Zodiac Cards Grid - Uniform & Consistent Design for All 12 Signs */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         {filteredSigns.map((sign) => {
           const isSelected = Boolean(selectedSignId && sign.id === selectedSignId);
           return (
@@ -804,7 +804,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
                   }
                 }, 100);
               }}
-              className={`p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden group hover:scale-[1.02] hover:-translate-y-0.5 ${
+              className={`p-2.5 sm:p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden group hover:scale-[1.02] hover:-translate-y-0.5 ${
                 isSelected
                   ? isDark
                     ? 'bg-[#1C1C22] border-transparent shadow-lg shadow-[#C9A050]/20 ring-2 ring-[#C9A050]'
@@ -815,20 +815,20 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               }`}
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                   <span 
-                    className="text-2xl font-serif text-[#C9A050] group-hover:scale-105 transition duration-200"
+                    className="text-xl sm:text-2xl font-serif text-[#C9A050] group-hover:scale-105 transition duration-200"
                   >
                     {sign.symbol}&#xFE0E;
                   </span>
                   {getElementBadge(sign.element)}
                 </div>
 
-                <h3 className={`astro-zodiac-card-title flex items-baseline space-x-1.5 ${
+                <h3 className={`astro-zodiac-card-title flex flex-col sm:flex-row sm:items-baseline sm:space-x-1.5 ${
                   isDark ? 'text-[#F0ECE1]' : 'text-gray-900'
                 }`}>
-                  <span className="astro-zodiac-card-name">{sign.name}</span>
-                  <span className={`astro-zodiac-card-rashi ${isDark ? 'text-[#C9A050]' : 'text-[#8D6723]'}`}>
+                  <span className="astro-zodiac-card-name text-xs sm:text-sm font-bold truncate">{sign.name}</span>
+                  <span className={`astro-zodiac-card-rashi text-[10px] sm:text-xs truncate ${isDark ? 'text-[#C9A050]' : 'text-[#8D6723]'}`}>
                     ({getLocalizedRashiName(sign.id, currentLang, sign.sanskritScript)})
                   </span>
                 </h3>

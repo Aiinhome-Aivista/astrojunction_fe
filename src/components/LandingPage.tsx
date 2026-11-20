@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquareText, X, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check, ChevronDown } from 'lucide-react';
+import { MessageSquareText, X, Menu, Send, Bot, Lock, Compass, Hash, Milestone, ShieldAlert, Sun, Moon, Home, LayoutDashboard, Globe, Calendar, Play, BookOpen, RotateCcw, ArrowRight, Check, ChevronDown } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
 import { StarfieldBackground } from './StarfieldBackground';
 import { GlobalZodiacView } from './GlobalZodiacView';
@@ -96,11 +96,10 @@ export function HeaderLanguageSwitcher({
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center space-x-1 sm:space-x-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full transition-all border cursor-pointer shrink-0 ${
-          theme === 'dark'
-            ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
-            : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
-        }`}
+        className={`flex items-center space-x-1 sm:space-x-1.5 px-2 py-1 sm:px-3 sm:py-2 rounded-full transition-all border cursor-pointer shrink-0 ${theme === 'dark'
+          ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
+          : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
+          }`}
         aria-label="Change language"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -110,9 +109,8 @@ export function HeaderLanguageSwitcher({
           {activeLangObj.short}
         </span>
         <ChevronDown
-          className={`w-3 h-3 transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180' : ''
-          } ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}
+          className={`w-3 h-3 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''
+            } ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}
         />
       </button>
 
@@ -120,11 +118,10 @@ export function HeaderLanguageSwitcher({
         <div
           role="listbox"
           aria-label="Language"
-          className={`absolute right-0 ${dropUp ? 'bottom-full mb-2' : 'mt-2'} w-40 sm:w-44 rounded-2xl border shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${
-            theme === 'dark'
-              ? 'bg-[#141418]/95 border-[#2A2A2E] text-[#E5E1D8]'
-              : 'bg-white/95 border-gray-200 text-gray-800 shadow-xl'
-          }`}
+          className={`absolute right-0 ${dropUp ? 'bottom-full mb-2' : 'mt-2'} w-40 sm:w-44 rounded-2xl border shadow-2xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${theme === 'dark'
+            ? 'bg-[#141418]/95 border-[#2A2A2E] text-[#E5E1D8]'
+            : 'bg-white/95 border-gray-200 text-gray-800 shadow-xl'
+            }`}
           style={{ maxHeight: 'calc(100vh - 100px)' }}
         >
           {LANGUAGE_LIST.map((lang, idx) => {
@@ -137,15 +134,14 @@ export function HeaderLanguageSwitcher({
                 aria-selected={isSelected}
                 onClick={() => handleSelect(lang.code)}
                 onMouseEnter={() => setHighlightedIndex(idx)}
-                className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-medium transition cursor-pointer text-left ${
-                  isHighlighted || isSelected
-                    ? theme === 'dark'
-                      ? 'bg-[#2A2A2E]/70 text-[#C9A050]'
-                      : 'bg-amber-50 text-[#8C6B28]'
-                    : theme === 'dark'
+                className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-medium transition cursor-pointer text-left ${isHighlighted || isSelected
+                  ? theme === 'dark'
+                    ? 'bg-[#2A2A2E]/70 text-[#C9A050]'
+                    : 'bg-amber-50 text-[#8C6B28]'
+                  : theme === 'dark'
                     ? 'text-[#E5E1D8] hover:bg-white/5'
                     : 'text-gray-700 hover:bg-black/5'
-                }`}
+                  }`}
               >
                 <span className="font-medium text-sm">{lang.label}</span>
                 {isSelected && <Check className="w-3.5 h-3.5 text-[#C9A050] shrink-0" />}
@@ -248,6 +244,7 @@ export function LandingPage({
   const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Track Landing Page View once when visitor arrives on landing page
   const hasTrackedLandingView = useRef(false);
@@ -624,25 +621,25 @@ export function LandingPage({
             {/* Logo */}
             <div
               onClick={handleResetToInitial}
-              className="flex items-center space-x-3 cursor-pointer group select-none"
+              className="flex items-center space-x-1 xs:space-x-1.5 sm:space-x-3 cursor-pointer group select-none shrink-0"
             >
-              <AncientTraditionLogo size="md" isLight={theme === 'light'} />
-              <div>
-                <span className="text-lg sm:text-xl font-serif font-bold tracking-wider flex items-center">
+              <AncientTraditionLogo size="md" isLight={theme === 'light'} className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 shrink-0" />
+              <div className="shrink-0">
+                <span className="text-xs xs:text-sm sm:text-xl font-serif font-bold tracking-wider flex items-center whitespace-nowrap">
                   ASTRO<span className="text-[#C9A050]">JUNCTION</span>
                 </span>
-                <p className={`text-[9px] font-bold tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
+                <p className={`hidden min-[420px]:block text-[8px] sm:text-[9px] font-bold tracking-widest uppercase mt-0.5 whitespace-nowrap ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-gray-500'}`}>
                   {t('header.authentic_wisdom', 'Authentic Vedic Wisdom')}
                 </p>
               </div>
             </div>
 
-            {/* Center Links (Desktop only) */}
-            <div className={`hidden lg:flex items-center space-x-1 px-1.5 py-1.5 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
+            {/* Center Links (Desktop only, drawer handles mobile & tablet) */}
+            <div className={`hidden xl:flex items-center space-x-0.5 lg:space-x-1 px-1 lg:px-1.5 py-1 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
               <a
                 href="#hero-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('hero-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
@@ -653,7 +650,7 @@ export function LandingPage({
               <a
                 href="#zodiac-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('zodiac-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
@@ -664,7 +661,7 @@ export function LandingPage({
               <a
                 href="#panjika-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('panjika-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
@@ -675,17 +672,18 @@ export function LandingPage({
               <a
                 href="#remedies-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('remedies-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
               >
+                <Compass className="w-3.5 h-3.5" />
                 <span>{t('header.nav.remedies')}</span>
               </a>
               <a
                 href="/blogs"
                 onClick={(e) => { e.preventDefault(); scrollToSection('blog-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
@@ -696,7 +694,7 @@ export function LandingPage({
               <a
                 href="#premium-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('premium-section'); }}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
+                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
                   : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
                   }`}
@@ -707,11 +705,13 @@ export function LandingPage({
             </div>
 
             {/* Right Controls */}
-            <div className="flex items-center space-x-1 sm:space-x-3 shrink-0">
-              <HeaderLanguageSwitcher theme={theme} />
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+              <div className="hidden sm:block shrink-0">
+                <HeaderLanguageSwitcher theme={theme} />
+              </div>
               <button
                 onClick={toggleTheme}
-                className={`p-1.5 sm:p-2.5 rounded-full transition-all border shrink-0 ${theme === 'dark'
+                className={`p-1.5 sm:p-2 rounded-full transition-all border shrink-0 ${theme === 'dark'
                   ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:border-[#C9A050]/50'
                   : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
                   }`}
@@ -758,7 +758,7 @@ export function LandingPage({
                 <>
                   <button
                     onClick={handleLoginClick}
-                    className={`hidden sm:block px-5 py-2.5 rounded-full font-bold text-[13px] transition-all cursor-pointer border shadow-sm ${theme === 'dark'
+                    className={`hidden sm:block px-4 py-2 rounded-full font-bold text-xs sm:text-[13px] transition-all cursor-pointer border shadow-sm ${theme === 'dark'
                       ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
                       : 'bg-white border-gray-200 text-[#0D0D0F] hover:text-[#8C6B28] hover:border-[#C9A050]/50'
                       }`}
@@ -767,16 +767,146 @@ export function LandingPage({
                   </button>
                   <button
                     onClick={handleRegisterClick}
-                    className="px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs sm:text-sm hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-sm hover:shadow-md shrink-0 whitespace-nowrap"
+                    className="px-2.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs sm:text-sm hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-sm hover:shadow-md shrink-0 whitespace-nowrap"
                   >
                     {t('header.get_started')}
                   </button>
                 </>
               )}
+
+              {/* Mobile / Tablet Menu Button (xl:hidden) */}
+              <button
+                onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                className={`xl:hidden flex items-center justify-center w-8 h-8 rounded-lg border transition cursor-pointer shrink-0 ${theme === 'dark'
+                  ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8] hover:text-[#C9A050] hover:border-[#C9A050]/50'
+                  : 'bg-[#FAF3DF] border-[#DFC896] text-[#2C2825] hover:text-[#C9A050] hover:border-[#C9A050]'
+                  }`}
+                aria-label="Toggle navigation drawer"
+              >
+                {isMobileMenuOpen ? <X className="w-4 h-4 text-[#C9A050]" /> : <Menu className="w-4 h-4" />}
+              </button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile & Tablet Slide-Out Navigation Drawer for Landing Page */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 xl:hidden bg-black/60 backdrop-blur-sm flex justify-end animate-fade-in">
+          <div className={`w-[82%] max-w-sm h-full border-l p-5 shadow-2xl flex flex-col justify-between overflow-y-auto font-sans ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-[#E5E1D8]' : 'bg-[#FAF5E6] border-[#DFC896] text-[#2C2825]'
+            }`}>
+            <div>
+              {/* Drawer Header */}
+              <div className={`flex items-center justify-between pb-4 border-b ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]'}`}>
+                <div
+                  className="flex items-center space-x-2.5 cursor-pointer select-none"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    scrollToSection('hero-section');
+                  }}
+                >
+                  <AncientTraditionLogo size="sm" isLight={theme === 'light'} />
+                  <div>
+                    <span className="text-base font-serif font-bold tracking-wider">
+                      ASTRO<span className="text-[#C9A050]">JUNCTION</span>
+                    </span>
+                    <p className="text-[9px] font-bold tracking-widest uppercase text-[#C9A050]">
+                      {t('header.authentic_wisdom', 'Authentic Vedic Wisdom')}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`p-1.5 rounded-lg border transition cursor-pointer ${theme === 'dark' ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white' : 'border-[#DFC896] text-gray-600 hover:text-black'
+                    }`}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Language Selector in Mobile Drawer */}
+              <div className={`flex items-center justify-between px-3.5 py-2.5 my-3 rounded-xl border ${theme === 'dark' ? 'bg-[#1C1A27]/60 border-[#2A2A2E]' : 'bg-[#FAF2DE] border-[#DFC896]'
+                }`}>
+                <span className={`text-xs font-semibold ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-[#7A6F5D]'}`}>
+                  {t('userPanel.drawer.selectLanguage', 'Language')}
+                </span>
+                <HeaderLanguageSwitcher theme={theme} />
+              </div>
+
+              {/* Drawer Navigation Links */}
+              <div className="mt-5 space-y-1.5">
+                {[
+                  { id: 'hero-section', label: t('header.nav.home'), icon: Home },
+                  { id: 'zodiac-section', label: t('header.nav.zodiac'), icon: Globe },
+                  { id: 'panjika-section', label: t('header.nav.panjika'), icon: Calendar },
+                  { id: 'remedies-section', label: t('header.nav.remedies'), icon: Compass },
+                  { id: 'blog-section', label: t('header.nav.blogs'), icon: BookOpen },
+                  { id: 'premium-section', label: t('header.nav.premium'), icon: Lock },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        scrollToSection(item.id);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${isActive
+                        ? 'bg-[#C9A050] text-[#0D0D0F] font-bold shadow-md'
+                        : theme === 'dark'
+                          ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5'
+                          : 'text-[#5C574F] hover:text-[#1A1816] hover:bg-black/5'
+                        }`}
+                    >
+                      <Icon className="w-4 h-4 shrink-0 text-[#C9A050]" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Drawer Bottom Actions */}
+            <div className={`pt-4 border-t ${theme === 'dark' ? 'border-[#2A2A2E]' : 'border-[#DFC896]'} space-y-2`}>
+              {!authUser ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleRegisterClick();
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs shadow-md text-center cursor-pointer"
+                  >
+                    {t('header.get_started')}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLoginClick();
+                    }}
+                    className={`w-full py-2 rounded-xl text-xs font-bold border transition text-center cursor-pointer ${theme === 'dark' ? 'border-[#2A2A2E] text-[#E5E1D8]' : 'border-[#DFC896] text-[#2C2825]'
+                      }`}
+                  >
+                    {t('header.login')}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onGoToDashboard();
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs shadow-md text-center flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>{t('header.dashboard')}</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main className="flex-1 relative z-10 scroll-smooth">
@@ -806,15 +936,15 @@ export function LandingPage({
           <LegalInfoPage
             view={currentView as LegalPageView}
             onBack={() => {
-              if (window.history.state?.returnToAuth || (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host))) {
-                window.history.back();
-              } else {
-                setCurrentView('landing');
-                if (window.location.pathname !== '/') {
-                  window.history.pushState({}, '', '/');
-                }
-                window.dispatchEvent(new PopStateEvent('popstate'));
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+              const returnToAuth = sessionStorage.getItem('return_to_auth');
+              setCurrentView('landing');
+              if (window.location.pathname !== '/') {
+                window.history.pushState({}, '', '/');
+              }
+              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+              if (returnToAuth) {
+                sessionStorage.removeItem('return_to_auth');
+                onLoginClick();
               }
             }}
             onNavigateView={(v) => {
@@ -828,21 +958,21 @@ export function LandingPage({
           />
         ) : (
           <div className="max-w-7xl mx-auto px-3 sm:px-6 relative z-10">
-            <div id="hero-section" className="scroll-mt-24 min-h-[calc(100vh-5rem)] py-8 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div id="hero-section" className="scroll-mt-24 min-h-[calc(100vh-5rem)] py-4 sm:py-8 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center">
 
               {/* Left Column: Greetings */}
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
-                <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
+                <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C9A050]/20 to-transparent border border-[#C9A050]/30 text-[#C9A050] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2 sm:mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(201,160,80,0.15)]">
                   <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                   <span>{t('hero.badge', 'Authentic Vedic Oracle')}</span>
                 </div>
 
-                <h1 className={`astro-hero-title text-2xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-6 uppercase tracking-wider ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                <h1 className={`astro-hero-title text-xl sm:text-5xl lg:text-6xl font-serif font-extrabold leading-tight mb-2 sm:mb-6 uppercase tracking-wider ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                   <Trans
                     i18nKey="hero.title"
                     components={{
                       brand: (
-                        <span 
+                        <span
                           className="astro-hero-brand inline-flex mt-1 sm:mt-2 items-center justify-center lg:justify-start font-extrabold whitespace-nowrap"
                           style={{ fontFamily: "'Stardom', Georgia, serif" }}
                         >
@@ -885,14 +1015,14 @@ export function LandingPage({
                   />
                 </h1>
 
-                <p className={`max-w-xl text-lg sm:text-xl mb-10 leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-black'}`}>
+                <p className={`max-w-xl text-xs sm:text-lg lg:text-xl mb-4 sm:mb-10 leading-relaxed ${theme === 'dark' ? 'text-[#D0CBC0]' : 'text-black'}`}>
                   {t('hero.description')}
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
                   <button
                     onClick={authUser ? onGoToDashboard : handleRegisterClick}
-                    className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
+                    className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-8 sm:py-4 rounded-xl bg-gradient-to-r from-[#C9A050] to-[#8C6B28] text-white font-bold text-xs sm:text-base hover:from-[#D4AF37] hover:to-[#A37B2F] transition-all cursor-pointer shadow-[0_0_20px_rgba(201,160,80,0.4)] hover:shadow-[0_0_30px_rgba(201,160,80,0.6)] hover:-translate-y-1"
                   >
                     <span>{authUser ? t('hero.cta_dashboard') : t('hero.cta_unlock')}</span>
                   </button>
@@ -904,7 +1034,7 @@ export function LandingPage({
                 <div className="absolute inset-0 bg-[#C9A050]/20 rounded-full blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 lg:translate-x-16"></div>
 
                 {/* The wheel container */}
-                <div className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] flex items-center justify-center lg:translate-x-[15%]">
+                <div className="relative w-36 h-36 xs:w-44 xs:h-44 sm:w-72 sm:h-72 lg:w-[480px] lg:h-[480px] flex items-center justify-center lg:translate-x-[15%]">
                   <img
                     src="/white_zodiac_wheel.png"
                     alt="AstroJunction Zodiac Wheel"
@@ -917,23 +1047,23 @@ export function LandingPage({
                     <div className="absolute inset-0 rounded-full bg-[#C9A050]/20 blur-2xl animate-pulse"></div>
 
                     {/* Rotating decorative dashed ring */}
-                    <div className="absolute w-28 h-28 sm:w-[150px] sm:h-[150px] rounded-full border-[1.5px] border-dashed border-[#C9A050]/50 animate-[spin_40s_linear_infinite_reverse]"></div>
+                    <div className="absolute w-14 h-14 xs:w-18 xs:h-18 sm:w-[110px] sm:h-[110px] rounded-full border-[1.5px] border-dashed border-[#C9A050]/50 animate-[spin_40s_linear_infinite_reverse]"></div>
 
                     {/* Core Container */}
-                    <div className="relative bg-gradient-to-br from-[#1C1A14] to-[#0A0907] border-[2px] border-[#C9A050]/80 shadow-[0_0_40px_rgba(201,160,80,0.6),inset_0_0_15px_rgba(201,160,80,0.2)] rounded-full w-24 h-24 sm:w-32 sm:h-32 flex flex-col items-center justify-center overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[#1C1A14] to-[#0A0907] border-[2px] border-[#C9A050]/80 shadow-[0_0_40px_rgba(201,160,80,0.6),inset_0_0_15px_rgba(201,160,80,0.2)] rounded-full w-12 h-12 xs:w-16 xs:h-16 sm:w-24 sm:h-24 flex flex-col items-center justify-center overflow-hidden">
 
                       {/* Inner gold reflection / glass highlight */}
                       <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent rounded-full pointer-events-none"></div>
 
                       {/* Central Om Symbol with Glow */}
-                      <span className="text-[#D4AF37] text-2xl sm:text-3xl leading-none drop-shadow-[0_0_12px_rgba(201,160,80,0.9)] mb-1">
+                      <span className="text-[#D4AF37] text-sm xs:text-base sm:text-2xl leading-none drop-shadow-[0_0_12px_rgba(201,160,80,0.9)] mb-0.5 sm:mb-1">
                         ॐ
                       </span>
 
                       {/* Typography */}
-                      <span className="text-[#E5C170] font-serif font-bold text-[8px] sm:text-[10px] tracking-[0.25em] text-center flex flex-col items-center drop-shadow-md">
+                      <span className="text-[#E5C170] font-serif font-bold text-[6.5px] xs:text-[7.5px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] text-center flex flex-col items-center drop-shadow-md">
                         <span>ASTRO</span>
-                        <span className="font-sans text-[8px] sm:text-[9.5px] tracking-normal mt-0.5 text-[#C9A050]">JUNCTION</span>
+                        <span className="font-sans text-[7px] xs:text-[8px] sm:text-[9.5px] tracking-normal mt-0.5 text-[#C9A050]">JUNCTION</span>
                       </span>
                     </div>
                   </div>

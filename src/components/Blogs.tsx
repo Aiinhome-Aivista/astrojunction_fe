@@ -664,7 +664,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                   if (onSelectBlog) onSelectBlog(blog);
                   else if (onViewAll) onViewAll();
                 }}
-                className={`shrink-0 w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
+                className={`shrink-0 w-[280px] xs:w-[320px] md:w-[380px] rounded-[2rem] overflow-hidden flex flex-col cursor-pointer transition-all hover:-translate-y-2 duration-300 shadow-xl border-2 group ${
                   isDark 
                     ? 'bg-[#141418] border-[#2A2A2E] shadow-black/60 hover:border-[#C9A050]/60' 
                     : 'bg-white border-[#E2D9C8] shadow-amber-900/10 hover:border-[#C9A050]'
