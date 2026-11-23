@@ -583,29 +583,37 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
     switch (element) {
       case 'Fire':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
-            <Flame className="w-3 h-3 text-rose-400" />
+          <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+            isDark ? 'bg-rose-500/20 text-rose-200 border-rose-500/40' : 'bg-rose-100 text-rose-900 border-rose-300 font-bold'
+          }`}>
+            <Flame className={`w-3 h-3 ${isDark ? 'text-rose-300' : 'text-rose-800'}`} />
             <span>{element}</span>
           </span>
         );
       case 'Earth':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-            <Mountain className="w-3 h-3 text-emerald-400" />
+          <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+            isDark ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/40' : 'bg-emerald-100 text-emerald-900 border-emerald-300 font-bold'
+          }`}>
+            <Mountain className={`w-3 h-3 ${isDark ? 'text-emerald-300' : 'text-emerald-800'}`} />
             <span>{element}</span>
           </span>
         );
       case 'Air':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">
-            <Wind className="w-3 h-3 text-sky-400" />
+          <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+            isDark ? 'bg-sky-500/20 text-sky-200 border-sky-500/40' : 'bg-sky-100 text-sky-900 border-sky-300 font-bold'
+          }`}>
+            <Wind className={`w-3 h-3 ${isDark ? 'text-sky-300' : 'text-sky-800'}`} />
             <span>{element}</span>
           </span>
         );
       case 'Water':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
-            <Droplets className="w-3 h-3 text-indigo-400" />
+          <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+            isDark ? 'bg-indigo-500/20 text-indigo-200 border-indigo-500/40' : 'bg-indigo-100 text-indigo-900 border-indigo-300 font-bold'
+          }`}>
+            <Droplets className={`w-3 h-3 ${isDark ? 'text-indigo-300' : 'text-indigo-800'}`} />
             <span>{element}</span>
           </span>
         );
@@ -637,9 +645,9 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               <Globe className="w-3.5 h-3.5 text-[#C9A050]" />
               <span>{t('zodiac.title')}</span>
             </div>
-            <h1 className="astro-page-header-title">
+            <h2 className="astro-page-header-title text-xl sm:text-2xl font-bold font-serif">
               {t('zodiac.title')}
-            </h1>
+            </h2>
             <p className="text-xs sm:text-sm text-[#9E9A90] mt-1 max-w-3xl leading-relaxed">
               {t('zodiac.subtitle')}
             </p>
@@ -673,7 +681,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
         </div>
 
         {/* Ayanamsha Note */}
-        <div className="mt-3 pt-3 border-t border-[#2A2A2E]/60 flex items-center space-x-2 text-[10px] sm:text-xs text-[#C9A050]/90">
+        <div className="mt-3 pt-3 border-t border-[#2A2A2E]/60 flex items-center space-x-2 text-[10px] sm:text-xs text-[#F5D07A] font-medium">
           <Compass className="w-3 h-3 flex-shrink-0 text-[#C9A050]" />
           <span>{t('zodiac.ayanamsha_note')}</span>
         </div>
@@ -841,11 +849,11 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
               </div>
 
               <div className={`mt-3 pt-3 border-t flex items-center justify-between text-[10px] ${
-                isDark ? 'border-[#2A2A2E]/60 text-[#9E9A90]' : 'border-gray-100 text-gray-500'
+                isDark ? 'border-[#2A2A2E]/60 text-[#D0CCC2]' : 'border-[#E5E1D8] text-[#55524B] font-medium'
               }`}>
                 <span>{sign.glyph}</span>
                 <span className={`font-semibold ${
-                  isDark ? 'text-emerald-400' : 'text-[#8D6723]'
+                  isDark ? 'text-emerald-300' : 'text-emerald-900 font-bold'
                 }`}>
                   {vitalityMap[sign.id] ?? (zodiacSystem === 'sidereal' ? Math.max(0, sign.vitalityToday - 3) : sign.vitalityToday)}% {t('zodiac.vitality')}
                 </span>
@@ -873,9 +881,9 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-                <h2 className={`text-lg sm:text-xl font-bold astro-zodiac-detail-title ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
+                <h3 className={`text-lg sm:text-xl font-bold astro-zodiac-detail-title ${isDark ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>
                   {activeSign.name} • {activeSign.sanskritName} ({getLocalizedRashiName(activeSign.id, currentLang, activeSign.sanskritScript)})
-                </h2>
+                </h3>
                 {getElementBadge(activeSign.element)}
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
                   isDark ? 'bg-[#2A2A2E] text-[#E5E1D8]' : 'bg-gray-100 text-gray-700'

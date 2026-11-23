@@ -364,9 +364,9 @@
       "selectLanguage": "Language"
     },
     "fab": {
-      "title": "Ask Daivajna Astrologer",
-      "ariaLabel": "Ask Daivajna",
-      "label": "Daivajna"
+      "title": "Chat With Us",
+      "ariaLabel": "Chat With Us",
+      "label": "Chat With Us"
     }
   },
   "vedic": {

@@ -936,9 +936,9 @@
       "selectLanguage": "Langue"
     },
     "fab": {
-      "title": "Consulter l'Astrologue Daivajna",
-      "ariaLabel": "Consulter Daivajna",
-      "label": "Daivajna"
+      "title": "Discutez avec nous",
+      "ariaLabel": "Discutez avec nous",
+      "label": "Discuter"
     }
   },
   "vedic": {

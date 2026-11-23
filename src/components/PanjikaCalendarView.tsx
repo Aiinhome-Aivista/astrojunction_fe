@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Calendar as CalendarIcon,
@@ -13,6 +13,7 @@ import {
   ArrowRightLeft,
   Sparkles,
   Star,
+  Globe,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
@@ -109,6 +110,11 @@ export const toHindiNum = (num: string | number): string => {
 const MONTH_NAMES_EN = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+const MONTH_NAMES_SHORT = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ];
 
 export const PANCHANG_TERMS_MAP: Record<string, {bn: string; hi: string}> = {
@@ -295,6 +301,64 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
     // Do NOT reset selectedDay — we don't want modal to close when language changes
     setCalendarLang(newLang);
   };
+
+  // Compute corresponding Bengali and Hindi months for the selected Gregorian month & year
+  const currentRegionalMonths = useMemo(() => {
+    const MONTH_SOLAR_MAP = [
+      { ben: 'পৌষ - মাঘ', hi: 'पौष - माघ' },
+      { ben: 'মাঘ - ফাল্গুন', hi: 'माघ - फाल्गुन' },
+      { ben: 'ফাল্গুন - চৈত্র', hi: 'फाल्गुन - चैत्र' },
+      { ben: 'চৈত্র - বৈশাখ', hi: 'चैत्र - वैशाख' },
+      { ben: 'বৈশাখ - জ্যৈষ্ঠ', hi: 'वैशाख - ज्येष्ठ' },
+      { ben: 'জ্যৈষ্ঠ - আষাঢ়', hi: 'ज्येष्ठ - आषाढ़' },
+      { ben: 'আষাঢ় - শ্রাবণ', hi: 'आषाढ़ - श्रावण' },
+      { ben: 'শ্রাবণ - ভাদ্র', hi: 'श्रावण - भाद्रपद' },
+      { ben: 'ভাদ্র - আশ্বিন', hi: 'भाद्रपद - आश्विन' },
+      { ben: 'আশ্বিন - কার্তিক', hi: 'आश्विन - कार्तिक' },
+      { ben: 'কার্তিক - অগ্রহায়ণ', hi: 'कार्तिक - मार्गशीर्ष' },
+      { ben: 'অগ্রহায়ণ - পৌষ', hi: 'मार्गशीर्ष - पौष' },
+    ];
+
+    const monthIdx = currentDate.getMonth();
+    let benText = MONTH_SOLAR_MAP[monthIdx]?.ben || '';
+    let hinText = MONTH_SOLAR_MAP[monthIdx]?.hi || '';
+
+    if (calendarData?.days && calendarData.days.length > 0) {
+      const benSet = new Set<string>();
+      const hinSet = new Set<string>();
+
+      calendarData.days.forEach((d: any) => {
+        // Extract Bengali month
+        if (d.bengali_date) {
+          const parts = d.bengali_date.trim().split(' ');
+          if (parts[1]) {
+            const found = BENGALI_MONTHS_LIST.find(x => x.en.toLowerCase() === parts[1].toLowerCase());
+            if (found) benSet.add(found.bn);
+            else benSet.add(parts[1]);
+          }
+        }
+        // Extract Hindi month (stored after comma: e.g. "Saptami (Krishna Paksha), Kartika 2083 VS")
+        if (d.hindi_date) {
+          const commaParts = d.hindi_date.split(',');
+          if (commaParts[1]) {
+            const afterComma = commaParts[1].trim().split(' ');
+            const rawMonthName = afterComma[0];
+            if (rawMonthName) {
+              const found = HINDI_MONTHS_LIST.find(x => x.en.toLowerCase() === rawMonthName.toLowerCase())
+                || BENGALI_MONTHS_LIST.find(x => x.en.toLowerCase() === rawMonthName.toLowerCase());
+              if (found) hinSet.add(found.hi);
+              else hinSet.add(rawMonthName);
+            }
+          }
+        }
+      });
+
+      if (benSet.size > 0) benText = Array.from(benSet).join(' - ');
+      if (hinSet.size > 0) hinText = Array.from(hinSet).join(' - ');
+    }
+
+    return { benText, hinText };
+  }, [calendarData, currentDate]);
 
   const fetchFullPanjika = async (dateStr: string) => {
     setModalLoading(true);
@@ -557,56 +621,67 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
               : 'bg-[#FFFFFF]/95 border-[#E5E1D8] shadow-amber-900/5'
           }`}>
             
-            {/* Calendar Controls & Month Header */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 border-b border-[#C9A050]/20 mb-3">
+            {/* Calendar Controls & Month Header (All 3 in 1 Single Line, Responsive Wrap on Narrow Mobile) */}
+            <div className="flex items-center justify-between gap-1.5 w-full flex-wrap sm:flex-nowrap pb-2 border-b border-[#C9A050]/20 mb-3">
               
-              {/* Modern Unified Month / Year Navigation Pill */}
-              <div className={`inline-flex items-center justify-center p-0.5 rounded-xl border shadow-xs transition-all w-full sm:w-auto ${
+              {/* Box 1: Compact Month / Year Navigation Pill */}
+              <div className={`inline-flex items-center px-1 py-0.5 rounded-full border shadow-xs shrink-0 ${
                 isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4]'
               }`}>
                 {/* Prev Button */}
                 <button
                   onClick={prevMonth}
                   title="Previous Month"
-                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  aria-label="Previous Month"
+                  className={`p-0.5 rounded-full transition-all cursor-pointer ${
                     isDark
                       ? 'text-[#9E9A90] hover:text-[#C9A050] hover:bg-[#1A1A1E]'
                       : 'text-gray-600 hover:text-[#8C6B28] hover:bg-[#C9A050]/15'
                   }`}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3 h-3" />
                 </button>
 
-                <div className="h-4 w-px bg-[#C9A050]/20 mx-1" />
+                <div className="h-3 w-px bg-[#C9A050]/20 mx-0.5" />
 
-                {/* Month Selector */}
+                {/* Month Selector (Compact Short Form) */}
                 <div className="relative flex items-center">
+                  <label htmlFor="panjika-month-select" className="sr-only">
+                    Select Month
+                  </label>
                   <select
+                    id="panjika-month-select"
                     value={currentDate.getMonth()}
                     onChange={(e) =>
                       setCurrentDate(new Date(currentDate.getFullYear(), parseInt(e.target.value), 1))
                     }
-                    className="appearance-none bg-transparent text-xs sm:text-sm font-bold pl-2 pr-5 py-1 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050] hover:opacity-80 transition-opacity"
+                    aria-label="Select Month"
+                    className="appearance-none bg-transparent text-[10.5px] sm:text-xs font-bold pl-1 pr-3 py-0.5 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050] hover:opacity-80 transition-opacity"
                   >
-                    {MONTH_NAMES_EN.map((m, i) => (
+                    {MONTH_NAMES_SHORT.map((m, i) => (
                       <option key={m} value={i} className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
                         {m}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3 h-3 text-[#C9A050] absolute right-1 pointer-events-none opacity-80" />
+                  <ChevronDown className="w-2 h-2 text-[#C9A050] absolute right-0.5 pointer-events-none opacity-80" />
                 </div>
 
-                <span className="text-gray-300 dark:text-gray-600 text-xs font-light mx-0.5">•</span>
+                <span className="text-gray-300 dark:text-gray-600 text-[9px] font-light mx-0.5">•</span>
 
                 {/* Year Selector */}
                 <div className="relative flex items-center">
+                  <label htmlFor="panjika-year-select" className="sr-only">
+                    Select Year
+                  </label>
                   <select
+                    id="panjika-year-select"
                     value={currentDate.getFullYear()}
                     onChange={(e) =>
                       setCurrentDate(new Date(parseInt(e.target.value), currentDate.getMonth(), 1))
                     }
-                    className="appearance-none bg-transparent text-xs sm:text-sm font-bold pl-2 pr-5 py-1 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050] hover:opacity-80 transition-opacity"
+                    aria-label="Select Year"
+                    className="appearance-none bg-transparent text-[10.5px] sm:text-xs font-bold pl-1 pr-3 py-0.5 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050] hover:opacity-80 transition-opacity"
                   >
                     {Array.from({ length: 151 }, (_, i) => 1950 + i).map((y) => (
                       <option key={y} value={y} className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
@@ -614,92 +689,90 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3 h-3 text-[#C9A050] absolute right-1 pointer-events-none opacity-80" />
+                  <ChevronDown className="w-2 h-2 text-[#C9A050] absolute right-0.5 pointer-events-none opacity-80" />
                 </div>
 
-                <div className="h-4 w-px bg-[#C9A050]/20 mx-1" />
+                <div className="h-3 w-px bg-[#C9A050]/20 mx-0.5" />
 
                 {/* Next Button */}
                 <button
                   onClick={nextMonth}
                   title="Next Month"
-                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  aria-label="Next Month"
+                  className={`p-0.5 rounded-full transition-all cursor-pointer ${
                     isDark
                       ? 'text-[#9E9A90] hover:text-[#C9A050] hover:bg-[#1A1A1E]'
                       : 'text-gray-600 hover:text-[#8C6B28] hover:bg-[#C9A050]/15'
                   }`}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
 
-              {/* Language Dropdown Selector */}
-              <div className="flex items-center justify-between sm:justify-start space-x-2 w-full sm:w-auto">
-                <span className={`text-xs font-bold uppercase tracking-wider ${
-                  isDark ? 'text-[#9E9A90]' : 'text-gray-500'
+              {/* Box 2: Corresponding Bengali & Hindi Months Pill (Super Compact) */}
+              {currentRegionalMonths && (
+                <div className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded-full text-[8.5px] sm:text-[9.5px] font-semibold border shadow-xs whitespace-nowrap shrink-0 ${
+                  isDark ? 'bg-[#0D0D0F] border-[#2A2A2E] text-[#E5C170]' : 'bg-[#FAF8F5] border-[#D4CFC4] text-[#8C6B28]'
                 }`}>
-                  Language:
-                </span>
-                <div className={`relative flex items-center p-0.5 rounded-xl border shadow-xs ${
-                  isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4]'
-                }`}>
-                  <select
-                    value={calendarLang}
-                    onChange={(e) => handleLanguageChange(e.target.value as any)}
-                    className="appearance-none bg-transparent text-xs font-bold pl-2.5 pr-6 py-1 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050]"
-                  >
-                    <option value="all" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
-                      All
-                    </option>
-                    <option value="bn" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
-                      Bengali
-                    </option>
-                    <option value="hi" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
-                      Hindi
-                    </option>
-                    <option value="en" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
-                      English
-                    </option>
-                  </select>
-                  <ChevronDown className="w-3 h-3 text-[#C9A050] absolute right-2 pointer-events-none opacity-80" />
+                  <span className="flex items-center space-x-0.5">
+                    <span className="text-[7.5px] opacity-70">বাং:</span>
+                    <strong className="font-bold">{currentRegionalMonths.benText}</strong>
+                  </span>
+                  <span className="opacity-25 text-[8px]">|</span>
+                  <span className="flex items-center space-x-0.5">
+                    <span className="text-[7.5px] opacity-70">हिं:</span>
+                    <strong className="font-bold">{currentRegionalMonths.hinText}</strong>
+                  </span>
                 </div>
+              )}
+
+              {/* Box 3: Compact Language Dropdown Selector (Integrated Pill) */}
+              <div className={`relative flex items-center px-1.5 py-0.5 rounded-full border shadow-xs shrink-0 ${
+                isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-white border-[#D4CFC4]'
+              }`}>
+                <label htmlFor="calendar-lang-select" className="sr-only">
+                  Select Language
+                </label>
+                <Globe className="w-2.5 h-2.5 text-[#C9A050] mr-0.5 shrink-0" />
+                <select
+                  id="calendar-lang-select"
+                  value={calendarLang}
+                  onChange={(e) => handleLanguageChange(e.target.value as any)}
+                  aria-label="Select Language"
+                  className="appearance-none bg-transparent text-[10px] sm:text-[11px] font-bold pl-0.5 pr-3.5 py-0 outline-none cursor-pointer text-[#8C6B28] dark:text-[#C9A050]"
+                >
+                  <option value="all" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
+                    All
+                  </option>
+                  <option value="bn" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
+                    বাংলা
+                  </option>
+                  <option value="hi" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
+                    हिन्दी
+                  </option>
+                  <option value="en" className={isDark ? 'bg-[#141418] text-[#E5E1D8]' : 'bg-white text-black'}>
+                    English
+                  </option>
+                </select>
+                <ChevronDown className="w-2 h-2 text-[#C9A050] absolute right-1 pointer-events-none opacity-80" />
               </div>
+
             </div>
 
-            {/* Calendar Grid Header (Sun - Sat) */}
+            {/* Calendar Grid Header (Sun - Sat) - Single name only, no duplicate stacked names */}
             <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-1.5">
               {WEEKDAYS_MAP.map((w) => {
                 const isSun = w.en === 'Sun';
+                const weekdayName =
+                  calendarLang === 'bn' ? w.bn : calendarLang === 'hi' ? w.hi : w.en;
                 return (
                   <div
                     key={w.en}
-                    className={`text-center py-1 rounded-lg font-bold text-xs uppercase tracking-wider ${
+                    className={`text-center py-1 sm:py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider ${
                       isSun ? 'text-amber-600 font-extrabold' : isDark ? 'text-[#9E9A90]' : 'text-black'
                     }`}
                   >
-                    {calendarLang === 'bn' ? (
-                      <>
-                        <span className="block text-xs font-bold">{w.bn}</span>
-                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullBn}</span>
-                      </>
-                    ) : calendarLang === 'hi' ? (
-                      <>
-                        <span className="block text-xs font-bold">{w.hi}</span>
-                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullHi}</span>
-                      </>
-                    ) : calendarLang === 'en' ? (
-                      <>
-                        <span className="block text-xs font-bold">{w.en}</span>
-                        <span className="hidden sm:block text-[10px] opacity-75 font-normal">{w.fullEn}</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="block text-xs font-bold">{w.en}</span>
-                        <span className="block text-[9px] sm:text-[10px] opacity-80 font-normal truncate">
-                          {w.bn} • {w.hi}
-                        </span>
-                      </>
-                    )}
+                    <span>{weekdayName}</span>
                   </div>
                 );
               })}
@@ -741,14 +814,19 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
 
                   const benShort = dayData.bengali_date ? dayData.bengali_date.split(' ').slice(0, 2).join(' ') : '';
                   const benParts = benShort.split(' ');
-                  const benDayNum = calendarLang === 'en' ? benParts[0] : toBengaliNum(benParts[0] || '');
-                  const hinDayNum = toHindiNum(benParts[0] || '');
+                  const rawBenDay = benParts[0] || '';
+                  const rawBenMonth = benParts[1] || '';
                   
                   const benMonthObj = BENGALI_MONTHS_LIST.find(
-                    (m) => m.en.toLowerCase() === (benParts[1] || '').toLowerCase()
+                    (m) => m.en.toLowerCase() === rawBenMonth.toLowerCase()
                   );
-                  const benMonthName = calendarLang === 'en' ? (benParts[1] || '') : benMonthObj ? benMonthObj.bn : benParts[1];
-                  const hinMonthName = benMonthObj ? benMonthObj.hi : benParts[1];
+                  const benMonthShortBn = benMonthObj ? benMonthObj.bn : rawBenMonth;
+                  const benMonthShortHi = benMonthObj ? benMonthObj.hi : rawBenMonth;
+                  const benMonthShortEn = rawBenMonth;
+
+                  const benDayNum = toBengaliNum(rawBenDay);
+                  const hinDayNum = toHindiNum(rawBenDay);
+                  const engDayNum = dayData.day;
 
                   const tithiBn = TITHI_MAP[dayData.tithi]?.bn || dayData.tithi;
                   const tithiHi = TITHI_MAP[dayData.tithi]?.hi || dayData.tithi;
@@ -791,11 +869,8 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       ? 'Ekadashi'
                       : 'একাদশী • एकादशी';
 
-                  // Month display string for top right
-                  let topRegionalDate = `${benDayNum} ${benMonthName}`;
-                  if (calendarLang === 'hi') {
-                    topRegionalDate = `${hinDayNum} ${hinMonthName}`;
-                  }
+                  const cellDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayData.day).getDay();
+                  const isSunday = cellDayOfWeek === 0;
 
                   return (
                     <motion.div
@@ -803,7 +878,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       whileHover={{ scale: 1.02, y: -1 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => openDayModal(dayData)}
-                      className={`min-h-[48px] sm:min-h-[62px] p-1 sm:p-1.5 rounded-md sm:rounded-xl border transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden group shadow-xs ${
+                      className={`min-h-[58px] sm:min-h-[72px] p-1 sm:p-1.5 rounded-lg sm:rounded-xl border transition-all flex flex-col justify-between cursor-pointer relative overflow-hidden group shadow-xs box-border ${
                         isSelected
                           ? 'border-[#C9A050] bg-[#C9A050]/20 shadow-md shadow-[#C9A050]/30 ring-2 ring-[#C9A050]/40'
                           : isToday
@@ -819,50 +894,75 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           : 'bg-[#FDFBF7] border-[#EAE6DF] hover:border-[#C9A050]/60 hover:bg-white shadow-sm'
                       }`}
                     >
-                      {/* Top Row: Gregorian Date Number & Regional Bengali/Hindi Date */}
-                      <div className="flex items-center justify-between">
+                      {/* Top Row: Small Corner Regional / Secondary Date (Traditional Calendar Style) */}
+                      <div className="flex items-center justify-between w-full overflow-hidden leading-none text-[7.5px] sm:text-[9.5px]">
+                        {calendarLang === 'bn' ? (
+                          <>
+                            <span className="font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate">
+                              {benMonthShortBn}
+                            </span>
+                            <span className="font-medium text-gray-400 dark:text-gray-500 shrink-0">
+                              {engDayNum}
+                            </span>
+                          </>
+                        ) : calendarLang === 'hi' ? (
+                          <>
+                            <span className="font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate">
+                              {benMonthShortHi}
+                            </span>
+                            <span className="font-medium text-gray-400 dark:text-gray-500 shrink-0">
+                              {engDayNum}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate">
+                              {calendarLang === 'en' ? `${rawBenDay} ${benMonthShortEn.slice(0, 4)}` : `${benDayNum} ${benMonthShortBn.slice(0, 4)}`}
+                            </span>
+                            <span className="text-[7px] sm:text-[8px] font-medium text-gray-400 dark:text-gray-500 shrink-0">
+                              {dayData.paksha === 'Shukla' ? (calendarLang === 'bn' ? 'শু' : 'शु') : (calendarLang === 'bn' ? 'কৃ' : 'कृ')}
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Center Row: BIG, BOLD, PROMINENT NUMBER (Kalnirnay / Panchang Style) */}
+                      <div className="flex items-center justify-center my-auto py-0.5">
                         <span
-                          className={`font-serif font-bold text-[11px] sm:text-sm leading-none ${
+                          className={`font-serif text-base sm:text-2xl font-bold leading-none select-none tracking-tight ${
                             isSelected || isToday
                               ? 'text-[#C9A050]'
+                              : isSunday
+                              ? 'text-red-600 dark:text-red-400 font-extrabold'
                               : isDark
                               ? 'text-[#F0ECE1]'
                               : 'text-[#0D0D0F]'
                           }`}
                         >
-                          {calendarLang === 'bn' ? toBengaliNum(dayData.day) : calendarLang === 'hi' ? toHindiNum(dayData.day) : dayData.day}
-                        </span>
-
-                        <span className="text-[8.5px] sm:text-xs font-semibold text-[#8C6B28] dark:text-[#C9A050] truncate pl-0.5">
-                          {topRegionalDate}
+                          {calendarLang === 'bn' ? benDayNum : calendarLang === 'hi' ? hinDayNum : engDayNum}
                         </span>
                       </div>
 
                       {/* Bottom Row: Purnima/Amavasya/Ekadashi Badge OR Tithi */}
-                      <div className="mt-0.5 sm:mt-1">
+                      <div className="w-full overflow-hidden leading-tight">
                         {isPurnima ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
-                            <span>🌕</span>
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 py-0.5 rounded bg-[#C9A050]/20 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/40 text-[7px] sm:text-[9px] font-bold tracking-tight truncate w-full shadow-xs">
+                            <span className="text-[7.5px] sm:text-[9px]">🌕</span>
                             <span className="truncate">{purnimaLabel}</span>
                           </div>
                         ) : isAmavasya ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
-                            <span>🌑</span>
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[7px] sm:text-[9px] font-bold tracking-tight truncate w-full shadow-xs">
+                            <span className="text-[7.5px] sm:text-[9px]">🌑</span>
                             <span className="truncate">{amavasyaLabel}</span>
                           </div>
                         ) : isEkadashi ? (
-                          <div className="flex items-center justify-center space-x-0.5 px-0.5 sm:px-1 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[8.5px] sm:text-xs font-bold tracking-tight truncate w-full shadow-xs">
-                            <span>🌿</span>
+                          <div className="flex items-center justify-center space-x-0.5 px-0.5 py-0.5 rounded bg-[#C9A050]/15 text-[#8C6B28] dark:text-[#E5C170] border border-[#C9A050]/30 text-[7px] sm:text-[9px] font-bold tracking-tight truncate w-full shadow-xs">
+                            <span className="text-[7.5px] sm:text-[9px]">🌿</span>
                             <span className="truncate">{ekadashiLabel}</span>
                           </div>
                         ) : (
-                          <div className={`flex items-center justify-between text-[8px] sm:text-xs px-0.5 ${isDark ? 'text-gray-400' : 'text-black font-medium'}`}>
+                          <div className={`flex items-center justify-center text-[7px] sm:text-[9px] px-0.5 w-full overflow-hidden text-center truncate ${isDark ? 'text-gray-400' : 'text-gray-700 font-medium'}`}>
                             <span className="truncate">{tithiDisplay}</span>
-                            {isShukla ? (
-                              <Moon className="w-2 h-2 text-[#C9A050] shrink-0 ml-0.5" />
-                            ) : (
-                              <Moon className="w-2 h-2 text-gray-400 shrink-0 ml-0.5" />
-                            )}
                           </div>
                         )}
                       </div>
@@ -947,10 +1047,11 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     isDark ? 'bg-[#0D0D0F]/90 border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
-                      <label className="text-[11px] font-bold uppercase tracking-wider text-[#C9A050]">
+                      <label htmlFor="converter-from-select" className="text-[11px] font-bold uppercase tracking-wider text-[#C9A050]">
                         Convert From
                       </label>
                       <select
+                        id="converter-from-select"
                         value={convertFrom}
                         onChange={(e) => {
                           const newFrom = e.target.value as any;
@@ -1003,8 +1104,9 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             />
                           </div>
                           <div>
-                            <label className="block text-[10px] text-gray-400 mb-1">Month</label>
+                            <label htmlFor="converter-ben-month" className="block text-[10px] text-gray-400 mb-1">Month</label>
                             <select
+                              id="converter-ben-month"
                               value={benMonth}
                               onChange={(e) => setBenMonth(e.target.value)}
                               className={`w-full p-2 rounded-lg border text-xs font-semibold outline-none focus:border-[#C9A050] ${
@@ -1037,8 +1139,9 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       <div className="space-y-2">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           <div>
-                            <label className="block text-[10px] text-gray-400 mb-1">Tithi</label>
+                            <label htmlFor="converter-hin-tithi" className="block text-[10px] text-gray-400 mb-1">Tithi</label>
                             <select
+                              id="converter-hin-tithi"
                               value={hinTithi}
                               onChange={(e) => setHinTithi(e.target.value)}
                               className={`w-full p-2 rounded-lg border text-xs font-semibold outline-none focus:border-[#C9A050] ${
@@ -1053,8 +1156,9 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             </select>
                           </div>
                           <div>
-                            <label className="block text-[10px] text-gray-400 mb-1">Paksha</label>
+                            <label htmlFor="converter-hin-paksha" className="block text-[10px] text-gray-400 mb-1">Paksha</label>
                             <select
+                              id="converter-hin-paksha"
                               value={hinPaksha}
                               onChange={(e) => setHinPaksha(e.target.value)}
                               className={`w-full p-2 rounded-lg border text-xs font-semibold outline-none focus:border-[#C9A050] ${
@@ -1066,8 +1170,9 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             </select>
                           </div>
                           <div>
-                            <label className="block text-[10px] text-gray-400 mb-1">Month</label>
+                            <label htmlFor="converter-hin-month" className="block text-[10px] text-gray-400 mb-1">Month</label>
                             <select
+                              id="converter-hin-month"
                               value={hinMonth}
                               onChange={(e) => setHinMonth(e.target.value)}
                               className={`w-full p-2 rounded-lg border text-xs font-semibold outline-none focus:border-[#C9A050] ${
@@ -1103,6 +1208,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       type="button"
                       onClick={handleSwapConverter}
                       title="Swap Conversion Directions"
+                      aria-label="Swap Conversion Directions"
                       className="w-11 h-11 rounded-full bg-[#C9A050] text-[#0D0D0F] flex items-center justify-center shadow-lg shadow-[#C9A050]/25 hover:scale-110 active:scale-95 transition cursor-pointer"
                     >
                       <ArrowRightLeft className="w-5 h-5 font-bold" />
@@ -1114,10 +1220,11 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     isDark ? 'bg-[#0D0D0F]/90 border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                   }`}>
                     <div className="flex items-center justify-between mb-3">
-                      <label className="text-[11px] font-bold uppercase tracking-wider text-[#C9A050]">
+                      <label htmlFor="converter-to-select" className="text-[11px] font-bold uppercase tracking-wider text-[#C9A050]">
                         Convert To
                       </label>
                       <select
+                        id="converter-to-select"
                         value={convertTo}
                         onChange={(e) => setConvertTo(e.target.value as any)}
                         className={`text-xs font-bold px-2.5 py-1 rounded-lg border outline-none cursor-pointer ${

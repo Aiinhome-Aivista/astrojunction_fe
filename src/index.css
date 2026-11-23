@@ -209,7 +209,7 @@ html[lang="ta"] [class*="tracking-"] {
   html,
   body,
   #root {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
     width: 100%;
   }

@@ -154,6 +154,26 @@ export function HeaderLanguageSwitcher({
   );
 }
 
+const SECTION_PATH_MAP: Record<string, string> = {
+  'hero-section': '/',
+  'zodiac-section': '/global-zodiac',
+  'panjika-section': '/panjika',
+  'remedies-section': '/remedies',
+  'blog-section': '/blogs',
+  'premium-section': '/premium',
+};
+
+const PATH_SECTION_MAP: Record<string, string> = {
+  '/': 'hero-section',
+  '/home': 'hero-section',
+  '/global-zodiac': 'zodiac-section',
+  '/zodiac': 'zodiac-section',
+  '/panjika': 'panjika-section',
+  '/remedies': 'remedies-section',
+  '/blogs': 'blog-section',
+  '/premium': 'premium-section',
+};
+
 interface LandingPageProps {
   onLoginClick: () => void;
   onRegisterClick: () => void;
@@ -230,7 +250,7 @@ export function LandingPage({
   const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
-      if (path === '/blogs' || path.startsWith('/blogs/') || new URLSearchParams(window.location.search).has('blog')) {
+      if ((path.startsWith('/blogs/') && path !== '/blogs') || new URLSearchParams(window.location.search).has('blog')) {
         return 'blogs';
       }
       const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];
@@ -255,6 +275,22 @@ export function LandingPage({
     }
   }, [currentView]);
 
+  // Initial mount: if user arrived directly on e.g. /global-zodiac, /panjika, /remedies, /blogs, /premium
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const path = window.location.pathname;
+    const targetSection = PATH_SECTION_MAP[path];
+    if (targetSection && targetSection !== 'hero-section') {
+      setTimeout(() => {
+        const el = document.getElementById(targetSection);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setActiveSection(targetSection);
+        }
+      }, 300);
+    }
+  }, []);
+
   const handleLoginClick = () => {
     sessionTracker.trackAuthGateOpen('login');
     onLoginClick();
@@ -269,16 +305,22 @@ export function LandingPage({
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      if (path === '/blogs' || path.startsWith('/blogs/')) {
+      if (path.startsWith('/blogs/') && path !== '/blogs') {
         setCurrentView('blogs');
-      } else if (path === '/' || path === '') {
-        setCurrentView('landing');
-        setSelectedBlogForPage(null);
       } else {
         const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];
         const matchedLegal = legalPaths.find(p => path === `/${p}`);
         if (matchedLegal) {
           setCurrentView(matchedLegal);
+        } else {
+          setCurrentView('landing');
+          setSelectedBlogForPage(null);
+          const targetSection = PATH_SECTION_MAP[path] || 'hero-section';
+          setActiveSection(targetSection);
+          const el = document.getElementById(targetSection);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
       }
     };
@@ -318,17 +360,19 @@ export function LandingPage({
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
+    const targetPath = SECTION_PATH_MAP[id] || '/';
+    if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+      window.history.pushState({ section: id }, '', targetPath);
+    }
 
     isClickScrolling.current = true;
     if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
     clickScrollTimeout.current = setTimeout(() => {
       isClickScrolling.current = false;
     }, 1000);
+
     if (currentView !== 'landing') {
       setCurrentView('landing');
-      if (window.location.pathname !== '/') {
-        window.history.pushState({}, '', '/');
-      }
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
@@ -377,7 +421,7 @@ export function LandingPage({
       if (isClickScrolling.current) return;
 
       const sections = ['hero-section', 'zodiac-section', 'panjika-section', 'remedies-section', 'blog-section', 'premium-section'];
-      const scrollPosition = window.scrollY + 120;
+      const scrollPosition = window.scrollY + 180;
 
       let currentSection = 'hero-section';
       for (const section of sections) {
@@ -387,6 +431,11 @@ export function LandingPage({
         }
       }
       setActiveSection(currentSection);
+
+      const targetPath = SECTION_PATH_MAP[currentSection] || '/';
+      if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+        window.history.replaceState({ section: currentSection }, '', targetPath);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -614,8 +663,8 @@ export function LandingPage({
     <div className={`min-h-screen relative font-sans flex flex-col astro-landing-page ${theme === 'dark' ? 'bg-[#0D0D0F] text-[#E5E1D8]' : 'bg-[#F0ECE1] text-[#0D0D0F]'}`}>
       {theme === 'dark' && <StarfieldBackground />}
 
-      {/* Navigation Bar */}
-      <nav className={`sticky top-0 z-50 backdrop-blur-2xl transition-all duration-300 border-b ${theme === 'dark' ? 'bg-[#0D0D0F]/80 border-[#2A2A2E]/50' : 'bg-[#F9F7F1]/80 border-[#E5E1D8]/80'} shadow-sm`}>
+      {/* Navigation Bar - Sticky */}
+      <nav className={`sticky top-0 z-50 backdrop-blur-2xl transition-all duration-300 border-b ${theme === 'dark' ? 'bg-[#0D0D0F]/90 border-[#2A2A2E]/80 shadow-[0_4px_20px_rgba(0,0,0,0.5)]' : 'bg-[#FAF8F3]/95 border-[#E5E1D8] shadow-[0_4px_20px_rgba(0,0,0,0.06)]'}`}>
         <div className="w-full px-2 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20 gap-1 sm:gap-4">
             {/* Logo */}
@@ -637,7 +686,7 @@ export function LandingPage({
             {/* Center Links (Desktop only, drawer handles mobile & tablet) */}
             <div className={`hidden xl:flex items-center space-x-0.5 lg:space-x-1 px-1 lg:px-1.5 py-1 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
               <a
-                href="#hero-section"
+                href="/"
                 onClick={(e) => { e.preventDefault(); scrollToSection('hero-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -648,7 +697,7 @@ export function LandingPage({
                 <span>{t('header.nav.home')}</span>
               </a>
               <a
-                href="#zodiac-section"
+                href="/global-zodiac"
                 onClick={(e) => { e.preventDefault(); scrollToSection('zodiac-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -659,7 +708,7 @@ export function LandingPage({
                 <span>{t('header.nav.zodiac')}</span>
               </a>
               <a
-                href="#panjika-section"
+                href="/panjika"
                 onClick={(e) => { e.preventDefault(); scrollToSection('panjika-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -670,7 +719,7 @@ export function LandingPage({
                 <span>{t('header.nav.panjika')}</span>
               </a>
               <a
-                href="#remedies-section"
+                href="/remedies"
                 onClick={(e) => { e.preventDefault(); scrollToSection('remedies-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -692,7 +741,7 @@ export function LandingPage({
                 <span>{t('header.nav.blogs')}</span>
               </a>
               <a
-                href="#premium-section"
+                href="/premium"
                 onClick={(e) => { e.preventDefault(); scrollToSection('premium-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -716,6 +765,7 @@ export function LandingPage({
                   : 'bg-white border-gray-200 text-gray-700 hover:border-[#C9A050]/50 shadow-sm'
                   }`}
                 title="Toggle Theme"
+                aria-label="Toggle Theme"
               >
                 {theme === 'dark' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
@@ -737,6 +787,8 @@ export function LandingPage({
                   <div className="relative flex items-center">
                     <button
                       onClick={onGoToDashboard}
+                      title="User Profile Dashboard"
+                      aria-label="User Profile Dashboard"
                       className={`group focus:outline-none flex items-center justify-center p-0.5 rounded-full border transition-all duration-300 shadow-sm ${theme === 'dark'
                         ? 'bg-[#17161F] border-[#C9A050]/50 hover:border-[#E2C375] hover:shadow-[0_0_15px_rgba(201,160,80,0.35)]'
                         : 'bg-[#FAF3DF] border-[#DFC896] hover:border-[#C9A050] hover:shadow-[0_2px_12px_rgba(201,160,80,0.25)]'
@@ -817,6 +869,8 @@ export function LandingPage({
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
+                  title="Close navigation drawer"
+                  aria-label="Close navigation drawer"
                   className={`p-1.5 rounded-lg border transition cursor-pointer ${theme === 'dark' ? 'border-[#2A2A2E] text-[#9E9A90] hover:text-white' : 'border-[#DFC896] text-gray-600 hover:text-black'
                     }`}
                 >
@@ -1216,7 +1270,7 @@ export function LandingPage({
                             Premium
                           </span>
                         </div>
-                        <h4 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{getFeatTitle(feat.id, feat.title)}</h4>
+                        <h3 className={`font-serif text-xl font-bold mb-2 leading-snug ${theme === 'dark' ? 'text-[#F0ECE1]' : 'text-[#0D0D0F]'}`}>{getFeatTitle(feat.id, feat.title)}</h3>
                         <p className={`text-sm leading-relaxed text-left ${theme === 'dark' ? 'text-[#9E9A90]' : 'text-black font-medium'}`}>{getFeatDesc(feat.id, feat.desc)}</p>
                       </div>
                     </div>
@@ -1289,11 +1343,17 @@ export function LandingPage({
                   <button
                     onClick={handleResetChat}
                     title={t('chat.guest_restart', 'Restart Chat')}
+                    aria-label={t('chat.guest_restart', 'Restart Chat')}
                     className="hover:bg-black/10 p-1 rounded-md transition cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                   </button>
-                  <button onClick={() => setIsChatOpen(false)} className="hover:bg-black/10 p-1 rounded-md transition cursor-pointer">
+                  <button
+                    onClick={() => setIsChatOpen(false)}
+                    title={t('chat.close_chat', 'Close Chat')}
+                    aria-label={t('chat.close_chat', 'Close Chat')}
+                    className="hover:bg-black/10 p-1 rounded-md transition cursor-pointer"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -1429,6 +1489,8 @@ export function LandingPage({
                   <button
                     onClick={handleSend}
                     disabled={msgCount >= 3 || !input.trim()}
+                    title={t('chat.send_button', 'Send message')}
+                    aria-label={t('chat.send_button', 'Send message')}
                     className="p-1.5 rounded-lg bg-[#C9A050] text-[#0D0D0F] disabled:opacity-50 cursor-pointer hover:bg-[#D4AF37] transition"
                   >
                     <Send className="w-3.5 h-3.5" />
@@ -1442,9 +1504,18 @@ export function LandingPage({
         {!isChatOpen && (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="w-12 h-12 rounded-full bg-[#C9A050] text-[#0D0D0F] flex items-center justify-center shadow-lg shadow-[#C9A050]/30 hover:scale-105 transition cursor-pointer"
+            title={t('userPanel.fab.title', 'Chat With Us')}
+            aria-label={t('userPanel.fab.ariaLabel', 'Chat With Us')}
+            className={`w-[58px] h-[58px] sm:w-[66px] sm:h-[66px] rounded-full flex flex-col items-center justify-center p-1 shadow-xl shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${
+              theme === 'dark'
+                ? 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F]'
+                : 'bg-[#C9A050] hover:bg-[#B38730] text-white'
+            }`}
           >
-            <MessageSquareText className="w-5 h-5" />
+            <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current transition-transform duration-200 shrink-0 mb-0.5" />
+            <span className="text-[10px] sm:text-[11.5px] font-bold leading-none text-center tracking-tight select-none px-0.5">
+              {t('userPanel.fab.label', 'Chat With Us')}
+            </span>
           </button>
         )}
       </div>

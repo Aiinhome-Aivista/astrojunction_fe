@@ -864,14 +864,63 @@ function escapeXml(unsafe: string): string {
 
 // Robots.txt Handler
 app.get('/robots.txt', (req, res) => {
-  const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
-  if (fs.existsSync(robotsPath)) {
-    res.type('text/plain; charset=utf-8');
-    return res.sendFile(robotsPath);
+  const possiblePaths = [
+    path.join(__dirname, 'public', 'robots.txt'),
+    path.join(__dirname, 'dist', 'robots.txt'),
+    path.join(process.cwd(), 'public', 'robots.txt'),
+    path.join(process.cwd(), 'astrojunction_fe', 'public', 'robots.txt'),
+    path.join(process.cwd(), 'dist', 'robots.txt'),
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      res.type('text/plain; charset=utf-8');
+      return res.sendFile(p);
+    }
   }
   const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: https://astrojunction.in/sitemap.xml\n";
   res.type('text/plain; charset=utf-8');
   return res.send(defaultRobots);
+});
+
+// LLMs.txt Handler for AI Agents
+app.get('/llms.txt', (req, res) => {
+  const possiblePaths = [
+    path.join(__dirname, 'public', 'llms.txt'),
+    path.join(__dirname, 'dist', 'llms.txt'),
+    path.join(process.cwd(), 'public', 'llms.txt'),
+    path.join(process.cwd(), 'astrojunction_fe', 'public', 'llms.txt'),
+    path.join(process.cwd(), 'dist', 'llms.txt'),
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      res.type('text/markdown; charset=utf-8');
+      return res.sendFile(p);
+    }
+  }
+  res.type('text/markdown; charset=utf-8');
+  return res.send(`# ASTROJUNCTION
+
+> AstroJunction is an authentic Vedic Astrology and spiritual intelligence platform offering accurate Janam Kundli, Daily Horoscope, Vedic Panchang, 36 Gun Ashtakoota Matchmaking, Numerology, and certified astrologer consultations.
+
+## Core Services & Tools
+- [Daily Horoscope & Panchang](https://astrojunction.in/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
+- [Vedic Janam Kundli](https://astrojunction.in/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
+- [Kundli Milan / Matchmaking](https://astrojunction.in/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
+- [Vedic Numerology Calculator](https://astrojunction.in/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
+- [Vedic Panjika Calendar](https://astrojunction.in/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
+- [Astrologer Consultations](https://astrojunction.in/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
+- [Daivajna AI Life Counsellor](https://astrojunction.in/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
+
+## Articles & Wisdom
+- [Vedic Astrology Blogs](https://astrojunction.in/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
+
+## Company & Policies
+- [About Us](https://astrojunction.in/about-us): Mission, heritage, and background of AstroJunction.
+- [Frequently Asked Questions (FAQ)](https://astrojunction.in/faq): Answers to common questions regarding Vedic calculations and platform features.
+- [Privacy Policy](https://astrojunction.in/privacy-policy): Data privacy, protection, and user confidentiality standards.
+- [Terms & Conditions](https://astrojunction.in/terms-and-conditions): Terms of platform usage and service agreements.
+- [Cookie Policy](https://astrojunction.in/cookie-policy): Information on cookies and local storage usage.
+`);
 });
 
 // Dynamic Sitemap Handler

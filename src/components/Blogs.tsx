@@ -698,10 +698,10 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     </span>
                   </div>
 
-                  <h4 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
+                  <h3 className={`text-lg md:text-xl font-serif font-bold mb-3 leading-snug line-clamp-2 ${isDark ? 'text-[#F0ECE1]' : 'text-[#181614] group-hover:text-[#8C6218] transition-colors'
                     }`}>
                     {blog.title}
-                  </h4>
+                  </h3>
 
                   <p className={`text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 mt-auto ${isDark ? 'text-[#D0CCC2] font-normal' : 'text-black font-medium'
                     }`}>
@@ -1979,8 +1979,9 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               </div>
 
               <div>
-                <label className={`block text-sm font-bold mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Category</label>
+                <label htmlFor="blog-category-select" className={`block text-sm font-bold mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Category</label>
                 <select
+                  id="blog-category-select"
                   name="category"
                   value={formData.category}
                   onChange={(e) => {
@@ -2000,8 +2001,9 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Subcategory</label>
+                <label htmlFor="blog-subcategory-select" className={`block text-sm font-medium mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Subcategory</label>
                 <select
+                  id="blog-subcategory-select"
                   name="sub_category"
                   value={formData.sub_category}
                   onChange={handleInputChange}
@@ -2019,8 +2021,9 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Publication Status</label>
+                <label htmlFor="blog-status-select" className={`block text-sm font-medium mb-1.5 ${theme === 'dark' ? 'text-[#E5E1D8]' : 'text-[#0D0D0F]'}`}>Publication Status</label>
                 <select
+                  id="blog-status-select"
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
@@ -2184,7 +2187,10 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                 <span>Subcategories</span>
               </h2>
               <form onSubmit={handleCreateSubcategory} className="space-y-2 mb-4">
+                <label htmlFor="parent-category-select" className="sr-only">Parent Category</label>
                 <select
+                  id="parent-category-select"
+                  aria-label="Select Parent Category"
                   value={selectedCategoryForSub}
                   onChange={(e) => setSelectedCategoryForSub(e.target.value)}
                   className={`w-full px-3 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 focus:ring-[#C9A050] ${theme === 'dark' ? 'bg-[#141418] border-[#2A2A2E] text-white' : 'bg-white border-gray-300 text-black'
