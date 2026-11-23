@@ -565,21 +565,6 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
   };
 
   const getElementBadge = (element: string) => {
-    if (theme === 'light') {
-      let Icon = Globe;
-      if (element === 'Fire') Icon = Flame;
-      if (element === 'Earth') Icon = Mountain;
-      if (element === 'Air') Icon = Wind;
-      if (element === 'Water') Icon = Droplets;
-
-      return (
-        <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#C9A050]/10 text-[#C9A050] border border-[#C9A050]/30">
-          <Icon className="w-3 h-3 text-[#C9A050]" />
-          <span>{element}</span>
-        </span>
-      );
-    }
-
     switch (element) {
       case 'Fire':
         return (
@@ -641,7 +626,7 @@ export const GlobalZodiacView: React.FC<GlobalZodiacViewProps> = ({
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#C9A050]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-start md:items-center lg:items-start xl:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center space-x-2 text-[#C9A050] text-[10px] sm:text-xs font-semibold uppercase tracking-widest mb-1.5">
+            <div className="flex items-center space-x-2 text-[#F5D07A] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1.5">
               <Globe className="w-3.5 h-3.5 text-[#C9A050]" />
               <span>{t('zodiac.title')}</span>
             </div>

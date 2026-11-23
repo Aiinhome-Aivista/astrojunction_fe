@@ -1284,7 +1284,7 @@ export function LandingPage({
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${theme === 'dark' ? 'bg-[#141418] border border-[#2A2A2E]' : 'bg-white border border-[#E5E1D8]'}`}>
                             <Icon className="w-6 h-6 text-[#C9A050]" />
                           </div>
-                          <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#C9A050] border-[#2A2A2E]' : 'bg-white text-amber-700 border-[#E5E1D8]'}`}>
+                          <span className={`text-xs px-3 py-1 rounded-full uppercase tracking-wider border ${theme === 'dark' ? 'bg-[#141418] text-[#F5D07A] border-[#C9A050]/40 font-extrabold' : 'bg-amber-100/80 text-[#5C3A00] border-amber-300 font-extrabold'}`}>
                             Premium
                           </span>
                         </div>
