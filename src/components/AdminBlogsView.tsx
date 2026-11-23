@@ -63,7 +63,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
     try {
       setLoading(true);
       const [blogsData, catsData, subCatsData] = await Promise.all([
-        blogApi.getBlogs(),
+        blogApi.getBlogs('All'),
         blogApi.getCategories(),
         blogApi.getSubcategories(),
       ]);
@@ -196,16 +196,18 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
   };
 
   const handleSave = async (statusOverride?: string) => {
-    if (!formData.title || !formData.content) {
+    const content = editor.current?.value || formData.content;
+    if (!formData.title || !content) {
       alert('Title and Content are required!');
       return;
     }
 
     const payload = {
       ...formData,
+      content,
       status: statusOverride || formData.status,
       tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
-      preview: formData.content.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
+      preview: content.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
     };
 
     try {

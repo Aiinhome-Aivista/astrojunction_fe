@@ -207,7 +207,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           title={`${selectedBlog.title} • ASTROJUNCTION`}
           description={blogDescription}
           keywords={Array.isArray(selectedBlog.tags) && selectedBlog.tags.length ? selectedBlog.tags : [selectedBlog.category || 'Vedic Astrology']}
-          ogImage={selectedBlog.image_url || '/blog_1.jpg'}
+          ogImage={selectedBlog.image_url || '/blog_1.webp'}
           ogType="article"
           jsonLd={{
             "@context": "https://schema.org",
@@ -357,10 +357,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           {/* Hero Featured Cover Image */}
           <div className="relative rounded-3xl overflow-hidden mb-10 shadow-2xl border border-white/10 aspect-[16/9] sm:aspect-[21/9] bg-black/40">
             <img 
-              src={selectedBlog.image_url || '/blog_1.jpg'} 
+              src={selectedBlog.image_url || '/blog_1.webp'} 
               alt={selectedBlog.title}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                (e.target as HTMLImageElement).src = '/blog_1.webp';
               }}
               className="w-full h-full object-cover"
             />
@@ -529,10 +529,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                   >
                     <div className="relative h-40 w-full overflow-hidden bg-black/20">
                       <img 
-                        src={relBlog.image_url || '/blog_1.jpg'} 
+                        src={relBlog.image_url || '/blog_1.webp'} 
                         alt={relBlog.title} 
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                          (e.target as HTMLImageElement).src = '/blog_1.webp';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -574,7 +574,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         title="Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION"
         description="Explore curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth."
         keywords={["astrology blog", "vedic articles", "zodiac signs blog", "planetary transits", "vedic wisdom"]}
-        ogImage="/blog_1.jpg"
+        ogImage="/blog_1.webp"
         ogType="website"
       />
       {/* Top Control Bar: Full-width matching Navbar's left and right alignment */}
@@ -708,10 +708,10 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                     {/* Card Image */}
                     <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-black/20">
                       <img 
-                        src={blog.image_url || '/blog_1.jpg'} 
+                        src={blog.image_url || '/blog_1.webp'} 
                         alt={blog.title} 
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                          (e.target as HTMLImageElement).src = '/blog_1.webp';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

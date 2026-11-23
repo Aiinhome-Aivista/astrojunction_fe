@@ -210,21 +210,20 @@ export async function initLanguage(): Promise<SupportedLanguage> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-    const baseUrl = getApiBaseUrl().replace(/\/+$/, '');
-    const geoUrl = baseUrl ? `${baseUrl}/geo/language` : '/geo/language';
-
+    // Try same-origin /geo/language first (handled by Express server / Cloudflare proxy)
     let res: Response | null = null;
     try {
-      res = await fetch(geoUrl, {
+      res = await fetch('/geo/language', {
         method: 'GET',
         headers: { Accept: 'application/json' },
         signal: controller.signal,
       });
-    } catch (directErr) {
-      // If direct backendUrl fetch was blocked (e.g. cross-origin/PNA in Edge/Chrome), fallback to same-origin relative proxy
-      if (geoUrl !== '/geo/language') {
+    } catch {
+      // Relative fetch failed, try baseUrl if available
+      const baseUrl = getApiBaseUrl().replace(/\/+$/, '');
+      if (baseUrl && !baseUrl.includes('aivista.co.in')) {
         try {
-          res = await fetch('/geo/language', {
+          res = await fetch(`${baseUrl}/geo/language`, {
             method: 'GET',
             headers: { Accept: 'application/json' },
             signal: controller.signal,

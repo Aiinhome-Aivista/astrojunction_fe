@@ -170,7 +170,7 @@ const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
     views: 1250,
     status: 'Published',
     tags: ['Raj Yoga', 'Kundli', 'Wealth', 'Jyotish'],
-    image_url: '/blog_3.jpg',
+    image_url: '/blog_3.webp',
     pinned: 1,
     preview: 'What is a Raj Yoga in Vedic Astrology? In classical Jyotish Shastra, a Raj Yoga is a celestial combination of supreme auspiciousness that bestows high status, wealth, and spiritual growth.',
     content: ''
@@ -187,7 +187,7 @@ const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
     views: 1420,
     status: 'Published',
     tags: ['Saturn Return', 'Sade Sati', 'Shani', 'Remedies'],
-    image_url: '/blog_2.jpg',
+    image_url: '/blog_2.webp',
     pinned: 1,
     preview: 'Understanding the Divine Power of Saturn in Vedic Astrology: In Vedic Astrology (Jyotish Shastra), Saturn (Shani Dev) is revered not as a malefic punisher, but as the cosmic taskmaster and dispenser of justice.',
     content: ''
@@ -204,7 +204,7 @@ const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
     views: 1890,
     status: 'Published',
     tags: ['Raj Yoga', 'Wealth', 'Vedic Astrology', 'Kundli'],
-    image_url: '/blog_1.jpg',
+    image_url: '/blog_1.webp',
     pinned: 1,
     preview: 'Understanding Raj Yogas in Your Birth Chart: In classical Vedic Astrology, a Raj Yoga represents a celestial alignment of supreme auspiciousness that brings financial prosperity and leadership.',
     content: ''
@@ -221,7 +221,7 @@ const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
     views: 1100,
     status: 'Published',
     tags: ['Numerology', 'Soul Contracts', 'Life Path', 'Anka Vidya'],
-    image_url: '/blog_4.jpg',
+    image_url: '/blog_4.webp',
     pinned: 0,
     preview: 'The Sacred Vibration of Numbers in Vedic Numerology: According to ancient Vedic Anka Vidya, numbers are living frequencies reflecting planetary rulerships and personal destiny blueprints.',
     content: ''
@@ -238,7 +238,7 @@ const DEFAULT_INITIAL_BLOGS: BlogPost[] = [
     views: 2300,
     status: 'Published',
     tags: ['Matchmaking', 'Kundli Milan', 'Ashta Koota', 'Guna Milan'],
-    image_url: '/zodiac_compatibility_art.jpg',
+    image_url: '/zodiac_compatibility_art.webp',
     pinned: 0,
     preview: 'Decoding 36 Gunas in Vedic Ashta Koota Matchmaking: Complete breakdown of Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot, and Nadi for marriage compatibility and life-long harmony.',
     content: ''
@@ -259,7 +259,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1250,
       status: 'Published',
       tags: ['রাজ যোগ', 'কুণ্ডলী', 'ধনসম্পদ', 'জ্যোতিষ'],
-      image_url: '/blog_3.jpg',
+      image_url: '/blog_3.webp',
       pinned: 1,
       preview: 'বৈদিক জ্যোতিষে রাজ যোগ কী? শাস্ত্রীয় জ্যোতিষশাস্ত্রে, রাজ যোগ হলো একটি অত্যন্ত শুভ মহাজাগতিক সংযোগ যা ব্যক্তির জীবনে উচ্চ পদমর্যাদা, সম্মান এবং আধ্যাত্মিক সমৃদ্ধি নিয়ে আসে।',
       content: ''
@@ -276,7 +276,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1420,
       status: 'Published',
       tags: ['শনির সাড়ে সাতি', 'শনি', 'উপায়', 'জ্যোতিষ'],
-      image_url: '/blog_2.jpg',
+      image_url: '/blog_2.webp',
       pinned: 1,
       preview: 'বৈদিক জ্যোতিষে শনি দেবতার ঐশ্বরিক শক্তি: জ্যোতিষ শাস্ত্রে শনি দেবকে কোনো ক্ষতিকারক শাস্তিপ্রদানকারী হিসেবে নয়, বরং কর্মের বিচারক ও আত্মিক শোধক হিসেবে সম্মান জানানো হয়।',
       content: ''
@@ -293,7 +293,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1890,
       status: 'Published',
       tags: ['রাজ যোগ', 'বৈদিক জ্যোতিষ', 'কুণ্ডলী', 'সমৃদ্ধি'],
-      image_url: '/blog_1.jpg',
+      image_url: '/blog_1.webp',
       pinned: 1,
       preview: 'আপনার জন্মকুণ্ডলীতে রাজ যোগের তাৎপর্য: শাস্ত্রীয় বৈদিক জ্যোতিষে, রাজ যোগ একটি অত্যন্ত শুভ মহাজাগতিক সংযোগের প্রতীক যা আর্থিক সমৃদ্ধি ও নেতৃত্ব প্রতিষ্ঠা করে।',
       content: ''
@@ -310,7 +310,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1100,
       status: 'Published',
       tags: ['সংখ্যাতত্ত্ব', 'অঙ্ক বিদ্যা', 'ভাগ্য সংখ্যা'],
-      image_url: '/blog_4.jpg',
+      image_url: '/blog_4.webp',
       pinned: 0,
       preview: 'সংখ্যার জীবন্ত স্পন্দন: বৈদিক অঙ্ক বিদ্যা অনুসারে সংখ্যা নিছক হিসাব নয়, বরং প্রতিটি সংখ্যা গ্রহের তেজ ও আত্মার ভাগ্যলিপির প্রতিনিধিত্ব করে।',
       content: ''
@@ -327,7 +327,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 2300,
       status: 'Published',
       tags: ['কুণ্ডলী মিলন', 'গুণ মিলন', 'অষ্টকূট', 'বিবাহ সামঞ্জস্য'],
-      image_url: '/zodiac_compatibility_art.jpg',
+      image_url: '/zodiac_compatibility_art.webp',
       pinned: 0,
       preview: '৩৬ গুণের পূর্ণ বৈদিক বিশ্লেষণ: বর্ণ, বশ্য, তারা, যোনি, গ্রহ মৈত্রী, গণ, ভাকুট ও নদী—দাম্পত্য জীবনের চিরন্তন সুখ ও সামঞ্জস্যের গোপন রহস্য।',
       content: ''
@@ -346,7 +346,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1250,
       status: 'Published',
       tags: ['राज योग', 'कुंडली', 'धन', 'ज्योतिष'],
-      image_url: '/blog_3.jpg',
+      image_url: '/blog_3.webp',
       pinned: 1,
       preview: 'वैदिक ज्योतिष में राज योग क्या है? शास्त्रीय ज्योतिष शास्त्र में, राज योग एक अत्यंत शुभ संयोजन है जो व्यक्ति को समाज में उच्च सम्मान और समृद्धि प्रदान करता है।',
       content: ''
@@ -363,7 +363,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1420,
       status: 'Published',
       tags: ['शनि साढ़े साती', 'शनि', 'उपाय', 'ज्योतिष'],
-      image_url: '/blog_2.jpg',
+      image_url: '/blog_2.webp',
       pinned: 1,
       preview: 'वैदिक ज्योतिष में शनि देव का प्रभाव: शनि देव दंडनायक नहीं बल्कि निष्पक्ष न्यायधीश हैं जो जातक को अनुशासन और आत्मिक शक्ति प्रदान करते हैं।',
       content: ''
@@ -380,7 +380,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1890,
       status: 'Published',
       tags: ['राज योग', 'कुंडली', 'धन', 'ज्योतिष'],
-      image_url: '/blog_1.jpg',
+      image_url: '/blog_1.webp',
       pinned: 1,
       preview: 'अपनी जन्म कुंडली में राज योग को समझें: शास्त्रीय वैदिक ज्योतिष में, राज योग एक अत्यंत शुभ आकाशीय संरेखण का प्रतिनिधित्व करता है जो समृद्धि लाता है।',
       content: ''
@@ -397,7 +397,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1100,
       status: 'Published',
       tags: ['अंकशास्त्र', 'मूलांक', 'भाग्य अंक'],
-      image_url: '/blog_4.jpg',
+      image_url: '/blog_4.webp',
       pinned: 0,
       preview: 'संख्याओं का दिव्य प्रभाव: वैदिक अंक शास्त्र के अनुसार प्रत्येक संख्या किसी विशिष्ट ग्रह ऊर्जा का प्रतीक है जो हमारे जीवन पथ को निर्धारित करती है।',
       content: ''
@@ -414,7 +414,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 2300,
       status: 'Published',
       tags: ['कुंडली मिलान', 'गुण मिलान', 'अष्टकूट', 'विवाह'],
-      image_url: '/zodiac_compatibility_art.jpg',
+      image_url: '/zodiac_compatibility_art.webp',
       pinned: 0,
       preview: '36 गुणों का संपूर्ण वैदिक विश्लेषण: वर्ण, वश्य, तारा, योनि, ग्रह मैत्री, गण, भकूट और नाड़ी—सफल और सुखद वैवाहिक जीवन का रहस्य।',
       content: ''
@@ -433,7 +433,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1250,
       status: 'Published',
       tags: ['ராஜ யோகம்', 'ஜாதகம்', 'செல்வம்', 'ஜோதிடம்'],
-      image_url: '/blog_3.jpg',
+      image_url: '/blog_3.webp',
       pinned: 1,
       preview: 'வேத ஜோதிடத்தில் ராஜ யோகம் என்றால் என்ன? பாரம்பரிய ஜோதிட சாஸ்திரத்தில், ராஜ யோகம் என்பது மிக உயர்ந்த மங்களகரமான அமைப்பாகும்.',
       content: ''
@@ -450,7 +450,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1420,
       status: 'Published',
       tags: ['ஏழரை சனி', 'சனி', 'பரிகாரங்கள்', 'ஜோதிடம்'],
-      image_url: '/blog_2.jpg',
+      image_url: '/blog_2.webp',
       pinned: 1,
       preview: 'வேத ஜோதிடத்தில் சனி பகவானின் அருள்: சனி பகவான் தண்டனை வழங்குபவர் அல்ல, அவர் கர்ம வினைகளை சீராக்கும் நீதிபதி.',
       content: ''
@@ -467,7 +467,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1890,
       status: 'Published',
       tags: ['ராஜ யோகம்', 'ஜாதகம்', 'செல்வம்', 'ஜோதிடம்'],
-      image_url: '/blog_1.jpg',
+      image_url: '/blog_1.webp',
       pinned: 1,
       preview: 'உங்கள் ஜாதகத்தில் ராஜ யோகங்களைப் புரிந்துகொள்ளுதல்: பாரம்பரிய வேத ஜோதிடத்தில், ராஜ யோகம் என்பது மங்களகரமான அமைப்பாகும்.',
       content: ''
@@ -484,7 +484,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1100,
       status: 'Published',
       tags: ['எண்கணிதம்', 'எண் ஜோதிடம்'],
-      image_url: '/blog_4.jpg',
+      image_url: '/blog_4.webp',
       pinned: 0,
       preview: 'எண்களின் புனித அதிர்வு: வேத எண்கணிதத்தின்படி எண்கள் வெறும் கணிதம் அல்ல, அவை கிரக அதிர்வுகளின் குறியீடுகள்.',
       content: ''
@@ -501,7 +501,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 2300,
       status: 'Published',
       tags: ['திருமண பொருத்தம்', 'குண பொருத்தம்', 'அஷ்டகூடம்'],
-      image_url: '/zodiac_compatibility_art.jpg',
+      image_url: '/zodiac_compatibility_art.webp',
       pinned: 0,
       preview: '36 குணங்களின் முழுமையான விளக்கம்: வர்ணம், வசியம், தாரா, யோனி, கிரக மைத்ரி, கணம், பகுட மற்றும் நாடி பொருத்தம்.',
       content: ''
@@ -520,7 +520,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1250,
       status: 'Published',
       tags: ['Raj Yoga', 'Kundli', 'Richesse', 'Jyotish'],
-      image_url: '/blog_3.jpg',
+      image_url: '/blog_3.webp',
       pinned: 1,
       preview: "Qu'est-ce qu'un Raj Yoga en Astrologie Védique ? En Jyotish classique, un Raj Yoga est un alignement céleste d'une bénédiction suprême conférant statut et élévation.",
       content: ''
@@ -537,7 +537,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1420,
       status: 'Published',
       tags: ['Saturne', 'Sade Sati', 'Karma', 'Remèdes'],
-      image_url: '/blog_2.jpg',
+      image_url: '/blog_2.webp',
       pinned: 1,
       preview: "Comprendre la puissance de Saturne : En astrologie védique, Shani Dev est le maître cosmique de la justice et de l'évolution de l'âme.",
       content: ''
@@ -554,7 +554,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1890,
       status: 'Published',
       tags: ['Raj Yoga', 'Richesse', 'Prospérité'],
-      image_url: '/blog_1.jpg',
+      image_url: '/blog_1.webp',
       pinned: 1,
       preview: "Comprendre les Raj Yogas dans votre thème natal : Dans l'astrologie védique classique, un Raj Yoga apporte abondance et accomplissement spirituel.",
       content: ''
@@ -571,7 +571,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 1100,
       status: 'Published',
       tags: ['Numérologie', 'Chemin de Vie', 'Vibrations'],
-      image_url: '/blog_4.jpg',
+      image_url: '/blog_4.webp',
       pinned: 0,
       preview: "La vibration sacrée des nombres : Selon l'ancienne Anka Vidya, les nombres sont des fréquences vivantes qui révèlent notre destinée.",
       content: ''
@@ -588,7 +588,7 @@ const LOCALIZED_INITIAL_BLOGS: Record<string, BlogPost[]> = {
       views: 2300,
       status: 'Published',
       tags: ['Compatibilité', 'Kundli Milan', '36 Gunas'],
-      image_url: '/zodiac_compatibility_art.jpg',
+      image_url: '/zodiac_compatibility_art.webp',
       pinned: 0,
       preview: "L'analyse complète des 36 Gunas védiques : Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot et Nadi pour l'harmonie durable.",
       content: ''
@@ -674,7 +674,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     src={getBlogImageUrl(blog.image_url)}
                     alt={blog.title}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                      (e.target as HTMLImageElement).src = '/blog_1.webp';
                     }}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
@@ -958,7 +958,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
           title={`${selectedBlog.title} • ASTROJUNCTION`}
           description={blogDescription}
           keywords={Array.isArray(selectedBlog.tags) && selectedBlog.tags.length ? selectedBlog.tags : [selectedBlog.category || 'Vedic Astrology']}
-          ogImage={selectedBlog.image_url || '/blog_1.jpg'}
+          ogImage={selectedBlog.image_url || '/blog_1.webp'}
           ogType="article"
           jsonLd={{
             "@context": "https://schema.org",
@@ -1077,7 +1077,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               src={getBlogImageUrl(selectedBlog.image_url)}
               alt={selectedBlog.title}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                (e.target as HTMLImageElement).src = '/blog_1.webp';
               }}
               className="w-full h-full object-cover"
             />
@@ -1247,7 +1247,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         src={getBlogImageUrl(relBlog.image_url)} 
                         alt={relBlog.title} 
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                          (e.target as HTMLImageElement).src = '/blog_1.webp';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -1285,7 +1285,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
         title="Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION"
         description="Explore curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth."
         keywords={["astrology blog", "vedic articles", "zodiac signs blog", "planetary transits", "vedic wisdom"]}
-        ogImage="/blog_1.jpg"
+        ogImage="/blog_1.webp"
         ogType="website"
       />
       <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
@@ -1424,7 +1424,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
                         src={getBlogImageUrl(blog.image_url)}
                         alt={blog.title}
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                          (e.target as HTMLImageElement).src = '/blog_1.webp';
                         }}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -1726,13 +1726,14 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
       await blogApi.deleteBlog(id);
       fetchData();
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to delete blog');
+      alert(error?.message || error?.response?.data?.message || 'Failed to delete blog');
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.content) {
+    const currentContent = editor.current?.value || formData.content;
+    if (!formData.title || !currentContent) {
       alert('Please provide both a Title and Content for the blog.');
       return;
     }
@@ -1744,13 +1745,13 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
         .filter(t => t.length > 0);
 
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = formData.content;
+      tempDiv.innerHTML = currentContent;
       const rawText = tempDiv.textContent || tempDiv.innerText || '';
       const preview = rawText.slice(0, 160).trim() + (rawText.length > 160 ? '...' : '');
 
       const payload = {
         title: formData.title,
-        content: formData.content,
+        content: currentContent,
         preview,
         image_url: formData.image_url,
         category: formData.category,
@@ -1770,7 +1771,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
       setViewMode('list');
       fetchData();
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to save blog');
+      alert(error?.message || error?.response?.data?.message || 'Failed to save blog');
     }
   };
 
@@ -1891,7 +1892,7 @@ export const AdminBlogsView: React.FC<AdminBlogsViewProps> = ({ theme = 'dark' }
                             src={getBlogImageUrl(blog.image_url)}
                             alt="Thumb"
                             className="w-7 h-7 rounded object-cover border border-[#DFC896]/50"
-                            onError={(e) => { (e.target as HTMLImageElement).src = '/blog_1.jpg'; }}
+                            onError={(e) => { (e.target as HTMLImageElement).src = '/blog_1.webp'; }}
                           />
                         ) : (
                           <div className={`w-7 h-7 rounded flex items-center justify-center ${theme === 'dark' ? 'bg-[#2A2A2E]' : 'bg-[#FAF2DA] border border-[#DFC896]'}`}>

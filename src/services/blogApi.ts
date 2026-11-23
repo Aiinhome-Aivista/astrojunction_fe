@@ -33,21 +33,33 @@ export interface Subcategory {
 }
 
 export const getBlogImageUrl = (url?: string): string => {
-  if (!url) return '/blog_1.jpg';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:') || url.startsWith('data:')) {
-    return url;
+  if (!url) return '/blog_1.webp';
+
+  let processedUrl = url;
+  // If uploaded image has .png / .jpg / .jpeg, swap to .webp to save MBs
+  if (processedUrl.includes('/upload/blogs_image/') && /\.(png|jpe?g)$/i.test(processedUrl)) {
+    processedUrl = processedUrl.replace(/\.(png|jpe?g)$/i, '.webp');
+  }
+
+  if (processedUrl.startsWith('http://') || processedUrl.startsWith('https://') || processedUrl.startsWith('blob:') || processedUrl.startsWith('data:')) {
+    return processedUrl;
   }
   // If uploaded via backend (/upload/, /uploads/, or /static/)
   if (
-    url.startsWith('/upload/') || url.startsWith('upload/') ||
-    url.startsWith('/uploads/') || url.startsWith('uploads/') ||
-    url.startsWith('/static/') || url.startsWith('static/')
+    processedUrl.startsWith('/upload/') || processedUrl.startsWith('upload/') ||
+    processedUrl.startsWith('/uploads/') || processedUrl.startsWith('uploads/') ||
+    processedUrl.startsWith('/static/') || processedUrl.startsWith('static/')
   ) {
     const base = (getApiBaseUrl() || '').replace(/\/+$/, '');
-    return `${base}${url.startsWith('/') ? '' : '/'}${url}`;
+    return `${base}${processedUrl.startsWith('/') ? '' : '/'}${processedUrl}`;
   }
-  // Local frontend assets (like /blog_1.jpg)
-  return url.startsWith('/') ? url : `/${url}`;
+  // Convert standard static assets from .jpg to .webp if available
+  if (processedUrl.endsWith('.jpg')) {
+    const webpUrl = processedUrl.replace(/\.jpg$/, '.webp');
+    return webpUrl.startsWith('/') ? webpUrl : `/${webpUrl}`;
+  }
+  // Local frontend assets (like /blog_1.webp)
+  return processedUrl.startsWith('/') ? processedUrl : `/${processedUrl}`;
 };
 
 export const blogApi = {

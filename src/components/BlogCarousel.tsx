@@ -113,7 +113,7 @@ export const BlogCarousel: React.FC<BlogCarouselProps> = ({ theme, onSelectBlog,
                     src={getBlogImageUrl(blog.image_url)}
                     alt={blog.title}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/blog_1.jpg';
+                      (e.target as HTMLImageElement).src = '/blog_1.webp';
                     }}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />

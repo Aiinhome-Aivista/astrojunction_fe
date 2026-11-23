@@ -203,8 +203,12 @@ export const ZodiacCompatibilityMatrix: React.FC<ZodiacCompatibilityMatrixProps>
       {/* Artwork Side */}
       <div className="w-full lg:w-[35%] xl:w-[40%] relative min-h-[250px] lg:min-h-full flex-shrink-0 border-b lg:border-b-0 lg:border-r border-[#E5E1D8] dark:border-[#2A2A2E]">
         <img 
-          src="/zodiac_compatibility_art.jpg" 
+          src="/zodiac_compatibility_art.webp" 
           alt="Zodiac Compatibility" 
+          loading="lazy"
+          decoding="async"
+          width={600}
+          height={720}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
         />
         <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.6)] pointer-events-none"></div>

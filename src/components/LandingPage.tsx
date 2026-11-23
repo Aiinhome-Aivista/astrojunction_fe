@@ -417,24 +417,34 @@ export function LandingPage({
   useEffect(() => {
     if (currentView !== 'landing') return;
 
+    let ticking = false;
     const handleScroll = () => {
       if (isClickScrolling.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (isClickScrolling.current) {
+            ticking = false;
+            return;
+          }
+          const sections = ['hero-section', 'zodiac-section', 'panjika-section', 'remedies-section', 'blog-section', 'premium-section'];
+          const scrollPosition = window.scrollY + 180;
 
-      const sections = ['hero-section', 'zodiac-section', 'panjika-section', 'remedies-section', 'blog-section', 'premium-section'];
-      const scrollPosition = window.scrollY + 180;
+          let currentSection = 'hero-section';
+          for (const section of sections) {
+            const element = document.getElementById(section);
+            if (element && element.offsetTop <= scrollPosition) {
+              currentSection = section;
+            }
+          }
+          setActiveSection(currentSection);
 
-      let currentSection = 'hero-section';
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element && element.offsetTop <= scrollPosition) {
-          currentSection = section;
-        }
-      }
-      setActiveSection(currentSection);
-
-      const targetPath = SECTION_PATH_MAP[currentSection] || '/';
-      if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
-        window.history.replaceState({ section: currentSection }, '', targetPath);
+          const targetPath = SECTION_PATH_MAP[currentSection] || '/';
+          if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+            window.history.replaceState({ section: currentSection }, '', targetPath);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -968,7 +978,7 @@ export function LandingPage({
         {/* Universal Astrologer Background (Fixed across all sections) */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <div
-            className={`absolute inset-0 bg-no-repeat bg-cover bg-center bg-[url('/astrologer_bg.jpg')] transition-opacity duration-700 ${theme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
+            className={`absolute inset-0 bg-no-repeat bg-cover bg-center bg-[url('/astrologer_bg.webp')] transition-opacity duration-700 ${theme === 'dark' ? 'opacity-[0.35]' : 'opacity-[0.20]'}`}
           ></div>
           <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-transparent ${theme === 'dark' ? 'to-[#0D0D0F]/90' : 'to-[#F0ECE1]/90'}`}></div>
         </div>
@@ -1090,8 +1100,12 @@ export function LandingPage({
                 {/* The wheel container */}
                 <div className="relative w-36 h-36 xs:w-44 xs:h-44 sm:w-72 sm:h-72 lg:w-[480px] lg:h-[480px] flex items-center justify-center lg:translate-x-[15%]">
                   <img
-                    src="/white_zodiac_wheel.png"
+                    src="/white_zodiac_wheel.webp"
                     alt="AstroJunction Zodiac Wheel"
+                    width={480}
+                    height={480}
+                    decoding="async"
+                    {...({ fetchPriority: 'high' } as any)}
                     className="w-full h-full object-cover rounded-full shadow-[0_0_60px_rgba(201,160,80,0.4)] border border-[#C9A050]/40 relative z-10 animate-[spin_60s_linear_infinite]"
                   />
 
@@ -1146,8 +1160,12 @@ export function LandingPage({
                   <div className="w-full hidden lg:flex items-center justify-center p-4">
                     <div className="relative w-full max-w-[340px] xl:max-w-[380px] aspect-square rounded-full overflow-hidden shadow-[0_0_50px_rgba(201,160,80,0.2)] border-2 border-[#C9A050]/20 group">
                       <img
-                        src="/vedic_calendar_alt.jpg"
+                        src="/vedic_calendar_alt.webp"
                         alt="Vedic Calendar"
+                        loading="lazy"
+                        decoding="async"
+                        width={380}
+                        height={380}
                         className="w-full h-full object-cover scale-[1.02] animate-[spin_120s_linear_infinite]"
                       />
                       <div className="absolute inset-0 rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.9)] pointer-events-none"></div>
