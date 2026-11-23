@@ -848,6 +848,108 @@ function injectDynamicMeta(html: string, req: express.Request): string {
     .replace(/<meta\s+property=["']og:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image" content="${fullOgImage}" />\n    <link rel="canonical" href="${fullCanonical}" />`);
 }
 
+// Helper for XML escaping
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
+
+// Robots.txt Handler
+app.get('/robots.txt', (req, res) => {
+  const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
+  if (fs.existsSync(robotsPath)) {
+    res.type('text/plain; charset=utf-8');
+    return res.sendFile(robotsPath);
+  }
+  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: https://astrojunction.in/sitemap.xml\n";
+  res.type('text/plain; charset=utf-8');
+  return res.send(defaultRobots);
+});
+
+// Dynamic Sitemap Handler
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const staticPages = [
+      { loc: 'https://astrojunction.in/', changefreq: 'daily', priority: '1.0' },
+      { loc: 'https://astrojunction.in/blogs', changefreq: 'daily', priority: '0.9' },
+      { loc: 'https://astrojunction.in/about-us', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://astrojunction.in/faq', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://astrojunction.in/privacy-policy', changefreq: 'yearly', priority: '0.5' },
+      { loc: 'https://astrojunction.in/terms-and-conditions', changefreq: 'yearly', priority: '0.5' },
+      { loc: 'https://astrojunction.in/cookie-policy', changefreq: 'yearly', priority: '0.5' },
+    ];
+
+    const fallbackSlugs = [
+      'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
+      'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide'
+    ];
+
+    let blogs: any[] = [];
+    const backendUrl = (process.env.VITE_API_BASE_URL || 'http://127.0.0.1:5001').replace(/\/+$/, '');
+
+    try {
+      const response = await fetch(`${backendUrl}/api/blogs`, {
+        signal: AbortSignal.timeout(4000),
+      });
+      if (response.ok) {
+        const json: any = await response.json();
+        blogs = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : []);
+      }
+    } catch {
+      // Backend fetch failed, use fallback slugs
+    }
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    for (const page of staticPages) {
+      xml += `  <url>\n    <loc>${escapeXml(page.loc)}</loc>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+    }
+
+    if (blogs && blogs.length > 0) {
+      for (const blog of blogs) {
+        const slug = blog.slug || blog.id;
+        if (!slug) continue;
+        let lastmodTag = '';
+        const dateVal = blog.updated_at || blog.created_at;
+        if (dateVal) {
+          try {
+            const d = new Date(dateVal);
+            if (!isNaN(d.getTime())) {
+              lastmodTag = `\n    <lastmod>${d.toISOString().split('T')[0]}</lastmod>`;
+            }
+          } catch {
+            // ignore date formatting errors
+          }
+        }
+        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      }
+    } else {
+      for (const slug of fallbackSlugs) {
+        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      }
+    }
+
+    xml += `</urlset>`;
+
+    res.header('Content-Type', 'application/xml; charset=utf-8');
+    res.header('Cache-Control', 'public, max-age=3600');
+    return res.send(xml);
+  } catch (err) {
+    console.error('Error generating dynamic sitemap:', err);
+    res.status(500).type('text/plain').send('Error generating sitemap');
+  }
+});
+
 // Start Server with Vite Middleware
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
