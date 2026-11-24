@@ -141,5 +141,10 @@ export const TAB_SEO_CONFIG: Record<string, SEOProps> = {
     title: "Admin Portal • ASTROJUNCTION",
     description: "AstroJunction Administrative Dashboard and System Management.",
     ogType: "website",
+  },
+  not_found: {
+    title: "Page Not Found (404) • ASTROJUNCTION",
+    description: "The celestial coordinates you requested could not be located in our cosmic charts.",
+    ogType: "website",
   }
 };

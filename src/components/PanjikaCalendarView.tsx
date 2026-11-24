@@ -869,8 +869,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                     >
                       {/* Regional Date - Centered with padding away from borders */}
                       <span
-                        className="font-semibold text-[8.5px] sm:text-[10px] leading-tight text-center px-0.5 block max-w-full truncate"
-                        style={{ color: 'var(--text-secondary)' }}
+                        className="font-bold text-[8.5px] sm:text-[10px] leading-tight text-center px-0.5 block max-w-full truncate text-[#9A6700] dark:text-[#FCD34D]"
                       >
                         {calendarLang === 'bn'
                           ? `${benDayNum} ${benMonthShortBn}`
@@ -903,7 +902,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                             ? 'font-bold text-[#B45309] dark:text-[#FBBF24]'
                             : isEkadashi
                             ? 'font-bold text-[#15803D] dark:text-[#4ADE80]'
-                            : 'font-medium'
+                            : 'font-medium text-[#4B5563] dark:text-[#CBD5E1]'
                           }`}
                         style={
                           !isPurnima && !isAmavasya && !isEkadashi
@@ -1346,7 +1345,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       {calendarLang === 'bn' ? 'গ্রেগরিয়ান' : (calendarLang === 'hi' ? 'ग्रेगोरियन' : 'Gregorian')}
                     </div>
                     <div
-                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5"
+                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5 text-[#111111] dark:text-[#F5F2EB]"
                       style={{ color: 'var(--text-primary)' }}
                     >
                       {localizeString(new Date(selectedDay.english_date).toLocaleDateString(
@@ -1355,7 +1354,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       ), calendarLang)}
                     </div>
                     <div
-                      className="text-[9.5px] font-medium leading-none mt-0.5"
+                      className="text-[9.5px] font-medium leading-none mt-0.5 text-[#333333] dark:text-[#D8D2C5]"
                       style={{ color: 'var(--text-secondary)' }}
                     >
                       {localizeString(new Date(selectedDay.english_date).toLocaleDateString(
@@ -1372,7 +1371,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       {calendarLang === 'bn' ? 'বঙ্গাব্দ' : (calendarLang === 'hi' ? 'बंगाब्द' : 'Bangabda')}
                     </div>
                     <div
-                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5"
+                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5 text-[#111111] dark:text-[#F5F2EB]"
                       style={{ color: 'var(--text-primary)' }}
                     >
                       {calendarLang === 'en'
@@ -1388,7 +1387,7 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                       {calendarLang === 'bn' ? 'বিক্রম সংবৎ' : (calendarLang === 'hi' ? 'विक्रम संवत' : 'Vikram Samvat')}
                     </div>
                     <div
-                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5"
+                      className="font-serif font-bold text-xs sm:text-sm leading-tight mt-0.5 text-[#111111] dark:text-[#F5F2EB]"
                       style={{ color: 'var(--text-primary)' }}
                     >
                       {calendarLang === 'en'
@@ -1482,10 +1481,10 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                                 item.valueBn;
                           return (
                           <div key={idx} className="flex items-center justify-between py-1 px-2 text-[11px] sm:text-xs border-b border-black/5 dark:border-white/5 last:border-b-0 gap-2">
-                            <span className="font-medium shrink-0" style={{ color: 'var(--text-secondary)' }}>
+                            <span className="font-medium shrink-0 text-[#333333] dark:text-[#D8D2C5]" style={{ color: 'var(--text-secondary)' }}>
                               {displayLabel}
                             </span>
-                            <span className="font-medium sm:font-semibold text-right whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
+                            <span className="font-semibold text-right whitespace-nowrap text-[#111111] dark:text-[#F5F2EB]" style={{ color: 'var(--text-primary)' }}>
                               {localizeString(displayValue, calendarLang)}
                             </span>
                           </div>
@@ -1511,28 +1510,28 @@ export const PanjikaCalendarView: React.FC<PanjikaCalendarViewProps> = ({ theme 
                           <span className="text-[8px] sm:text-[9px] text-[#9A5B00] dark:text-[#FCD34D] uppercase font-black block mb-0.5 leading-none">
                             🌅 {t('panjika.details.sunrise')}
                           </span>
-                          <span className="font-mono text-[11px] sm:text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.sunrise, calendarLang)}</span>
+                          <span className="font-mono text-[11px] sm:text-xs font-semibold text-[#111111] dark:text-[#F5F2EB]" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.sunrise, calendarLang)}</span>
                         </div>
                         <div className={`py-1 px-1.5 rounded-lg border text-center ${isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                           }`}>
                           <span className="text-[8px] sm:text-[9px] text-[#C2410C] dark:text-[#FDBA74] uppercase font-black block mb-0.5 leading-none">
                             🌇 {t('panjika.details.sunset')}
                           </span>
-                          <span className="font-mono text-[11px] sm:text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.sunset, calendarLang)}</span>
+                          <span className="font-mono text-[11px] sm:text-xs font-semibold text-[#111111] dark:text-[#F5F2EB]" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.sunset, calendarLang)}</span>
                         </div>
                         <div className={`py-1 px-1.5 rounded-lg border text-center ${isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                           }`}>
                           <span className="text-[8px] sm:text-[9px] text-[#4338CA] dark:text-[#A5B4FC] uppercase font-black block mb-0.5 leading-none">
                             🌙 {t('panjika.details.moonrise')}
                           </span>
-                          <span className="font-mono text-[11px] sm:text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.moonrise, calendarLang)}</span>
+                          <span className="font-mono text-[11px] sm:text-xs font-semibold text-[#111111] dark:text-[#F5F2EB]" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.moonrise, calendarLang)}</span>
                         </div>
                         <div className={`py-1 px-1.5 rounded-lg border text-center ${isDark ? 'bg-[#0D0D0F] border-[#2A2A2E]' : 'bg-[#F9F7F1] border-[#E5E1D8]'
                           }`}>
                           <span className="text-[8px] sm:text-[9px] text-[#334155] dark:text-[#CBD5E1] uppercase font-black block mb-0.5 leading-none">
                             🌘 {t('panjika.details.moonset')}
                           </span>
-                          <span className="font-mono text-[11px] sm:text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.moonset, calendarLang)}</span>
+                          <span className="font-mono text-[11px] sm:text-xs font-semibold text-[#111111] dark:text-[#F5F2EB]" style={{ color: 'var(--text-primary)' }}>{localizeString(fullPanjika.moonset, calendarLang)}</span>
                         </div>
                       </div>
                     </div>

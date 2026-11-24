@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { AuthGate } from './components/AuthGate';
 import { LandingPage } from './components/LandingPage';
@@ -9,20 +9,24 @@ import { NumerologyView } from './components/NumerologyView';
 import { AICounsellorChat } from './components/AICounsellorChat';
 import { LifeRoadmapView } from './components/LifeRoadmapView';
 import { ConsultationsPaymentView } from './components/ConsultationsPaymentView';
-import { AdminKGraphView } from './components/AdminKGraphView';
-import { AdminBlogsView } from './components/Blogs';
-import { AdminDashboardView } from './components/AdminDashboardView';
-import { AdminUsersView } from './components/AdminUsersView';
-import { AdminLogsView } from './components/AdminLogsView';
-import { AdminRevenueView } from './components/AdminRevenueView';
-import { AdminLLMConfigView } from './components/AdminLLMConfigView';
-import { AdminSEOView } from './components/AdminSEOView';
-import { AdminSubscriptionsView } from './components/AdminSubscriptionsView';
-import { AdminEventTrackingView } from './components/AdminEventTrackingView';
 import PanjikaCalendarView from './components/PanjikaCalendarView';
-import { LegalInfoPage, LegalPageView } from './components/LegalInfoPage';
-import { AdminLoginView } from './components/AdminLoginView';
+import type { LegalPageView } from './components/LegalInfoPage';
 import { Sparkles } from 'lucide-react';
+
+// Route-Level Code Splitting for secondary modules, legal, and heavy admin views
+const AdminDashboardView = React.lazy(() => import('./components/AdminDashboardView').then(m => ({ default: m.AdminDashboardView })));
+const AdminUsersView = React.lazy(() => import('./components/AdminUsersView').then(m => ({ default: m.AdminUsersView })));
+const AdminEventTrackingView = React.lazy(() => import('./components/AdminEventTrackingView').then(m => ({ default: m.AdminEventTrackingView })));
+const AdminLogsView = React.lazy(() => import('./components/AdminLogsView').then(m => ({ default: m.AdminLogsView })));
+const AdminRevenueView = React.lazy(() => import('./components/AdminRevenueView').then(m => ({ default: m.AdminRevenueView })));
+const AdminLLMConfigView = React.lazy(() => import('./components/AdminLLMConfigView').then(m => ({ default: m.AdminLLMConfigView })));
+const AdminSEOView = React.lazy(() => import('./components/AdminSEOView').then(m => ({ default: m.AdminSEOView })));
+const AdminSubscriptionsView = React.lazy(() => import('./components/AdminSubscriptionsView').then(m => ({ default: m.AdminSubscriptionsView })));
+const AdminKGraphView = React.lazy(() => import('./components/AdminKGraphView').then(m => ({ default: m.AdminKGraphView })));
+const AdminBlogsView = React.lazy(() => import('./components/Blogs').then(m => ({ default: m.AdminBlogsView })));
+const AdminLoginView = React.lazy(() => import('./components/AdminLoginView').then(m => ({ default: m.AdminLoginView })));
+const LegalInfoPage = React.lazy(() => import('./components/LegalInfoPage'));
+const NotFoundPage = React.lazy(() => import('./components/NotFoundPage'));
 
 import { API_ENDPOINTS } from './config/api_config';
 import { api } from './services/api';
@@ -256,6 +260,8 @@ export function App() {
           if (['global-zodiac', 'panjika', 'remedies', 'blogs', 'premium', 'zodiac'].includes(cleanPath)) return 'landing';
           const validTabs = ['daily', 'horoscope', 'matchmaking', 'numerology', 'consultations', 'counsellor', 'roadmap', 'landing', 'home'];
           if (validTabs.includes(cleanPath)) return cleanPath;
+          // Unrecognized route -> Custom 404
+          return 'not_found';
         }
       }
     } catch {}
@@ -269,7 +275,7 @@ export function App() {
     setLandingResetKey(prev => prev + 1);
     if (typeof window !== 'undefined') {
       if (window.location.pathname !== '/' || window.location.search) {
-        window.history.pushState({}, '', '/');
+        window.history.replaceState({}, '', '/');
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -825,6 +831,14 @@ export function App() {
             }}
             className="w-full"
           >
+            <Suspense
+              fallback={
+                <div className="min-h-[40vh] flex flex-col items-center justify-center space-y-3">
+                  <div className="w-8 h-8 rounded-full border-2 border-[#C9A050]/20 border-t-[#C9A050] animate-spin" />
+                  <span className="text-xs font-serif text-[#C9A050] tracking-wider">Loading...</span>
+                </div>
+              }
+            >
             {activeTab === 'daily' && (
               <DailyHoroscopeView
                 profile={currentProfile}
@@ -1025,6 +1039,16 @@ export function App() {
                 language={language}
               />
             )}
+            {activeTab === 'not_found' && (
+              <NotFoundPage
+                theme={theme}
+                onGoHome={() => {
+                  setActiveTab('landing');
+                  handleResetLanding();
+                }}
+              />
+            )}
+            </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>

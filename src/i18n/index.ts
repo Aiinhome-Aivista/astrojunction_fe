@@ -238,7 +238,7 @@ export async function initLanguage(): Promise<SupportedLanguage> {
     if (res && res.ok) {
       const contentType = res.headers?.get ? (res.headers.get('content-type') || '') : '';
       if (contentType && !contentType.includes('json')) {
-        console.warn(`[i18n] Non-JSON response from ${geoUrl}: ${contentType}`);
+        console.warn(`[i18n] Non-JSON response from ${res.url || '/geo/language'}: ${contentType}`);
       } else {
         const data = await res.json();
         console.log('[i18n] /geo/language response:', data);

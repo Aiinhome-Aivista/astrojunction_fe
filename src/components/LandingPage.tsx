@@ -154,24 +154,89 @@ export function HeaderLanguageSwitcher({
   );
 }
 
-const SECTION_PATH_MAP: Record<string, string> = {
-  'hero-section': '/',
-  'zodiac-section': '/global-zodiac',
-  'panjika-section': '/panjika',
-  'remedies-section': '/remedies',
-  'blog-section': '/blogs',
-  'premium-section': '/premium',
-};
+declare global {
+  interface Window {
+    __disableUrlSyncUntil?: number;
+  }
+}
 
-const PATH_SECTION_MAP: Record<string, string> = {
-  '/': 'hero-section',
-  '/home': 'hero-section',
-  '/global-zodiac': 'zodiac-section',
-  '/zodiac': 'zodiac-section',
-  '/panjika': 'panjika-section',
-  '/remedies': 'remedies-section',
-  '/premium': 'premium-section',
-};
+export interface LandingNavSection {
+  id: string;
+  path: string;
+  labelKey: string;
+  defaultLabel: string;
+  icon: React.ComponentType<{ className?: string }>;
+  aliases?: string[];
+}
+
+export const LANDING_NAV_SECTIONS: LandingNavSection[] = [
+  {
+    id: 'hero-section',
+    path: '/',
+    labelKey: 'header.nav.home',
+    defaultLabel: 'Home',
+    icon: Home,
+    aliases: ['/home'],
+  },
+  {
+    id: 'zodiac-section',
+    path: '/global-zodiac',
+    labelKey: 'header.nav.zodiac',
+    defaultLabel: 'Global Zodiac',
+    icon: Globe,
+    aliases: ['/zodiac'],
+  },
+  {
+    id: 'panjika-section',
+    path: '/panjika',
+    labelKey: 'header.nav.panjika',
+    defaultLabel: 'Panjika',
+    icon: Calendar,
+  },
+  {
+    id: 'remedies-section',
+    path: '/remedies',
+    labelKey: 'header.nav.remedies',
+    defaultLabel: 'Remedies',
+    icon: Compass,
+  },
+  {
+    id: 'blog-section',
+    path: '/blogs',
+    labelKey: 'header.nav.blogs',
+    defaultLabel: 'Blogs',
+    icon: BookOpen,
+  },
+  {
+    id: 'premium-section',
+    path: '/premium',
+    labelKey: 'header.nav.premium',
+    defaultLabel: 'Premium',
+    icon: Lock,
+  },
+];
+
+export const SECTION_BY_ID = new Map<string, LandingNavSection>(
+  LANDING_NAV_SECTIONS.map((sec) => [sec.id, sec])
+);
+
+export const SECTION_BY_PATH = new Map<string, LandingNavSection>();
+LANDING_NAV_SECTIONS.forEach((sec) => {
+  SECTION_BY_PATH.set(sec.path, sec);
+  sec.aliases?.forEach((alias) => SECTION_BY_PATH.set(alias, sec));
+});
+
+const SECTION_PATH_MAP: Record<string, string> = Object.fromEntries(
+  LANDING_NAV_SECTIONS.map((s) => [s.id, s.path])
+);
+
+const PATH_SECTION_MAP: Record<string, string> = {};
+LANDING_NAV_SECTIONS.forEach((s) => {
+  PATH_SECTION_MAP[s.path] = s.id;
+  s.aliases?.forEach((a) => {
+    PATH_SECTION_MAP[a] = s.id;
+  });
+});
 
 interface LandingPageProps {
   onLoginClick: () => void;
@@ -259,8 +324,8 @@ export function LandingPage({
     return 'landing';
   });
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const isClickScrolling = useRef(false);
-  const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  // Scroll Mutex Lock timestamp to prevent URL flickering during smooth scrolling
+  const disableUrlSyncUntil = useRef<number>(0);
 
   const [activeSection, setActiveSection] = useState<string>('hero-section');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -274,21 +339,34 @@ export function LandingPage({
     }
   }, [currentView]);
 
-  // Initial mount: if user arrived directly on e.g. /global-zodiac, /panjika, /remedies, /blogs, /premium
-  // Clean up URL so landing page sections do not have separate URLs
+  const performScrollToElement = (id: string) => {
+    if (typeof window === 'undefined') return;
+    if (id === 'hero-section') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 76;
+      const targetY = Math.max(0, element.offsetTop - headerOffset);
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  };
+
+  // Initial mount fallback: if user arrived directly on e.g. /global-zodiac, /panjika, /remedies, /premium
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const path = window.location.pathname;
-    const targetSection = PATH_SECTION_MAP[path];
-    if (targetSection && targetSection !== 'hero-section') {
-      window.history.replaceState({ section: targetSection }, '', '/');
-      setTimeout(() => {
-        const el = document.getElementById(targetSection);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setActiveSection(targetSection);
-        }
-      }, 300);
+    const target = SECTION_BY_PATH.get(path);
+    if (target && target.id !== 'hero-section') {
+      const lockUntil = Date.now() + 1200;
+      disableUrlSyncUntil.current = lockUntil;
+      window.__disableUrlSyncUntil = lockUntil;
+      setActiveSection(target.id);
+      const timer = setTimeout(() => {
+        performScrollToElement(target.id);
+      }, 150);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -302,9 +380,10 @@ export function LandingPage({
     onRegisterClick();
   };
 
-  // Handle browser back/forward buttons
+  // Handle browser back/forward buttons with seamless viewport restoration
   useEffect(() => {
     const handlePopState = () => {
+      if (typeof window === 'undefined') return;
       const path = window.location.pathname;
       if (path === '/blogs' || path.startsWith('/blogs/')) {
         setCurrentView('blogs');
@@ -316,12 +395,12 @@ export function LandingPage({
         } else {
           setCurrentView('landing');
           setSelectedBlogForPage(null);
-          const targetSection = PATH_SECTION_MAP[path] || 'hero-section';
-          setActiveSection(targetSection);
-          const el = document.getElementById(targetSection);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+          const target = SECTION_BY_PATH.get(path) || LANDING_NAV_SECTIONS[0];
+          const lockUntil = Date.now() + 1100;
+          disableUrlSyncUntil.current = lockUntil;
+          window.__disableUrlSyncUntil = lockUntil;
+          setActiveSection(target.id);
+          performScrollToElement(target.id);
         }
       }
     };
@@ -359,45 +438,44 @@ export function LandingPage({
     setSavedDob(null);
   };
 
+  // Click Navigation with Instant Feedback & Scroll Mutex Lock
   const scrollToSection = (id: string) => {
-    setActiveSection(id);
-    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-      window.history.pushState({ section: id }, '', '/');
+    const sec = SECTION_BY_ID.get(id) || LANDING_NAV_SECTIONS[0];
+
+    // Set scroll mutex lock to disable scroll listener during smooth scroll animation (1100ms)
+    const lockUntil = Date.now() + 1100;
+    disableUrlSyncUntil.current = lockUntil;
+    if (typeof window !== 'undefined') {
+      window.__disableUrlSyncUntil = lockUntil;
+      // Immediately update browser URL without reload or history stack pollution
+      if (window.location.pathname !== sec.path) {
+        window.history.replaceState(null, '', sec.path);
+      }
     }
 
-    isClickScrolling.current = true;
-    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
-    clickScrollTimeout.current = setTimeout(() => {
-      isClickScrolling.current = false;
-    }, 1000);
+    // Immediately update active state
+    setActiveSection(sec.id);
 
+    // Switch view back to landing if user was on a sub-view (blogs/legal)
     if (currentView !== 'landing') {
       setCurrentView('landing');
+      setSelectedBlogForPage(null);
       setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        performScrollToElement(sec.id);
       }, 50);
       return;
     }
 
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    performScrollToElement(sec.id);
   };
 
   const handleResetToInitial = () => {
-    isClickScrolling.current = true;
-    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
-    clickScrollTimeout.current = setTimeout(() => {
-      isClickScrolling.current = false;
-    }, 1000);
-
+    const lockUntil = Date.now() + 1100;
+    disableUrlSyncUntil.current = lockUntil;
     if (typeof window !== 'undefined') {
+      window.__disableUrlSyncUntil = lockUntil;
       if (window.location.pathname !== '/' || window.location.search) {
-        window.history.pushState({}, '', '/');
+        window.history.replaceState(null, '', '/');
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -414,39 +492,91 @@ export function LandingPage({
     }
   };
 
+  // High-Performance Viewport Detection (Scroll-Spy) with requestAnimationFrame & Real-Time URL Sync
   useEffect(() => {
     if (currentView !== 'landing') return;
 
     let ticking = false;
+
     const handleScroll = () => {
-      if (isClickScrolling.current) return;
+      // Check mutex lock: disable during click-induced smooth scrolling
+      const now = Date.now();
+      if (
+        disableUrlSyncUntil.current > now ||
+        (typeof window !== 'undefined' && (window.__disableUrlSyncUntil || 0) > now)
+      ) {
+        return;
+      }
+
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (isClickScrolling.current) {
-            ticking = false;
+          ticking = false;
+          const currentLock = Date.now();
+          if (
+            disableUrlSyncUntil.current > currentLock ||
+            (typeof window !== 'undefined' && (window.__disableUrlSyncUntil || 0) > currentLock)
+          ) {
             return;
           }
-          const sections = ['hero-section', 'zodiac-section', 'panjika-section', 'remedies-section', 'blog-section', 'premium-section'];
-          const scrollPosition = window.scrollY + 180;
 
-          let currentSection = 'hero-section';
-          for (const section of sections) {
-            const element = document.getElementById(section);
-            if (element && element.offsetTop <= scrollPosition) {
-              currentSection = section;
+          const scrollY = window.scrollY;
+          const HEADER_OFFSET = 180;
+
+          // When user is at the very top of the page (scrollY < 180px), automatically default back to root path ('/')
+          if (scrollY < HEADER_OFFSET) {
+            if (activeSection !== 'hero-section') {
+              setActiveSection('hero-section');
+            }
+            if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+              window.history.replaceState(null, '', '/');
+            }
+            return;
+          }
+
+          // Check if user is scrolled to the absolute bottom of the document
+          const isAtBottom =
+            window.innerHeight + scrollY >= document.documentElement.scrollHeight - 70;
+          let targetSection = LANDING_NAV_SECTIONS[0];
+
+          if (isAtBottom) {
+            targetSection = LANDING_NAV_SECTIONS[LANDING_NAV_SECTIONS.length - 1]; // 'premium-section'
+          } else {
+            // Find active section based on bounding offset
+            for (let i = LANDING_NAV_SECTIONS.length - 1; i >= 0; i--) {
+              const sec = LANDING_NAV_SECTIONS[i];
+              const el = document.getElementById(sec.id);
+              if (el) {
+                const sectionTop = el.offsetTop - HEADER_OFFSET;
+                if (scrollY >= sectionTop) {
+                  targetSection = sec;
+                  break;
+                }
+              }
             }
           }
-          setActiveSection(currentSection);
-          ticking = false;
+
+          // Update active section state
+          if (activeSection !== targetSection.id) {
+            setActiveSection(targetSection.id);
+          }
+
+          // Real-time Non-Reload URL Sync using replaceState
+          if (typeof window !== 'undefined' && window.location.pathname !== targetSection.path) {
+            window.history.replaceState(null, '', targetSection.path);
+          }
         });
         ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    // Run once on mount to establish correct initial active item
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentView]);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentView, activeSection]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -690,72 +820,30 @@ export function LandingPage({
 
             {/* Center Links (Desktop only, drawer handles mobile & tablet) */}
             <div className={`hidden xl:flex items-center space-x-0.5 lg:space-x-1 px-1 lg:px-1.5 py-1 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
-              <a
-                href="#hero-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('hero-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <Home className="w-3.5 h-3.5" />
-                <span>{t('header.nav.home')}</span>
-              </a>
-              <a
-                href="#zodiac-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('zodiac-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <Globe className="w-3.5 h-3.5" />
-                <span>{t('header.nav.zodiac')}</span>
-              </a>
-              <a
-                href="#panjika-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('panjika-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>{t('header.nav.panjika')}</span>
-              </a>
-              <a
-                href="#remedies-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('remedies-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <Compass className="w-3.5 h-3.5" />
-                <span>{t('header.nav.remedies')}</span>
-              </a>
-              <a
-                href="#blog-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('blog-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>{t('header.nav.blogs')}</span>
-              </a>
-              <a
-                href="#premium-section"
-                onClick={(e) => { e.preventDefault(); scrollToSection('premium-section'); }}
-                className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
-                  ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
-                  : theme === 'dark' ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5' : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5'
-                  }`}
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>{t('header.nav.premium')}</span>
-              </a>
+              {LANDING_NAV_SECTIONS.map((sec) => {
+                const Icon = sec.icon;
+                const isActive = currentView === 'landing' && activeSection === sec.id;
+                return (
+                  <a
+                    key={sec.id}
+                    href={sec.path === '/' ? '#hero-section' : sec.path}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(sec.id);
+                    }}
+                    className={`flex items-center space-x-1.5 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] transition-all duration-200 cursor-pointer select-none ${
+                      isActive
+                        ? 'text-[#0D0D0F] bg-[#C9A050] font-bold shadow-md shadow-[#C9A050]/25 ring-1 ring-[#C9A050]/50 scale-[1.02]'
+                        : theme === 'dark'
+                          ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5 font-semibold'
+                          : 'text-gray-600 hover:text-[#0D0D0F] hover:bg-black/5 font-semibold'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 transition-colors ${isActive ? 'text-[#0D0D0F]' : 'text-[#C9A050]'}`} />
+                    <span>{t(sec.labelKey, sec.defaultLabel)}</span>
+                  </a>
+                );
+              })}
             </div>
 
             {/* Right Controls */}
@@ -894,16 +982,9 @@ export function LandingPage({
 
               {/* Drawer Navigation Links */}
               <div className="mt-5 space-y-1.5">
-                {[
-                  { id: 'hero-section', label: t('header.nav.home'), icon: Home },
-                  { id: 'zodiac-section', label: t('header.nav.zodiac'), icon: Globe },
-                  { id: 'panjika-section', label: t('header.nav.panjika'), icon: Calendar },
-                  { id: 'remedies-section', label: t('header.nav.remedies'), icon: Compass },
-                  { id: 'blog-section', label: t('header.nav.blogs'), icon: BookOpen },
-                  { id: 'premium-section', label: t('header.nav.premium'), icon: Lock },
-                ].map((item) => {
+                {LANDING_NAV_SECTIONS.map((item) => {
                   const Icon = item.icon;
-                  const isActive = activeSection === item.id;
+                  const isActive = currentView === 'landing' && activeSection === item.id;
                   return (
                     <button
                       key={item.id}
@@ -911,15 +992,16 @@ export function LandingPage({
                         setIsMobileMenuOpen(false);
                         scrollToSection(item.id);
                       }}
-                      className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${isActive
-                        ? 'bg-[#C9A050] text-[#0D0D0F] font-bold shadow-md'
-                        : theme === 'dark'
-                          ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5'
-                          : 'text-[#5C574F] hover:text-[#1A1816] hover:bg-black/5'
-                        }`}
+                      className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
+                        isActive
+                          ? 'bg-[#C9A050] text-[#0D0D0F] font-bold shadow-md shadow-[#C9A050]/25 ring-1 ring-[#C9A050]/50'
+                          : theme === 'dark'
+                            ? 'text-[#9E9A90] hover:text-[#E5E1D8] hover:bg-white/5'
+                            : 'text-[#5C574F] hover:text-[#1A1816] hover:bg-black/5'
+                      }`}
                     >
-                      <Icon className="w-4 h-4 shrink-0 text-[#C9A050]" />
-                      <span>{item.label}</span>
+                      <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[#0D0D0F]' : 'text-[#C9A050]'}`} />
+                      <span>{t(item.labelKey, item.defaultLabel)}</span>
                     </button>
                   );
                 })}

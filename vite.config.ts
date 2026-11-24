@@ -216,7 +216,39 @@ function prerenderMetaPlugin() {
           fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemapXml, 'utf-8');
           fs.writeFileSync(path.join(__dirname, 'public/sitemap.xml'), sitemapXml, 'utf-8');
 
-          const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: ${ORIGIN}/sitemap.xml\n`;
+          const robotsTxt = `User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /s/
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: ${ORIGIN}/sitemap.xml
+`;
           fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt, 'utf-8');
           fs.writeFileSync(path.join(__dirname, 'public/robots.txt'), robotsTxt, 'utf-8');
         }
