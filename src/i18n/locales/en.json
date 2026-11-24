@@ -364,9 +364,9 @@
       "selectLanguage": "Language"
     },
     "fab": {
-      "title": "Chat With Us",
-      "ariaLabel": "Chat With Us",
-      "label": "Chat With Us"
+      "title": "Chat",
+      "ariaLabel": "Chat",
+      "label": "Chat"
     }
   },
   "vedic": {

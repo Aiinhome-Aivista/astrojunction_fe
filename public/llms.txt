@@ -3,20 +3,17 @@
 > AstroJunction is an authentic Vedic Astrology and spiritual intelligence platform offering accurate Janam Kundli, Daily Horoscope, Vedic Panchang, 36 Gun Ashtakoota Matchmaking, Numerology, and certified astrologer consultations.
 
 ## Core Services & Tools
-- [Daily Horoscope & Panchang](https://astrojunction.in/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
-- [Vedic Janam Kundli](https://astrojunction.in/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
-- [Kundli Milan / Matchmaking](https://astrojunction.in/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
-- [Vedic Numerology Calculator](https://astrojunction.in/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
-- [Vedic Panjika Calendar](https://astrojunction.in/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
-- [Astrologer Consultations](https://astrojunction.in/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
-- [Daivajna AI Life Counsellor](https://astrojunction.in/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
-
-## Articles & Wisdom
-- [Vedic Astrology Blogs](https://astrojunction.in/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
+- [Daily Horoscope & Panchang](https://astrojunction.com/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
+- [Vedic Janam Kundli](https://astrojunction.com/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
+- [Kundli Milan / Matchmaking](https://astrojunction.com/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
+- [Vedic Numerology Calculator](https://astrojunction.com/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
+- [Astrologer Consultations](https://astrojunction.com/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
+- [Daivajna AI Life Counsellor](https://astrojunction.com/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
+- [Life Destiny Roadmap](https://astrojunction.com/roadmap): 25-Year Vedic Destiny Roadmap and lifecycle milestone predictions.
 
 ## Company & Policies
-- [About Us](https://astrojunction.in/about-us): Mission, heritage, and background of AstroJunction.
-- [Frequently Asked Questions (FAQ)](https://astrojunction.in/faq): Answers to common questions regarding Vedic calculations and platform features.
-- [Privacy Policy](https://astrojunction.in/privacy-policy): Data privacy, protection, and user confidentiality standards.
-- [Terms & Conditions](https://astrojunction.in/terms-and-conditions): Terms of platform usage and service agreements.
-- [Cookie Policy](https://astrojunction.in/cookie-policy): Information on cookies and local storage usage.
+- [About Us](https://astrojunction.com/about-us): Mission, heritage, and background of AstroJunction.
+- [Frequently Asked Questions (FAQ)](https://astrojunction.com/faq): Answers to common questions regarding Vedic calculations and platform features.
+- [Privacy Policy](https://astrojunction.com/privacy-policy): Data privacy, protection, and user confidentiality standards.
+- [Terms & Conditions](https://astrojunction.com/terms-and-conditions): Terms of platform usage and service agreements.
+- [Cookie Policy](https://astrojunction.com/cookie-policy): Information on cookies and local storage usage.

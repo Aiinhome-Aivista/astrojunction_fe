@@ -47,6 +47,7 @@ const PAGES_LIST: PageMetaItem[] = [
 ];
 
 export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
+  const [siteUrl] = useState(() => (typeof window !== 'undefined' ? window.location.origin : 'https://astrojunction.com'));
   const [selectedPageId, setSelectedPageId] = useState<string>('landing');
   const [seoData, setSeoData] = useState<Record<string, SEOProps>>(() => ({ ...TAB_SEO_CONFIG }));
   const [loading, setLoading] = useState(true);
@@ -54,16 +55,18 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Load custom SEO settings from backend database
+  // Load custom SEO settings from backend database (strictly prevent siteUrl overwriting)
   useEffect(() => {
     const loadConfig = async () => {
       try {
         setLoading(true);
         const data = await adminApi.getSeoConfig();
         if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          // Never allow backend to overwrite frontend siteUrl
+          const { site_url, api_url, ...safeSeoData } = data as any;
           setSeoData((prev) => ({
             ...prev,
-            ...data,
+            ...safeSeoData,
           }));
         }
       } catch (err: any) {
@@ -307,6 +310,41 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
 
         {/* Right Column: Live Interactive Previews (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
+          {/* Sitemap & robots.txt Public Endpoints Card */}
+          <div 
+            className={`rounded-2xl border-2 p-5 space-y-3 ${bgCard}`}
+          >
+            <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#C9A050]">
+              <Globe className="w-3.5 h-3.5" />
+              <span>Sitemap & robots.txt</span>
+            </div>
+            <p className={`text-xs ${textMuted}`}>
+              Search engine crawler discovery endpoints dynamically linked to current host (leak-proof):
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+              <a 
+                className="mini seo-linkbtn flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-[#C9A050]/40 text-[#C9A050] hover:bg-[#C9A050]/10 transition-colors" 
+                href={`${siteUrl}/sitemap.xml`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <i className="pi pi-external-link" aria-hidden="true"></i>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span className="truncate">{siteUrl}/sitemap.xml</span>
+              </a>
+              <a 
+                className="mini seo-linkbtn flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-[#C9A050]/40 text-[#C9A050] hover:bg-[#C9A050]/10 transition-colors" 
+                href={`${siteUrl}/robots.txt`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <i className="pi pi-external-link" aria-hidden="true"></i>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span className="truncate">{siteUrl}/robots.txt</span>
+              </a>
+            </div>
+          </div>
+
           {/* 1. Google SERP (Search Result) Preview */}
           <div 
             className={`rounded-2xl border-2 p-5 space-y-3 ${bgCard}`}
@@ -327,7 +365,7 @@ export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
                   AJ
                 </span>
                 <span className={`truncate ${isDark ? 'text-[#9aa0a6]' : 'text-gray-600 font-medium'}`}>
-                  https://astrojunction.com {pageDef.path}
+                  {siteUrl} {pageDef.path}
                 </span>
               </div>
               <h4

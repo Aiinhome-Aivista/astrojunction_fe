@@ -276,11 +276,13 @@ export function LandingPage({
   }, [currentView]);
 
   // Initial mount: if user arrived directly on e.g. /global-zodiac, /panjika, /remedies, /blogs, /premium
+  // Clean up URL so landing page sections do not have separate URLs
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const path = window.location.pathname;
     const targetSection = PATH_SECTION_MAP[path];
     if (targetSection && targetSection !== 'hero-section') {
+      window.history.replaceState({ section: targetSection }, '', '/');
       setTimeout(() => {
         const el = document.getElementById(targetSection);
         if (el) {
@@ -360,9 +362,8 @@ export function LandingPage({
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
-    const targetPath = SECTION_PATH_MAP[id] || '/';
-    if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
-      window.history.pushState({ section: id }, '', targetPath);
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.history.pushState({ section: id }, '', '/');
     }
 
     isClickScrolling.current = true;
@@ -437,11 +438,6 @@ export function LandingPage({
             }
           }
           setActiveSection(currentSection);
-
-          const targetPath = SECTION_PATH_MAP[currentSection] || '/';
-          if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
-            window.history.replaceState({ section: currentSection }, '', targetPath);
-          }
           ticking = false;
         });
         ticking = true;
@@ -696,7 +692,7 @@ export function LandingPage({
             {/* Center Links (Desktop only, drawer handles mobile & tablet) */}
             <div className={`hidden xl:flex items-center space-x-0.5 lg:space-x-1 px-1 lg:px-1.5 py-1 rounded-full border backdrop-blur-md shadow-inner ${theme === 'dark' ? 'bg-[#141418]/60 border-[#2A2A2E]' : 'bg-white/60 border-gray-200/50'}`}>
               <a
-                href="/"
+                href="#hero-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('hero-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'hero-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -707,7 +703,7 @@ export function LandingPage({
                 <span>{t('header.nav.home')}</span>
               </a>
               <a
-                href="/global-zodiac"
+                href="#zodiac-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('zodiac-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'zodiac-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -718,7 +714,7 @@ export function LandingPage({
                 <span>{t('header.nav.zodiac')}</span>
               </a>
               <a
-                href="/panjika"
+                href="#panjika-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('panjika-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'panjika-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -729,7 +725,7 @@ export function LandingPage({
                 <span>{t('header.nav.panjika')}</span>
               </a>
               <a
-                href="/remedies"
+                href="#remedies-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('remedies-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'remedies-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -740,7 +736,7 @@ export function LandingPage({
                 <span>{t('header.nav.remedies')}</span>
               </a>
               <a
-                href="/blogs"
+                href="#blog-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('blog-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'blog-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -751,7 +747,7 @@ export function LandingPage({
                 <span>{t('header.nav.blogs')}</span>
               </a>
               <a
-                href="/premium"
+                href="#premium-section"
                 onClick={(e) => { e.preventDefault(); scrollToSection('premium-section'); }}
                 className={`flex items-center space-x-1 px-2.5 lg:px-4 py-1.5 lg:py-2 rounded-full text-xs lg:text-[13px] font-semibold transition-all cursor-pointer ${currentView === 'landing' && activeSection === 'premium-section'
                   ? 'text-[#0D0D0F] bg-[#C9A050] shadow-md shadow-[#C9A050]/20'
@@ -1522,8 +1518,8 @@ export function LandingPage({
         {!isChatOpen && (
           <button
             onClick={() => setIsChatOpen(true)}
-            title={t('userPanel.fab.title', 'Chat With Us')}
-            aria-label={t('userPanel.fab.ariaLabel', 'Chat With Us')}
+            title={t('userPanel.fab.title', 'Chat')}
+            aria-label={t('userPanel.fab.ariaLabel', 'Chat')}
             className={`w-[58px] h-[58px] sm:w-[66px] sm:h-[66px] rounded-full flex flex-col items-center justify-center p-1 shadow-xl shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${
               theme === 'dark'
                 ? 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F]'
@@ -1532,7 +1528,7 @@ export function LandingPage({
           >
             <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current transition-transform duration-200 shrink-0 mb-0.5" />
             <span className="text-[10px] sm:text-[11.5px] font-bold leading-none text-center tracking-tight select-none px-0.5">
-              {t('userPanel.fab.label', 'Chat With Us')}
+              {t('userPanel.fab.label', 'Chat')}
             </span>
           </button>
         )}

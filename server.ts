@@ -877,7 +877,7 @@ app.get('/robots.txt', (req, res) => {
       return res.sendFile(p);
     }
   }
-  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: https://astrojunction.in/sitemap.xml\n";
+  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: https://astrojunction.com/sitemap.xml\n";
   res.type('text/plain; charset=utf-8');
   return res.send(defaultRobots);
 });
@@ -903,23 +903,23 @@ app.get('/llms.txt', (req, res) => {
 > AstroJunction is an authentic Vedic Astrology and spiritual intelligence platform offering accurate Janam Kundli, Daily Horoscope, Vedic Panchang, 36 Gun Ashtakoota Matchmaking, Numerology, and certified astrologer consultations.
 
 ## Core Services & Tools
-- [Daily Horoscope & Panchang](https://astrojunction.in/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
-- [Vedic Janam Kundli](https://astrojunction.in/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
-- [Kundli Milan / Matchmaking](https://astrojunction.in/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
-- [Vedic Numerology Calculator](https://astrojunction.in/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
-- [Vedic Panjika Calendar](https://astrojunction.in/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
-- [Astrologer Consultations](https://astrojunction.in/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
-- [Daivajna AI Life Counsellor](https://astrojunction.in/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
+- [Daily Horoscope & Panchang](https://astrojunction.com/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
+- [Vedic Janam Kundli](https://astrojunction.com/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
+- [Kundli Milan / Matchmaking](https://astrojunction.com/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
+- [Vedic Numerology Calculator](https://astrojunction.com/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
+- [Vedic Panjika Calendar](https://astrojunction.com/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
+- [Astrologer Consultations](https://astrojunction.com/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
+- [Daivajna AI Life Counsellor](https://astrojunction.com/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
 
 ## Articles & Wisdom
-- [Vedic Astrology Blogs](https://astrojunction.in/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
+- [Vedic Astrology Blogs](https://astrojunction.com/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
 
 ## Company & Policies
-- [About Us](https://astrojunction.in/about-us): Mission, heritage, and background of AstroJunction.
-- [Frequently Asked Questions (FAQ)](https://astrojunction.in/faq): Answers to common questions regarding Vedic calculations and platform features.
-- [Privacy Policy](https://astrojunction.in/privacy-policy): Data privacy, protection, and user confidentiality standards.
-- [Terms & Conditions](https://astrojunction.in/terms-and-conditions): Terms of platform usage and service agreements.
-- [Cookie Policy](https://astrojunction.in/cookie-policy): Information on cookies and local storage usage.
+- [About Us](https://astrojunction.com/about-us): Mission, heritage, and background of AstroJunction.
+- [Frequently Asked Questions (FAQ)](https://astrojunction.com/faq): Answers to common questions regarding Vedic calculations and platform features.
+- [Privacy Policy](https://astrojunction.com/privacy-policy): Data privacy, protection, and user confidentiality standards.
+- [Terms & Conditions](https://astrojunction.com/terms-and-conditions): Terms of platform usage and service agreements.
+- [Cookie Policy](https://astrojunction.com/cookie-policy): Information on cookies and local storage usage.
 `);
 });
 
@@ -927,18 +927,18 @@ app.get('/llms.txt', (req, res) => {
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const staticPages = [
-      { loc: 'https://astrojunction.in/', changefreq: 'daily', priority: '1.0' },
-      { loc: 'https://astrojunction.in/blogs', changefreq: 'daily', priority: '0.9' },
-      { loc: 'https://astrojunction.in/about-us', changefreq: 'monthly', priority: '0.7' },
-      { loc: 'https://astrojunction.in/faq', changefreq: 'monthly', priority: '0.7' },
-      { loc: 'https://astrojunction.in/privacy-policy', changefreq: 'yearly', priority: '0.5' },
-      { loc: 'https://astrojunction.in/terms-and-conditions', changefreq: 'yearly', priority: '0.5' },
-      { loc: 'https://astrojunction.in/cookie-policy', changefreq: 'yearly', priority: '0.5' },
+      { loc: 'https://astrojunction.com/', changefreq: 'daily', priority: '1.0' },
+      { loc: 'https://astrojunction.com/about-us', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://astrojunction.com/privacy-policy', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.com/terms-and-conditions', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.com/faq', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.com/cookie-policy', changefreq: 'monthly', priority: '0.5' },
     ];
 
     const fallbackSlugs = [
-      'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
+      'the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status',
       'navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation',
+      'the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology',
       'vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration',
       'vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide'
     ];
@@ -980,11 +980,11 @@ app.get('/sitemap.xml', async (req, res) => {
             // ignore date formatting errors
           }
         }
-        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>https://astrojunction.com/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     } else {
       for (const slug of fallbackSlugs) {
-        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>https://astrojunction.com/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     }
 
@@ -995,6 +995,20 @@ app.get('/sitemap.xml', async (req, res) => {
     return res.send(xml);
   } catch (err) {
     console.error('Error generating dynamic sitemap:', err);
+    // Fallback to static sitemap if available
+    const possiblePaths = [
+      path.join(__dirname, 'public', 'sitemap.xml'),
+      path.join(__dirname, 'dist', 'sitemap.xml'),
+      path.join(process.cwd(), 'public', 'sitemap.xml'),
+      path.join(process.cwd(), 'astrojunction_fe', 'public', 'sitemap.xml'),
+      path.join(process.cwd(), 'dist', 'sitemap.xml'),
+    ];
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        res.type('application/xml; charset=utf-8');
+        return res.sendFile(p);
+      }
+    }
     res.status(500).type('text/plain').send('Error generating sitemap');
   }
 });

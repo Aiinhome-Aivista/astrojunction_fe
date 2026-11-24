@@ -1,6 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /api/
+Disallow: /account
+Disallow: /s/
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
 
-Sitemap: https://astrojunction.in/sitemap.xml
+Sitemap: https://astrojunction.com/sitemap.xml

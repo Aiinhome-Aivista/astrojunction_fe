@@ -830,7 +830,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {!isViewingAdmin && !isAdmin && (
         <button
           onClick={() => setActiveTab('counsellor')}
-          title={t('userPanel.fab.title', 'Chat With Us')}
+          title={t('userPanel.fab.title', 'Chat')}
           className={`fixed bottom-20 md:bottom-7 right-4 md:right-7 z-40 w-[58px] h-[58px] sm:w-[66px] sm:h-[66px] rounded-full flex flex-col items-center justify-center p-1 shadow-xl shadow-[#C9A050]/30 transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95 ${activeTab === 'counsellor'
             ? 'ring-4 ring-[#C9A050] ring-offset-2'
             : ''
@@ -838,11 +838,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               ? 'bg-[#C9A050] hover:bg-[#D4AF37] text-[#0D0D0F]'
               : 'bg-[#C9A050] hover:bg-[#B38730] text-white'
             }`}
-          aria-label={t('userPanel.fab.ariaLabel', 'Chat With Us')}
+          aria-label={t('userPanel.fab.ariaLabel', 'Chat')}
         >
           <MessageSquareText className="w-5 h-5 sm:w-6 sm:h-6 text-current transition-transform duration-200 shrink-0 mb-0.5" />
           <span className="text-[10px] sm:text-[11.5px] font-bold leading-none text-center tracking-tight select-none px-0.5">
-            {t('userPanel.fab.label', 'Chat With Us')}
+            {t('userPanel.fab.label', 'Chat')}
           </span>
 
           {/* Hover Tooltip on Left */}
@@ -850,7 +850,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             ? 'bg-[#141418] text-[#E8C470] border-[#C9A050]/50'
             : 'bg-[#FAF3DF] text-[#8C6218] border-[#DFC896]'
             }`}>
-            {t('userPanel.fab.title', 'Chat With Us')}
+            {t('userPanel.fab.title', 'Chat')}
           </span>
         </button>
       )}

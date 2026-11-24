@@ -233,7 +233,7 @@ export function App() {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<string>(() => {
+  const resolveTabFromLocation = (): string => {
     try {
       if (typeof window !== 'undefined') {
         const params = new URLSearchParams(window.location.search || window.location.hash.replace(/^#/, ''));
@@ -244,10 +244,25 @@ export function App() {
           } catch {}
         }
         if (urlTab) return urlTab;
+
+        const cleanPath = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '').toLowerCase();
+        if (cleanPath) {
+          if (cleanPath === 'about' || cleanPath === 'about-us') return 'about-us';
+          if (cleanPath === 'privacy' || cleanPath === 'privacy-policy') return 'privacy-policy';
+          if (cleanPath === 'terms' || cleanPath === 'terms-and-conditions') return 'terms-and-conditions';
+          if (cleanPath === 'faq') return 'faq';
+          if (cleanPath === 'cookie-policy') return 'cookie-policy';
+          if (cleanPath === 'disclaimer') return 'terms-and-conditions';
+          if (['global-zodiac', 'panjika', 'remedies', 'blogs', 'premium', 'zodiac'].includes(cleanPath)) return 'landing';
+          const validTabs = ['daily', 'horoscope', 'matchmaking', 'numerology', 'consultations', 'counsellor', 'roadmap', 'landing', 'home'];
+          if (validTabs.includes(cleanPath)) return cleanPath;
+        }
       }
     } catch {}
     return 'daily';
-  });
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(() => resolveTabFromLocation());
   const [landingResetKey, setLandingResetKey] = useState(0);
 
   const handleResetLanding = () => {
@@ -299,19 +314,15 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        const urlTab = new URLSearchParams(window.location.search).get('tab');
-        if (urlTab) {
-          setActiveTab(urlTab);
-          return;
-        }
-      }
-    } catch {}
+    const tabFromUrl = resolveTabFromLocation();
+    if (tabFromUrl && tabFromUrl !== 'daily') {
+      setActiveTab(tabFromUrl);
+      return;
+    }
     if (authUser?.role === 'admin') {
       setActiveTab('admin_dashboard');
     } else {
-      setActiveTab('daily');
+      setActiveTab(tabFromUrl || 'daily');
     }
   }, [authUser]);
   // Scroll to top when navigating between pages/tabs
