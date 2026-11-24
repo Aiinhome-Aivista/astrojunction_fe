@@ -65,7 +65,7 @@ export function useSEO(props: Partial<SEOProps>) {
     : rawImage;
 
   const currentUrl = typeof window !== 'undefined'
-    ? props.canonical || window.location.href
+    ? props.canonical || `${window.location.origin}${window.location.pathname.replace(/\/+$/, '') || '/'}`
     : '';
 
   const ogType = props.ogType || DEFAULT_SEO.ogType || 'website';

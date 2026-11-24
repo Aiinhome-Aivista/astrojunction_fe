@@ -170,7 +170,6 @@ const PATH_SECTION_MAP: Record<string, string> = {
   '/zodiac': 'zodiac-section',
   '/panjika': 'panjika-section',
   '/remedies': 'remedies-section',
-  '/blogs': 'blog-section',
   '/premium': 'premium-section',
 };
 
@@ -250,7 +249,7 @@ export function LandingPage({
   const [currentView, setCurrentView] = useState<'landing' | 'blogs' | LegalPageView>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
-      if ((path.startsWith('/blogs/') && path !== '/blogs') || new URLSearchParams(window.location.search).has('blog')) {
+      if (path === '/blogs' || path.startsWith('/blogs/') || new URLSearchParams(window.location.search).has('blog')) {
         return 'blogs';
       }
       const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];
@@ -307,7 +306,7 @@ export function LandingPage({
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      if (path.startsWith('/blogs/') && path !== '/blogs') {
+      if (path === '/blogs' || path.startsWith('/blogs/')) {
         setCurrentView('blogs');
       } else {
         const legalPaths: LegalPageView[] = ['about-us', 'faq', 'privacy-policy', 'cookie-policy', 'terms-and-conditions'];

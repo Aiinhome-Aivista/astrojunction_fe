@@ -877,7 +877,7 @@ app.get('/robots.txt', (req, res) => {
       return res.sendFile(p);
     }
   }
-  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: https://astrojunction.com/sitemap.xml\n";
+  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: https://astrojunction.in/sitemap.xml\n";
   res.type('text/plain; charset=utf-8');
   return res.send(defaultRobots);
 });
@@ -927,12 +927,13 @@ app.get('/llms.txt', (req, res) => {
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const staticPages = [
-      { loc: 'https://astrojunction.com/', changefreq: 'daily', priority: '1.0' },
-      { loc: 'https://astrojunction.com/about-us', changefreq: 'monthly', priority: '0.7' },
-      { loc: 'https://astrojunction.com/privacy-policy', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.com/terms-and-conditions', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.com/faq', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.com/cookie-policy', changefreq: 'monthly', priority: '0.5' },
+      { loc: 'https://astrojunction.in/', changefreq: 'daily', priority: '1.0' },
+      { loc: 'https://astrojunction.in/about-us', changefreq: 'monthly', priority: '0.7' },
+      { loc: 'https://astrojunction.in/privacy-policy', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.in/terms-and-conditions', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.in/faq', changefreq: 'monthly', priority: '0.6' },
+      { loc: 'https://astrojunction.in/cookie-policy', changefreq: 'monthly', priority: '0.5' },
+      { loc: 'https://astrojunction.in/blogs', changefreq: 'daily', priority: '0.8' },
     ];
 
     const fallbackSlugs = [
@@ -980,11 +981,11 @@ app.get('/sitemap.xml', async (req, res) => {
             // ignore date formatting errors
           }
         }
-        xml += `  <url>\n    <loc>https://astrojunction.com/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     } else {
       for (const slug of fallbackSlugs) {
-        xml += `  <url>\n    <loc>https://astrojunction.com/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     }
 
@@ -1036,9 +1037,13 @@ async function startServer() {
     }));
     app.get('*', (req, res) => {
       try {
-        const indexPath = path.join(distPath, 'index.html');
-        const rawHtml = fs.readFileSync(indexPath, 'utf-8');
-        const finalHtml = injectDynamicMeta(rawHtml, req);
+        const cleanPath = req.path.replace(/^\/+|\/+$/g, '');
+        const specificHtmlPath = cleanPath ? path.join(distPath, cleanPath, 'index.html') : '';
+        const targetHtmlPath = (specificHtmlPath && fs.existsSync(specificHtmlPath))
+          ? specificHtmlPath
+          : path.join(distPath, 'index.html');
+        const rawHtml = fs.readFileSync(targetHtmlPath, 'utf-8');
+        const finalHtml = targetHtmlPath === specificHtmlPath ? rawHtml : injectDynamicMeta(rawHtml, req);
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Pragma', 'no-cache');
