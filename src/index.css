@@ -155,9 +155,9 @@ html[lang="ta"] [class*="tracking-"] {
     --bg-inner: #08080A;
     --border-color: #2A2A2E;
     --border-hover: #3E3E44;
-    --text-primary: #F0ECE1;
-    --text-secondary: #E5E1D8;
-    --text-muted: #9E9A90;
+    --text-primary: #F5F2EB;
+    --text-secondary: #D8D2C5;
+    --text-muted: #A8A296;
     --gold-primary: #C9A050;
     --gold-hover: #D4AF37;
     --gold-bg: rgba(201, 160, 80, 0.12);
@@ -175,6 +175,7 @@ html[lang="ta"] [class*="tracking-"] {
     --btn-primary-hover: #D4AF37;
   }
 
+  html.light,
   .light {
     --bg-canvas: #F5EFE0;
     --bg-card: #FAF4E4;
@@ -183,9 +184,9 @@ html[lang="ta"] [class*="tracking-"] {
     --bg-inner: #EFE4CC;
     --border-color: #DFC896;
     --border-hover: #C9B278;
-    --text-primary: #1A1816;
-    --text-secondary: #2C2825;
-    --text-muted: #6E6452;
+    --text-primary: #111111;
+    --text-secondary: #333333;
+    --text-muted: #555555;
     --gold-primary: #94691E;
     --gold-hover: #AF7F26;
     --gold-bg: rgba(148, 105, 30, 0.12);
@@ -193,13 +194,20 @@ html[lang="ta"] [class*="tracking-"] {
 
     --input-bg: #FFFFFF;
     --input-border: #DDD5C7;
-    --input-text: #1A1816;
-    --input-placeholder: #9E9A90;
+    --input-text: #111111;
+    --input-placeholder: #666666;
     --input-focus-border: #94691E;
 
     --btn-primary-bg: #94691E;
     --btn-primary-text: #FFFFFF;
     --btn-primary-hover: #AF7F26;
+  }
+
+  html.dark,
+  .dark {
+    --text-primary: #F5F2EB;
+    --text-secondary: #D8D2C5;
+    --text-muted: #A8A296;
   }
 
   html {

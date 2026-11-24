@@ -75,25 +75,13 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
     title: 'ASTROJUNCTION • Vedic Astrology, Kundli & Daily Horoscope',
     description: 'Ancient Knowledge • Modern Intelligence. Accurate Vedic Janam Kundli, Daily Panchang & Horoscope, Kundli Milan (Matchmaking), Numerology, and Life Counselling.',
   },
-  '/about': {
-    title: 'About Us • ASTROJUNCTION',
-    description: "Discover AstroJunction's mission to bridge ancient Vedic Jyotish shastra with state-of-the-art computational astrology.",
-  },
   '/about-us': {
     title: 'About Us • ASTROJUNCTION',
     description: "Discover AstroJunction's mission to bridge ancient Vedic Jyotish shastra with state-of-the-art computational astrology.",
   },
-  '/privacy': {
-    title: 'Privacy Policy • ASTROJUNCTION',
-    description: 'Read our privacy policy outlining how personal and astrological data is collected, protected, and safeguarded.',
-  },
   '/privacy-policy': {
     title: 'Privacy Policy • ASTROJUNCTION',
     description: 'Read our privacy policy outlining how personal and astrological data is collected, protected, and safeguarded.',
-  },
-  '/terms': {
-    title: 'Terms & Conditions • ASTROJUNCTION',
-    description: 'Review the terms and conditions governing the use of AstroJunction services, predictions, and consultations.',
   },
   '/terms-and-conditions': {
     title: 'Terms & Conditions • ASTROJUNCTION',
@@ -107,17 +95,9 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
     title: 'Cookie Policy • ASTROJUNCTION',
     description: 'Information on cookies and local storage usage on AstroJunction.',
   },
-  '/disclaimer': {
-    title: 'Astrological Disclaimer • ASTROJUNCTION',
-    description: 'Important astrological guidance disclaimer and advisory notice for AstroJunction seekers.',
-  },
   '/blogs': {
     title: 'Vedic Astrology Blogs, Articles & Ancient Wisdom • ASTROJUNCTION',
     description: 'Explore authentic Vedic astrology, planetary yogas, kundli matching, and spiritual wisdom directly from our masters.',
-  },
-  '/tools/compress': {
-    title: 'Astrology Dossier & PDF Compressor • ASTROJUNCTION',
-    description: 'Fast, client-side PDF and report compression tool for astrological dossiers and Kundli charts.',
   },
 };
 
@@ -193,14 +173,12 @@ function prerenderMetaPlugin() {
 
         const routes = new Set<string>([
           '/',
-          '/about',
           '/about-us',
           '/privacy-policy',
           '/terms-and-conditions',
           '/faq',
           '/cookie-policy',
           '/blogs',
-          '/tools/compress',
         ]);
 
         const sitemapPath = path.resolve(__dirname, 'public/sitemap.xml');
@@ -212,7 +190,7 @@ function prerenderMetaPlugin() {
             try {
               const u = new URL(m[1]);
               const r = u.pathname.replace(/\/+$/, '') || '/';
-              if (!['/admin', '/login', '/signup', '/account', '/s', '/forgot-password', '/reset-password'].some(p => r === p || r.startsWith(`${p}/`))) {
+              if (!['/about', '/tools', '/tools/compress', '/admin', '/login', '/signup', '/account', '/s', '/forgot-password', '/reset-password'].some(p => r === p || r.startsWith(`${p}/`))) {
                 routes.add(r);
               }
             } catch { }

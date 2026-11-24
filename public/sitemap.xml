@@ -6,11 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://astrojunction.in/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://astrojunction.in/about-us</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -38,11 +33,6 @@
   <url>
     <loc>https://astrojunction.in/blogs</loc>
     <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://astrojunction.in/tools/compress</loc>
-    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
