@@ -7,6 +7,34 @@ import { createServer as createViteServer } from 'vite';
 
 dotenv.config();
 
+// Load SHARE_BASE_URL from backend's .env or root .env if not set
+function getShareBaseUrl(): string {
+  if (process.env.SHARE_BASE_URL) {
+    return process.env.SHARE_BASE_URL.trim().replace(/\/+$/, '');
+  }
+  const possiblePaths = [
+    // 1. Root folder .env (e.g. d:/server_astrojunction/.env)
+    path.resolve(__dirname, '../.env'),
+    path.resolve(process.cwd(), '.env'),
+    path.resolve(process.cwd(), '../.env')
+    
+  ];
+  for (const envPath of possiblePaths) {
+    if (fs.existsSync(envPath)) {
+      try {
+        const content = fs.readFileSync(envPath, 'utf-8');
+        const match = content.match(/^\s*SHARE_BASE_URL\s*=\s*([^\r\n#]+)/m);
+        if (match && match[1].trim()) {
+          const val = match[1].trim().replace(/^['"]|['"]$/g, '').replace(/\/+$/, '');
+          process.env.SHARE_BASE_URL = val;
+          return val;
+        }
+      } catch { }
+    }
+  }
+  return '';
+}
+
 const app = express();
 const PORT = 3000;
 
@@ -525,7 +553,7 @@ Format as JSON with:
 app.post('/api/consultations/create-order', (req, res) => {
   const { tierId, tierTitle, amount, currency, userProfile, paymentMethod } = req.body;
   const refCode = `JV-ORD-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`;
-  
+
   res.json({
     success: true,
     orderId: `order_${Date.now()}`,
@@ -540,7 +568,7 @@ app.post('/api/consultations/create-order', (req, res) => {
 
 app.post('/api/consultations/verify-payment', (req, res) => {
   const { orderId, referenceCode, paymentDetails, userProfile, tier } = req.body;
-  
+
   res.json({
     success: true,
     status: 'Completed',
@@ -835,10 +863,9 @@ function injectDynamicMeta(html: string, req: express.Request): string {
   const key = tabQuery || urlPath || 'landing';
   const seo = SEO_SERVER_CONFIG[key] || SEO_SERVER_CONFIG['landing'];
 
-  const host = req.get('host') || 'localhost:3000';
-  const protocol = req.protocol || 'http';
-  const fullOgImage = seo.ogImage.startsWith('http') ? seo.ogImage : `${protocol}://${host}${seo.ogImage}`;
-  const fullCanonical = `${protocol}://${host}${req.originalUrl || req.url}`;
+  const origin = getShareBaseUrl() || `${req.protocol}://${req.get('host') || 'localhost:3000'}`;
+  const fullOgImage = seo.ogImage.startsWith('http') ? seo.ogImage : `${origin}${seo.ogImage}`;
+  const fullCanonical = `${origin}${req.originalUrl || req.url}`;
 
   return html
     .replace(/<title>.*?<\/title>/i, `<title>${seo.title}</title>`)
@@ -864,20 +891,8 @@ function escapeXml(unsafe: string): string {
 
 // Robots.txt Handler
 app.get('/robots.txt', (req, res) => {
-  const possiblePaths = [
-    path.join(__dirname, 'public', 'robots.txt'),
-    path.join(__dirname, 'dist', 'robots.txt'),
-    path.join(process.cwd(), 'public', 'robots.txt'),
-    path.join(process.cwd(), 'astrojunction_fe', 'public', 'robots.txt'),
-    path.join(process.cwd(), 'dist', 'robots.txt'),
-  ];
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      res.type('text/plain; charset=utf-8');
-      return res.sendFile(p);
-    }
-  }
-  const defaultRobots = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: https://astrojunction.in/sitemap.xml\n";
+  const base = getShareBaseUrl() || `${req.protocol}://${req.get('host') || 'localhost:3000'}`;
+  const defaultRobots = `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /account\nDisallow: /s/\nDisallow: /login\nDisallow: /signup\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: ${base}/sitemap.xml\n`;
   res.type('text/plain; charset=utf-8');
   return res.send(defaultRobots);
 });
@@ -897,43 +912,45 @@ app.get('/llms.txt', (req, res) => {
       return res.sendFile(p);
     }
   }
+  const base = getShareBaseUrl() || `${req.protocol}://${req.get('host') || 'localhost:3000'}`;
   res.type('text/markdown; charset=utf-8');
   return res.send(`# ASTROJUNCTION
 
 > AstroJunction is an authentic Vedic Astrology and spiritual intelligence platform offering accurate Janam Kundli, Daily Horoscope, Vedic Panchang, 36 Gun Ashtakoota Matchmaking, Numerology, and certified astrologer consultations.
 
 ## Core Services & Tools
-- [Daily Horoscope & Panchang](https://astrojunction.com/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
-- [Vedic Janam Kundli](https://astrojunction.com/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
-- [Kundli Milan / Matchmaking](https://astrojunction.com/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
-- [Vedic Numerology Calculator](https://astrojunction.com/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
-- [Vedic Panjika Calendar](https://astrojunction.com/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
-- [Astrologer Consultations](https://astrojunction.com/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
-- [Daivajna AI Life Counsellor](https://astrojunction.com/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
+- [Daily Horoscope & Panchang](${base}/daily): Real-time daily planetary forecasts, Tithi, Nakshatra, Rahu Kaal, and Shubh Muhurat.
+- [Vedic Janam Kundli](${base}/horoscope): Online birth chart generator with D1 Lagna and D9 Navamsha calculations.
+- [Kundli Milan / Matchmaking](${base}/matchmaking): Comprehensive 36 Gun Ashtakoota compatibility analysis and Dosha checking for marriage.
+- [Vedic Numerology Calculator](${base}/numerology): Instant calculation of Mulank (Root), Bhagyank (Destiny), and Chaldean/Pythagorean name numbers.
+- [Vedic Panjika Calendar](${base}/panjika): Complete Hindu religious calendar featuring Ekadashi, Purnima, Amavasya, and festival dates.
+- [Astrologer Consultations](${base}/consultations): 1-on-1 personalized guidance with verified Vedic astrology experts.
+- [Daivajna AI Life Counsellor](${base}/counsellor): Intelligent Vedic life counselling and personalized astrological remedies.
 
 ## Articles & Wisdom
-- [Vedic Astrology Blogs](https://astrojunction.com/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
+- [Vedic Astrology Blogs](${base}/blogs): Curated articles on planetary transits, zodiac compatibility, Vedic rituals, gemstones, and spiritual growth.
 
 ## Company & Policies
-- [About Us](https://astrojunction.com/about-us): Mission, heritage, and background of AstroJunction.
-- [Frequently Asked Questions (FAQ)](https://astrojunction.com/faq): Answers to common questions regarding Vedic calculations and platform features.
-- [Privacy Policy](https://astrojunction.com/privacy-policy): Data privacy, protection, and user confidentiality standards.
-- [Terms & Conditions](https://astrojunction.com/terms-and-conditions): Terms of platform usage and service agreements.
-- [Cookie Policy](https://astrojunction.com/cookie-policy): Information on cookies and local storage usage.
+- [About Us](${base}/about-us): Mission, heritage, and background of AstroJunction.
+- [Frequently Asked Questions (FAQ)](${base}/faq): Answers to common questions regarding Vedic calculations and platform features.
+- [Privacy Policy](${base}/privacy-policy): Data privacy, protection, and user confidentiality standards.
+- [Terms & Conditions](${base}/terms-and-conditions): Terms of platform usage and service agreements.
+- [Cookie Policy](${base}/cookie-policy): Information on cookies and local storage usage.
 `);
 });
 
 // Dynamic Sitemap Handler
 app.get('/sitemap.xml', async (req, res) => {
   try {
+    const base = getShareBaseUrl() || `${req.protocol}://${req.get('host') || 'localhost:3000'}`;
     const staticPages = [
-      { loc: 'https://astrojunction.in/', changefreq: 'daily', priority: '1.0' },
-      { loc: 'https://astrojunction.in/about-us', changefreq: 'monthly', priority: '0.7' },
-      { loc: 'https://astrojunction.in/privacy-policy', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.in/terms-and-conditions', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.in/faq', changefreq: 'monthly', priority: '0.6' },
-      { loc: 'https://astrojunction.in/cookie-policy', changefreq: 'monthly', priority: '0.5' },
-      { loc: 'https://astrojunction.in/blogs', changefreq: 'daily', priority: '0.8' },
+      { loc: `${base}/`, changefreq: 'daily', priority: '1.0' },
+      { loc: `${base}/about-us`, changefreq: 'monthly', priority: '0.7' },
+      { loc: `${base}/privacy-policy`, changefreq: 'monthly', priority: '0.6' },
+      { loc: `${base}/terms-and-conditions`, changefreq: 'monthly', priority: '0.6' },
+      { loc: `${base}/faq`, changefreq: 'monthly', priority: '0.6' },
+      { loc: `${base}/cookie-policy`, changefreq: 'monthly', priority: '0.5' },
+      { loc: `${base}/blogs`, changefreq: 'daily', priority: '0.8' },
     ];
 
     const fallbackSlugs = [
@@ -981,11 +998,11 @@ app.get('/sitemap.xml', async (req, res) => {
             // ignore date formatting errors
           }
         }
-        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>${base}/blogs/${escapeXml(encodeURI(String(slug)))}</loc>${lastmodTag}\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     } else {
       for (const slug of fallbackSlugs) {
-        xml += `  <url>\n    <loc>https://astrojunction.in/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        xml += `  <url>\n    <loc>${base}/blogs/${escapeXml(encodeURI(slug))}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     }
 

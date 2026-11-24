@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core Home / Landing Page (Public) -->
   <url>
     <loc>https://astrojunction.in/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Static Information & Legal Pages (Public) -->
+  <url>
+    <loc>https://astrojunction.in/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://astrojunction.in/about-us</loc>
     <changefreq>monthly</changefreq>
@@ -16,53 +18,56 @@
   <url>
     <loc>https://astrojunction.in/privacy-policy</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/terms-and-conditions</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/faq</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/cookie-policy</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
-
-  <!-- All Blogs Hub & Published Articles (Public) -->
   <url>
     <loc>https://astrojunction.in/blogs</loc>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://astrojunction.in/tools/compress</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/blogs/the-power-of-raj-yogas-how-kendra-and-trikona-conjunctions-unlock-high-status</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/blogs/navigating-saturn-return-shani-sade-sati-ancient-vedic-wisdom-for-karma-and-transformation</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/blogs/the-power-of-raj-yogas-unlocking-wealth-and-prosperity-in-vedic-astrology</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/blogs/vedic-numerology-and-life-path-numbers-decoding-soul-contracts-through-sacred-vibration</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://astrojunction.in/blogs/vedic-kundli-milan-and-36-guna-ashta-koota-compatibility-guide</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 </urlset>

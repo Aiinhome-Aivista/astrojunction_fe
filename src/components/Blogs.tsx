@@ -976,7 +976,7 @@ export function BlogPage({ theme, onBack, initialBlog = null }: BlogPageProps) {
               "name": "ASTROJUNCTION",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://astrojunction.com/jyotishveda_logo_standard.png"
+                "url": typeof window !== 'undefined' ? `${window.location.origin}/jyotishveda_logo_standard.png` : '/jyotishveda_logo_standard.png'
               }
             }
           }}

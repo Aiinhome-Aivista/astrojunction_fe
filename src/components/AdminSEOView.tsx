@@ -47,7 +47,7 @@ const PAGES_LIST: PageMetaItem[] = [
 ];
 
 export const AdminSEOView: React.FC<AdminSEOViewProps> = ({ theme }) => {
-  const [siteUrl] = useState(() => (typeof window !== 'undefined' ? window.location.origin : 'https://astrojunction.com'));
+  const [siteUrl] = useState(() => (typeof window !== 'undefined' ? window.location.origin : ''));
   const [selectedPageId, setSelectedPageId] = useState<string>('landing');
   const [seoData, setSeoData] = useState<Record<string, SEOProps>>(() => ({ ...TAB_SEO_CONFIG }));
   const [loading, setLoading] = useState(true);
